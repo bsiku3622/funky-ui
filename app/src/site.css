@@ -1,0 +1,140 @@
+/* Site-level chrome only. All design decisions reuse funky-ui tokens (--funky-*).
+   The site dogfoods funky-ui components; this file holds page-frame plumbing
+   (full-height, marketing display type) that isn't part of the library surface. */
+
+:root {
+  /* a touch brighter than the cream bg (#fff5d1) — raised/subtle surfaces on cream */
+  --site-raised: #fffae8;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Editorial display type — larger than the library's chrome ladder, but built
+   on the same family/weight/tracking tokens so it stays on-brand. */
+.site-display {
+  font-family: var(--funky-font-family);
+  font-weight: var(--funky-weight-black);
+  text-transform: uppercase;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  margin: 0;
+  color: var(--funky-ink);
+}
+.site-display--xl { font-size: clamp(2.75rem, 8vw, 6rem); }
+.site-display--lg { font-size: clamp(2rem, 5vw, 3.5rem); }
+
+.site-skew { display: inline-block; transform: skewX(-6deg); }
+
+/* Marketing topbar (site chrome, not a library template). */
+.site-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--funky-space-lg);
+  height: 4.5rem;
+  padding: 0 var(--funky-space-xl);
+  background: var(--funky-secondary);
+  border-bottom: var(--funky-border);
+  box-shadow: 0 4px 0 0 rgba(0, 0, 0, 0.2);
+}
+.site-topbar__brand {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.15em;
+  font-family: var(--funky-font-family);
+  font-weight: var(--funky-weight-black);
+  font-size: var(--funky-size-xl);
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  color: var(--funky-ink-inverse);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transform: skewX(-6deg);
+}
+.site-topbar__nav { display: inline-flex; align-items: center; gap: var(--funky-space-xs); }
+.site-navlink {
+  padding: var(--funky-space-xs) var(--funky-space-md);
+  font-family: var(--funky-font-family);
+  font-weight: var(--funky-weight-black);
+  font-size: var(--funky-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--funky-ink-inverse);
+  text-decoration: none;
+  border: 2px solid transparent;
+  background: none;
+  cursor: pointer;
+  transition: background-color 100ms ease-out, border-color 100ms ease-out;
+}
+.site-navlink:hover { background: rgba(255, 255, 255, 0.12); }
+.site-navlink--active { border-color: rgba(255, 255, 255, 0.5); background: rgba(255, 255, 255, 0.12); }
+
+/* Page width container for marketing sections. */
+.site-wrap { width: 100%; max-width: 72rem; margin: 0 auto; padding: 0 var(--funky-space-xl); }
+
+.site-grid-bg {
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
+  background-size: 2rem 2rem;
+}
+
+/* ── Responsive layouts ─────────────────────────────────────────── */
+.site-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 3rem;
+  align-items: center;
+}
+.site-cols-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem; }
+.site-cols-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+.pg-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.docs-layout { display: flex; align-items: flex-start; }
+.docs-sidebar {
+  position: sticky;
+  top: 4.5rem;
+  align-self: flex-start;
+  width: 16rem;
+  flex-shrink: 0;
+  height: calc(100vh - 4.5rem);
+  overflow-y: auto;
+  padding: 1.5rem 1rem;
+  background: var(--funky-bg);
+  border-right: var(--funky-border);
+}
+.docs-main { flex: 1; min-width: 0; padding: 2.5rem; display: flex; justify-content: center; }
+
+@media (max-width: 900px) {
+  .site-hero { grid-template-columns: 1fr; gap: 2rem; }
+  .site-hero__collage { display: none; } /* decorative collage — drop on small screens */
+}
+@media (max-width: 768px) {
+  .site-cols-3,
+  .site-cols-2,
+  .pg-split { grid-template-columns: 1fr; }
+  .site-wrap { padding: 0 var(--funky-space-lg); }
+  .site-topbar { padding: 0 var(--funky-space-lg); }
+}
+@media (max-width: 860px) {
+  .docs-layout { flex-direction: column; }
+  .docs-sidebar {
+    position: static;
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: var(--funky-border);
+  }
+  .docs-main { padding: 1.75rem var(--funky-space-lg); }
+}
