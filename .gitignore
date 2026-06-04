@@ -3,3 +3,7 @@ dist/
 *.log
 .DS_Store
 .vercel
+
+# generated docs API (built from docs/ by app/scripts/build-docs-api.mjs)
+app/public/docs/
+app/public/llms.txt

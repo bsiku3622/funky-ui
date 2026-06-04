@@ -1,0 +1,57 @@
+# funky-ui
+
+> **Neo-brutalist React design system** by Studio Baeks. Cream surfaces, neon accents, thick black borders, blur-0 hard shadows, and a signature "press into shadow" interaction. Four composition layers (Token → Atom → Component → Template) and three core rules the whole system is built on.
+
+The system ships as one npm package — `@studio-baeks/funky-ui` — with zero runtime cost (tokens compile to CSS variables, styles are global classes — no CSS-in-JS, no Tailwind). Components are React 18+.
+
+This file is an AI-oriented index. Every link points to raw markdown served at `/docs/api/...` — clean source, no HTML chrome.
+
+## Start here
+
+- [Install](https://funky-ui.bsiku.dev/docs/api/get-started/install.md): add the package, import the stylesheet, render the first screen
+- [Principles](https://funky-ui.bsiku.dev/docs/api/get-started/principles.md): the three promises (loud by default · press into shadow · fewer choices)
+
+## Foundations
+
+- [Architecture](https://funky-ui.bsiku.dev/docs/api/foundations/architecture.md): the four layers (Token → Atom → Component → Template) and how styling works
+- [Tokens](https://funky-ui.bsiku.dev/docs/api/foundations/tokens.md): exact values — color, hard shadows, type ladder, spacing, shape, motion
+
+## Component library
+
+funky-ui keeps a small, deliberate catalog (14 components). Each layer's documentation is a single markdown file containing every component in that layer — fetch one URL to load the whole layer at once.
+
+- [Atoms](https://funky-ui.bsiku.dev/docs/api/components/atoms.md) (7): `Button` · `Input` · `SearchInput` · `Tag` · `Badge` · `Text` · `Icon`
+- [Components](https://funky-ui.bsiku.dev/docs/api/components/components.md) (5): `Card` · `StatTile` · `Accordion` · `Tabs` · `Modal`
+- [Templates](https://funky-ui.bsiku.dev/docs/api/components/templates.md) (1): `AppShell` (+ `StatusCard`, `NavItem`)
+
+## API access pattern (for AI agents)
+
+Every documentation page is fetchable as raw markdown at `/docs/api/{path}.md`. Unlike larger systems there is no per-component split — each layer file (`atoms.md`, `components.md`, `templates.md`) already contains all of its components inline.
+
+Examples:
+- `https://funky-ui.bsiku.dev/docs/api/components/atoms.md` — all 7 atoms with props + examples
+- `https://funky-ui.bsiku.dev/docs/api/foundations/tokens.md` — exact token values
+- `https://funky-ui.bsiku.dev/docs/api/get-started/install.md` — install + first screen
+
+When generating code that uses funky-ui: fetch the relevant layer page(s) for accurate prop signatures, then keep the three core rules in mind before composing.
+
+## The three core rules (when writing funky-ui code)
+
+1. **Loud by default** — there is no quiet default. Every component renders at its boldest with no config: neon fill, 2px black border, blur-0 hard shadow. Reach for restraint explicitly (e.g. `variant="neutral"`).
+2. **Press into shadow** — interactive elements float on a hard shadow and sink into it on hover (halfway) and active (fully). Shared via the `.funky-pressable` class. Don't reimplement it with custom transforms.
+3. **Fewer choices** — options are deliberately few (Button = 8 variants × 3 sizes, that's it). Express intent through `variant`/`size`/`color` props, not arbitrary inline style. Color/size/time/shadow live only in `tokens.ts` — never write raw hex or inline numeric values.
+
+## Setup
+
+```tsx
+import "@studio-baeks/funky-ui/styles.css"; // once, at the app entry point
+import { Button, StatTile } from "@studio-baeks/funky-ui";
+```
+
+Tokens only (no components): `import "@studio-baeks/funky-ui/tokens.css";` then reference `var(--funky-primary)` etc. In TS: `import { tokens, color, shadow } from "@studio-baeks/funky-ui";`.
+
+## License & repo
+
+- License: MIT
+- Package: [`@studio-baeks/funky-ui`](https://www.npmjs.com/package/@studio-baeks/funky-ui) on npm
+- Site: [funky-ui.bsiku.dev](https://funky-ui.bsiku.dev)
