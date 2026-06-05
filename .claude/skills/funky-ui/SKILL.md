@@ -11,7 +11,9 @@ description: funky-ui 디자인 시스템 가이드. Neo-brutalist 정체성 (�
 
 다음 작업에서 자동 발동:
 
-- funky-ui 컴포넌트로 화면·UI 만들기
+- funky-ui 컴포넌트로 화면·UI 만들기 (React)
+- **순수 HTML / 바닐라 JS로 funky-ui 쓰기** (React 없이)
+- **비웹 환경(native·SwiftUI·Compose·Flutter·tkinter 등)에서 funky-ui 룩 재현**
 - 컴포넌트 prop 시그니처 · default 값 확인
 - 비슷한 컴포넌트 중 무엇을 골라야 할지 (예: `Tag` vs `Badge`, `Input` vs `SearchInput`, `Card` vs `StatTile`)
 - 토큰 값 (색·그림자·간격·타입) 참조
@@ -38,6 +40,14 @@ description: funky-ui 디자인 시스템 가이드. Neo-brutalist 정체성 (�
 
 ---
 
+## 먼저 타깃 환경부터 — 무엇을 fetch할지 결정
+
+funky-ui는 zero-runtime이라 디자인이 전부 CSS 클래스+토큰에 있고 React는 얇은 래퍼다. 그래서 **어디에 쓰느냐로 참고 문서가 갈린다:**
+
+- **React** → 아래 컴포넌트 layer 문서(`atoms.md` 등)를 fetch. npm 패키지 사용.
+- **순수 HTML / 바닐라 JS** → `recipes/html.md` 하나면 끝. CDN `<link>` 한 줄 + class 이름을 손으로 조립. press 효과는 순수 CSS라 공짜, Modal·Tabs·Accordion만 작은 vanilla JS 필요.
+- **비웹**(native·SwiftUI·Compose·Flutter·tkinter·슬라이드 등) → CSS를 못 쓰니 `design.md`를 fetch. 정체성 + 3규칙 + **전체 토큰 값(색·그림자·간격·타입)** 이 self-contained로 들어있다. 그 값을 해당 플랫폼 스타일 언어로 번역. 그림자·press가 안 되는 플랫폼은 충실도 노트의 우선순위(테두리+네온+각진 모서리+두꺼운 타입 먼저)를 따른다.
+
 ## Docs API — fetch로 모든 docs 접근
 
 배포된 사이트가 모든 docs를 raw markdown으로 노출. URL 한 종류:
@@ -53,6 +63,10 @@ studio-ui와 달리 컴포넌트당 분리가 없다 — 각 layer 파일이 그
 ```
 # 전체 진입로
 https://funky-ui.bsiku.dev/llms.txt
+
+# 환경별 트랙
+https://funky-ui.bsiku.dev/docs/api/recipes/html.md   # 순수 HTML/바닐라 JS — CDN + class 레시피 + compound JS
+https://funky-ui.bsiku.dev/docs/api/design.md         # 비웹 — 정체성 + 전체 토큰 값 + 번역 지침 (self-contained)
 
 # 시작 (설치 · 원칙)
 https://funky-ui.bsiku.dev/docs/api/get-started/install.md

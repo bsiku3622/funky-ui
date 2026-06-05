@@ -6,6 +6,15 @@ The system ships as one npm package — `@studio-baeks/funky-ui` — with zero r
 
 This file is an AI-oriented index. Every link points to raw markdown served at `/docs/api/...` — clean source, no HTML chrome.
 
+## Pick your target first
+
+funky-ui is zero-runtime — the design lives entirely in CSS classes + tokens, and
+React is just a thin wrapper. So how you consume it depends on the target:
+
+- **React** → use the component docs below (`Button`, `StatTile`, …) and the npm package.
+- **Plain HTML / vanilla JS** → [Plain HTML recipe](https://funky-ui.bsiku.dev/docs/api/recipes/html.md): load one CDN stylesheet, write the class names by hand. Same look, no React, no build.
+- **Anything non-web** (native, SwiftUI, Compose, Flutter, Qt, Python/tkinter, slides, …) → [Design Guide](https://funky-ui.bsiku.dev/docs/api/design.md): the CSS can't follow there, so this is the whole system as raw token values + rules. Translate the tokens into that platform's styling.
+
 ## Start here
 
 - [Install](https://funky-ui.bsiku.dev/docs/api/get-started/install.md): add the package, import the stylesheet, render the first screen
