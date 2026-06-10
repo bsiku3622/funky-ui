@@ -78,3 +78,67 @@ const [open, setOpen] = useState(false);
 | `open` | `boolean` (필수) | — |
 | `onClose` | `() => void` (필수) | — |
 | `closeOnOverlay` | `boolean` | `true` |
+
+## Panel
+
+화면을 영역으로 나누는 **구조 프리미티브**입니다. 3px 검정 테두리 + 하드 그림자에 선택적 uppercase 헤더바를 얹습니다. funky-ui는 영역을 1px 얇은 선이 아니라 Panel로 끊습니다([Composition §2](https://funky-ui.bsiku.dev/docs/api/foundations/composition.md) 참고). 헤더는 기본 검정(`ink`) 면이고, `color`로 네온을 주면 더 과감해집니다. `actions`로 헤더 우측에 버튼·태그를 붙입니다.
+
+```tsx
+<Panel title="Filters" color="pink" actions={<Button size="sm">Reset</Button>}>
+  본문
+</Panel>
+<Panel title="Raw" padded={false}><pre>…</pre></Panel>
+```
+
+| prop | 값 | 기본 |
+| --- | --- | --- |
+| `title` | `ReactNode` (없으면 헤더바 생략) | — |
+| `actions` | `ReactNode` (헤더 우측) | — |
+| `color` | `ink` · `neutral` · 네온 7색 | `ink` |
+| `padded` | `boolean` | `true` |
+
+## Window
+
+신호등 dots 타이틀바가 달린 macOS풍 프레임입니다. 3px 테두리 + lg 하드 그림자. 코드 샘플·미리보기·export 샷을 감싸는 시그니처 래퍼입니다. 코드처럼 자식이 테두리에 붙어야 하면 `padded={false}`.
+
+```tsx
+<Window title="App.tsx">
+  <pre>…</pre>
+</Window>
+```
+
+| prop | 값 | 기본 |
+| --- | --- | --- |
+| `title` | `ReactNode` (없으면 dots만) | — |
+| `padded` | `boolean` | `true` |
+
+## Toolbar
+
+도구 화면 상단의 가로 컨트롤 바입니다. 크림 면 + 3px 검정 아래 테두리. `ToolShell`의 `toolbar` 슬롯에 넣거나 단독으로 씁니다. 컨트롤은 `Toolbar.Group`으로 묶고, `Toolbar.Spacer`로 한 묶음을 우측 끝으로 밀어냅니다.
+
+```tsx
+<Toolbar>
+  <Toolbar.Group>
+    <Button size="sm">Open</Button>
+    <Button size="sm">Save</Button>
+  </Toolbar.Group>
+  <Toolbar.Spacer />
+  <Toolbar.Group><Button size="sm" variant="primary">Export</Button></Toolbar.Group>
+</Toolbar>
+```
+
+`Toolbar`는 컨테이너(`children`)만 받습니다. `Toolbar.Group`도 `children`만, `Toolbar.Spacer`는 prop이 없습니다.
+
+## Toast
+
+검정 면 + 크림 글자(또는 네온 면)의 알림 박스입니다. **표시 자체만** 담당합니다 — 보임/숨김과 타이머는 쓰는 쪽이 관리합니다. `fixed`를 주면 화면 하단 중앙에 고정됩니다.
+
+```tsx
+{show && <Toast fixed>Saved ✓</Toast>}
+<Toast color="green">Done</Toast>
+```
+
+| prop | 값 | 기본 |
+| --- | --- | --- |
+| `color` | `ink` · 네온 7색 | `ink` |
+| `fixed` | `boolean` (하단 중앙 고정) | `false` |

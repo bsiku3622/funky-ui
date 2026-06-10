@@ -31,8 +31,8 @@ If you only need the tokens, import `@studio-baeks/funky-ui/tokens.css` to get t
 ## What's inside
 
 - **Atoms** — Button · Input · SearchInput · Tag · Badge · Text · Icon
-- **Components** — Card · StatTile · Accordion · Tabs · Modal
-- **Templates** — AppShell
+- **Components** — Card · StatTile · Accordion · Tabs · Modal · Panel · Window · Toolbar · Toast
+- **Templates** — AppShell · ToolShell
 - **Tokens** — color · shadow · radius · border · space · font · motion
 
 Requires React 18+ (peer dependency).

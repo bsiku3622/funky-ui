@@ -24,14 +24,15 @@ React is just a thin wrapper. So how you consume it depends on the target:
 
 - [Architecture](https://funky-ui.bsiku.dev/docs/api/foundations/architecture.md): the four layers (Token → Atom → Component → Template) and how styling works
 - [Tokens](https://funky-ui.bsiku.dev/docs/api/foundations/tokens.md): exact values — color, hard shadows, type ladder, spacing, shape, motion
+- [Composition](https://funky-ui.bsiku.dev/docs/api/foundations/composition.md): how to lay out a *whole screen* — shell choice, region separation (thick borders/shadows, never thin lines), the loudness budget, anti-patterns, and an identity self-check. **Read this before composing any full screen or app** — it's where most off-identity drift happens.
 
 ## Component library
 
-funky-ui keeps a small, deliberate catalog (14 components). Each layer's documentation is a single markdown file containing every component in that layer — fetch one URL to load the whole layer at once.
+funky-ui keeps a small, deliberate catalog (18 components). Each layer's documentation is a single markdown file containing every component in that layer — fetch one URL to load the whole layer at once.
 
 - [Atoms](https://funky-ui.bsiku.dev/docs/api/components/atoms.md) (7): `Button` · `Input` · `SearchInput` · `Tag` · `Badge` · `Text` · `Icon`
-- [Components](https://funky-ui.bsiku.dev/docs/api/components/components.md) (5): `Card` · `StatTile` · `Accordion` · `Tabs` · `Modal`
-- [Templates](https://funky-ui.bsiku.dev/docs/api/components/templates.md) (1): `AppShell` (+ `StatusCard`, `NavItem`)
+- [Components](https://funky-ui.bsiku.dev/docs/api/components/components.md) (9): `Card` · `StatTile` · `Accordion` · `Tabs` · `Modal` · `Panel` · `Window` · `Toolbar` · `Toast`
+- [Templates](https://funky-ui.bsiku.dev/docs/api/components/templates.md) (2): `AppShell` · `ToolShell` (+ `StatusCard`, `NavItem`)
 
 ## API access pattern (for AI agents)
 
@@ -42,7 +43,7 @@ Examples:
 - `https://funky-ui.bsiku.dev/docs/api/foundations/tokens.md` — exact token values
 - `https://funky-ui.bsiku.dev/docs/api/get-started/install.md` — install + first screen
 
-When generating code that uses funky-ui: fetch the relevant layer page(s) for accurate prop signatures, then keep the three core rules in mind before composing.
+When generating code that uses funky-ui: fetch the relevant layer page(s) for accurate prop signatures, then keep the three core rules in mind before composing. When building a *whole screen or app* (not just a single component), also fetch [Composition](https://funky-ui.bsiku.dev/docs/api/foundations/composition.md) first and run its self-check before finishing — component-level correctness alone does not keep a screen on-identity.
 
 ## The three core rules (when writing funky-ui code)
 

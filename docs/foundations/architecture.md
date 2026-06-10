@@ -10,9 +10,9 @@ Token → Atom → Component → Template
 
 **Atom** 은 더 쪼갤 수 없는 완성 단위입니다. raw HTML 하나를 렌더하고 variant나 size 정도를 받습니다. `Button · Input · SearchInput · Tag · Badge · Text · Icon`이 여기 속합니다.
 
-**Component** 는 Atom을 합성하거나 열림·닫힘 같은 약간의 상태를 갖는 "껍데기"입니다. raw HTML을 직접 렌더하지 않습니다. `Card · StatTile · Accordion · Tabs · Modal`이 여기 속합니다.
+**Component** 는 Atom을 합성하거나 열림·닫힘 같은 약간의 상태를 갖는 "껍데기"입니다. raw HTML을 직접 렌더하지 않습니다. `Card · StatTile · Accordion · Tabs · Modal · Panel · Window · Toolbar · Toast`가 여기 속합니다.
 
-**Template** 은 레이아웃만 맡습니다. nav chrome을 소유하고 콘텐츠는 슬롯으로 받습니다. 지금은 `AppShell` 하나입니다.
+**Template** 은 레이아웃만 맡습니다. 화면 chrome을 소유하고 콘텐츠는 슬롯으로 받습니다. `AppShell`(멀티뷰 앱)과 `ToolShell`(단일 도구) 둘입니다. 매크로 배치 규칙은 [Composition](composition.md)이 소유합니다.
 
 ## 폴더 구조
 

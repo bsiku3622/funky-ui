@@ -186,7 +186,40 @@ to render it with.
 
 ---
 
-## 5. Fidelity notes — what survives the jump
+## 5. Composition — laying out a whole screen
+
+Tokens and components are the *voice*; this is the *grammar* that keeps a full
+screen from drifting into a generic app with neon paint. Most off-identity
+funky-ui screens are correct at the component level and wrong here.
+
+- **One of two shells.** Macro layout is either a **sidebar + content** app
+  (multi-view) or a **toolbar + stage + footer** tool (single surface). Pick one;
+  don't invent a third skeleton.
+- **Separate regions with borders and shadows — never thin lines.** This is the
+  rule that breaks most often. Divide regions only by (a) a thick 3px black
+  border, (b) a hard-shadowed framed box (panel/card/window), or (c) a surface
+  switch (cream ↔ white ↔ sunken). A 1px hairline divider or an `<hr>` is wrong —
+  that's what makes it read as a docs site.
+- **Spend neon on structure, not decoration.** Rough area budget: cream/white
+  60–70%, neon 10–20%, black 20–30%. The neon must fill *structural* things —
+  section headers, selected/active states, stat tiles, the primary action — as
+  solid fills. Neon used only as tiny highlights leaves the screen 95% greyscale
+  and kills the identity. Don't leave large empty white voids; frame sparse
+  content in a panel/card.
+- **Type carries structure.** Section labels are UPPERCASE, letter-spaced, black
+  weight (the "chrome" style) — not a plain heading over a thin underline.
+  Metrics are huge black numbers, not body text. Put key headings on a black or
+  neon fill.
+- **Signature moves.** Checkerboard / dot-grid stage textures; macOS-style window
+  frames with neon traffic-light dots; a dark toast with cream text; a skewed
+  wordmark; sticker-like corner labels (black fill, white uppercase).
+
+Before shipping a screen, check: shell is one of the two · regions split by
+3px borders / shadowed frames / surface switches (no hairlines) · neon on
+structure as solid fills · no empty white voids · UPPERCASE chrome labels and
+big black metrics · radius 0 and blur-0 shadows · every value from a token.
+
+## 6. Fidelity notes — what survives the jump
 
 Platforms vary in what they can express. Priority when something has to give:
 
