@@ -57,6 +57,14 @@ export type {
   ModalHeaderProps,
   ModalSlotProps,
 } from "./components/Modal";
+export { Toolbar } from "./components/Toolbar";
+export type { ToolbarProps, ToolbarGroupProps } from "./components/Toolbar";
+export { Panel } from "./components/Panel";
+export type { PanelProps, PanelColor } from "./components/Panel";
+export { Window } from "./components/Window";
+export type { WindowProps } from "./components/Window";
+export { Toast } from "./components/Toast";
+export type { ToastProps, ToastColor } from "./components/Toast";
 
 /* ── Templates ── */
 export { AppShell, StatusCard } from "./templates/AppShell";
@@ -65,3 +73,5 @@ export type {
   NavItem,
   StatusCardProps,
 } from "./templates/AppShell";
+export { ToolShell } from "./templates/ToolShell";
+export type { ToolShellProps, ToolStage } from "./templates/ToolShell";

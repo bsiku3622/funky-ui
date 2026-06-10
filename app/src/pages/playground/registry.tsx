@@ -11,6 +11,10 @@ import {
   Accordion,
   Tabs,
   Modal,
+  Panel,
+  Window,
+  Toolbar,
+  Toast,
 } from "@studio-baeks/funky-ui";
 import { useState } from "react";
 
@@ -211,6 +215,72 @@ const componentEntries: Entry[] = [
     blurb: "오버레이 — 트리거로 열고 닫는다.",
     importName: "Modal",
     gallery: [{ title: "Example", node: <ModalDemo /> }],
+  },
+  {
+    id: "panel",
+    name: "Panel",
+    layer: "Components",
+    blurb: "영역을 나누는 구조 프리미티브 — 3px 테두리 + 하드 그림자 + uppercase 헤더바. 얇은 선 대신 이걸로 끊는다.",
+    importName: "Panel",
+    controls: [
+      { prop: "color", type: "enum", options: ["ink", "neutral", ...ACCENTS], default: "ink" },
+      { prop: "title", type: "text", default: "Filters" },
+      { prop: "children", type: "text", default: "패널 본문" },
+    ],
+    render: (p) => <div style={{ maxWidth: "22rem" }}><Panel color={p.color as never} title={p.title as string}>{p.children as string}</Panel></div>,
+    code: (p) => `<Panel color="${p.color}" title="${p.title}">${p.children}</Panel>`,
+    gallery: [{ title: "Header colors", node: <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(12rem, 1fr))", gap: "0.75rem" }}>{["ink", "pink", "cyan", "yellow"].map((c) => <Panel key={c} color={c as never} title={c}><Text variant="body">본문</Text></Panel>)}</div> }],
+  },
+  {
+    id: "window",
+    name: "Window",
+    layer: "Components",
+    blurb: "신호등 dots 타이틀바가 달린 macOS풍 프레임. 코드·미리보기·export 샷 래퍼.",
+    importName: "Window",
+    controls: [
+      { prop: "title", type: "text", default: "App.tsx" },
+    ],
+    render: (p) => <div style={{ maxWidth: "22rem" }}><Window title={p.title as string}><Text variant="body">window body</Text></Window></div>,
+    code: (p) => `<Window title="${p.title}">…</Window>`,
+    gallery: [{ title: "Example", node: <div style={{ maxWidth: "22rem" }}><Window title="App.tsx"><Text variant="body">신호등 dots + 3px 프레임 + lg 그림자.</Text></Window></div> }],
+  },
+  {
+    id: "toolbar",
+    name: "Toolbar",
+    layer: "Components",
+    blurb: "도구 화면 상단 가로 컨트롤 바. Group으로 묶고 Spacer로 우측 정렬. ToolShell의 toolbar 슬롯.",
+    importName: "Toolbar",
+    gallery: [
+      {
+        title: "Groups + Spacer",
+        node: (
+          <div style={{ width: "100%", border: "var(--funky-border)", boxShadow: "var(--funky-shadow-sm)" }}>
+            <Toolbar>
+              <Toolbar.Group>
+                <Button size="sm">Open</Button>
+                <Button size="sm">Save</Button>
+              </Toolbar.Group>
+              <Toolbar.Spacer />
+              <Toolbar.Group><Button size="sm" variant="primary">Export</Button></Toolbar.Group>
+            </Toolbar>
+          </div>
+        ),
+      },
+    ],
+  },
+  {
+    id: "toast",
+    name: "Toast",
+    layer: "Components",
+    blurb: "검정 면 + 크림 글자(또는 네온) 알림 박스. 표시만 담당, 상태는 소비자가.",
+    importName: "Toast",
+    controls: [
+      { prop: "color", type: "enum", options: ["ink", ...ACCENTS], default: "ink" },
+      { prop: "children", type: "text", default: "Saved ✓" },
+    ],
+    render: (p) => <Toast color={p.color as never}>{p.children as string}</Toast>,
+    code: (p) => `<Toast color="${p.color}">${p.children}</Toast>`,
+    gallery: [{ title: "Colors", node: <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>{["ink", "green", "pink", "cyan"].map((c) => <Toast key={c} color={c as never}>{c}</Toast>)}</div> }],
   },
 ];
 

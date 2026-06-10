@@ -30,6 +30,7 @@ const TITLES: Record<string, string> = {
   "get-started/principles": "원칙",
   "foundations/architecture": "아키텍처",
   "foundations/tokens": "토큰",
+  "foundations/composition": "Composition",
   "components/atoms": "Atoms",
   "components/components": "Components",
   "components/templates": "Templates",
@@ -41,7 +42,7 @@ const titleFor = (slug: string): string =>
 export const DOC_GROUPS: { title: string; docs: DocMeta[] }[] = [
   { title: "", slugs: [""] },
   { title: "Get Started", slugs: ["get-started/install", "get-started/principles"] },
-  { title: "Foundations", slugs: ["foundations/architecture", "foundations/tokens"] },
+  { title: "Foundations", slugs: ["foundations/architecture", "foundations/tokens", "foundations/composition"] },
   { title: "Components", slugs: ["components/atoms", "components/components", "components/templates"] },
 ].map((g) => ({
   title: g.title,

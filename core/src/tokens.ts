@@ -4,7 +4,8 @@
 // "voice 는 적고 과감하게" — 옵션을 일부러 적게 둬서 양산 앱들이 저절로 같아진다.
 //
 // 레이어: Token → Atom → Component(껍데기) → Template.
-// 이 파일은 *voice* 만 정의한다. 레이아웃/composition 은 시스템이 소유하지 않는다.
+// 이 파일은 *voice*(색·그림자·타입 등 무엇으로 그리는가)만 정의한다.
+// composition(어떻게 배치하는가)은 별도 문서가 소유한다 — docs/foundations/composition.md.
 //
 // 이 파일이 유일한 SSOT. src/tokens.css (CSS 변수 --funky-*) 는 여기서
 // codegen 된 산출물이다 — 토큰을 바꾸면 `node scripts/gen-tokens.ts` 로 재생성.

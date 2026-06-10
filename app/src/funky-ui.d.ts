@@ -93,6 +93,33 @@ declare module "@studio-baeks/funky-ui" {
       Footer: ComponentType<HTMLAttributes<HTMLDivElement>>;
     }
   >;
+  export const Panel: ComponentType<
+    Omit<HTMLAttributes<HTMLDivElement>, "title"> & {
+      title?: ReactNode;
+      actions?: ReactNode;
+      color?: string;
+      padded?: boolean;
+    }
+  >;
+  export const Window: ComponentType<
+    Omit<HTMLAttributes<HTMLDivElement>, "title"> & { title?: ReactNode; padded?: boolean }
+  >;
+  export const Toolbar: Compound<
+    HTMLAttributes<HTMLDivElement>,
+    {
+      Group: ComponentType<HTMLAttributes<HTMLDivElement>>;
+      Spacer: ComponentType<Record<string, never>>;
+    }
+  >;
+  export const Toast: ComponentType<
+    HTMLAttributes<HTMLDivElement> & { color?: string; fixed?: boolean }
+  >;
+  export const ToolShell: ComponentType<{
+    toolbar?: ReactNode;
+    footer?: ReactNode;
+    stage?: "plain" | "checker" | "dots";
+    children?: ReactNode;
+  }>;
 
   export const tokens: Record<string, unknown>;
   export const color: Record<string, string>;
