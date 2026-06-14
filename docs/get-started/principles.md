@@ -4,7 +4,7 @@ funky-ui는 세 가지 확신 위에 서 있습니다. 컴포넌트를 새로 �
 
 ## 01 · 구조는 loud, 내용은 quiet
 
-네온 면색, 하드 그림자, UPPERCASE black은 화면의 *구조*(헤더·상태·지표·네비·활성)에 몰아줍니다. 읽는 *내용*(본문·데이터·입력값)은 크림/흰 위 검정 타이포로 물러납니다. "loud by default"는 "다 시끄럽게"가 아니라 "**구조가** 시끄럽게"라는 뜻입니다. 절제가 필요한 구조 요소는 `neutral` variant처럼 명시적으로 고릅니다. (정체성 근거는 [identity](../foundations/identity.md)·[composition](../foundations/composition.md).)
+네온 면색, 하드 그림자, UPPERCASE black은 화면의 *구조*(헤더·상태·지표·네비·활성)에 몰아줍니다. 읽는 *내용*(본문·데이터·입력값)은 크림/흰 위 검정 타이포로 물러납니다. "loud by default"는 "다 시끄럽게"가 아니라 "**구조가** 시끄럽게"라는 뜻입니다. 절제가 필요한 구조 요소는 `white` variant처럼 명시적으로 고릅니다. (정체성 근거는 [identity](../foundations/identity.md)·[composition](../foundations/composition.md).)
 
 ## 02 · 눌림과 떠오름 (press & lift)
 
@@ -14,7 +14,7 @@ funky-ui는 세 가지 확신 위에 서 있습니다. 컴포넌트를 새로 �
 
 ## 03 · Fewer choices
 
-옵션을 일부러 적게 둡니다. Button은 variant 8개와 size 3개, 그게 전부입니다. 고를 게 줄면 서로 다른 사람이 만든 앱들이 저절로 닮아갑니다. 그래서 모든 API 결정은 "이 prop이 개발자의 선택지를 늘리는가?"를 먼저 묻습니다.
+옵션을 일부러 적게 둡니다. Button은 variant 9개와 size 3개, 그게 전부입니다. 고를 게 줄면 서로 다른 사람이 만든 앱들이 저절로 닮아갑니다. 그래서 모든 API 결정은 "이 prop이 개발자의 선택지를 늘리는가?"를 먼저 묻습니다.
 
 ## 토큰만 씁니다
 

@@ -135,14 +135,14 @@ TS에서: `import { tokens, color, accent, colorVar, shadow } from "@studio-baek
 
 ### 컴포넌트 카탈로그 (23)
 
-- **Atoms (11)** — `Button` (variant 8 × size 3) · `Input` · `SearchInput` · `Checkbox` · `Radio` · `Switch`(=`Toggle`) · `Tag` · `Badge` · `Table` · `Text` (display·heading·title·body·caption·chrome·overline·code) · `Icon`
+- **Atoms (11)** — `Button` (variant 9 × size 3) · `Input`(accent) · `SearchInput` · `Checkbox` · `Radio` · `Switch`(=`Toggle`) · `Tag` · `Badge` · `Table`(accent·striped) · `Text` (display·heading·title·body·caption·chrome·overline·code) · `Icon`
 - **Components (11)** — `Card` · `StatTile` · `Accordion`(compound) · `Tabs`(compound, 제어/비제어) · `Modal`(compound) · `Panel`(영역 분리 프리미티브: 2px 테두리 + 헤더바) · `Window`(신호등 dots 프레임) · `Toolbar`(투명 컨트롤 바 + `.Group`/`.Spacer`) · `Toast`(다크 알림) · `Select`(커스텀 드롭다운) · `Toc`(읽기 화면 목차 레일)
 - **Templates (4)** — `AppShell`(보라 상단바 + 크림 사이드바 + 모바일 하단 nav; 멀티뷰 앱) · `ToolShell`(Toolbar + Stage + Footer 세로 스택; 단일 도구) · `SiteHeader`(docs 풍 보라 상단바) · `DocsSidebar`(읽기 화면 좌측 nav) + `StatusCard` · `NavItem`
 - **Markdown 서브패스** — `MarkdownView`(LaTeX 포함 마크다운 렌더러, `@studio-baeks/funky-ui/markdown`)
 
-### Button variant 8 / size 3
+### Button variant 9 / size 3
 
-variant: `primary · secondary · success · warning · danger · info · neutral · ink` (기본 `neutral`)
+variant(색 한 축): `primary · secondary · success · warning · danger · info · white · black · ink` (기본 `white`). 6 role 네온 + 중립 3종 — `white`(흰 면) · `black`(#000 순검정) · `ink`(#222 잉크).
 size: `sm · md · lg` (기본 `md`)
 
 ### 색 + accent variant
@@ -151,6 +151,7 @@ size: `sm · md · lg` (기본 `md`)
 - **Neon accent 8** — `pink · purple · cyan · yellow · orange · sky · green · red`
 - **role alias** — `primary`=pink · `secondary`=purple · `success`=green · `warning`=orange · `danger`=red · `info`=cyan
 - **variant 4** — `solid`(네온 면) · `soft`(옅은 동색 틴트) · `outline`(흰 면 + 네온 테두리) · `ghost`(투명). CSS 변수 `--funky-accent-{color|role}-{variant}-{bg|bg-hover|fg|border}`로 노출. 네온 위 글자색(onColor)은 토큰이 단일 출처로 결정.
+- **contextual accent (계층 전파)** — 컨테이너에 `.funky-accent--{color|role}` 클래스를 선언하면 하위/상태가 `--funky-ac-*`(bg·fg·hover·strip·text) 캐스케이드 변수로 그 색을 따라간다. 미선언(neutral)이면 회색 hover가 기본. atom 중 `Table`·`Input`이 `accent` prop으로 이 계층을 노출 — `<Table accent="cyan" striped>`면 헤더·행 hover·zebra strip이 한 앵커에서 함께 파생된다. hover 틴트는 muted(거의 흰색)라 은은하게 깔린다.
 
 ### 그림자 (blur 0 하드 오프셋) · 모션
 
@@ -167,7 +168,7 @@ radius = `0` 하나 (pill도 각짐). **테두리는 2px(표준) — 오브젝�
 
 - **Button vs Tag vs Badge** — 액션 버튼 vs 작은 라벨 칩 vs 카운트/상태 핀
 - **Input vs SearchInput** — 일반 필드 vs 검색 아이콘이 이미 붙은 필드
-- **Checkbox vs Radio vs Switch** — 다중 선택 vs 단일 선택 vs on/off 토글(흑백 반전)
+- **Checkbox vs Radio vs Switch** — 다중 선택 vs 단일 선택 vs on/off 토글(ON 시 트랙이 핑크 — 체크박스 checked와 동일 어휘)
 - **Card vs StatTile vs Panel** — 빈 액자(내용 자유) vs 네온 면 위 큰 숫자 vs 헤더바 달린 영역 분리 프리미티브. 화면을 구역으로 나눌 땐 Panel.
 - **Accordion vs Tabs** — 세로 펼침/접힘 vs 가로 탭 전환 (둘 다 compound)
 - **AppShell/ToolShell vs SiteHeader/DocsSidebar** — *상호작용 화면*(대시보드·도구; loud) vs *읽기 화면*(docs·리포트; quiet, 본문 카드 없이 크림 위에 흐름 + `MarkdownView`).

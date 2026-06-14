@@ -68,7 +68,7 @@ const [open, setOpen] = useState(false);
   <Modal.Header onClose={() => setOpen(false)}>Title</Modal.Header>
   <Modal.Body>본문</Modal.Body>
   <Modal.Footer>
-    <Button variant="neutral" onClick={() => setOpen(false)}>Close</Button>
+    <Button variant="white" onClick={() => setOpen(false)}>Close</Button>
   </Modal.Footer>
 </Modal>
 ```

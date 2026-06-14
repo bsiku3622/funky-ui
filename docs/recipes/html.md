@@ -87,14 +87,14 @@ Rules of thumb:
 
 ### Button
 
-`variant`: `primary · secondary · success · warning · danger · info · neutral · ink`
-(neutral is the visual default). `size`: `sm · md · lg` (md default — omit the class).
-Always include `funky-pressable`.
+`variant`: `primary · secondary · success · warning · danger · info · white · black · ink`
+(white is the visual default; white/black/ink are the neutrals — black is pure #000, ink is #222).
+`size`: `sm · md · lg` (md default — omit the class). Always include `funky-pressable`.
 
 ```html
 <button class="funky-button funky-pressable funky-button--primary" type="button">Primary</button>
 <button class="funky-button funky-pressable funky-button--danger funky-button--sm" type="button">Small danger</button>
-<button class="funky-button funky-pressable funky-button--neutral" type="button" disabled>Disabled</button>
+<button class="funky-button funky-pressable funky-button--white" type="button" disabled>Disabled</button>
 
 <!-- leading / trailing icon: just drop the glyph inside -->
 <button class="funky-button funky-pressable funky-button--success" type="button">
@@ -309,7 +309,7 @@ Click on the panel itself must not bubble to the overlay.
     </div>
     <div class="funky-modal__body">Are you sure?</div>
     <div class="funky-modal__footer">
-      <button class="funky-button funky-pressable funky-button--neutral" type="button" data-close>Cancel</button>
+      <button class="funky-button funky-pressable funky-button--white" type="button" data-close>Cancel</button>
       <button class="funky-button funky-pressable funky-button--danger" type="button">Delete</button>
     </div>
   </div>
@@ -383,7 +383,7 @@ nav. Nav items are `<a>` (with `href`) or `<button>`; mark the current one with
 
 The three system rules apply identically in HTML:
 
-1. **Loud by default** — use the bold base classes; reach for `--neutral` to be quiet.
+1. **Loud by default** — use the bold base classes; reach for `--white` to be quiet.
 2. **Press into shadow** — put `funky-pressable` on interactive elements; never
    re-create the sink with your own `transform`.
 3. **Fewer choices** — express intent with the `--modifier` classes only. Don't
