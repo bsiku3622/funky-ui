@@ -107,19 +107,35 @@
 
 ## Text
 
-타이포를 담당하는 atom입니다. heading·body·chrome 세 가지 register를 제공합니다.
+타이포를 담당하는 atom입니다. `font.role`에 1:1 매핑되는 8개 register를 제공합니다 — 구조(loud)는 `display`·`heading`·`title`·`chrome`·`overline`, 내용(quiet)은 `body`·`caption`, 코드는 mono인 `code`.
 
 ```tsx
+<Text variant="display">DISPLAY</Text>
 <Text variant="heading">Loud heading</Text>
+<Text variant="title">Section title</Text>
 <Text variant="body" muted>설명 본문</Text>
+<Text variant="caption">보조 설명</Text>
 <Text variant="chrome">EYEBROW LABEL</Text>
+<Text variant="overline">OVERLINE</Text>
+<Text variant="code">const x = 1</Text>
 ```
+
+| variant | 성격 | 기본 태그 |
+| --- | --- | --- |
+| `display` | 가장 큰 black·tight | `h1` |
+| `heading` | black·tight | `h2` |
+| `title` | bold·snug | `h3` |
+| `body` | medium 본문 (기본) | `p` |
+| `caption` | medium 작은 본문 | `p` |
+| `chrome` | UPPERCASE·black·자간 | `span` |
+| `overline` | UPPERCASE·black·넓은 자간 | `span` |
+| `code` | mono | `code` |
 
 | prop | 값 | 기본 |
 | --- | --- | --- |
-| `variant` | `heading` `body` `chrome` | `body` |
+| `variant` | 위 8종 | `body` |
 | `as` | `ElementType` | variant별 기본 태그 |
-| `muted` | `boolean` | `false` |
+| `muted` | `boolean` (옅은 잉크색) | `false` |
 
 ## Icon
 
