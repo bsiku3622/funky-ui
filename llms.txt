@@ -51,7 +51,7 @@ When generating code that uses funky-ui: fetch the relevant layer page(s) for ac
 
 1. **Structure loud, content quiet** — neon solids, hard shadows, and UPPERCASE black go to *structure* (headers, status, metrics, nav, active states); reading *content* (body, data cells, input values) recedes to black type on cream/white. "Loud by default" means *structure* is loud, not everything.
 2. **Press & lift** — two opposite signature motions. *Press* (`.funky-pressable`): an element floats on a hard shadow and sinks into it on hover (halfway) and active (fully) — Button, triggers. *Lift* (`.funky-liftable`): a flat element raises a shadow on focus — Input. Don't reimplement either with custom transforms.
-3. **Fewer choices** — options are deliberately few (Button = 8 variants × 3 sizes, that's it). Express intent through `variant`/`size`/`color` props, not arbitrary inline style. Color/size/time/shadow live only in `tokens.ts` — never write raw hex or inline numeric values.
+3. **Fewer choices** — options are deliberately few (Button = 9 variants × 3 sizes, that's it). Express intent through `variant`/`size`/`color`/`accent` props, not arbitrary inline style. Color/size/time/shadow live only in `tokens.ts` — never write raw hex or inline numeric values.
 
 ## Setup
 

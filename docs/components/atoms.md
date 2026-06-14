@@ -12,9 +12,11 @@
 
 | prop | 값 | 기본 |
 | --- | --- | --- |
-| `variant` | `primary` `secondary` `success` `warning` `danger` `info` `neutral` `ink` | `neutral` |
+| `variant` | `primary` `secondary` `success` `warning` `danger` `info` `white` `black` `ink` | `white` |
 | `size` | `sm` `md` `lg` | `md` |
 | `leadingIcon` `trailingIcon` | `ReactNode` | — |
+
+`variant`은 색 한 축입니다 — 6개 role 네온, 그리고 중립 3종 `white`(흰 면)·`black`(순검정)·`ink`(잉크 #222).
 
 ## Input
 
@@ -28,8 +30,9 @@
 | --- | --- | --- |
 | `leading` `trailing` | `ReactNode` | — |
 | `fullWidth` | `boolean` | `false` |
+| `accent` | `pink` `purple` `cyan` `yellow` `orange` `sky` `green` `red` | — (회색 hover) |
 
-검색 입력이 필요하면 검색 아이콘이 이미 붙어 있는 `SearchInput`을 씁니다.
+기본 hover는 옅은 회색입니다. `accent`를 주면 그 색의 은은한 hover 틴트로 바뀝니다 — 컨테이너에 `accent`를 선언하는 contextual accent와 같은 계층 전파입니다. 검색 입력이 필요하면 검색 아이콘이 이미 붙어 있는 `SearchInput`을 씁니다.
 
 ## Checkbox
 
@@ -87,10 +90,10 @@
 
 ## Table
 
-데이터 테이블입니다. `<Table>`이 스스로를 `.funky-table__scroll` 컨테이너로 감싸 가로 스크롤을 처리하니, 안에는 plain `<thead>`·`<tbody>`·`<tr>`·`<th>`·`<td>`만 넣으면 `.funky-table` 클래스가 스타일링합니다. 검정 헤더 + 크림 본문 + 2px 검정 행 구분선 + sm 그림자를 입습니다.
+데이터 테이블입니다. `<Table>`이 스스로를 `.funky-table__scroll` 컨테이너로 감싸 가로 스크롤을 처리하니, 안에는 plain `<thead>`·`<tbody>`·`<tr>`·`<th>`·`<td>`만 넣으면 `.funky-table` 클래스가 스타일링합니다. 풀그리드(모든 셀 2px 검정 테두리) + sm 그림자가 기본이고, 헤더는 검정입니다.
 
 ```tsx
-<Table>
+<Table accent="cyan" striped>
   <thead>
     <tr><th>이름</th><th>점수</th></tr>
   </thead>
@@ -100,8 +103,12 @@
 </Table>
 ```
 
+`accent`를 주면 헤더 색·행 hover·zebra strip이 **한 앵커에서 함께** 파생됩니다 — 헤더는 진한 네온, hover는 은은한 동색, strip은 거의 흰색에 가까운 옅은 동색. 컨테이너가 accent를 선언하면 하위가 따라가는 contextual accent 구조입니다.
+
 | prop | 값 | 기본 |
 | --- | --- | --- |
+| `accent` | `pink` `purple` `cyan` `yellow` `orange` `sky` `green` `red` | — (검정 헤더) |
+| `striped` | `boolean` (짝수 행 zebra) | `false` |
 | `children` | `ReactNode` (plain `<thead>/<tbody>/…`) | — |
 | 그 외 | `<table>`의 모든 prop | — |
 

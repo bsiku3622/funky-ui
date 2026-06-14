@@ -21,7 +21,7 @@
 
 ### Accent 시스템 — 3-layer
 
-각 색은 **앵커**(`accent.pink` 등 색당 6키: `fill`·`fillHover`·`soft`·`softHover`·`onFill`·`text`) 하나에서 출발합니다. codegen이 이 앵커를 **4 variant × 4 field**로 정적으로 펼칩니다.
+각 색은 **앵커**(`accent.pink` 등 색당 7키: `fill`·`fillHover`·`soft`·`softHover`·`muted`·`onFill`·`text`) 하나에서 출발합니다. codegen이 이 앵커를 **4 variant × 4 field**로 정적으로 펼칩니다. `muted`(거의 흰색에 가까운 옅은 동색)는 variant 밖의 별도 토큰으로, table zebra strip처럼 아주 옅은 틴트 자리에 씁니다.
 
 ```
 --funky-accent-{color}-{variant}-{field}
@@ -44,6 +44,25 @@
 import { colorVar } from "@studio-baeks/funky-ui";
 colorVar("primary", "solid", "bg"); // "var(--funky-accent-primary-solid-bg)"
 ```
+
+### contextual accent — 계층 전파
+
+위 variant 토큰이 *요소 단위*라면, **contextual accent**는 *컨테이너가 한 번 선언하면 하위가 따라가는* 계층입니다. 컨테이너에 `.funky-accent--{color}`(또는 role) 클래스를 붙이면, codegen이 그 클래스에서 `--funky-ac-*` 캐스케이드 변수를 그 색의 앵커로 덮어씁니다. 하위 요소의 hover·strip·fill은 이 변수만 읽으므로 자동으로 그 색을 따라갑니다.
+
+```
+:root            --funky-ac-{bg,fg,hover,strip,text} = neutral (검정·회색·크림)
+.funky-accent--cyan  →  같은 변수를 cyan 앵커(solid-bg·muted…)로 덮음
+   └─ 하위 th·td·행 hover·input hover·strip 이 var(--funky-ac-*) 를 소비 → cyan
+```
+
+| 변수 | neutral 기본 | accent 선언 시 |
+| --- | --- | --- |
+| `--funky-ac-bg` / `-fg` | 검정 / 흰 | 네온 solid 면 / 그 위 글자 |
+| `--funky-ac-hover` | 회색 `#ededeb` | 거의 흰 동색(muted) — 아주 옅은 틴트 |
+| `--funky-ac-strip` | 크림 sunken | 거의 흰 동색(muted) |
+| `--funky-ac-text` | 검정 | 진한 동색 |
+
+`Table accent="cyan"`, `Input accent="cyan"`이 이 계층을 노출하는 atom입니다. neutral 요소(accent 미선언)는 회색 hover가 기본이라, "구조 loud / 내용 quiet"에서 조용한 쪽이 시끄러워지지 않습니다.
 
 ## 그림자 · press
 
