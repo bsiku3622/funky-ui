@@ -1,6 +1,6 @@
 # funky-ui
 
-> **Neo-brutalist React design system** by Studio Baeks. Cream surfaces, neon accents, thick black borders, blur-0 hard shadows, and a signature "press into shadow" interaction. Four composition layers (Token → Atom → Component → Template) and three core rules the whole system is built on.
+> **Neo-brutalist React design system** by Studio Baeks. Cream surfaces, neon accents, 2px black borders, blur-0 hard shadows, and signature press/lift interactions. Four composition layers (Token → Atom → Component → Template) and three core rules the whole system is built on.
 
 The system ships as one npm package — `@studio-baeks/funky-ui` — with zero runtime cost (tokens compile to CSS variables, styles are global classes — no CSS-in-JS, no Tailwind). Components are React 18+.
 
@@ -18,28 +18,30 @@ React is just a thin wrapper. So how you consume it depends on the target:
 ## Start here
 
 - [Install](https://funky-ui.bsiku.dev/docs/api/get-started/install.md): add the package, import the stylesheet, render the first screen
-- [Principles](https://funky-ui.bsiku.dev/docs/api/get-started/principles.md): the three promises (loud by default · press into shadow · fewer choices)
+- [Principles](https://funky-ui.bsiku.dev/docs/api/get-started/principles.md): the three promises (structure loud, content quiet · press & lift · fewer choices)
 
 ## Foundations
 
+- [Identity](https://funky-ui.bsiku.dev/docs/api/foundations/identity.md): why it's drawn this way — DNA, the "structure loud / content quiet" stance, the 4-quadrant model
 - [Architecture](https://funky-ui.bsiku.dev/docs/api/foundations/architecture.md): the four layers (Token → Atom → Component → Template) and how styling works
 - [Tokens](https://funky-ui.bsiku.dev/docs/api/foundations/tokens.md): exact values — color, hard shadows, type ladder, spacing, shape, motion
 - [Composition](https://funky-ui.bsiku.dev/docs/api/foundations/composition.md): how to lay out a *whole screen* — shell choice, region separation (thick borders/shadows, never thin lines), the loudness budget, anti-patterns, and an identity self-check. **Read this before composing any full screen or app** — it's where most off-identity drift happens.
 
 ## Component library
 
-funky-ui keeps a small, deliberate catalog (18 components). Each layer's documentation is a single markdown file containing every component in that layer — fetch one URL to load the whole layer at once.
+funky-ui keeps a small, deliberate catalog (23 components). Each layer's documentation is a single markdown file containing every component in that layer — fetch one URL to load the whole layer at once.
 
-- [Atoms](https://funky-ui.bsiku.dev/docs/api/components/atoms.md) (7): `Button` · `Input` · `SearchInput` · `Tag` · `Badge` · `Text` · `Icon`
-- [Components](https://funky-ui.bsiku.dev/docs/api/components/components.md) (9): `Card` · `StatTile` · `Accordion` · `Tabs` · `Modal` · `Panel` · `Window` · `Toolbar` · `Toast`
-- [Templates](https://funky-ui.bsiku.dev/docs/api/components/templates.md) (2): `AppShell` · `ToolShell` (+ `StatusCard`, `NavItem`)
+- [Atoms](https://funky-ui.bsiku.dev/docs/api/components/atoms.md) (11): `Button` · `Input` · `SearchInput` · `Checkbox` · `Radio` · `Switch` · `Tag` · `Badge` · `Table` · `Text` · `Icon`
+- [Components](https://funky-ui.bsiku.dev/docs/api/components/components.md) (11): `Card` · `StatTile` · `Accordion` · `Tabs` · `Modal` · `Panel` · `Window` · `Toolbar` · `Toast` · `Select` · `Toc`
+- [Templates](https://funky-ui.bsiku.dev/docs/api/components/templates.md) (4): `AppShell` · `ToolShell` · `SiteHeader` · `DocsSidebar` (+ `StatusCard`, `NavItem`)
+- Markdown subpath: `MarkdownView` — `@studio-baeks/funky-ui/markdown` (LaTeX-capable markdown renderer; heavy deps kept out of the main bundle)
 
 ## API access pattern (for AI agents)
 
 Every documentation page is fetchable as raw markdown at `/docs/api/{path}.md`. Unlike larger systems there is no per-component split — each layer file (`atoms.md`, `components.md`, `templates.md`) already contains all of its components inline.
 
 Examples:
-- `https://funky-ui.bsiku.dev/docs/api/components/atoms.md` — all 7 atoms with props + examples
+- `https://funky-ui.bsiku.dev/docs/api/components/atoms.md` — all 11 atoms with props + examples
 - `https://funky-ui.bsiku.dev/docs/api/foundations/tokens.md` — exact token values
 - `https://funky-ui.bsiku.dev/docs/api/get-started/install.md` — install + first screen
 
@@ -47,8 +49,8 @@ When generating code that uses funky-ui: fetch the relevant layer page(s) for ac
 
 ## The three core rules (when writing funky-ui code)
 
-1. **Loud by default** — there is no quiet default. Every component renders at its boldest with no config: neon fill, 2px black border, blur-0 hard shadow. Reach for restraint explicitly (e.g. `variant="neutral"`).
-2. **Press into shadow** — interactive elements float on a hard shadow and sink into it on hover (halfway) and active (fully). Shared via the `.funky-pressable` class. Don't reimplement it with custom transforms.
+1. **Structure loud, content quiet** — neon solids, hard shadows, and UPPERCASE black go to *structure* (headers, status, metrics, nav, active states); reading *content* (body, data cells, input values) recedes to black type on cream/white. "Loud by default" means *structure* is loud, not everything.
+2. **Press & lift** — two opposite signature motions. *Press* (`.funky-pressable`): an element floats on a hard shadow and sinks into it on hover (halfway) and active (fully) — Button, triggers. *Lift* (`.funky-liftable`): a flat element raises a shadow on focus — Input. Don't reimplement either with custom transforms.
 3. **Fewer choices** — options are deliberately few (Button = 8 variants × 3 sizes, that's it). Express intent through `variant`/`size`/`color` props, not arbitrary inline style. Color/size/time/shadow live only in `tokens.ts` — never write raw hex or inline numeric values.
 
 ## Setup
@@ -58,7 +60,7 @@ import "@studio-baeks/funky-ui/styles.css"; // once, at the app entry point
 import { Button, StatTile } from "@studio-baeks/funky-ui";
 ```
 
-Tokens only (no components): `import "@studio-baeks/funky-ui/tokens.css";` then reference `var(--funky-primary)` etc. In TS: `import { tokens, color, shadow } from "@studio-baeks/funky-ui";`.
+Tokens only (no components): `import "@studio-baeks/funky-ui/tokens.css";` then reference `var(--funky-primary)` etc. In TS: `import { tokens, color, accent, colorVar, shadow } from "@studio-baeks/funky-ui";`. Markdown: `import { MarkdownView } from "@studio-baeks/funky-ui/markdown";` (+ `markdown.css`).
 
 ## License & repo
 

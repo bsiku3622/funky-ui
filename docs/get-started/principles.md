@@ -2,15 +2,15 @@
 
 funky-ui는 세 가지 확신 위에 서 있습니다. 컴포넌트를 새로 넣거나 API를 정할 때 늘 이 셋으로 판단합니다.
 
-## 01 · Loud by default
+## 01 · 구조는 loud, 내용은 quiet
 
-조용한 기본값은 없습니다. 각 컴포넌트는 별다른 설정 없이도 가장 과감한 모습으로 화면에 놓입니다. 네온 면색, 2px 검정 테두리, blur 0의 하드 그림자가 처음부터 켜져 있습니다. 절제가 필요하면 `neutral` variant처럼 명시적으로 골라야 합니다. 손대지 않은 기본값이 이미 시끄럽습니다.
+네온 면색, 하드 그림자, UPPERCASE black은 화면의 *구조*(헤더·상태·지표·네비·활성)에 몰아줍니다. 읽는 *내용*(본문·데이터·입력값)은 크림/흰 위 검정 타이포로 물러납니다. "loud by default"는 "다 시끄럽게"가 아니라 "**구조가** 시끄럽게"라는 뜻입니다. 절제가 필요한 구조 요소는 `neutral` variant처럼 명시적으로 고릅니다. (정체성 근거는 [identity](../foundations/identity.md)·[composition](../foundations/composition.md).)
 
-## 02 · Press into shadow
+## 02 · 눌림과 떠오름 (press & lift)
 
-요소는 자기 하드 그림자 위에 떠 있습니다. hover하면 절반쯤, active하면 그림자 속으로 완전히 가라앉습니다. 클릭이 손끝에 만져지는 이 거동이 시스템의 시그니처이고, 이름(funky ← thunk, 눌리는 소리)의 유래이기도 합니다.
+하드 그림자를 이용한 정반대의 두 거동이 시그니처입니다. **눌림**: 요소가 그림자 위에 떠 있다가 hover하면 절반, active하면 완전히 그림자 *속으로* 가라앉습니다(Button·trigger). **떠오름**: 납작하던 요소가 focus 시 그림자를 *솟아올립니다*(Input). 클릭이 손끝에 만져지는 이 촉각이 이름(funky ← thunk, 눌리는 소리)의 유래이기도 합니다.
 
-눌림이 필요한 interactive 컴포넌트는 `.funky-pressable` 클래스 하나로 이 거동을 공유합니다.
+눌림은 `.funky-pressable`, 떠오름은 `.funky-liftable` 클래스로 공유합니다 — 커스텀 transform으로 재구현하지 않습니다.
 
 ## 03 · Fewer choices
 

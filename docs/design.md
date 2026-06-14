@@ -40,11 +40,13 @@ A **neo-brutalist** system. The feeling is loud, flat, and physical:
 
 ## 2. The three rules
 
-1. **Loud by default.** There is no quiet default state. Components render at
-   their boldest with zero configuration — neon fill, black border, hard shadow.
-   Restraint is opt-in (a `neutral` variant), never the starting point.
-2. **Press into shadow.** Interactive things float and sink. Don't invent a
-   different hover/press feedback; use this one consistently.
+1. **Structure loud, content quiet.** Neon solids, hard shadows, and UPPERCASE
+   black go to *structure* (headers, status, metrics, nav, active states).
+   Reading *content* (body, data, input values) recedes to black type on
+   cream/white. "Loud" means structure is loud — not everything.
+2. **Press & lift.** Two opposite signature motions. *Press*: a raised element
+   sinks into its hard shadow on hover/active (buttons, triggers). *Lift*: a flat
+   element raises a shadow on focus (inputs). Don't invent other feedback.
 3. **Fewer choices.** Options are deliberately narrow — a fixed set of
    variants/sizes/colors, nothing arbitrary. Never introduce off-token colors,
    ad-hoc spacing, or one-off type sizes. If a value isn't in the token tables
@@ -80,8 +82,13 @@ in your platform's units; keep the numbers.
 | `cyan` | `#3decfd` | `info` |
 | `yellow` | `#ffd500` | — |
 | `sky` | `#00c8ff` | — |
-| `danger` | `#ff3b3b` | `danger` (red) |
-| `accent-soft` | `#f0fdff` | Faint cyan tint |
+| `red` | `#ff3b3b` | `danger` |
+| `accent-soft` | `#f0fdff` | Faint cyan tint (generic hover) |
+
+**Accent variants.** Each color expands into 4 fills: `solid` (neon face),
+`soft` (faint same-hue tint), `outline` (white face + neon border), `ghost`
+(transparent). On a solid fill the text color (onColor) is chosen per color —
+white on pink/purple/green/red, black on cyan/yellow/orange/sky.
 
 ### Shadow — hard offset, blur 0
 
@@ -94,15 +101,16 @@ Format is `offset-x offset-y blur spread color`. **Blur and spread are always 0.
 | `shadow-lg` | `8px 8px 0 0 rgba(0,0,0,0.2)` |
 
 On platforms with only a single shadow primitive: a solid black rectangle at 20%
-opacity, offset down-right by 4–8px, no blur.
+opacity, offset down-right by 4–8px, no blur. **Objects (cards, panels, tables,
+modals, etc.) all use `sm`** — `md`/`lg` are kept for special elevation only.
 
 ### Shape
 
 | Token | Value |
 | --- | --- |
 | `radius` | `0` (everything sharp) |
-| `border-width` | `2px` |
-| `border-width-bold` | `3px` |
+| `border-width` | `2px` (objects all use this) |
+| `border-width-bold` | `3px` (real emphasis only — rare) |
 | `border-color` | `#000000` |
 
 ### Spacing
@@ -137,22 +145,26 @@ opacity, offset down-right by 4–8px, no blur.
 | `control-md` | `2.25rem` / 36px |
 | `control-lg` | `2.75rem` / 44px |
 
-### Motion — the press
+### Motion — press & lift
 
-| Token | Value |
-| --- | --- |
-| `duration` | `100ms` |
-| `easing` | `ease-out` |
-| `press-offset` | `4px` |
+| Token | Value | Use |
+| --- | --- | --- |
+| `easing` | `ease-out` | all |
+| `duration.snap` | `100ms` | micro feedback (press/lift, hover) |
+| `duration.base` | `180ms` | state transitions, overlay open |
+| `duration.slow` | `300ms` | reveal / entrance |
+| `stagger` | `60ms` | sequenced reveal interval |
+| `press-offset` | `4px` | press depth |
 
-Press behavior in three states:
-- **Rest:** element at origin, full hard shadow (size by component: sm/md/lg).
-- **Hover:** element moves `+2px, +2px`; shadow shrinks to `2px 2px`.
-- **Active/pressed:** element moves `+4px, +4px` (the press-offset); shadow gone.
-- **Disabled:** 50% opacity, no press.
+Two opposite shadow choreographies:
 
-Net effect: the element slides down-right into the space its shadow occupied, as
-if physically pushed into the page.
+- **Press** (raised → sunk; buttons, triggers). Rest: element at origin with a
+  full hard shadow. Hover: moves `+2px,+2px`, shadow shrinks to `2px 2px`.
+  Active: moves `+4px,+4px` (press-offset), shadow gone. The element slides into
+  the space its shadow occupied — as if pushed into the page.
+- **Lift** (flat → raised; inputs). Rest: flat, no shadow. Focus: a `shadow-sm`
+  appears (the element rises). No translate.
+- **Disabled:** 50% opacity, no motion.
 
 ---
 

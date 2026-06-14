@@ -31,6 +31,47 @@
 
 검색 입력이 필요하면 검색 아이콘이 이미 붙어 있는 `SearchInput`을 씁니다.
 
+## Checkbox
+
+테두리 박스에 네온 체크가 들어가는 체크박스입니다. 그림자 없이 평평하고, 호버하면 옅은 틴트가 깔리고 checked되면 네온으로 채워집니다. `<label>`로 감싸므로 `label` prop만 넘기면 클릭 영역까지 묶입니다.
+
+```tsx
+<Checkbox label="동의합니다" defaultChecked />
+```
+
+| prop | 값 | 기본 |
+| --- | --- | --- |
+| `label` | `ReactNode` | — |
+| 그 외 | `input[type=checkbox]`의 모든 prop (`type`·`size` 제외) | — |
+
+## Radio
+
+체크박스와 같은 결의 라디오입니다. 단, brutalist답게 둥근 점이 아니라 네모난 칸이 selected되면 네온으로 채워집니다. 그림자 없이 평평하고 호버 시 옅은 틴트가 깔립니다.
+
+```tsx
+<Radio name="plan" label="Pro" value="pro" defaultChecked />
+```
+
+| prop | 값 | 기본 |
+| --- | --- | --- |
+| `label` | `ReactNode` | — |
+| 그 외 | `input[type=radio]`의 모든 prop (`type`·`size` 제외) | — |
+
+## Switch
+
+흑백을 반전시키는 슬라이딩 토글입니다. OFF는 흰 트랙 + 검정 thumb, ON은 검정 트랙 + 흰 thumb으로 뒤집힙니다. 내부 checkbox input은 시각적으로 숨겨집니다. `Toggle`이라는 이름으로도 export됩니다.
+
+```tsx
+<Switch label="알림 받기" defaultChecked />
+```
+
+| prop | 값 | 기본 |
+| --- | --- | --- |
+| `label` | `ReactNode` | — |
+| 그 외 | `input[type=checkbox]`의 모든 prop (`type`·`size` 제외) | — |
+
+`Toggle`은 `Switch`의 alias라 prop이 동일합니다.
+
 ## Tag · Badge
 
 `Tag`는 작은 라벨 칩이고, `Badge`는 카운트나 상태를 보여주는 핀입니다.
@@ -43,6 +84,26 @@
 | prop | 값 | 기본 |
 | --- | --- | --- |
 | `color` | `neutral` + 네온 7색 | Tag `neutral` · Badge `pink` |
+
+## Table
+
+데이터 테이블입니다. `<Table>`이 스스로를 `.funky-table__scroll` 컨테이너로 감싸 가로 스크롤을 처리하니, 안에는 plain `<thead>`·`<tbody>`·`<tr>`·`<th>`·`<td>`만 넣으면 `.funky-table` 클래스가 스타일링합니다. 검정 헤더 + 크림 본문 + 2px 검정 행 구분선 + sm 그림자를 입습니다.
+
+```tsx
+<Table>
+  <thead>
+    <tr><th>이름</th><th>점수</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>재원</td><td>98</td></tr>
+  </tbody>
+</Table>
+```
+
+| prop | 값 | 기본 |
+| --- | --- | --- |
+| `children` | `ReactNode` (plain `<thead>/<tbody>/…`) | — |
+| 그 외 | `<table>`의 모든 prop | — |
 
 ## Text
 

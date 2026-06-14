@@ -142,3 +142,79 @@ const [open, setOpen] = useState(false);
 | --- | --- | --- |
 | `color` | `ink` · 네온 7색 | `ink` |
 | `fixed` | `boolean` (하단 중앙 고정) | `false` |
+
+## Select
+
+트리거 + 하드 그림자 팝업 메뉴로 짜는 커스텀 드롭다운입니다. 외부 클릭이나 Esc로 닫히고, ↑↓로 항목을 옮기고 Enter로 고릅니다. 열림 상태는 컴포넌트가 직접 들고, 값만 `value`/`onChange`로 제어합니다. 각 항목은 `SelectOption`(`value` · `label` · `disabled?`)으로 넘깁니다.
+
+```tsx
+const [value, setValue] = useState("a");
+
+<Select
+  value={value}
+  onChange={setValue}
+  options={[
+    { value: "a", label: "Option A" },
+    { value: "b", label: "Option B" },
+    { value: "c", label: "Option C", disabled: true },
+  ]}
+  placeholder="Select…"
+/>
+```
+
+| prop | 값 | 기본 |
+| --- | --- | --- |
+| `options` | `SelectOption[]` (필수) | — |
+| `value` | `string` | — |
+| `onChange` | `(value: string) => void` | — |
+| `placeholder` | `ReactNode` | `"Select…"` |
+| `disabled` | `boolean` | `false` |
+
+## Toc
+
+읽기 화면 옆에 세우는 "On this page" 목차 레일입니다. 마크다운 의존성 없는 순수 react라, 항목은 `@studio-baeks/funky-ui/markdown`의 `extractToc`로 뽑아 넘깁니다. 레일을 어디에 둘지는 쓰는 쪽이 정합니다 — 이 컴포넌트는 목록만 그립니다. 항목은 `TocItem`(`id` · `text` · `depth` 2/3/4)이고, `activeId`로 현재 위치를 표시합니다.
+
+```tsx
+<Toc
+  items={[
+    { id: "intro", text: "Intro", depth: 2 },
+    { id: "usage", text: "Usage", depth: 2 },
+    { id: "props", text: "Props", depth: 3 },
+  ]}
+  activeId={activeId}
+  onSelect={(id) => scrollTo(id)}
+/>
+```
+
+| prop | 값 | 기본 |
+| --- | --- | --- |
+| `items` | `TocItem[]` (필수, 비면 렌더 생략) | — |
+| `activeId` | `string \| null` | — |
+| `onSelect` | `(id: string) => void` | — |
+| `label` | `ReactNode` (헤더 라벨) | `"On this page"` |
+
+## MarkdownView
+
+heading 스케일 · 검정 코드블록 · `.funky-table` 표 · 선택적 KaTeX를 입힌 마크다운 렌더러입니다. 인용구는 좌측 검정 바 + accent-soft 면, 코드블록은 검정 면입니다. 무거운 deps(`react-markdown`/`katex`)를 메인 번들에서 떼어내려고 **서브패스로 분리**되어 있으니, import 경로와 CSS에 주의합니다.
+
+```tsx
+import { MarkdownView } from "@studio-baeks/funky-ui/markdown";
+import "@studio-baeks/funky-ui/markdown.css"; // KaTeX 스타일 포함
+
+<MarkdownView
+  content={md}
+  math
+  onLinkClick={(href) => navigate(href)}
+  resolveHref={(href) => href.replace(/\.md$/, "")}
+/>
+```
+
+라우터에 묶이지 않습니다 — 내부 링크 이동은 `onLinkClick`로 가로채고(modifier-click·외부·앵커 링크는 통과), 상대 경로 변환은 `resolveHref`로 처리합니다. LaTeX는 `math` prop으로 켭니다.
+
+| prop | 값 | 기본 |
+| --- | --- | --- |
+| `content` | `string` (필수) | — |
+| `math` | `boolean` (remark-math + KaTeX) | `false` |
+| `onLinkClick` | `(href, e) => void` (내부 링크 가로채기) | — |
+| `resolveHref` | `(href: string) => string` | — |
+| `components` | `Partial<Components>` (엘리먼트 매핑 override) | — |
