@@ -7,3 +7,7 @@ dist/
 # generated docs API (built from docs/ by app/scripts/build-docs-api.mjs)
 app/public/docs/
 app/public/llms.txt
+
+# session artifacts
+.playwright-mcp/
+.claude/.mode
