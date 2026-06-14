@@ -24,6 +24,8 @@ export default defineConfig({
   resolve: {
     alias: {
       "@studio-baeks/funky-ui/styles.css": path.resolve(CORE_DIR, "src/styles.css"),
+      "@studio-baeks/funky-ui/markdown.css": path.resolve(CORE_DIR, "src/markdown.css"),
+      "@studio-baeks/funky-ui/markdown": path.resolve(CORE_DIR, "src/markdown.ts"),
       "@studio-baeks/funky-ui": path.resolve(CORE_DIR, "src/index.ts"),
     },
   },
@@ -35,7 +37,10 @@ export default defineConfig({
       "react-router-dom",
       "react-markdown",
       "remark-gfm",
+      "remark-math",
       "rehype-slug",
+      "rehype-katex",
+      "katex",
       "github-slugger",
     ],
   },

@@ -4,18 +4,19 @@
 @import "./tokens.css";
 
 /* ════════════════════════════════════════════════════════════
-   Shared: press-into-shadow interaction.
-   The element sits "above" its hard shadow; on hover it sinks
-   halfway, on active it sinks fully into the shadow (shadow gone).
+   Shared: 두 모션 archetype (하드 그림자 안무)
+   · 눌림 (.funky-pressable)  — rest 에 그림자가 있고, 누르면 그림자 *속으로*
+     가라앉는다(hover 절반 → active 완전, 그림자 소멸). Button·trigger 류.
+   · 떠오름 (.funky-liftable)  — rest 는 납작하고, focus 시 그림자가 *솟아오른다*.
+     눌림의 정반대. Input·Switch 류.
+   둘 다 transition 번들 토큰으로 안무 시간을 공유한다.
    ════════════════════════════════════════════════════════════ */
 .funky-pressable {
-  transition: box-shadow var(--funky-motion-duration) var(--funky-motion-easing),
-    transform var(--funky-motion-duration) var(--funky-motion-easing),
-    background-color var(--funky-motion-duration) var(--funky-motion-easing);
+  transition: var(--funky-transition-press);
 }
 .funky-pressable:hover:not(:disabled) {
-  box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.2);
-  transform: translate(2px, 2px);
+  box-shadow: var(--funky-shadow-hover);
+  transform: translate(var(--funky-press-hover), var(--funky-press-hover));
 }
 .funky-pressable:active:not(:disabled) {
   box-shadow: none;
@@ -24,6 +25,14 @@
 .funky-pressable:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+/* 떠오름 — rest 납작, focus 시 그림자 출현(이동 없음). 눌림의 거울상. */
+.funky-liftable {
+  box-shadow: none;
+  transition: var(--funky-transition-lift);
+}
+.funky-liftable:focus-within {
+  box-shadow: var(--funky-shadow-sm);
 }
 
 /* ════════════════════════════════════════════════════════════
@@ -35,13 +44,13 @@
   justify-content: center;
   gap: var(--funky-space-sm);
   height: var(--funky-control-md);
-  padding: 0 var(--funky-space-lg);
+  padding: 0 var(--funky-control-padx-md);
   border: var(--funky-border);
   border-radius: var(--funky-radius);
   background: var(--funky-surface);
   color: var(--funky-ink);
   font-family: var(--funky-font-family);
-  font-size: var(--funky-size-sm);
+  font-size: var(--funky-control-fs-md);
   font-weight: var(--funky-weight-black);
   text-transform: var(--funky-chrome-transform);
   letter-spacing: var(--funky-chrome-tracking);
@@ -50,16 +59,16 @@
   box-shadow: var(--funky-shadow-sm);
   white-space: nowrap;
 }
-.funky-button--sm { height: var(--funky-control-sm); padding: 0 var(--funky-space-md); font-size: var(--funky-size-xs); }
-.funky-button--lg { height: var(--funky-control-lg); padding: 0 var(--funky-space-xl); font-size: var(--funky-size-md); }
+.funky-button--sm { height: var(--funky-control-sm); padding: 0 var(--funky-control-padx-sm); font-size: var(--funky-control-fs-sm); }
+.funky-button--lg { height: var(--funky-control-lg); padding: 0 var(--funky-control-padx-lg); font-size: var(--funky-control-fs-lg); }
 
-/* color variants — solid neon fill, inverse ink */
-.funky-button--primary   { background: var(--funky-primary);   color: var(--funky-ink-inverse); }
-.funky-button--secondary { background: var(--funky-secondary); color: var(--funky-ink-inverse); }
-.funky-button--success   { background: var(--funky-success);   color: var(--funky-ink-inverse); }
-.funky-button--warning   { background: var(--funky-warning);   color: var(--funky-ink); }
-.funky-button--danger    { background: var(--funky-danger);    color: var(--funky-ink-inverse); }
-.funky-button--info      { background: var(--funky-info);      color: var(--funky-ink); }
+/* color variants — solid neon fill, accent onColor (검정/흰 글자 단일 출처). neutral/ink 는 비-accent. */
+.funky-button--primary   { background: var(--funky-accent-primary-solid-bg);   color: var(--funky-accent-primary-solid-fg); }
+.funky-button--secondary { background: var(--funky-accent-secondary-solid-bg); color: var(--funky-accent-secondary-solid-fg); }
+.funky-button--success   { background: var(--funky-accent-success-solid-bg);   color: var(--funky-accent-success-solid-fg); }
+.funky-button--warning   { background: var(--funky-accent-warning-solid-bg);   color: var(--funky-accent-warning-solid-fg); }
+.funky-button--danger    { background: var(--funky-accent-danger-solid-bg);    color: var(--funky-accent-danger-solid-fg); }
+.funky-button--info      { background: var(--funky-accent-info-solid-bg);      color: var(--funky-accent-info-solid-fg); }
 .funky-button--neutral   { background: var(--funky-surface);   color: var(--funky-ink); }
 .funky-button--ink       { background: var(--funky-ink);       color: var(--funky-ink-inverse); }
 
@@ -75,14 +84,8 @@
   border: var(--funky-border);
   border-radius: var(--funky-radius);
   background: var(--funky-surface);
-  box-shadow: var(--funky-shadow-sm);
-  transition: box-shadow var(--funky-motion-duration) var(--funky-motion-easing),
-    transform var(--funky-motion-duration) var(--funky-motion-easing);
 }
-.funky-input:focus-within {
-  box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.2);
-  transform: translate(2px, 2px);
-}
+/* 떠오름(rest 납작 → focus 시 그림자 솟음)은 .funky-liftable 이 소유한다. */
 .funky-input__field {
   flex: 1;
   min-width: 0;
@@ -103,6 +106,118 @@
 .funky-input--full { display: flex; width: 100%; }
 
 /* ════════════════════════════════════════════════════════════
+   Atom: Checkbox & Radio (sharp box, neon when selected)
+   ════════════════════════════════════════════════════════════ */
+.funky-checkbox,
+.funky-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--funky-space-sm);
+  cursor: pointer;
+  font-family: var(--funky-font-family);
+}
+.funky-checkbox__box,
+.funky-radio__dot {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: 0 0 auto;
+  width: var(--funky-checkbox-size);
+  height: var(--funky-checkbox-size);
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: var(--funky-border);
+  border-radius: var(--funky-radius);
+  background: var(--funky-surface);
+  cursor: pointer;
+  transition: var(--funky-transition-tint);
+}
+/* checkbox/radio are flat — no shadow. subtle tint on hover (unchecked only). */
+.funky-checkbox__box:hover:not(:disabled):not(:checked),
+.funky-radio__dot:hover:not(:disabled):not(:checked) {
+  background: var(--funky-accent-soft);
+}
+.funky-checkbox__box:checked { background: var(--funky-primary); }
+.funky-checkbox__box:checked::after {
+  content: "";
+  width: 0.3rem;
+  height: 0.6rem;
+  border: solid var(--funky-ink-inverse);
+  border-width: 0 0.1875rem 0.1875rem 0;
+  transform: translateY(-0.06rem) rotate(45deg);
+}
+.funky-radio__dot:checked::after {
+  content: "";
+  width: 0.625rem;
+  height: 0.625rem;
+  background: var(--funky-primary);
+}
+.funky-checkbox__box:disabled,
+.funky-radio__dot:disabled { opacity: 0.5; cursor: not-allowed; }
+.funky-checkbox__label,
+.funky-radio__label {
+  font-size: var(--funky-size-sm);
+  font-weight: var(--funky-weight-bold);
+  color: var(--funky-ink);
+}
+
+/* ════════════════════════════════════════════════════════════
+   Atom: Switch (sliding toggle — neon-green when on)
+   ════════════════════════════════════════════════════════════ */
+.funky-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--funky-space-sm);
+  cursor: pointer;
+  font-family: var(--funky-font-family);
+}
+.funky-switch__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+/* track/knob 색 반전: OFF 흰 track·검정 knob → ON 네온 track·흰 knob (retro invert). */
+.funky-switch__track {
+  position: relative;
+  flex: 0 0 auto;
+  width: var(--funky-switch-w);
+  height: var(--funky-switch-h);
+  border: var(--funky-border);
+  border-radius: var(--funky-radius);
+  background: var(--funky-surface);
+  transition: var(--funky-transition-tint);
+}
+.funky-switch__knob {
+  position: absolute;
+  top: var(--funky-switch-gap);
+  bottom: var(--funky-switch-gap);
+  left: var(--funky-switch-gap);
+  width: var(--funky-switch-thumb);
+  background: var(--funky-ink);
+  transition: transform var(--funky-motion-duration) var(--funky-motion-easing),
+    background-color var(--funky-motion-duration) var(--funky-motion-easing);
+}
+/* ON — 흑백 반전: 트랙 검정 + thumb 흰색 (track/thumb 색이 서로 뒤집힌다). */
+.funky-switch__input:checked + .funky-switch__track { background: var(--funky-ink); }
+.funky-switch__input:checked + .funky-switch__track .funky-switch__knob {
+  transform: translateX(var(--funky-switch-travel));
+  background: var(--funky-surface);
+}
+.funky-switch__input:focus-visible + .funky-switch__track {
+  outline: var(--funky-border);
+  outline-offset: 2px;
+}
+.funky-switch__input:disabled + .funky-switch__track { opacity: 0.5; cursor: not-allowed; }
+.funky-switch__label {
+  font-size: var(--funky-size-sm);
+  font-weight: var(--funky-weight-bold);
+  color: var(--funky-ink);
+}
+
+/* ════════════════════════════════════════════════════════════
    Atom: Tag (small chip) & Badge (count/status pill)
    ════════════════════════════════════════════════════════════ */
 .funky-tag {
@@ -117,40 +232,40 @@
   font-family: var(--funky-font-family);
   font-size: var(--funky-size-xs);
   font-weight: var(--funky-weight-bold);
-  box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.1);
+  box-shadow: var(--funky-shadow-sm);
   line-height: 1;
 }
-.funky-tag--pink   { background: var(--funky-pink);   color: var(--funky-ink-inverse); }
-.funky-tag--purple { background: var(--funky-purple); color: var(--funky-ink-inverse); }
-.funky-tag--cyan   { background: var(--funky-cyan);   color: var(--funky-ink); }
-.funky-tag--yellow { background: var(--funky-yellow); color: var(--funky-ink); }
-.funky-tag--orange { background: var(--funky-orange); color: var(--funky-ink); }
-.funky-tag--sky    { background: var(--funky-sky);    color: var(--funky-ink); }
-.funky-tag--green  { background: var(--funky-green);  color: var(--funky-ink-inverse); }
+.funky-tag--pink   { background: var(--funky-accent-pink-solid-bg);   color: var(--funky-accent-pink-solid-fg); }
+.funky-tag--purple { background: var(--funky-accent-purple-solid-bg); color: var(--funky-accent-purple-solid-fg); }
+.funky-tag--cyan   { background: var(--funky-accent-cyan-solid-bg);   color: var(--funky-accent-cyan-solid-fg); }
+.funky-tag--yellow { background: var(--funky-accent-yellow-solid-bg); color: var(--funky-accent-yellow-solid-fg); }
+.funky-tag--orange { background: var(--funky-accent-orange-solid-bg); color: var(--funky-accent-orange-solid-fg); }
+.funky-tag--sky    { background: var(--funky-accent-sky-solid-bg);    color: var(--funky-accent-sky-solid-fg); }
+.funky-tag--green  { background: var(--funky-accent-green-solid-bg);  color: var(--funky-accent-green-solid-fg); }
 
 .funky-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 1.25rem;
-  height: 1.25rem;
-  padding: 0 var(--funky-space-xs);
+  min-width: var(--funky-label-h-md);
+  height: var(--funky-label-h-md);
+  padding: 0 var(--funky-label-padx-md);
   border: var(--funky-border);
   border-radius: var(--funky-radius);
-  background: var(--funky-primary);
-  color: var(--funky-ink-inverse);
+  background: var(--funky-accent-primary-solid-bg);
+  color: var(--funky-accent-primary-solid-fg);
   font-family: var(--funky-font-family);
-  font-size: var(--funky-size-xs);
+  font-size: var(--funky-label-fs-md);
   font-weight: var(--funky-weight-black);
   line-height: 1;
 }
-.funky-badge--pink   { background: var(--funky-pink);   color: var(--funky-ink-inverse); }
-.funky-badge--purple { background: var(--funky-purple); color: var(--funky-ink-inverse); }
-.funky-badge--cyan   { background: var(--funky-cyan);   color: var(--funky-ink); }
-.funky-badge--yellow { background: var(--funky-yellow); color: var(--funky-ink); }
-.funky-badge--orange { background: var(--funky-orange); color: var(--funky-ink); }
-.funky-badge--sky    { background: var(--funky-sky);    color: var(--funky-ink); }
-.funky-badge--green  { background: var(--funky-green);  color: var(--funky-ink-inverse); }
+.funky-badge--pink   { background: var(--funky-accent-pink-solid-bg);   color: var(--funky-accent-pink-solid-fg); }
+.funky-badge--purple { background: var(--funky-accent-purple-solid-bg); color: var(--funky-accent-purple-solid-fg); }
+.funky-badge--cyan   { background: var(--funky-accent-cyan-solid-bg);   color: var(--funky-accent-cyan-solid-fg); }
+.funky-badge--yellow { background: var(--funky-accent-yellow-solid-bg); color: var(--funky-accent-yellow-solid-fg); }
+.funky-badge--orange { background: var(--funky-accent-orange-solid-bg); color: var(--funky-accent-orange-solid-fg); }
+.funky-badge--sky    { background: var(--funky-accent-sky-solid-bg);    color: var(--funky-accent-sky-solid-fg); }
+.funky-badge--green  { background: var(--funky-accent-green-solid-bg);  color: var(--funky-accent-green-solid-fg); }
 
 /* ════════════════════════════════════════════════════════════
    Atom: Icon
@@ -166,22 +281,8 @@
    Atom: Text
    ════════════════════════════════════════════════════════════ */
 .funky-text { font-family: var(--funky-font-family); color: var(--funky-ink); margin: 0; }
-.funky-text--heading {
-  font-weight: var(--funky-weight-black);
-  font-size: var(--funky-size-xl);
-  line-height: 1.1;
-}
-.funky-text--body {
-  font-weight: var(--funky-weight-medium);
-  font-size: var(--funky-size-md);
-  line-height: 1.5;
-}
-.funky-text--chrome {
-  font-weight: var(--funky-weight-black);
-  font-size: var(--funky-size-xs);
-  text-transform: var(--funky-chrome-transform);
-  letter-spacing: var(--funky-chrome-tracking);
-}
+/* role 합성 클래스(.funky-text--display/heading/title/body/caption/chrome/overline/code)는
+   tokens.css 에서 codegen — font.role SSOT. 여기엔 base 와 색 modifier 만 둔다. */
 .funky-text--muted { color: var(--funky-ink-muted); }
 
 /* ════════════════════════════════════════════════════════════
@@ -191,7 +292,7 @@
   border: var(--funky-border);
   border-radius: var(--funky-radius);
   background: var(--funky-surface);
-  box-shadow: var(--funky-shadow-md);
+  box-shadow: var(--funky-shadow-sm);
 }
 .funky-card__body { padding: var(--funky-space-xl); }
 
@@ -207,15 +308,15 @@
   border-radius: var(--funky-radius);
   background: var(--funky-cyan);
   color: var(--funky-ink);
-  box-shadow: var(--funky-shadow-md);
+  box-shadow: var(--funky-shadow-sm);
 }
-.funky-stat-tile--pink   { background: var(--funky-pink);   color: var(--funky-ink-inverse); }
-.funky-stat-tile--purple { background: var(--funky-purple); color: var(--funky-ink-inverse); }
-.funky-stat-tile--cyan   { background: var(--funky-cyan);   color: var(--funky-ink); }
-.funky-stat-tile--yellow { background: var(--funky-yellow); color: var(--funky-ink); }
-.funky-stat-tile--orange { background: var(--funky-orange); color: var(--funky-ink); }
-.funky-stat-tile--sky    { background: var(--funky-sky);    color: var(--funky-ink); }
-.funky-stat-tile--green  { background: var(--funky-green);  color: var(--funky-ink-inverse); }
+.funky-stat-tile--pink   { background: var(--funky-accent-pink-solid-bg);   color: var(--funky-accent-pink-solid-fg); }
+.funky-stat-tile--purple { background: var(--funky-accent-purple-solid-bg); color: var(--funky-accent-purple-solid-fg); }
+.funky-stat-tile--cyan   { background: var(--funky-accent-cyan-solid-bg);   color: var(--funky-accent-cyan-solid-fg); }
+.funky-stat-tile--yellow { background: var(--funky-accent-yellow-solid-bg); color: var(--funky-accent-yellow-solid-fg); }
+.funky-stat-tile--orange { background: var(--funky-accent-orange-solid-bg); color: var(--funky-accent-orange-solid-fg); }
+.funky-stat-tile--sky    { background: var(--funky-accent-sky-solid-bg);    color: var(--funky-accent-sky-solid-fg); }
+.funky-stat-tile--green  { background: var(--funky-accent-green-solid-bg);  color: var(--funky-accent-green-solid-fg); }
 .funky-stat-tile__label {
   font-size: var(--funky-size-xs);
   font-weight: var(--funky-weight-black);
@@ -256,7 +357,7 @@
   text-transform: var(--funky-chrome-transform);
   letter-spacing: var(--funky-chrome-tracking);
   cursor: pointer;
-  transition: background-color var(--funky-motion-duration) var(--funky-motion-easing);
+  transition: var(--funky-transition-tint);
 }
 .funky-accordion__header:hover { background: var(--funky-accent-soft); }
 .funky-accordion__chevron {
@@ -290,9 +391,7 @@
   text-transform: var(--funky-chrome-transform);
   letter-spacing: var(--funky-chrome-tracking);
   cursor: pointer;
-  transition: background-color var(--funky-motion-duration) var(--funky-motion-easing),
-    box-shadow var(--funky-motion-duration) var(--funky-motion-easing),
-    transform var(--funky-motion-duration) var(--funky-motion-easing);
+  transition: var(--funky-transition-press);
 }
 .funky-tabs__trigger:hover:not(.funky-tabs__trigger--active) {
   background: var(--funky-accent-soft);
@@ -323,10 +422,10 @@
   max-height: 90vh;
   display: flex;
   flex-direction: column;
-  border: var(--funky-border-bold);
+  border: var(--funky-border);
   border-radius: var(--funky-radius);
   background: var(--funky-surface);
-  box-shadow: var(--funky-shadow-lg);
+  box-shadow: var(--funky-shadow-sm);
 }
 .funky-modal__header {
   display: flex;
@@ -352,7 +451,7 @@
   cursor: pointer;
   font-weight: var(--funky-weight-black);
   line-height: 1;
-  transition: background-color var(--funky-motion-duration) var(--funky-motion-easing);
+  transition: var(--funky-transition-tint);
 }
 .funky-modal__close:hover { background: var(--funky-accent-soft); }
 .funky-modal__body { padding: var(--funky-space-lg); overflow: auto; }
@@ -366,7 +465,7 @@
 
 /* ════════════════════════════════════════════════════════════
    Component: Toolbar (+ Group / Spacer)
-   Horizontal control bar — cream fill, 3px black bottom border.
+   투명한 가로 컨트롤 바 — 프레이밍/구분선은 담는 셸(ToolShell)이 소유.
    ════════════════════════════════════════════════════════════ */
 .funky-toolbar {
   display: flex;
@@ -374,8 +473,6 @@
   flex-wrap: wrap;
   gap: var(--funky-space-md);
   padding: var(--funky-space-md) var(--funky-space-xl);
-  background: var(--funky-bg);
-  border-bottom: var(--funky-border-bold);
 }
 .funky-toolbar__group {
   display: inline-flex;
@@ -389,10 +486,10 @@
    + optional uppercase heading bar). The antidote to thin dividers.
    ════════════════════════════════════════════════════════════ */
 .funky-panel {
-  border: var(--funky-border-bold);
+  border: var(--funky-border);
   border-radius: var(--funky-radius);
   background: var(--funky-surface);
-  box-shadow: var(--funky-shadow-md);
+  box-shadow: var(--funky-shadow-sm);
 }
 .funky-panel__head {
   display: flex;
@@ -400,7 +497,7 @@
   justify-content: space-between;
   gap: var(--funky-space-md);
   padding: var(--funky-space-md) var(--funky-space-lg);
-  border-bottom: var(--funky-border-bold);
+  border-bottom: var(--funky-border);
   font-family: var(--funky-font-family);
   font-weight: var(--funky-weight-black);
   font-size: var(--funky-size-sm);
@@ -409,13 +506,13 @@
 }
 .funky-panel__head--ink     { background: var(--funky-ink);     color: var(--funky-ink-inverse); }
 .funky-panel__head--neutral { background: var(--funky-surface); color: var(--funky-ink); }
-.funky-panel__head--pink    { background: var(--funky-pink);    color: var(--funky-ink-inverse); }
-.funky-panel__head--purple  { background: var(--funky-purple);  color: var(--funky-ink-inverse); }
-.funky-panel__head--cyan    { background: var(--funky-cyan);    color: var(--funky-ink); }
-.funky-panel__head--yellow  { background: var(--funky-yellow);  color: var(--funky-ink); }
-.funky-panel__head--orange  { background: var(--funky-orange);  color: var(--funky-ink); }
-.funky-panel__head--sky     { background: var(--funky-sky);     color: var(--funky-ink); }
-.funky-panel__head--green   { background: var(--funky-green);   color: var(--funky-ink-inverse); }
+.funky-panel__head--pink    { background: var(--funky-accent-pink-solid-bg);    color: var(--funky-accent-pink-solid-fg); }
+.funky-panel__head--purple  { background: var(--funky-accent-purple-solid-bg);  color: var(--funky-accent-purple-solid-fg); }
+.funky-panel__head--cyan    { background: var(--funky-accent-cyan-solid-bg);    color: var(--funky-accent-cyan-solid-fg); }
+.funky-panel__head--yellow  { background: var(--funky-accent-yellow-solid-bg);  color: var(--funky-accent-yellow-solid-fg); }
+.funky-panel__head--orange  { background: var(--funky-accent-orange-solid-bg);  color: var(--funky-accent-orange-solid-fg); }
+.funky-panel__head--sky     { background: var(--funky-accent-sky-solid-bg);     color: var(--funky-accent-sky-solid-fg); }
+.funky-panel__head--green   { background: var(--funky-accent-green-solid-bg);   color: var(--funky-accent-green-solid-fg); }
 .funky-panel__actions { display: inline-flex; align-items: center; gap: var(--funky-space-sm); }
 .funky-panel__body { padding: var(--funky-space-lg); }
 .funky-panel__body--flush { padding: 0; }
@@ -426,17 +523,17 @@
 .funky-window {
   display: flex;
   flex-direction: column;
-  border: var(--funky-border-bold);
+  border: var(--funky-border);
   border-radius: var(--funky-radius);
   background: var(--funky-surface);
-  box-shadow: var(--funky-shadow-lg);
+  box-shadow: var(--funky-shadow-sm);
 }
 .funky-window__bar {
   display: flex;
   align-items: center;
   gap: var(--funky-space-sm);
   padding: var(--funky-space-sm) var(--funky-space-md);
-  border-bottom: var(--funky-border-bold);
+  border-bottom: var(--funky-border);
   background: var(--funky-sunken);
 }
 .funky-window__dots { display: inline-flex; gap: var(--funky-space-xs); }
@@ -479,13 +576,13 @@
   box-shadow: var(--funky-shadow-sm);
 }
 .funky-toast--ink    { background: var(--funky-ink);    color: var(--funky-bg); }
-.funky-toast--pink   { background: var(--funky-pink);   color: var(--funky-ink-inverse); }
-.funky-toast--purple { background: var(--funky-purple); color: var(--funky-ink-inverse); }
-.funky-toast--cyan   { background: var(--funky-cyan);   color: var(--funky-ink); }
-.funky-toast--yellow { background: var(--funky-yellow); color: var(--funky-ink); }
-.funky-toast--orange { background: var(--funky-orange); color: var(--funky-ink); }
-.funky-toast--sky    { background: var(--funky-sky);    color: var(--funky-ink); }
-.funky-toast--green  { background: var(--funky-green);  color: var(--funky-ink-inverse); }
+.funky-toast--pink   { background: var(--funky-accent-pink-solid-bg);   color: var(--funky-accent-pink-solid-fg); }
+.funky-toast--purple { background: var(--funky-accent-purple-solid-bg); color: var(--funky-accent-purple-solid-fg); }
+.funky-toast--cyan   { background: var(--funky-accent-cyan-solid-bg);   color: var(--funky-accent-cyan-solid-fg); }
+.funky-toast--yellow { background: var(--funky-accent-yellow-solid-bg); color: var(--funky-accent-yellow-solid-fg); }
+.funky-toast--orange { background: var(--funky-accent-orange-solid-bg); color: var(--funky-accent-orange-solid-fg); }
+.funky-toast--sky    { background: var(--funky-accent-sky-solid-bg);    color: var(--funky-accent-sky-solid-fg); }
+.funky-toast--green  { background: var(--funky-accent-green-solid-bg);  color: var(--funky-accent-green-solid-fg); }
 .funky-toast--fixed {
   position: fixed;
   left: 50%;
@@ -639,7 +736,7 @@
   border-radius: var(--funky-radius);
   background: var(--funky-surface);
   color: var(--funky-ink);
-  box-shadow: 4px 4px 0 0 rgba(0, 0, 0, 0.1);
+  box-shadow: var(--funky-shadow-sm);
 }
 .funky-appshell__status-card-title {
   font-size: var(--funky-size-2xs);
@@ -694,7 +791,7 @@
   letter-spacing: var(--funky-chrome-tracking);
   text-decoration: none;
   cursor: pointer;
-  transition: background-color var(--funky-motion-duration) var(--funky-motion-easing);
+  transition: var(--funky-transition-tint);
 }
 .funky-bottom-nav-item:hover:not(.funky-bottom-nav-item--active) { background: var(--funky-accent-soft); }
 .funky-bottom-nav-item--active { background: var(--funky-ink); color: var(--funky-ink-inverse); }
@@ -710,7 +807,7 @@
   width: 100%;
   background: var(--funky-bg);
 }
-.funky-toolshell__bar { flex: 0 0 auto; }
+.funky-toolshell__bar { flex: 0 0 auto; border-bottom: var(--funky-border); }
 .funky-toolshell__stage {
   flex: 1 1 auto;
   min-height: 0;
@@ -738,5 +835,248 @@
 }
 .funky-toolshell__foot {
   flex: 0 0 auto;
-  border-top: var(--funky-border-bold);
+  border-top: var(--funky-border);
+}
+
+/* ════════════════════════════════════════════════════════════
+   Component: Select (custom dropdown — trigger + hard-shadow menu)
+   ════════════════════════════════════════════════════════════ */
+.funky-select { position: relative; display: inline-block; }
+.funky-select__trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--funky-space-md);
+  width: 100%;
+  height: var(--funky-control-md);
+  padding: 0 var(--funky-space-md);
+  border: var(--funky-border);
+  border-radius: var(--funky-radius);
+  background: var(--funky-surface);
+  color: var(--funky-ink);
+  font-family: var(--funky-font-family);
+  font-size: var(--funky-size-sm);
+  font-weight: var(--funky-weight-bold);
+  box-shadow: var(--funky-shadow-sm);
+  cursor: pointer;
+  transition: var(--funky-transition-press);
+}
+.funky-select__trigger:hover:not(:disabled) {
+  box-shadow: var(--funky-shadow-hover);
+  transform: translate(var(--funky-press-hover), var(--funky-press-hover));
+}
+.funky-select__value { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.funky-select__placeholder { color: var(--funky-ink-muted); }
+.funky-select__chevron {
+  display: inline-flex;
+  flex: 0 0 auto;
+  transition: transform var(--funky-motion-duration) var(--funky-motion-easing);
+}
+.funky-select__chevron--open { transform: rotate(180deg); }
+.funky-select__menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 20;
+  min-width: 100%;
+  max-height: 16rem;
+  overflow-y: auto;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: var(--funky-border);
+  border-radius: var(--funky-radius);
+  background: var(--funky-surface);
+  box-shadow: var(--funky-shadow-sm);
+}
+.funky-select__option {
+  display: block;
+  width: 100%;
+  padding: var(--funky-space-sm) var(--funky-space-md);
+  border: none;
+  background: transparent;
+  color: var(--funky-ink);
+  font-family: var(--funky-font-family);
+  font-size: var(--funky-size-sm);
+  font-weight: var(--funky-weight-bold);
+  text-align: left;
+  cursor: pointer;
+  transition: var(--funky-transition-tint);
+}
+.funky-select__option--active { background: var(--funky-accent-soft); }
+.funky-select__option--selected { background: var(--funky-primary); color: var(--funky-ink-inverse); }
+.funky-select__option:disabled { opacity: 0.5; cursor: not-allowed; }
+.funky-select--disabled .funky-select__trigger { opacity: 0.5; cursor: not-allowed; }
+
+/* ════════════════════════════════════════════════════════════
+   Atom: Table (bordered data table — ink header, hard cells)
+   ════════════════════════════════════════════════════════════ */
+/* 그림자는 래퍼에 — 테이블에 두면 래퍼 overflow 가 클립한다 */
+.funky-table__scroll { overflow-x: auto; box-shadow: var(--funky-shadow-sm); }
+.funky-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: var(--funky-border);
+  background: var(--funky-bg);
+  font-family: var(--funky-font-family);
+  font-size: var(--funky-size-sm);
+  color: var(--funky-ink);
+}
+/* 헤더 — 검정 ink 바 + 흰 chrome 라벨 */
+.funky-table th {
+  padding: var(--funky-space-xs) var(--funky-space-md);
+  background: var(--funky-ink);
+  color: var(--funky-ink-inverse);
+  font-weight: var(--funky-weight-black);
+  font-size: var(--funky-size-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--funky-tracking-chrome);
+  text-align: left;
+}
+/* 본문 — 크림 면(흰색 X) + 2px 검정 행선 + 좁은 패딩 + bold 텍스트 */
+.funky-table td {
+  padding: var(--funky-space-xs) var(--funky-space-md);
+  border-top: var(--funky-border);
+  vertical-align: top;
+  font-weight: var(--funky-weight-bold);
+  line-height: var(--funky-leading-normal);
+}
+.funky-table tbody tr:hover { background: var(--funky-accent-soft); }
+
+/* ════════════════════════════════════════════════════════════
+   Component: Toc ("On this page" outline rail — for reading screens)
+   ════════════════════════════════════════════════════════════ */
+.funky-toc__head {
+  margin: 0 0 0.75rem;
+  font-family: var(--funky-font-family);
+  font-weight: var(--funky-weight-black);
+  font-size: var(--funky-size-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--funky-ink-muted);
+}
+.funky-toc__list { list-style: none; margin: 0; padding: 0; }
+.funky-toc__link {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.25rem 0.5rem;
+  border: none;
+  border-left: 2px solid transparent;
+  background: none;
+  cursor: pointer;
+  font-family: var(--funky-font-family);
+  font-size: var(--funky-size-sm);
+  line-height: 1.4;
+  color: var(--funky-ink-muted);
+  transition: color var(--funky-motion-duration) var(--funky-motion-easing);
+}
+.funky-toc__link:hover { color: var(--funky-ink); }
+.funky-toc__row--d3 .funky-toc__link { padding-left: 1.25rem; font-size: 0.78rem; }
+.funky-toc__row--d4 .funky-toc__link { padding-left: 2rem; font-size: var(--funky-size-xs); }
+.funky-toc__row--active .funky-toc__link {
+  color: var(--funky-secondary);
+  font-weight: var(--funky-weight-black);
+  border-left-color: var(--funky-secondary);
+}
+
+/* ════════════════════════════════════════════════════════════
+   Template: SiteHeader (purple sticky topbar — skew wordmark + ghost nav)
+   ════════════════════════════════════════════════════════════ */
+.funky-site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--funky-space-lg);
+  height: 4.5rem;
+  padding: 0 var(--funky-space-xl);
+  background: var(--funky-secondary);
+  border-bottom: var(--funky-border);
+  box-shadow: 0 4px 0 0 rgba(0, 0, 0, 0.2);
+}
+.funky-site-header__brand {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.15em;
+  font-family: var(--funky-font-family);
+  font-weight: var(--funky-weight-black);
+  font-size: var(--funky-size-xl);
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  color: var(--funky-ink-inverse);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transform: skewX(-6deg);
+}
+.funky-site-header__nav { display: inline-flex; align-items: center; gap: var(--funky-space-xs); }
+.funky-site-header__actions { display: inline-flex; align-items: center; gap: var(--funky-space-md); }
+.funky-site-navlink {
+  padding: var(--funky-space-xs) var(--funky-space-md);
+  font-family: var(--funky-font-family);
+  font-weight: var(--funky-weight-black);
+  font-size: var(--funky-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--funky-ink-inverse);
+  text-decoration: none;
+  border: 2px solid transparent;
+  background: none;
+  cursor: pointer;
+  transition: background-color var(--funky-motion-duration) var(--funky-motion-easing),
+    border-color var(--funky-motion-duration) var(--funky-motion-easing);
+}
+.funky-site-navlink:hover { background: rgba(255, 255, 255, 0.12); }
+.funky-site-navlink--active {
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* ════════════════════════════════════════════════════════════
+   Template: DocsSidebar (reading-screen left rail — cream, active black)
+   ════════════════════════════════════════════════════════════ */
+.funky-docs-sidebar {
+  position: sticky;
+  top: 4.5rem;
+  align-self: flex-start;
+  width: 16rem;
+  flex-shrink: 0;
+  height: calc(100vh - 4.5rem);
+  overflow-y: auto;
+  padding: 1.5rem 1rem;
+  background: var(--funky-bg);
+  border-right: var(--funky-border);
+}
+.funky-docs-sidebar__group { margin-bottom: 1.25rem; }
+.funky-docs-sidebar__label {
+  margin: 0 0 0.5rem 0.6rem;
+  font-family: var(--funky-font-family);
+  font-weight: var(--funky-weight-black);
+  font-size: var(--funky-size-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--funky-ink-muted);
+}
+.funky-docs-sidebar__link {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.4rem 0.6rem;
+  border: 2px solid transparent;
+  background: transparent;
+  color: var(--funky-ink-muted);
+  font-family: var(--funky-font-family);
+  font-weight: var(--funky-weight-bold);
+  font-size: var(--funky-size-sm);
+  cursor: pointer;
+  transition: var(--funky-transition-tint);
+}
+.funky-docs-sidebar__link:hover { color: var(--funky-ink); }
+.funky-docs-sidebar__link--active {
+  background: var(--funky-ink);
+  color: var(--funky-ink-inverse);
+  font-weight: var(--funky-weight-black);
 }

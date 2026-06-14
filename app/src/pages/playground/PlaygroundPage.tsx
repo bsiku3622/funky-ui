@@ -102,7 +102,10 @@ const Index = () => {
     <div style={{ display: "flex", flexDirection: "column", gap: "2.5rem" }}>
       <div>
         <h1 className="site-display site-display--lg">Playground</h1>
-        <Text variant="body" muted>14 components · 4 token foundations. 클릭해서 살펴보세요.</Text>
+        <Text variant="body" muted>
+          {ENTRIES.filter((e) => e.layer !== "Foundations").length} components ·{" "}
+          {ENTRIES.filter((e) => e.layer === "Foundations").length} token foundations. 클릭해서 살펴보세요.
+        </Text>
       </div>
       {LAYER_ORDER.map((layer) => (
         <div key={layer}>

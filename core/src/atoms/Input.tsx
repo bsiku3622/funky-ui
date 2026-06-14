@@ -11,11 +11,12 @@ export interface InputProps
   fullWidth?: boolean;
 }
 
-/** Input — bordered field with hard shadow that presses on focus. */
+/** Input — bordered field, flat at rest; the hard shadow lifts on focus (떠오름). */
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ leading, trailing, fullWidth, className = "", ...rest }, ref) => {
     const wrap = [
       "funky-input",
+      "funky-liftable",
       fullWidth ? "funky-input--full" : "",
       className,
     ]

@@ -1,0 +1,73 @@
+/* funky-ui — markdown renderer styles (MarkdownView). Import once alongside
+   the main stylesheet:  import "@studio-baeks/funky-ui/markdown.css";
+   Pulls in KaTeX so LaTeX (math) renders. Tables reuse the main .funky-table. */
+
+@import "katex/dist/katex.min.css";
+
+.funky-md {
+  font-family: var(--funky-font-family);
+  font-size: 0.9375rem;
+  color: var(--funky-ink);
+}
+
+.funky-md__h1,
+.funky-md__h2,
+.funky-md__h3,
+.funky-md__h4 {
+  font-weight: var(--funky-weight-black);
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  scroll-margin-top: 5.5rem;
+}
+.funky-md__h1 { font-size: var(--funky-size-4xl); margin: 0 0 0.6rem; }
+.funky-md__h2 {
+  font-size: var(--funky-size-2xl);
+  margin: 2.5rem 0 0.6rem;
+  border-top: var(--funky-border);
+  padding-top: 1.5rem;
+}
+.funky-md__h3 { font-size: var(--funky-size-lg); margin: 1.75rem 0 0.6rem; }
+.funky-md__h4 { font-size: var(--funky-size-md); margin: 1.25rem 0 0.6rem; }
+
+.funky-md__p { margin: 0 0 1rem; line-height: 1.7; }
+.funky-md__a { color: var(--funky-secondary); font-weight: var(--funky-weight-bold); }
+.funky-md__ul,
+.funky-md__ol { margin: 0 0 1rem; padding-left: 1.4rem; line-height: 1.7; }
+.funky-md__li { margin-bottom: 0.3rem; }
+.funky-md__strong { font-weight: var(--funky-weight-black); }
+.funky-md__hr { border: none; border-top: var(--funky-border); margin: 2rem 0; }
+
+/* 인용구 — 읽기 콘텐츠라 콜아웃 박스(전체 보더+그림자) 대신 좌측 바 + 옅은 면 (quiet). */
+.funky-md__blockquote {
+  margin: 0 0 1rem;
+  padding: 0.5rem 1rem;
+  background: var(--funky-accent-soft);
+  border-left: 0.25rem solid var(--funky-ink);
+  color: var(--funky-ink-muted);
+}
+.funky-md__blockquote .funky-md__p:last-child { margin-bottom: 0; }
+
+.funky-md__pre {
+  margin: 0 0 1rem;
+  padding: 0.9rem 1.1rem;
+  background: var(--funky-ink);
+  color: var(--funky-ink-inverse);
+  border: var(--funky-border);
+  box-shadow: var(--funky-shadow-sm);
+  overflow-x: auto;
+  font-family: var(--funky-font-mono);
+  font-size: var(--funky-size-sm);
+  line-height: 1.55;
+}
+.funky-md__code {
+  font-family: var(--funky-font-mono);
+  font-size: 0.85em;
+  background: var(--funky-sunken);
+  border: 1px solid var(--funky-line);
+  padding: 0.1em 0.35em;
+}
+
+.funky-md table { margin: 0 0 1rem; }
+.funky-md img { max-width: 100%; border: var(--funky-border); box-shadow: var(--funky-shadow-sm); }
+.funky-md .katex-display { overflow-x: auto; overflow-y: hidden; padding: 0.5rem 0; }
