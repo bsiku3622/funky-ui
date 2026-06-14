@@ -8,11 +8,13 @@ export type ButtonVariant =
   | "warning"
   | "danger"
   | "info"
-  | "neutral"
+  | "white"
+  | "black"
   | "ink";
 export type ButtonSize = "sm" | "md" | "lg";
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  /** color/role — primary…info, or the neutrals white/black/ink */
   variant?: ButtonVariant;
   size?: ButtonSize;
   leadingIcon?: ReactNode;
@@ -24,7 +26,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
-      variant = "neutral",
+      variant = "white",
       size = "md",
       leadingIcon,
       trailingIcon,

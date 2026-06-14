@@ -62,14 +62,15 @@
 .funky-button--sm { height: var(--funky-control-sm); padding: 0 var(--funky-control-padx-sm); font-size: var(--funky-control-fs-sm); }
 .funky-button--lg { height: var(--funky-control-lg); padding: 0 var(--funky-control-padx-lg); font-size: var(--funky-control-fs-lg); }
 
-/* color variants — solid neon fill, accent onColor (검정/흰 글자 단일 출처). neutral/ink 는 비-accent. */
+/* color variants — solid neon fill, accent onColor (검정/흰 글자 단일 출처). white/black/ink 는 비-accent neutral. */
 .funky-button--primary   { background: var(--funky-accent-primary-solid-bg);   color: var(--funky-accent-primary-solid-fg); }
 .funky-button--secondary { background: var(--funky-accent-secondary-solid-bg); color: var(--funky-accent-secondary-solid-fg); }
 .funky-button--success   { background: var(--funky-accent-success-solid-bg);   color: var(--funky-accent-success-solid-fg); }
 .funky-button--warning   { background: var(--funky-accent-warning-solid-bg);   color: var(--funky-accent-warning-solid-fg); }
 .funky-button--danger    { background: var(--funky-accent-danger-solid-bg);    color: var(--funky-accent-danger-solid-fg); }
 .funky-button--info      { background: var(--funky-accent-info-solid-bg);      color: var(--funky-accent-info-solid-fg); }
-.funky-button--neutral   { background: var(--funky-surface);   color: var(--funky-ink); }
+.funky-button--white     { background: var(--funky-surface);   color: var(--funky-ink); }
+.funky-button--black     { background: var(--funky-line);      color: var(--funky-ink-inverse); }
 .funky-button--ink       { background: var(--funky-ink);       color: var(--funky-ink-inverse); }
 
 /* ════════════════════════════════════════════════════════════
@@ -86,6 +87,8 @@
   background: var(--funky-surface);
 }
 /* 떠오름(rest 납작 → focus 시 그림자 솟음)은 .funky-liftable 이 소유한다. */
+/* hover(미포커스) — 은은한 틴트. neutral=회색, accent 선언 시 그 색. */
+.funky-input:hover:not(:focus-within) { background: var(--funky-ac-hover); }
 .funky-input__field {
   flex: 1;
   min-width: 0;
@@ -136,7 +139,7 @@
 /* checkbox/radio are flat — no shadow. subtle tint on hover (unchecked only). */
 .funky-checkbox__box:hover:not(:disabled):not(:checked),
 .funky-radio__dot:hover:not(:disabled):not(:checked) {
-  background: var(--funky-accent-soft);
+  background: var(--funky-ac-hover);
 }
 .funky-checkbox__box:checked { background: var(--funky-primary); }
 .funky-checkbox__box:checked::after {
@@ -200,8 +203,8 @@
   transition: transform var(--funky-motion-duration) var(--funky-motion-easing),
     background-color var(--funky-motion-duration) var(--funky-motion-easing);
 }
-/* ON — 흑백 반전: 트랙 검정 + thumb 흰색 (track/thumb 색이 서로 뒤집힌다). */
-.funky-switch__input:checked + .funky-switch__track { background: var(--funky-ink); }
+/* ON — 트랙이 네온(primary)으로 + 흰 thumb. 체크박스 checked(핑크+흰 체크)와 동일 어휘. */
+.funky-switch__input:checked + .funky-switch__track { background: var(--funky-primary); }
 .funky-switch__input:checked + .funky-switch__track .funky-switch__knob {
   transform: translateX(var(--funky-switch-travel));
   background: var(--funky-surface);
@@ -242,6 +245,7 @@
 .funky-tag--orange { background: var(--funky-accent-orange-solid-bg); color: var(--funky-accent-orange-solid-fg); }
 .funky-tag--sky    { background: var(--funky-accent-sky-solid-bg);    color: var(--funky-accent-sky-solid-fg); }
 .funky-tag--green  { background: var(--funky-accent-green-solid-bg);  color: var(--funky-accent-green-solid-fg); }
+.funky-tag--red    { background: var(--funky-accent-red-solid-bg);    color: var(--funky-accent-red-solid-fg); }
 
 .funky-badge {
   display: inline-flex;
@@ -266,6 +270,7 @@
 .funky-badge--orange { background: var(--funky-accent-orange-solid-bg); color: var(--funky-accent-orange-solid-fg); }
 .funky-badge--sky    { background: var(--funky-accent-sky-solid-bg);    color: var(--funky-accent-sky-solid-fg); }
 .funky-badge--green  { background: var(--funky-accent-green-solid-bg);  color: var(--funky-accent-green-solid-fg); }
+.funky-badge--red    { background: var(--funky-accent-red-solid-bg);    color: var(--funky-accent-red-solid-fg); }
 
 /* ════════════════════════════════════════════════════════════
    Atom: Icon
@@ -317,6 +322,7 @@
 .funky-stat-tile--orange { background: var(--funky-accent-orange-solid-bg); color: var(--funky-accent-orange-solid-fg); }
 .funky-stat-tile--sky    { background: var(--funky-accent-sky-solid-bg);    color: var(--funky-accent-sky-solid-fg); }
 .funky-stat-tile--green  { background: var(--funky-accent-green-solid-bg);  color: var(--funky-accent-green-solid-fg); }
+.funky-stat-tile--red    { background: var(--funky-accent-red-solid-bg);    color: var(--funky-accent-red-solid-fg); }
 .funky-stat-tile__label {
   font-size: var(--funky-size-xs);
   font-weight: var(--funky-weight-black);
@@ -359,7 +365,7 @@
   cursor: pointer;
   transition: var(--funky-transition-tint);
 }
-.funky-accordion__header:hover { background: var(--funky-accent-soft); }
+.funky-accordion__header:hover { background: var(--funky-ac-hover); }
 .funky-accordion__chevron {
   display: inline-flex;
   transition: transform var(--funky-motion-duration) var(--funky-motion-easing);
@@ -394,7 +400,7 @@
   transition: var(--funky-transition-press);
 }
 .funky-tabs__trigger:hover:not(.funky-tabs__trigger--active) {
-  background: var(--funky-accent-soft);
+  background: var(--funky-ac-hover);
 }
 .funky-tabs__trigger--active {
   background: var(--funky-ink);
@@ -409,7 +415,7 @@
 .funky-modal__overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: var(--funky-scrim);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -453,7 +459,7 @@
   line-height: 1;
   transition: var(--funky-transition-tint);
 }
-.funky-modal__close:hover { background: var(--funky-accent-soft); }
+.funky-modal__close:hover { background: var(--funky-ac-hover); }
 .funky-modal__body { padding: var(--funky-space-lg); overflow: auto; }
 .funky-modal__footer {
   display: flex;
@@ -513,6 +519,7 @@
 .funky-panel__head--orange  { background: var(--funky-accent-orange-solid-bg);  color: var(--funky-accent-orange-solid-fg); }
 .funky-panel__head--sky     { background: var(--funky-accent-sky-solid-bg);     color: var(--funky-accent-sky-solid-fg); }
 .funky-panel__head--green   { background: var(--funky-accent-green-solid-bg);   color: var(--funky-accent-green-solid-fg); }
+.funky-panel__head--red     { background: var(--funky-accent-red-solid-bg);     color: var(--funky-accent-red-solid-fg); }
 .funky-panel__actions { display: inline-flex; align-items: center; gap: var(--funky-space-sm); }
 .funky-panel__body { padding: var(--funky-space-lg); }
 .funky-panel__body--flush { padding: 0; }
@@ -583,6 +590,7 @@
 .funky-toast--orange { background: var(--funky-accent-orange-solid-bg); color: var(--funky-accent-orange-solid-fg); }
 .funky-toast--sky    { background: var(--funky-accent-sky-solid-bg);    color: var(--funky-accent-sky-solid-fg); }
 .funky-toast--green  { background: var(--funky-accent-green-solid-bg);  color: var(--funky-accent-green-solid-fg); }
+.funky-toast--red    { background: var(--funky-accent-red-solid-bg);    color: var(--funky-accent-red-solid-fg); }
 .funky-toast--fixed {
   position: fixed;
   left: 50%;
@@ -683,8 +691,8 @@
   font-size: var(--funky-size-2xs);
   font-weight: var(--funky-weight-black);
   text-transform: var(--funky-chrome-transform);
-  letter-spacing: 0.2em;
-  color: rgba(0, 0, 0, 0.4);
+  letter-spacing: var(--funky-tracking-widest);
+  color: var(--funky-ink-muted);
   margin-bottom: var(--funky-space-md);
   padding: 0 0.25rem;
 }
@@ -697,12 +705,12 @@
   border: 2px solid transparent;
   border-radius: var(--funky-radius);
   background: transparent;
-  color: rgba(0, 0, 0, 0.6);
+  color: var(--funky-ink-muted);
   font-family: var(--funky-font-family);
   font-size: var(--funky-size-sm);
   font-weight: var(--funky-weight-black);
   text-transform: var(--funky-chrome-transform);
-  letter-spacing: -0.025em;
+  letter-spacing: var(--funky-tracking-tight);
   text-decoration: none;
   cursor: pointer;
   transition: background-color var(--funky-motion-duration) var(--funky-motion-easing),
@@ -742,8 +750,8 @@
   font-size: var(--funky-size-2xs);
   font-weight: var(--funky-weight-black);
   text-transform: var(--funky-chrome-transform);
-  letter-spacing: 0.1em;
-  color: rgba(0, 0, 0, 0.4);
+  letter-spacing: var(--funky-tracking-wide);
+  color: var(--funky-ink-muted);
 }
 .funky-appshell__status-card-text {
   margin-top: var(--funky-space-md);
@@ -793,7 +801,7 @@
   cursor: pointer;
   transition: var(--funky-transition-tint);
 }
-.funky-bottom-nav-item:hover:not(.funky-bottom-nav-item--active) { background: var(--funky-accent-soft); }
+.funky-bottom-nav-item:hover:not(.funky-bottom-nav-item--active) { background: var(--funky-ac-hover); }
 .funky-bottom-nav-item--active { background: var(--funky-ink); color: var(--funky-ink-inverse); }
 
 /* ════════════════════════════════════════════════════════════
@@ -903,8 +911,8 @@
   cursor: pointer;
   transition: var(--funky-transition-tint);
 }
-.funky-select__option--active { background: var(--funky-accent-soft); }
-.funky-select__option--selected { background: var(--funky-primary); color: var(--funky-ink-inverse); }
+.funky-select__option--active { background: var(--funky-ac-hover); }
+.funky-select__option--selected { background: var(--funky-accent-primary-solid-bg); color: var(--funky-accent-primary-solid-fg); }
 .funky-select__option:disabled { opacity: 0.5; cursor: not-allowed; }
 .funky-select--disabled .funky-select__trigger { opacity: 0.5; cursor: not-allowed; }
 
@@ -917,31 +925,35 @@
   width: 100%;
   border-collapse: collapse;
   border: var(--funky-border);
-  background: var(--funky-bg);
+  background: var(--funky-surface);
   font-family: var(--funky-font-family);
   font-size: var(--funky-size-sm);
   color: var(--funky-ink);
 }
-/* 헤더 — 검정 ink 바 + 흰 chrome 라벨 */
-.funky-table th {
+/* 풀그리드 — 모든 셀에 2px 검정 테두리 */
+.funky-table th,
+.funky-table td {
+  border: var(--funky-border);
   padding: var(--funky-space-xs) var(--funky-space-md);
-  background: var(--funky-ink);
-  color: var(--funky-ink-inverse);
+  text-align: left;
+}
+/* 헤더 — contextual accent 면 (neutral=검정, .funky-accent--{color} 선언 시 그 색) + chrome 라벨 */
+.funky-table th {
+  background: var(--funky-ac-bg);
+  color: var(--funky-ac-fg);
   font-weight: var(--funky-weight-black);
   font-size: var(--funky-size-xs);
   text-transform: uppercase;
   letter-spacing: var(--funky-tracking-chrome);
-  text-align: left;
 }
-/* 본문 — 크림 면(흰색 X) + 2px 검정 행선 + 좁은 패딩 + bold 텍스트 */
 .funky-table td {
-  padding: var(--funky-space-xs) var(--funky-space-md);
-  border-top: var(--funky-border);
   vertical-align: top;
   font-weight: var(--funky-weight-bold);
   line-height: var(--funky-leading-normal);
 }
-.funky-table tbody tr:hover { background: var(--funky-accent-soft); }
+/* zebra strip (옵션) — 짝수 행 = contextual strip (neutral=크림, accent=muted 틴트) */
+.funky-table--striped tbody tr:nth-child(even) td { background: var(--funky-ac-strip); }
+.funky-table tbody tr:hover td { background: var(--funky-ac-hover); }
 
 /* ════════════════════════════════════════════════════════════
    Component: Toc ("On this page" outline rail — for reading screens)

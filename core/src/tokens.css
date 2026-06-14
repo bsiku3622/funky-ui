@@ -24,6 +24,9 @@
   --funky-green: #00c22a;
   --funky-red: #ff3b3b;
   --funky-accent-soft: #f0fdff;
+  /* Semantic surface */
+  --funky-surface-hover: #ededeb;
+  --funky-scrim: rgba(0, 0, 0, 0.45);
   /* Role aliases (의미 축 — accent 색의 별칭) */
   --funky-primary: #ff4eba;
   --funky-secondary: #7828c8;
@@ -49,6 +52,7 @@
   --funky-accent-pink-ghost-bg-hover: #ffe3f3;
   --funky-accent-pink-ghost-fg: #a8004f;
   --funky-accent-pink-ghost-border: transparent;
+  --funky-accent-pink-muted: #fff0f7;
   --funky-accent-purple-solid-bg: #7828c8;
   --funky-accent-purple-solid-bg-hover: #5f1ba0;
   --funky-accent-purple-solid-fg: var(--funky-ink-inverse);
@@ -65,6 +69,7 @@
   --funky-accent-purple-ghost-bg-hover: #f0e3ff;
   --funky-accent-purple-ghost-fg: #4a127a;
   --funky-accent-purple-ghost-border: transparent;
+  --funky-accent-purple-muted: #f6effd;
   --funky-accent-cyan-solid-bg: #3decfd;
   --funky-accent-cyan-solid-bg-hover: #1fcfe0;
   --funky-accent-cyan-solid-fg: var(--funky-ink);
@@ -81,6 +86,7 @@
   --funky-accent-cyan-ghost-bg-hover: #e0fbff;
   --funky-accent-cyan-ghost-fg: #0a6b78;
   --funky-accent-cyan-ghost-border: transparent;
+  --funky-accent-cyan-muted: #f0fdff;
   --funky-accent-yellow-solid-bg: #ffd500;
   --funky-accent-yellow-solid-bg-hover: #e6bf00;
   --funky-accent-yellow-solid-fg: var(--funky-ink);
@@ -97,6 +103,7 @@
   --funky-accent-yellow-ghost-bg-hover: #fff7cc;
   --funky-accent-yellow-ghost-fg: #7a6500;
   --funky-accent-yellow-ghost-border: transparent;
+  --funky-accent-yellow-muted: #fffceb;
   --funky-accent-orange-solid-bg: #ff9100;
   --funky-accent-orange-solid-bg-hover: #e67e00;
   --funky-accent-orange-solid-fg: var(--funky-ink);
@@ -113,6 +120,7 @@
   --funky-accent-orange-ghost-bg-hover: #ffe8cc;
   --funky-accent-orange-ghost-fg: #8a4d00;
   --funky-accent-orange-ghost-border: transparent;
+  --funky-accent-orange-muted: #fff4e8;
   --funky-accent-sky-solid-bg: #00c8ff;
   --funky-accent-sky-solid-bg-hover: #00aee0;
   --funky-accent-sky-solid-fg: var(--funky-ink);
@@ -129,6 +137,7 @@
   --funky-accent-sky-ghost-bg-hover: #d6f6ff;
   --funky-accent-sky-ghost-fg: #005f78;
   --funky-accent-sky-ghost-border: transparent;
+  --funky-accent-sky-muted: #ecf9ff;
   --funky-accent-green-solid-bg: #00c22a;
   --funky-accent-green-solid-bg-hover: #00a323;
   --funky-accent-green-solid-fg: var(--funky-ink-inverse);
@@ -145,6 +154,7 @@
   --funky-accent-green-ghost-bg-hover: #d6ffde;
   --funky-accent-green-ghost-fg: #00661a;
   --funky-accent-green-ghost-border: transparent;
+  --funky-accent-green-muted: #effdf3;
   --funky-accent-red-solid-bg: #ff3b3b;
   --funky-accent-red-solid-bg-hover: #e62e2e;
   --funky-accent-red-solid-fg: var(--funky-ink-inverse);
@@ -161,6 +171,7 @@
   --funky-accent-red-ghost-bg-hover: #ffe0e0;
   --funky-accent-red-ghost-fg: #a80000;
   --funky-accent-red-ghost-border: transparent;
+  --funky-accent-red-muted: #fff0f0;
 
   /* Accent role aliases — {role}-{variant}-{field} = var(color)  (의미→색 재참조) */
   --funky-accent-primary-solid-bg: var(--funky-accent-pink-solid-bg);
@@ -179,6 +190,7 @@
   --funky-accent-primary-ghost-bg-hover: var(--funky-accent-pink-ghost-bg-hover);
   --funky-accent-primary-ghost-fg: var(--funky-accent-pink-ghost-fg);
   --funky-accent-primary-ghost-border: var(--funky-accent-pink-ghost-border);
+  --funky-accent-primary-muted: var(--funky-accent-pink-muted);
   --funky-accent-secondary-solid-bg: var(--funky-accent-purple-solid-bg);
   --funky-accent-secondary-solid-bg-hover: var(--funky-accent-purple-solid-bg-hover);
   --funky-accent-secondary-solid-fg: var(--funky-accent-purple-solid-fg);
@@ -195,6 +207,7 @@
   --funky-accent-secondary-ghost-bg-hover: var(--funky-accent-purple-ghost-bg-hover);
   --funky-accent-secondary-ghost-fg: var(--funky-accent-purple-ghost-fg);
   --funky-accent-secondary-ghost-border: var(--funky-accent-purple-ghost-border);
+  --funky-accent-secondary-muted: var(--funky-accent-purple-muted);
   --funky-accent-success-solid-bg: var(--funky-accent-green-solid-bg);
   --funky-accent-success-solid-bg-hover: var(--funky-accent-green-solid-bg-hover);
   --funky-accent-success-solid-fg: var(--funky-accent-green-solid-fg);
@@ -211,6 +224,7 @@
   --funky-accent-success-ghost-bg-hover: var(--funky-accent-green-ghost-bg-hover);
   --funky-accent-success-ghost-fg: var(--funky-accent-green-ghost-fg);
   --funky-accent-success-ghost-border: var(--funky-accent-green-ghost-border);
+  --funky-accent-success-muted: var(--funky-accent-green-muted);
   --funky-accent-warning-solid-bg: var(--funky-accent-orange-solid-bg);
   --funky-accent-warning-solid-bg-hover: var(--funky-accent-orange-solid-bg-hover);
   --funky-accent-warning-solid-fg: var(--funky-accent-orange-solid-fg);
@@ -227,6 +241,7 @@
   --funky-accent-warning-ghost-bg-hover: var(--funky-accent-orange-ghost-bg-hover);
   --funky-accent-warning-ghost-fg: var(--funky-accent-orange-ghost-fg);
   --funky-accent-warning-ghost-border: var(--funky-accent-orange-ghost-border);
+  --funky-accent-warning-muted: var(--funky-accent-orange-muted);
   --funky-accent-danger-solid-bg: var(--funky-accent-red-solid-bg);
   --funky-accent-danger-solid-bg-hover: var(--funky-accent-red-solid-bg-hover);
   --funky-accent-danger-solid-fg: var(--funky-accent-red-solid-fg);
@@ -243,6 +258,7 @@
   --funky-accent-danger-ghost-bg-hover: var(--funky-accent-red-ghost-bg-hover);
   --funky-accent-danger-ghost-fg: var(--funky-accent-red-ghost-fg);
   --funky-accent-danger-ghost-border: var(--funky-accent-red-ghost-border);
+  --funky-accent-danger-muted: var(--funky-accent-red-muted);
   --funky-accent-info-solid-bg: var(--funky-accent-cyan-solid-bg);
   --funky-accent-info-solid-bg-hover: var(--funky-accent-cyan-solid-bg-hover);
   --funky-accent-info-solid-fg: var(--funky-accent-cyan-solid-fg);
@@ -259,6 +275,14 @@
   --funky-accent-info-ghost-bg-hover: var(--funky-accent-cyan-ghost-bg-hover);
   --funky-accent-info-ghost-fg: var(--funky-accent-cyan-ghost-fg);
   --funky-accent-info-ghost-border: var(--funky-accent-cyan-ghost-border);
+  --funky-accent-info-muted: var(--funky-accent-cyan-muted);
+
+  /* Contextual accent — neutral 기본 (.funky-accent--* 가 덮음) */
+  --funky-ac-bg: var(--funky-ink);
+  --funky-ac-fg: var(--funky-ink-inverse);
+  --funky-ac-hover: var(--funky-surface-hover);
+  --funky-ac-strip: var(--funky-sunken);
+  --funky-ac-text: var(--funky-ink);
 
   /* Shadow: hard offset solid (blur 0) */
   --funky-shadow-sm: 4px 4px 0 0 rgba(0, 0, 0, 0.2);
@@ -341,11 +365,11 @@
   /* Atom intrinsic sizing */
   --funky-checkbox-size: 1.25rem;
   --funky-radio-size: 1.25rem;
-  --funky-switch-w: 3.25rem;
-  --funky-switch-h: 1.75rem;
-  --funky-switch-gap: 0.1875rem;
-  --funky-switch-thumb: 1.125rem;
-  --funky-switch-travel: 1.5rem;
+  --funky-switch-w: 2.375rem;
+  --funky-switch-h: 1.375rem;
+  --funky-switch-gap: 0.125rem;
+  --funky-switch-thumb: 0.875rem;
+  --funky-switch-travel: 1rem;
 
   /* Motion: timing */
   --funky-motion-duration: 100ms;
@@ -440,4 +464,104 @@ body {
   font-weight: var(--funky-weight-regular);
   line-height: var(--funky-leading-normal);
   font-family: var(--funky-font-mono);
+}
+
+/* ── Contextual accent setters — .funky-accent--{color|role} 선언 시 하위가 var(--funky-ac-*) 로 전파 ── */
+.funky-accent--pink {
+  --funky-ac-bg: var(--funky-accent-pink-solid-bg);
+  --funky-ac-fg: var(--funky-accent-pink-solid-fg);
+  --funky-ac-hover: var(--funky-accent-pink-muted);
+  --funky-ac-strip: var(--funky-accent-pink-muted);
+  --funky-ac-text: var(--funky-accent-pink-soft-fg);
+}
+.funky-accent--purple {
+  --funky-ac-bg: var(--funky-accent-purple-solid-bg);
+  --funky-ac-fg: var(--funky-accent-purple-solid-fg);
+  --funky-ac-hover: var(--funky-accent-purple-muted);
+  --funky-ac-strip: var(--funky-accent-purple-muted);
+  --funky-ac-text: var(--funky-accent-purple-soft-fg);
+}
+.funky-accent--cyan {
+  --funky-ac-bg: var(--funky-accent-cyan-solid-bg);
+  --funky-ac-fg: var(--funky-accent-cyan-solid-fg);
+  --funky-ac-hover: var(--funky-accent-cyan-muted);
+  --funky-ac-strip: var(--funky-accent-cyan-muted);
+  --funky-ac-text: var(--funky-accent-cyan-soft-fg);
+}
+.funky-accent--yellow {
+  --funky-ac-bg: var(--funky-accent-yellow-solid-bg);
+  --funky-ac-fg: var(--funky-accent-yellow-solid-fg);
+  --funky-ac-hover: var(--funky-accent-yellow-muted);
+  --funky-ac-strip: var(--funky-accent-yellow-muted);
+  --funky-ac-text: var(--funky-accent-yellow-soft-fg);
+}
+.funky-accent--orange {
+  --funky-ac-bg: var(--funky-accent-orange-solid-bg);
+  --funky-ac-fg: var(--funky-accent-orange-solid-fg);
+  --funky-ac-hover: var(--funky-accent-orange-muted);
+  --funky-ac-strip: var(--funky-accent-orange-muted);
+  --funky-ac-text: var(--funky-accent-orange-soft-fg);
+}
+.funky-accent--sky {
+  --funky-ac-bg: var(--funky-accent-sky-solid-bg);
+  --funky-ac-fg: var(--funky-accent-sky-solid-fg);
+  --funky-ac-hover: var(--funky-accent-sky-muted);
+  --funky-ac-strip: var(--funky-accent-sky-muted);
+  --funky-ac-text: var(--funky-accent-sky-soft-fg);
+}
+.funky-accent--green {
+  --funky-ac-bg: var(--funky-accent-green-solid-bg);
+  --funky-ac-fg: var(--funky-accent-green-solid-fg);
+  --funky-ac-hover: var(--funky-accent-green-muted);
+  --funky-ac-strip: var(--funky-accent-green-muted);
+  --funky-ac-text: var(--funky-accent-green-soft-fg);
+}
+.funky-accent--red {
+  --funky-ac-bg: var(--funky-accent-red-solid-bg);
+  --funky-ac-fg: var(--funky-accent-red-solid-fg);
+  --funky-ac-hover: var(--funky-accent-red-muted);
+  --funky-ac-strip: var(--funky-accent-red-muted);
+  --funky-ac-text: var(--funky-accent-red-soft-fg);
+}
+.funky-accent--primary {
+  --funky-ac-bg: var(--funky-accent-primary-solid-bg);
+  --funky-ac-fg: var(--funky-accent-primary-solid-fg);
+  --funky-ac-hover: var(--funky-accent-primary-muted);
+  --funky-ac-strip: var(--funky-accent-primary-muted);
+  --funky-ac-text: var(--funky-accent-primary-soft-fg);
+}
+.funky-accent--secondary {
+  --funky-ac-bg: var(--funky-accent-secondary-solid-bg);
+  --funky-ac-fg: var(--funky-accent-secondary-solid-fg);
+  --funky-ac-hover: var(--funky-accent-secondary-muted);
+  --funky-ac-strip: var(--funky-accent-secondary-muted);
+  --funky-ac-text: var(--funky-accent-secondary-soft-fg);
+}
+.funky-accent--success {
+  --funky-ac-bg: var(--funky-accent-success-solid-bg);
+  --funky-ac-fg: var(--funky-accent-success-solid-fg);
+  --funky-ac-hover: var(--funky-accent-success-muted);
+  --funky-ac-strip: var(--funky-accent-success-muted);
+  --funky-ac-text: var(--funky-accent-success-soft-fg);
+}
+.funky-accent--warning {
+  --funky-ac-bg: var(--funky-accent-warning-solid-bg);
+  --funky-ac-fg: var(--funky-accent-warning-solid-fg);
+  --funky-ac-hover: var(--funky-accent-warning-muted);
+  --funky-ac-strip: var(--funky-accent-warning-muted);
+  --funky-ac-text: var(--funky-accent-warning-soft-fg);
+}
+.funky-accent--danger {
+  --funky-ac-bg: var(--funky-accent-danger-solid-bg);
+  --funky-ac-fg: var(--funky-accent-danger-solid-fg);
+  --funky-ac-hover: var(--funky-accent-danger-muted);
+  --funky-ac-strip: var(--funky-accent-danger-muted);
+  --funky-ac-text: var(--funky-accent-danger-soft-fg);
+}
+.funky-accent--info {
+  --funky-ac-bg: var(--funky-accent-info-solid-bg);
+  --funky-ac-fg: var(--funky-accent-info-solid-fg);
+  --funky-ac-hover: var(--funky-accent-info-muted);
+  --funky-ac-strip: var(--funky-accent-info-muted);
+  --funky-ac-text: var(--funky-accent-info-soft-fg);
 }

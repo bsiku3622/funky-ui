@@ -76,7 +76,7 @@ export interface Entry {
   tile?: ReactNode;
 }
 
-const BUTTON_VARIANTS = ["primary", "secondary", "success", "warning", "danger", "info", "neutral", "ink"];
+const BUTTON_VARIANTS = ["primary", "secondary", "success", "warning", "danger", "info", "white", "black", "ink"];
 const ACCENTS = ["pink", "purple", "cyan", "yellow", "orange", "sky", "green", "red"];
 
 const SelectDemo = () => {
@@ -101,7 +101,7 @@ const componentEntries: Entry[] = [
     id: "button",
     name: "Button",
     layer: "Atoms",
-    blurb: "단일 액션. 8 variant × 3 size. hover/active 시 그림자 속으로 눌린다.",
+    blurb: "단일 액션. 9 variant(6 role + white/black/ink) × 3 size. hover/active 시 그림자 속으로 눌린다.",
     importName: "Button",
     controls: [
       { prop: "variant", type: "enum", options: BUTTON_VARIANTS, default: "primary" },
@@ -174,9 +174,12 @@ const componentEntries: Entry[] = [
     id: "table",
     name: "Table",
     layer: "Atoms",
-    blurb: "테두리 데이터 표. sunken 헤더 + 3px 구분선 + zebra 행 + hover.",
+    blurb: "풀그리드 데이터 표. accent로 헤더·hover·strip이 한 앵커에서 전파. striped는 zebra.",
     importName: "Table",
-    gallery: [{ title: "Example", node: <Table><thead><tr><th>알고리즘</th><th>복잡도</th></tr></thead><tbody><tr><td>Merge sort</td><td>O(n log n)</td></tr><tr><td>Bubble sort</td><td>O(n²)</td></tr></tbody></Table> }],
+    gallery: [
+      { title: "기본 (검정 헤더)", node: <Table><thead><tr><th>알고리즘</th><th>복잡도</th></tr></thead><tbody><tr><td>Merge sort</td><td>O(n log n)</td></tr><tr><td>Bubble sort</td><td>O(n²)</td></tr></tbody></Table> },
+      { title: 'accent="cyan" striped', node: <Table accent="cyan" striped><thead><tr><th>이름</th><th>점수</th><th>등급</th></tr></thead><tbody><tr><td>민준</td><td>92</td><td>A</td></tr><tr><td>서연</td><td>88</td><td>B</td></tr><tr><td>도윤</td><td>95</td><td>A</td></tr></tbody></Table> },
+    ],
   },
   {
     id: "select",
@@ -406,7 +409,7 @@ function ModalDemo() {
         <Modal.Header onClose={() => setOpen(false)}>Hello</Modal.Header>
         <Modal.Body><Text variant="body">A loud little modal.</Text></Modal.Body>
         <Modal.Footer>
-          <Button variant="neutral" onClick={() => setOpen(false)}>Close</Button>
+          <Button variant="white" onClick={() => setOpen(false)}>Close</Button>
           <Button variant="primary" onClick={() => setOpen(false)}>Confirm</Button>
         </Modal.Footer>
       </Modal>

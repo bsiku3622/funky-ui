@@ -9,7 +9,8 @@ export type PanelColor =
   | "yellow"
   | "orange"
   | "sky"
-  | "green";
+  | "green"
+  | "red";
 
 export interface PanelProps extends Omit<HTMLAttributes<HTMLDivElement>, "title"> {
   /** uppercase heading bar; omit for a plain framed container */

@@ -8,7 +8,8 @@ export type TagColor =
   | "yellow"
   | "orange"
   | "sky"
-  | "green";
+  | "green"
+  | "red";
 
 export interface TagProps extends HTMLAttributes<HTMLSpanElement> {
   color?: TagColor;

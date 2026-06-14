@@ -1,5 +1,6 @@
 import { forwardRef } from "react";
 import type { InputHTMLAttributes, ReactNode } from "react";
+import type { AccentColor } from "../tokens";
 
 export interface InputProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "size"> {
@@ -9,15 +10,21 @@ export interface InputProps
   trailing?: ReactNode;
   /** stretch to full width of the parent */
   fullWidth?: boolean;
+  /**
+   * contextual accent — tints the resting hover. Omit for a neutral gray hover,
+   * the default for a quiet input. e.g. `accent="cyan"` for a subtle cyan hover.
+   */
+  accent?: AccentColor;
 }
 
 /** Input — bordered field, flat at rest; the hard shadow lifts on focus (떠오름). */
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ leading, trailing, fullWidth, className = "", ...rest }, ref) => {
+  ({ leading, trailing, fullWidth, accent, className = "", ...rest }, ref) => {
     const wrap = [
       "funky-input",
       "funky-liftable",
       fullWidth ? "funky-input--full" : "",
+      accent ? `funky-accent--${accent}` : "",
       className,
     ]
       .filter(Boolean)

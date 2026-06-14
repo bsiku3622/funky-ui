@@ -7,7 +7,8 @@ export type StatTileColor =
   | "yellow"
   | "orange"
   | "sky"
-  | "green";
+  | "green"
+  | "red";
 
 export interface StatTileProps extends HTMLAttributes<HTMLDivElement> {
   label: ReactNode;

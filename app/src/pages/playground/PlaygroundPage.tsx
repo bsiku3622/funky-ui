@@ -188,7 +188,7 @@ const Detail = ({ entry }: { entry: Entry }) => {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
       <div>
-        <Button size="sm" variant="neutral" onClick={() => navigate("/playground")}>← All</Button>
+        <Button size="sm" variant="white" onClick={() => navigate("/playground")}>← All</Button>
         <h1 className="site-display site-display--lg" style={{ marginTop: "1rem" }}>{entry.name}</h1>
         <Text variant="body" muted>{entry.blurb}</Text>
         {entry.importName && (

@@ -109,7 +109,7 @@ const HomePage = () => {
                 <Button variant="primary" size="lg" onClick={() => navigate("/playground")}>
                   Open Playground
                 </Button>
-                <Button variant="neutral" size="lg" onClick={() => navigate("/docs")}>
+                <Button variant="white" size="lg" onClick={() => navigate("/docs")}>
                   Read the docs
                 </Button>
               </div>
@@ -178,7 +178,7 @@ const HomePage = () => {
                 <Button variant="primary">Primary</Button>
                 <Button variant="secondary">Secondary</Button>
                 <Button variant="ink">Ink</Button>
-                <Button variant="neutral">Neutral</Button>
+                <Button variant="white">White</Button>
               </div>
             </div>
           </Card>
@@ -267,7 +267,7 @@ const HomePage = () => {
           </h2>
           <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap", justifyContent: "center" }}>
             <Button variant="primary" size="lg" onClick={() => navigate("/playground")}>Explore components</Button>
-            <Button variant="neutral" size="lg" onClick={() => navigate("/docs")}>Get started</Button>
+            <Button variant="white" size="lg" onClick={() => navigate("/docs")}>Get started</Button>
           </div>
         </div>
       </section>

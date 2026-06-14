@@ -8,7 +8,8 @@ export type ToastColor =
   | "yellow"
   | "orange"
   | "sky"
-  | "green";
+  | "green"
+  | "red";
 
 export interface ToastProps extends HTMLAttributes<HTMLDivElement> {
   /** fill — defaults to ink (dark box, cream text), the canonical funky toast */

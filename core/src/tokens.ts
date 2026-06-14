@@ -37,6 +37,8 @@ export const color = {
   green: "#00c22a",
   red: "#ff3b3b", //       danger 네온 (8번째 accent 앵커)
   accentSoft: "#f0fdff", // 범용 옅은 hover 틴트 (per-color 아님 — 레거시 단일 토큰)
+  surfaceHover: "#ededeb", // neutral 요소 hover (연한 회색, 불투명 — accent soft 와 같은 레이어)
+  scrim: "rgba(0, 0, 0, 0.45)", //       overlay 배경 (Modal 등)
 } as const;
 
 export type AccentColor =
@@ -78,21 +80,22 @@ export type AccentOnFill = "ink" | "inkInverse";
 export type AccentAnchor = {
   fill: string;
   fillHover: string;
-  soft: string;
+  soft: string; //      옅은 동색 틴트 (밝음)
   softHover: string;
+  muted: string; //     흰색에 가까운 아주 옅은 동색 틴트 (table zebra strip 등 — 밝고 깨끗)
   onFill: AccentOnFill;
   text: string;
 };
 
 export const accent: Record<AccentColor, AccentAnchor> = {
-  pink:   { fill: color.pink,   fillHover: "#e63a9f", soft: "#ffe3f3", softHover: "#ffd0ea", onFill: "inkInverse", text: "#a8004f" },
-  purple: { fill: color.purple, fillHover: "#5f1ba0", soft: "#f0e3ff", softHover: "#e3ccff", onFill: "inkInverse", text: "#4a127a" },
-  cyan:   { fill: color.cyan,   fillHover: "#1fcfe0", soft: "#e0fbff", softHover: "#c4f5fc", onFill: "ink",        text: "#0a6b78" },
-  yellow: { fill: color.yellow, fillHover: "#e6bf00", soft: "#fff7cc", softHover: "#ffefa3", onFill: "ink",        text: "#7a6500" },
-  orange: { fill: color.orange, fillHover: "#e67e00", soft: "#ffe8cc", softHover: "#ffd6a3", onFill: "ink",        text: "#8a4d00" },
-  sky:    { fill: color.sky,    fillHover: "#00aee0", soft: "#d6f6ff", softHover: "#ade9ff", onFill: "ink",        text: "#005f78" },
-  green:  { fill: color.green,  fillHover: "#00a323", soft: "#d6ffde", softHover: "#aaf5b8", onFill: "inkInverse", text: "#00661a" },
-  red:    { fill: color.red,    fillHover: "#e62e2e", soft: "#ffe0e0", softHover: "#ffc7c7", onFill: "inkInverse", text: "#a80000" },
+  pink:   { fill: color.pink,   fillHover: "#e63a9f", soft: "#ffe3f3", softHover: "#ffd0ea", muted: "#fff0f7", onFill: "inkInverse", text: "#a8004f" },
+  purple: { fill: color.purple, fillHover: "#5f1ba0", soft: "#f0e3ff", softHover: "#e3ccff", muted: "#f6effd", onFill: "inkInverse", text: "#4a127a" },
+  cyan:   { fill: color.cyan,   fillHover: "#1fcfe0", soft: "#e0fbff", softHover: "#c4f5fc", muted: "#f0fdff", onFill: "ink",        text: "#0a6b78" },
+  yellow: { fill: color.yellow, fillHover: "#e6bf00", soft: "#fff7cc", softHover: "#ffefa3", muted: "#fffceb", onFill: "ink",        text: "#7a6500" },
+  orange: { fill: color.orange, fillHover: "#e67e00", soft: "#ffe8cc", softHover: "#ffd6a3", muted: "#fff4e8", onFill: "ink",        text: "#8a4d00" },
+  sky:    { fill: color.sky,    fillHover: "#00aee0", soft: "#d6f6ff", softHover: "#ade9ff", muted: "#ecf9ff", onFill: "ink",        text: "#005f78" },
+  green:  { fill: color.green,  fillHover: "#00a323", soft: "#d6ffde", softHover: "#aaf5b8", muted: "#effdf3", onFill: "inkInverse", text: "#00661a" },
+  red:    { fill: color.red,    fillHover: "#e62e2e", soft: "#ffe0e0", softHover: "#ffc7c7", muted: "#fff0f0", onFill: "inkInverse", text: "#a80000" },
 };
 
 export type AccentVariant = "solid" | "soft" | "outline" | "ghost";
@@ -250,11 +253,11 @@ export const label = {
 export const atom = {
   checkbox: "1.25rem",
   radio: "1.25rem",
-  switchW: "3.25rem", //    track 52×28 (border-box → 내부 48×24)
-  switchH: "1.75rem",
-  switchGap: "0.1875rem", // thumb 여백 3px
-  switchThumb: "1.125rem", //18px 정사각 thumb (내부높이 24 − 여백 2×3)
-  switchTravel: "1.5rem", // 24px = 내부폭(48) − 여백(2×3) − thumb(18)
+  switchW: "2.375rem", //   track 38×22 (border-box → 내부 34×18) — 체크박스급 컴팩트
+  switchH: "1.375rem",
+  switchGap: "0.125rem", //  thumb 여백 2px
+  switchThumb: "0.875rem", //14px 정사각 thumb (내부높이 18 − 여백 2×2)
+  switchTravel: "1rem", //   16px = 내부폭(34) − 여백(2×2) − thumb(14)
 } as const;
 
 // ───── Motion — press-into-shadow 시그니처 + 시간 어휘 ──────────────────────
