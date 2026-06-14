@@ -24,6 +24,8 @@ export const App = () => (
 
 - [설치](get-started/install.md) — 패키지 추가와 스타일 import
 - [원칙](get-started/principles.md) — 시스템이 지키는 세 가지 약속
+- [정체성](foundations/identity.md) — 왜 이렇게 그리는가 (DNA · stance · 4분면)
 - [아키텍처](foundations/architecture.md) — Token → Atom → Component → Template
-- [토큰](foundations/tokens.md) — 색·그림자·타입·간격의 정본
+- [토큰](foundations/tokens.md) — 색·accent·타입·크기의 정본
+- [Composition](foundations/composition.md) — 화면을 짜는 문법
 - [Atoms](components/atoms.md) · [Components](components/components.md) · [Templates](components/templates.md) — 컴포넌트 레퍼런스

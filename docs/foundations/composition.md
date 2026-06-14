@@ -6,27 +6,33 @@
 
 ---
 
-## 1. Shell — 매크로 레이아웃은 둘 중 하나
+## 0. Stance — 구조는 loud, 내용은 quiet
 
-화면 전체 골격은 두 가지뿐입니다. 새 앱을 짤 때 먼저 이 중 하나를 고릅니다.
+funky-ui의 한 줄 태도: **화면의 '뼈대'(구조)는 과감하게 드러내고, '살'(읽는 내용)은 차분하게 둔다.** 네온·검정 테두리·하드 그림자는 헤더·네비·섹션 경계·상태·지표 같은 *구조*에 몰아주고, 본문·데이터·입력값 같은 *내용*은 그 틀 안에 조용히 담는다. "Loud by default"는 "다 시끄럽게"가 아니라 "**구조가** 시끄럽게"라는 뜻이다.
 
-- **AppShell** — 보라 상단바 + 크림 사이드바(nav) + 콘텐츠 + 모바일 하단 nav. 여러 뷰를 오가는 **멀티뷰 앱**(대시보드, 탐색기, 관리도구)에.
-- **ToolShell** — Toolbar(상단) + Stage(가변) + Footer(선택). 하나의 작업 표면에 집중하는 **단일 도구**(에디터, 캔버스, 뷰어, 제너레이터)에.
+> 이 stance의 *근거*(DNA·4분면 모델·무게중심)는 [identity.md](identity.md)가 정본으로 소유한다. 이 문서는 그것을 화면으로 옮기는 *문법*이다.
 
-직접 셸을 짜더라도 이 둘의 골격을 벗어나지 않습니다. 영역 사이는 **3px 검정 테두리**로 끊습니다. (참고: 이 두 셸은 funky-essets·class-explorer 등 레퍼런스 앱이 실제로 쓰는 골격을 그대로 코드화한 것입니다.)
+## 1. 화면 유형부터 고른다 — 상호작용이냐, 읽기냐
+
+새 화면을 짤 때 가장 먼저 "이건 **조작하는** 화면인가, **읽는** 화면인가"를 정한다. 둘은 정반대 규칙을 따른다 — 같은 법칙을 양쪽에 들이대면 망한다.
+
+- **상호작용 화면**(대시보드·도구·게임·관리도구) — **AppShell**(보라 상단바 + 크림 nav 사이드바 + 콘텐츠 + 모바일 하단 nav) 또는 **ToolShell**(Toolbar + Stage + Footer) 골격. 영역을 카드·네온으로 loud하게 끊는다. **§2~§7이 여기 적용된다.**
+- **읽기 화면**(docs·리포트·아티클) — **SiteHeader**(보라 상단바) + **DocsSidebar**(크림 좌측 nav) + 본문 + 선택적 **Toc**(우측 "On this page"). 본문은 카드로 감싸지 않고 크림 위에 quiet하게 흐른다. 마크다운은 **MarkdownView**로 렌더. **이 부류는 §8을 따른다.**
+
+(이 셸들은 funky-essets·class-explorer·funky-ui docs 등 레퍼런스 앱의 골격을 그대로 코드화한 것이다. 직접 셸을 짜더라도 이 골격을 벗어나지 않는다.)
 
 ---
 
-## 2. 영역은 테두리·그림자로 나눈다 — 얇은 선 금지
+## 2. 영역은 카드·테두리로 나눈다 — 얇은 선 금지
 
-**funky-ui에서 가장 자주 깨지는 규칙입니다.** 일반 웹/SaaS는 영역을 1px hairline divider(옅은 회색 줄)로 나눕니다. funky-ui는 그러지 않습니다. 영역 분리는 셋 중 하나로만 합니다:
+**funky-ui에서 가장 자주 깨지는 규칙입니다.** (이 절은 *상호작용 화면* 기준 — 읽기 화면은 §8.) 일반 웹/SaaS는 영역을 1px hairline divider로 나눕니다. funky-ui는 그러지 않습니다. 영역 분리는 셋 중 하나로만, 우선순위 순으로:
 
-1. **3px 검정 테두리** — 셸 영역(toolbar/sidebar/footer)을 끊을 때.
-2. **하드 그림자로 떠 있는 면** — `Panel` · `Card` · `Window`. 콘텐츠 블록은 이 프레임 안에 담습니다.
-3. **면색 전환** — 크림(`bg`) ↔ 흰(`surface`) ↔ sunken(`#fff0b8`). 배경이 바뀌면 경계가 생깁니다.
+1. **하드 그림자로 떠 있는 면** — `Panel` · `Card` · `Window`. 콘텐츠 블록은 **우선 이 프레임에 담는다(1순위).** 크림 배경 위에 흰 카드가 gap을 두고 떠 있는 게 기본형.
+2. **2px 검정 테두리** — 셸 영역(toolbar/sidebar/footer)을 끊을 때. 더 강조할 땐 3px(`border-bold`). (표준 테두리는 2px다 — `border.width`.)
+3. **면색 전환** — 크림(`bg`) ↔ 흰(`surface`). *오브젝트* 강조는 옅은 틴트(sunken/accent-soft)가 아니라 **solid 네온**으로(§3). 옅은 틴트는 읽기 화면 본문에서만.
 
-> ❌ `border-bottom: 1px solid #eee` · `<hr>` 얇은 구분선 · 옅은 회색 카드 경계
-> ✅ 3px 검정 테두리 · `Panel`/`Card`로 프레이밍 · 크림/흰/sunken 면 전환
+> ❌ `border-bottom: 1px solid #eee` · `<hr>` 얇은 구분선 · 옅은 회색 카드 경계 · 오브젝트에 크림류 남발
+> ✅ `Panel`/`Card`로 프레이밍 · 2px 검정 테두리 · 흰/네온 면 · 영역별 네온 테마
 
 본문을 제목 + 얇은 가로줄 + 흰 여백으로 흘려보내면 docs 리더가 됩니다. 같은 콘텐츠를 `Panel`(검정/네온 헤더바 + 3px 테두리 + 하드 그림자)에 담으면 funky-ui가 됩니다.
 
@@ -73,9 +79,10 @@
 
 | ❌ generic (이렇게 새어나간다) | ✅ funky-ui |
 | --- | --- |
-| 1px 옅은 회색 divider · `<hr>` | 3px 검정 테두리 · `Panel`/`Card` 프레이밍 |
+| 1px 옅은 회색 divider · `<hr>` | `Panel`/`Card` 프레이밍 · 2px 검정 테두리 |
 | 본문이 흰 여백으로 흐름 (void) | 콘텐츠를 `Panel`/`Window`에 담아 밀도 확보 |
-| 우측 "On this page" TOC 레일 + 얇은 제목 | AppShell nav + chrome(UPPERCASE) 라벨 |
+| (상호작용 화면에서) 우측 "On this page" TOC 레일 | AppShell nav + chrome 라벨 — *단, 읽기 화면(docs)에선 우측 `Toc`가 정당(§8)* |
+| 오브젝트에 크림류(sunken/accent-soft) 남발 | solid 네온으로 강조 (크림은 셸 배경에만) |
 | 네온을 작은 하이라이트로만 사용 | 네온 solid fill을 헤더·상태·지표 등 구조에 |
 | 둥근 모서리 · 블러 드롭섀도 | `radius 0` · 하드 오프셋 그림자(blur 0) |
 | 옅은 회색 텍스트로 위계 | 검정 + weight(500/700/900)로 위계 |
@@ -90,7 +97,7 @@
 funky-ui로 화면을 만들었으면, 마무리 전에 이 체크리스트를 통과시킵니다. 하나라도 "아니오"면 §2–6으로 돌아가 고칩니다.
 
 - [ ] 매크로 골격이 AppShell 또는 ToolShell(혹은 그 골격)인가?
-- [ ] 영역 분리가 **3px 검정 테두리 / 하드 그림자 면 / 면색 전환**으로만 되어 있는가? (1px hairline·`<hr>`가 없는가)
+- [ ] 영역 분리가 **카드(하드 그림자 면) / 2px 검정 테두리 / 면색 전환**으로만 되어 있는가? (1px hairline·`<hr>`가 없는가)
 - [ ] 네온이 **구조적 요소**(헤더·상태·지표·활성)에 solid fill로 쓰였는가? (장식 점에만 묻지 않았는가)
 - [ ] 큰 빈 흰 void 없이 콘텐츠가 프레이밍되어 있는가?
 - [ ] 섹션 라벨이 UPPERCASE chrome인가? 지표가 큰 black 숫자인가?
@@ -100,8 +107,23 @@ funky-ui로 화면을 만들었으면, 마무리 전에 이 체크리스트를 �
 
 ---
 
+## 8. 읽기 화면 — funky docs 패턴
+
+docs·리포트·긴 아티클은 §2~§6의 "카드·네온" 법칙을 **그대로 쓰면 안 된다.** 본문을 카드로 감싸고 섹션마다 네온 칩을 붙이면 시끄러워서 못 읽는다. 읽기 화면은 funky-ui docs 사이트의 미니멀 패턴을 따른다 — 여기선 *절제가 정답*이다.
+
+- **골격:** `SiteHeader`(보라 상단바) + `DocsSidebar`(크림 좌측, active만 검정) + 본문 + 선택 `Toc`(우측 "On this page").
+- **본문은 카드 없이** 크림 위에 흐른다. 마크다운은 `MarkdownView`(헤딩 chrome · ink 코드블록 · `.funky-table` · `math`로 LaTeX). `@studio-baeks/funky-ui/markdown` 서브패스 + `markdown.css`.
+- **옅은 면이 오히려 맞다:** 인라인 코드·인용은 sunken/accent-soft, 표 셀 구분선은 얇아도 자연스럽다. (상호작용 화면의 "크림류 금지"가 여기엔 적용 안 됨.)
+- **구분선은 "별도 묶음" 경계에만:** 좌측 사이드바(문서 바깥 네비)는 border, 우측 `Toc`(현재 문서의 일부)는 구분선 없이.
+- **상단 여백:** 네비(사이드바)는 위에서 시작, 콘텐츠(본문·Toc)만 상단 패딩.
+- chrome(UPPERCASE·네온)은 헤더·사이드 라벨·active에만. 본문 타이포는 검정 + weight로 위계.
+
+---
+
 ## 참고
 
-- 셸 컴포넌트 prop: [Templates](https://funky-ui.bsiku.dev/docs/api/components/templates.md) (`AppShell` · `ToolShell`)
-- 프레이밍 컴포넌트: [Components](https://funky-ui.bsiku.dev/docs/api/components/components.md) (`Panel` · `Window` · `Toolbar` · `Toast` · `Card` · `StatTile`)
+- 셸·docs 템플릿: [Templates](https://funky-ui.bsiku.dev/docs/api/components/templates.md) (`AppShell` · `ToolShell` · `SiteHeader` · `DocsSidebar`)
+- 프레이밍·form: [Components](https://funky-ui.bsiku.dev/docs/api/components/components.md) (`Panel` · `Window` · `Card` · `StatTile` · `Select`) · Atoms (`Checkbox` · `Radio` · `Switch` · `Table`)
+- 읽기 렌더러: `MarkdownView` · `Toc` (`@studio-baeks/funky-ui/markdown`)
 - 토큰 정본: [Tokens](https://funky-ui.bsiku.dev/docs/api/foundations/tokens.md)
+- 정체성 근거: [identity.md](identity.md) · 운영 규칙: [CHARTER](../../core/CHARTER.md)
