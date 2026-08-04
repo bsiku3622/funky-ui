@@ -10,4 +10,3 @@ app/public/llms.txt
 
 # session artifacts
 .playwright-mcp/
-.claude/.mode
