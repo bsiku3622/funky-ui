@@ -10,3 +10,6 @@ app/public/llms.txt
 
 # session artifacts
 .playwright-mcp/
+
+# local work log — stays on the machine, never in the repo
+/logs.md
