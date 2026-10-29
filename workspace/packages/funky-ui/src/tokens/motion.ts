@@ -29,7 +29,7 @@ export const PRESS = {
   activeScale: 0.96,
   /** 큰 면(카드)은 덜 작아집니다 — 0.96 이면 400px 카드가 16px 나 줄어듭니다 */
   surfaceScale: 0.98,
-  /** 로고처럼 hover 때 커지는 것 */
+  /** 커지는 것 — 골라진 칸(Selectable 의 grow)과 hover 때의 로고 */
   grow: 1.05,
 } as const;
 

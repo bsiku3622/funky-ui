@@ -34,7 +34,8 @@ export function useAnchor(
       const top = side === "bottom" ? a.bottom + GAP : a.top - GAP - fh;
       let left = align === "start" ? a.left : align === "end" ? a.right - fw : a.left + a.width / 2 - fw / 2;
       left = Math.max(EDGE, Math.min(left, vw - fw - EDGE));
-      setStyle({ position: "fixed", top, left, minWidth: align === "center" ? undefined : a.width });
+      // 가운데 맞춤이면 폭을 건드리지 않습니다 — 키를 undefined 로라도 두면 쓰는 쪽이 준 minWidth 를 덮어씁니다
+      setStyle(align === "center" ? { position: "fixed", top, left } : { position: "fixed", top, left, minWidth: a.width });
     };
     measure();
     window.addEventListener("resize", measure);

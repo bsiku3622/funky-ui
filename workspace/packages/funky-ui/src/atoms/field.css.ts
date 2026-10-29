@@ -46,10 +46,12 @@ export const fieldSize = styleVariants(CONTROL.height, (h, size) =>
 
 /**
  * 폼의 주인공 칸 — 4px 그림자 위에 떠 있다가 포커스를 받으면 그림자를 거둡니다(그 자리는 핑크 링이 맡습니다).
+ * 링과 같은 `:focus-visible` 에 겁니다 — `:focus` 에 걸면 마우스로 연 select 는 링 없이 그림자만 사라집니다
+ * (글자 칸은 마우스로 눌러도 `:focus-visible` 이라 둘이 같습니다).
  * ⚠️ 규칙은 이것 하나입니다. class-explorer 에는 반대 규칙(평평하다가 포커스 때 그림자)도 있었는데, 그 앱의
- * InventoryPage 가 "focus 규칙이 서로 반대" 를 시스템의 빈칸으로 짚었고 이쪽이 다수(9 : 3)였습니다
+ * InventoryPage 가 "focus 규칙이 서로 반대" 를 시스템의 빈칸으로 짚었고 이쪽이 다수(10 : 2 — 반대는 Trade 둘)였습니다
  */
-export const fieldShadow = style(c({ boxShadow: vars.shadow.raised, selectors: { "&:focus": { boxShadow: FLAT_SHADOW } } }));
+export const fieldShadow = style(c({ boxShadow: vars.shadow.raised, selectors: { "&:focus-visible": { boxShadow: FLAT_SHADOW } } }));
 
 export const textarea = style(c({ height: "auto", resize: "vertical", lineHeight: px(20) }));
 export const textareaSize = styleVariants(CONTROL.height, (_, size) =>
