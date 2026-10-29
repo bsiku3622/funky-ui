@@ -11,7 +11,7 @@ class-explorer의 지금 클래스 문자열을 funky-ui의 무엇으로 바꾸�
 | `RetroButton` (기본 흰색) | `<Button shadow>` | 대부분의 RetroButton |
 | `RetroButton variant="black"` | `<Button variant="filled" shadow>` | 로그인 · 저장 |
 | `RetroButton variant="primary"` | `<Button accent="pink" variant="solid" shadow>` | |
-| `RetroButton isSelected` | `<Button selected>` | 학과 · 화면 전환 |
+| `RetroButton isSelected` | `<Button shadow selected>` — 105%로 커지고 그림자를 그대로 둡니다 | 학과 · 화면 전환 |
 | `bg-white border-2 border-black` (12) | `<Button>` · 아이콘만이면 `<IconButton variant="outline">` | MealCard 날짜 화살표 · 업로드 동작 |
 | `bg-black text-white border-black` (8) | `<Button variant="filled">` | RequestSidebar "허용" · Admin "확인" |
 | 안 골림 `border-black/30 text-black/40` → 골림 `bg-black text-white` (11 + 7) | `<Button variant="muted" selected={…}>` · 줄이면 `SegmentedControl` | EventFormModal 칩 · Admin 학기 |
@@ -62,7 +62,8 @@ class-explorer의 모션 전부를 몸짓 · 상태 모션 · 입력칸으로 �
 | 지금 | funky-ui | 자리 |
 | --- | --- | --- |
 | `hover:translate-x/y-[3~4px] hover:shadow-none` — 가라앉음 (29) | `sink` — Button `shadow` · Card `motion="sink"` | 그림자 있는 버튼 대부분 · 사람 카드 |
-| 골린 버튼 `scale-105 z-10` — 그림자는 그대로, hover 때 그림자만 숨김(제자리) · 누르면 100%. 색 버튼은 커지지 않음 (RetroButton `isSelected` · Rooms · SectionCard · EntityCard `isActive`) | **다름** — funky는 지금 `pressed`(눌린 채)로 그립니다. 바로잡을 방향 결정 대기 | Browse 보기 탭 · 학과 · Admin 필터 · 강의실 · 급식 끼니(색) |
+| 골린 버튼 `scale-105 z-10` — 그림자는 그대로, hover 때 그림자만 숨김(제자리) · 누르면 100%. 색 버튼은 커지지 않음 (RetroButton `isSelected` · Rooms · SectionCard) | Selectable의 `grow` — Button `shadow` + `selected`. 105%로 커져 이웃 위에 서고 그림자를 그대로 두며, hover 때 그림자만 숨고 누르면 100%로 돌아옵니다. 그림자가 없는 버튼은 `selected`여도 색만 바뀝니다 | Browse 보기 탭 · 학과 · Admin 필터 · 강의실 · 급식 끼니(색) |
+| 골린 카드 `scale-105 shadow-retro-lg` (EntityCard `isActive`) | 없음 — 가이드에만 있고 코드에는 없는 prop이라 옮길 것이 없습니다. Card에 `selected`는 없습니다 | |
 | `hover:shadow-[2px…]` — 평평하다가 그림자가 생김 (4) | `raise` — Button `shadow="hover"` (그림자는 4px로) | 복사 버튼 · Trade 과목 추가 칩 |
 | `hover:-translate-y-1(.5)` + 그림자 6px — 떠오름 (3) | `lift` — Card `motion="lift"` (4px로 통일) | EntityCard · Trade 카드 |
 | `active:scale-95` — 누르는 순간 작아짐 (15) | `tap` · sink의 누르는 순간 | 그림자 없는 버튼 |
@@ -71,9 +72,10 @@ class-explorer의 모션 전부를 몸짓 · 상태 모션 · 입력칸으로 �
 | `hover:scale-105 active:scale-95` (2) | 로고는 AppBar가 가짐 · 칩은 `raise` | 로고 · Trade 칩 |
 | 목록 줄의 hover 회색 층 | Pressable `none` + Surface `fill="none" hoverable` | 검색 추천 · 메뉴 항목 · 아코디언 머리 |
 | `group-hover:rotate-[-45deg]` · `group-hover:translate-x-0.5` · `group-hover:scale-105` | 없음 | 초기화 아이콘 · 링크 화살표 · 카드 안 이름 |
-| 입력칸 `focus:shadow-[4px…]`(생김) · `focus:shadow-none`(꺼짐) | 없음 — Input은 포커스 링만 | Trade 검색칸 · 로그인 · 업로드 |
+| 입력칸 `shadow-[4px…] focus:shadow-none` — 평소 있고 포커스에 거둠 | Input · Textarea · Select `shadow` — 쉴 때 4px, 포커스에 거두고 그 자리를 핑크 링이 채웁니다 | 로그인 · 업로드 · Admin · Materials |
+| 입력칸 평소 평평하고 `focus:shadow-[4px…]` — 포커스에 생김 | 없앰 — 위 규칙 하나로 모읍니다. 평평하게 두면 포커스는 링만 받고, 폼의 주인공 칸이면 `shadow`를 줍니다 | Trade 검색칸 둘 (Select Student · Add Subjects) |
 | `rotate-180` · `rotate-90` 펼침 화살표 | Accordion에 있음 | Accordion · Trade · TermSwitcher · Agent |
-| `animate-in fade-in` 펼친 내용 | 없음 | AccordionSection |
+| `animate-in fade-in duration-300` 펼친 내용 | Accordion 본문의 `fade` (300ms, 제자리) | AccordionSection |
 | `animate-pulse` 로딩 글자 · 상태 점 (7) | 없음 | Loading… · API 상태 점 |
 | `animate-spin` | Spinner | |
 | `badge-buzz` | StudentBadge `buzz` | |
@@ -107,6 +109,7 @@ class-explorer의 모션 전부를 몸짓 · 상태 모션 · 입력칸으로 �
 | --- | --- |
 | `retro-primary` · `retro-accent3` (같은 값) | `pink` |
 | `retro-secondary` | `purple` |
+| 상단 바 · 하단 바의 `bg-retro-secondary` | 없앰 — `AppBar` · `BottomNav`가 Surface `brand`(보라)로 칠하고 `accent`를 받지 않습니다. 바는 앱의 뼈대라 색을 고르는 자리가 아닙니다 |
 | `retro-accent1` | `cyan` |
 | `retro-accent2` | `yellow` |
 | `retro-accent4` | `orange` |
@@ -123,6 +126,8 @@ class-explorer의 모션 전부를 몸짓 · 상태 모션 · 입력칸으로 �
 ## 모달
 
 손으로 짠 겹판 일곱(`fixed inset-0 z-[50~1100] bg-black/40~70`)은 `<Modal>` 하나로 갑니다. native `<dialog>`라 z-index를 고르지 않고, 막은 `rgba(0,0,0,.5)` 하나, 그림자는 6px입니다. 머리 막대는 기본 보라(`accent`)이고, Esc · 막 누름 · 닫기 버튼이 모두 `onClose`를 부릅니다. 입력 중인 폼이면 `dismissible={false}`로 막 누름을 끕니다.
+
+모달 안에서 여는 `Menu` · `Tooltip`은 z-index를 올릴 필요가 없습니다. 판이 열린 `<dialog>` 안에 그려지기 때문에 보이고 눌립니다(body 끝에 그리면 모달 바깥이라 뒤 화면과 함께 비활성이 됩니다). 그 판이 떠 있는 동안의 첫 Esc는 판만 닫고, 다음 Esc가 모달을 닫습니다.
 
 ## class-explorer에 붙이는 순서
 

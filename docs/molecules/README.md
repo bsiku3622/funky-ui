@@ -2,7 +2,9 @@
 
 Molecules는 Atoms와 Primitives를 묶은 범용 조합입니다. 카드 · 선택 줄 · 떠 있는 판 · 폼 칸 · 숫자 · 알림처럼 한 번 만들어 두면 어느 앱에서나 쓰는 덩어리이고, class-explorer를 모르므로 학과나 학번 같은 앱 지식은 여기 없습니다. 같은 층 안에서는 `Card`만 다시 씁니다(PageHeader와 Accordion이 Card 위에 섭니다).
 
-`SegmentedControl`과 `Tabs`는 같은 버튼 무리이고 뜻만 다릅니다(값 고르기와 화면 바꾸기). `Tooltip`과 `Menu`는 body 끝(Portal)에 그려서 카드의 `overflow`에 잘리지 않고, `Modal`은 native `<dialog>`의 top layer에 올라 z-index를 고르지 않습니다. `accent` · `variant` · `size` · `shadow`는 [Atoms](../atoms/README.md)와 같은 뜻입니다. 예시는 import를 생략하며, `term`이나 `setTerm`처럼 앱이 가진 상태와 핸들러는 이미 있다고 봅니다.
+`SegmentedControl`과 `Tabs`는 같은 버튼 무리이고 뜻만 다릅니다(값 고르기와 화면 바꾸기). 둘 다 방향키와 Tab 순서를 [`useSelectableGroup`](../primitives/README.md#useselectablegroup) 하나로 받고, `Menu`도 같은 훅 위에 섭니다. `Tooltip`과 `Menu`는 [Floating](../primitives/README.md#floating) 위에 서서 body 끝(Portal)에 그려지므로 카드의 `overflow`에 잘리지 않고, `Modal` 안에서 열면 그 `<dialog>` 안에 그려집니다. `Modal`은 native `<dialog>`의 top layer에 올라 z-index를 고르지 않습니다. `accent` · `variant` · `size` · `shadow`는 [Atoms](../atoms/README.md)와 같은 뜻입니다. 예시는 import를 생략하며, `term`이나 `setTerm`처럼 앱이 가진 상태와 핸들러는 이미 있다고 봅니다.
+
+새로 나타나는 판은 등장 몸짓을 하나씩 가집니다 — 메뉴 · 툴팁은 4px 아래에서 올라오고(`rise`, 100ms), 모달은 8px 아래에서 올라오며(`pop`, 200ms), 펼친 아코디언 본문은 제자리에서 나타납니다(`fade`, 300ms). 퇴장 모션은 없습니다. 닫는 모션을 보이려면 판을 그만큼 더 들고 있어야 하는데, 그사이 한 번 더 누르면 판 뒤의 화면이 눌리기 때문입니다. 거리와 시간은 `ENTER` 토큰이 정하고([Motion](../foundations/motion.md#등장)), 움직임을 줄인 사람에게는 이동 없이 곧바로 나타납니다.
 
 | 묶음 | 컴포넌트 |
 | --- | --- |
@@ -31,7 +33,7 @@ Molecules는 Atoms와 Primitives를 묶은 범용 조합입니다. 카드 · 선
 | prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `as` | `ElementType` | `"div"` | 렌더할 요소입니다. `motion`을 주면 기본이 `"button"`입니다. |
-| `fill` | `SurfaceFill`(`none` 제외) | `"raised"` | 흑백 면입니다. 기본은 흰 면이고, 카드는 면이 있는 박스라 `none`은 받지 않습니다. accent로 칠한 박스가 필요하면 Card가 아니라 [Paint](../primitives/README.md#paint)입니다. |
+| `fill` | `SurfaceFill`(`none` · `brand` 제외) | `"raised"` | 흑백 면입니다. 기본은 흰 면이고, 카드는 면이 있는 박스라 `none`은 받지 않습니다. 앱의 뼈대인 보라 `brand`(상단 바 · 하단 바의 면)도 받지 않습니다. accent로 칠한 박스가 필요하면 Card가 아니라 [Paint](../primitives/README.md#paint)입니다. |
 | `shadow` | `"raised" \| "none"` | `"raised"` | 그림자입니다. 모달이 아니면 `floating`을 쓰지 않으므로 선택지가 둘뿐입니다. `motion`을 주면 무시됩니다. |
 | `padding` | `Space` | `"3xl"` | 안쪽 여백입니다(24px). 머리 막대를 붙이려면 `0`을 줍니다. |
 | `motion` | `PressMotion` | — | 카드 전체가 누르는 물건이면 `sink`(가라앉음) · `lift`(떠오름) · `raise`(그림자가 올라옴)를 줍니다. `none`은 누르지만 움직이지 않습니다. |
@@ -124,7 +126,7 @@ Molecules는 Atoms와 Primitives를 묶은 범용 조합입니다. 카드 · 선
 
 ## Accordion
 
-접히는 카드입니다. 머리를 누르면 펼쳐지고, 내용은 카드 안 구분선 아래에 놓입니다. 아래는 처음부터 펼쳐 둔 졸업 요건 카드입니다.
+접히는 카드입니다. 머리를 누르면 펼쳐지고, 내용은 카드 안 구분선 아래에 제자리에서 나타납니다. 아래는 처음부터 펼쳐 둔 졸업 요건 카드입니다.
 
 ```tsx
 <Accordion title="졸업 요건" icon={GraduationCap} trailing={<Badge size="sm">3/5</Badge>} defaultOpen>
@@ -145,12 +147,13 @@ Molecules는 Atoms와 Primitives를 묶은 범용 조합입니다. 카드 · 선
 
 - `open`을 주면 상태는 부르는 쪽이 쥡니다. `onOpenChange`로 받은 값을 `open`에 되돌려 줘야 접히고 펼쳐집니다. 주지 않으면 내부 상태가 관리하고, 어느 쪽이든 `onOpenChange`는 불립니다.
 - 접혀 있는 동안 `children`은 렌더되지 않습니다. 머리는 `aria-expanded`가 붙은 button이고 내용은 `role="region"`입니다.
+- 펼칠 때 내용은 300ms 동안 제자리에서 서서히 나타납니다(`fade`, class-explorer의 `fade-in duration-300`과 같습니다). 접을 때는 모션 없이 곧바로 사라집니다.
 - 머리 전체가 하나의 button이므로 `trailing`에는 개수 배지처럼 누르지 않는 것만 둡니다.
 - 흑백 카드라 `accent`가 없습니다. 안쪽 배지 · 버튼이 색을 각자 고릅니다.
 
 ## SegmentedControl
 
-값을 하나 고르는 버튼 줄입니다. `radiogroup`으로 읽힙니다. 아래는 학기를 고르는 줄입니다.
+값을 하나 고르는 버튼 줄입니다. `radiogroup`으로 읽히고, 칸은 `radio`입니다. 아래는 학기를 고르는 줄입니다.
 
 ```tsx
 <SegmentedControl
@@ -173,13 +176,14 @@ Molecules는 Atoms와 Primitives를 묶은 범용 조합입니다. 카드 · 선
 | `accent` | `Accent` | — | 색입니다. 주지 않으면 바깥 Paint의 색을 따르고, 바깥에도 없으면 `black`입니다. |
 | `variant` | `Variant` | `"muted"` | 안 골린 칸의 칠입니다. 골린 칸은 같은 accent의 `filled`입니다. |
 | `size` | `ControlSize` | `"sm"` | 칸의 크기입니다. |
-| `shadow` | `boolean` | `false` | 칸을 4px 그림자 위에 띄웁니다. 골린 칸은 눌린 채로 있습니다. |
+| `shadow` | `boolean` | `false` | 칸을 4px 그림자 위에 띄웁니다. 골린 칸은 105%로 커지고 그림자를 그대로 둡니다. |
 | `gap` | `Space` | `"sm"` | 칸 사이 간격입니다(6px). |
 | `fill` | `boolean` | `false` | 줄을 꽉 채워 칸을 같은 폭으로 나눕니다. 줄바꿈은 꺼집니다. |
 | `className` | `string` | — | 줄에 붙는 class입니다. |
 
 - 값을 고르는 줄입니다. 화면을 바꾸는 줄은 [Tabs](#tabs)입니다. 둘의 생김새는 같고 뜻만 다릅니다(`radiogroup`과 `tablist`).
-- 방향키(← → ↑ ↓)와 Home · End로 칸을 옮기고, 옮기면 값도 바로 바뀝니다. Tab 키로는 골린 칸 하나에만 들어옵니다.
+- 방향키(← → ↑ ↓)와 Home · End로 칸을 옮기고, 끝에서는 반대편으로 돌아 나옵니다. 옮기면 값도 바로 바뀌고(라디오와 같습니다), 꺼진 칸은 건너뜁니다. Tab 키로는 골린 칸 하나에만 들어옵니다(roving tabindex).
+- 이 키보드 규칙은 Button이 아니라 [`useSelectableGroup`](../primitives/README.md#useselectablegroup)이 붙입니다. 칸의 골라짐은 `radio` 역할의 `aria-checked` 하나로 알립니다. `value`가 어느 칸과도 맞지 않으면 Tab으로 들어올 칸이 없으므로, `value`는 늘 `options` 중 하나여야 합니다.
 - 골린 칸은 filled로 바뀌므로 안 골린 칸의 `variant`로 `filled`를 주면 둘이 같아져 고른 것이 보이지 않습니다. 안 골린 칸은 `muted` · `outline` · `hairline` 처럼 면이 비는 variant 로 둡니다.
 
 ## Tabs
@@ -204,14 +208,14 @@ Molecules는 Atoms와 Primitives를 묶은 범용 조합입니다. 카드 · 선
 | `accent` | `Accent` | — | 색입니다. 주지 않으면 바깥 Paint의 색을 따르고, 바깥에도 없으면 `black`입니다. |
 | `variant` | `Variant` | `"outline"` | 안 골린 탭의 칠입니다. 골린 탭은 같은 accent의 `filled`입니다. |
 | `size` | `ControlSize` | `"sm"` | 탭의 크기입니다. |
-| `shadow` | `boolean` | `true` | 탭을 4px 그림자 위에 띄웁니다. |
+| `shadow` | `boolean` | `true` | 탭을 4px 그림자 위에 띄웁니다. 골린 탭은 105%로 커지고 그림자를 그대로 둡니다. |
 | `gap` | `Space` | `"md"` | 탭 사이 간격입니다(8px). `Tabs.List`가 읽습니다. |
 | `fill` | `boolean` | `false` | 줄을 꽉 채워 탭을 같은 폭으로 나눕니다. |
 | `children` | `ReactNode` | — | `Tabs.List`와 `Tabs.Panel`입니다. |
 
 - 기본 생김새는 class-explorer의 화면 전환 버튼과 같은 `outline` + 그림자입니다. SegmentedControl의 기본(`muted`, 그림자 없음, `gap` `sm`)과 다릅니다.
 - 골라진 패널만 렌더하고 나머지는 지웁니다. `Tabs.*`를 `<Tabs>` 밖에서 쓰면 오류를 던집니다.
-- 키보드는 SegmentedControl과 같습니다. 방향키와 Home · End로 옮기면 탭이 바로 바뀌고, Tab 키로는 골린 탭 하나에만 들어옵니다.
+- 키보드는 SegmentedControl과 같습니다. 방향키와 Home · End로 옮기면 탭이 바로 바뀌고, Tab 키로는 골린 탭 하나에만 들어옵니다. 탭의 골라짐은 `tab` 역할의 `aria-selected` 하나로 알립니다.
 
 ### Tabs.List
 
@@ -272,8 +276,11 @@ Molecules는 Atoms와 Primitives를 묶은 범용 조합입니다. 카드 · 선
 | `aria-label` | `string` | — | 목록의 이름입니다. |
 
 - 누름과 `aria-haspopup` · `aria-expanded` · `aria-controls`는 Menu가 trigger에 붙입니다. trigger에 직접 준 `onClick`은 덮어쓰이므로 주지 않습니다.
-- `value`를 주면 항목이 `menuitemradio`(고르는 목록)가 되고, 주지 않으면 `menuitem`(동작 목록)입니다. 열리면 골라진 항목(없으면 첫 항목)에 포커스가 가고 ↑ ↓로 옮깁니다. 항목을 고르거나 Esc를 누르면 닫히며 포커스가 trigger로 돌아오고, 바깥을 누르거나 Tab을 눌러도 닫힙니다.
-- body 끝에 그려서 카드의 `overflow`에 잘리지 않습니다. 판은 버튼 아래가 기본이고 화면 밖으로 나가면 위로 뒤집힙니다. `center`가 아니면 판의 폭이 버튼 폭 이상입니다.
+- `value`를 주면 항목이 `menuitemradio`(고르는 목록)가 되고, 주지 않으면 `menuitem`(동작 목록)입니다. 열리면 골라진 항목(없으면 첫 항목)에 포커스가 갑니다.
+- ↑ ↓ · Home · End는 포커스만 옮깁니다. 옮긴다고 고르지는 않고, Enter나 누름으로 골라야 `onSelect`가 불립니다. SegmentedControl은 옮기면 바로 고르지만, 메뉴는 동작 목록일 수도 있어서 방향키로 훑는 동안 동작이 실행되면 안 됩니다. 같은 `useSelectableGroup`을 `selectOnFocus: false`로 쓴 것이고, 항목은 Tab 순서에 들어오지 않습니다.
+- 항목을 고르거나 Esc를 누르면 닫히며 포커스가 trigger로 돌아옵니다. 바깥을 누르면 닫히되 포커스는 옮기지 않습니다 — 누른 자리가 포커스를 가져가야 하기 때문입니다. Tab을 누르면 메뉴를 닫고 다음 요소로 넘어갑니다.
+- [Floating](../primitives/README.md#floating) 위에 서서 body 끝에 그려지므로 카드의 `overflow`에 잘리지 않습니다. 판은 버튼 아래가 기본이고 화면 밖으로 나가면 위로 뒤집힙니다. `center`가 아니면 판의 폭이 버튼 폭 이상입니다.
+- `Modal` 안에서도 씁니다. 안에서 열면 판이 열린 `<dialog>` 안에 그려져서 보이고 눌립니다. 모달이 열리면 브라우저가 나머지 문서를 비활성으로 만들고 top layer를 차지하는데, body 끝에 그린 판은 그 바깥이라 가려지고 눌리지도 않기 때문입니다. 이때 첫 Esc는 메뉴만 닫고, 다음 Esc가 모달을 닫습니다.
 
 ## Modal
 
@@ -309,6 +316,8 @@ native `<dialog>` 위에 서는 모달입니다. 아래는 수강 변경을 확�
 | `children` | `ReactNode` | — | 본문입니다. |
 
 - 포커스 가두기 · Esc · 뒤 화면 비활성 · 가장 위 층은 브라우저(`showModal()`)가 맡으므로 z-index를 고르지 않습니다. 그림자는 시스템에서 유일한 6px이고, 열려 있는 동안 뒤 화면은 스크롤되지 않습니다.
+- 열릴 때 판은 8px 아래에서 올라오고(`pop`, 200ms) 뒤 막은 같은 시간에 제자리에서 나타납니다(`fade`). 닫힐 때의 모션은 없습니다.
+- 안에서 여는 [Menu](#menu) · [Tooltip](#tooltip)은 열린 `<dialog>` 안에 그려집니다. body 끝에 그리면 모달 바깥이라 뒤 화면처럼 비활성이 되어 보이지도 눌리지도 않기 때문입니다. 그런 판이 떠 있는 동안의 첫 Esc는 판만 닫고, 다음 Esc가 모달을 닫습니다.
 - `dismissible={false}`는 바깥 누름만 막고 Esc는 막지 않습니다. 닫혀 있는 동안에는 `children`을 렌더하지 않으므로 안의 폼 상태는 다시 열 때 초기화됩니다.
 - `title`을 주지 않으면 머리 막대 없이 흰 면 오른쪽 위에 닫기 버튼만 앉습니다. `title`이 있으면 `aria-labelledby`로 `<dialog>`의 이름에 연결됩니다.
 
@@ -330,9 +339,10 @@ native `<dialog>` 위에 서는 모달입니다. 아래는 수강 변경을 확�
 | `delay` | `number` | `300` | 뜨기까지 기다리는 시간(ms)입니다. |
 | `disabled` | `boolean` | `false` | 켜지 않을 때 줍니다. 예를 들어 ⌘를 누를 때만 보이는 설명입니다. |
 
-- 검정 면 · 흰 글자 · 최대 폭 260px입니다. body 끝에 그려서 카드의 `overflow`에 잘리지 않고, 좌우는 화면 안에 묶입니다.
+- 검정 면 · 흰 글자 · 최대 폭 260px입니다. [Floating](../primitives/README.md#floating) 위에 서서 body 끝에 그려지므로 카드의 `overflow`에 잘리지 않고, 좌우는 화면 안에 묶입니다.
 - 뜨는 동안 children에 `aria-describedby`가 붙습니다. 풍선은 포인터를 받지 않으므로(`pointer-events: none`) 누르거나 선택할 내용은 넣지 않습니다.
 - 키보드로도 보이려면 children이 포커스를 받는 요소(버튼 · 링크 · 입력)여야 합니다.
+- Esc를 누르거나 바깥을 누르면 닫힙니다. `Modal` 안에서는 풍선이 열린 `<dialog>` 안에 그려지고, 풍선이 떠 있는 동안의 첫 Esc는 풍선만 닫습니다.
 
 ## SearchField
 
@@ -355,7 +365,7 @@ native `<dialog>` 위에 서는 모달입니다. 아래는 수강 변경을 확�
 | `clearLabel` | `string` | `"지우기"` | 지우기 버튼의 이름입니다. |
 | `size` | `ControlSize` | `"md"` | 높이 사다리입니다. 같은 크기의 Button과 같은 높이입니다. |
 | `invalid` | `boolean` | `false` | 틀린 값입니다. 빨간 테두리와 `aria-invalid`가 붙습니다. |
-| `shadow` | `boolean` | `false` | 4px 그림자 위에 띄웁니다. |
+| `shadow` | `boolean` | `false` | 4px 그림자 위에 띄우고, 포커스를 받으면 거둡니다. [Input](../atoms/README.md#input)과 같습니다. |
 | `className` | `string` | — | 바깥 `<span>`에 붙습니다. |
 | 그 밖 | `<input>`의 props (`value` · `onChange` · `type` 제외) | — | `placeholder` · `aria-label` · `onKeyDown` · `ref` 같은 native 속성이 `<input>`으로 갑니다. |
 

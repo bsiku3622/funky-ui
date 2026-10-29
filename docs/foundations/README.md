@@ -14,7 +14,7 @@ Color · Typography  →  Shape  →  Layout  →  Motion  →  Primitives  → 
 | [Typography](typography.md) | `tokens/typography.ts` | 서체, 글자 역할 열, 컨트롤 글자 |
 | [Shape](shape.md) | `tokens/shape.ts` | 선 굵기 · 모서리 · 컨트롤 크기 · 포커스 링 |
 | [Layout](layout.md) | `tokens/layout.ts` | 간격 · 그림자 두 단 · z · breakpoint · 폭 |
-| [Motion](motion.md) | `tokens/motion.ts` | 시간 · 곡선 · 눌림과 떠오름 |
+| [Motion](motion.md) | `tokens/motion.ts` | 시간 · 곡선 · 눌림 · 떠오름 · 커짐 · 등장 |
 
 값은 `tokens/variables.ts`가 `--fk-*` CSS 변수로 굽습니다. 이름이 해시가 아니라 고정이라 앱의 CSS도 같은 변수를 읽을 수 있습니다.
 

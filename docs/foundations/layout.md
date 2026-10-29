@@ -28,15 +28,17 @@ Tailwind 단위로 옮기면 `gap-1.5`가 `sm`, `p-5`가 `2xl`, `p-6`이 `3xl`�
 
 class-explorer를 계측했을 때 서로 다른 그림자 값이 33개였습니다(2px · 3px · 4px · 6px · 8px에 투명도 0.05 ~ 0.3, blur 15px 하나). 깊이가 33단계인 화면은 없으므로 전부 이 두 단으로 모읍니다. 카드의 6px도 4px이 됩니다(6px는 모달 몫입니다).
 
-쌓는 순서(z)는 바 · 드롭다운 · 토스트 · 툴팁 네 칸입니다. 모달은 native `<dialog>`의 top layer가 맡아서 z 값이 없습니다 — class-explorer의 `z-50`부터 `z-[1100]`까지 흩어진 값이 여기서 정리됩니다.
+쌓는 순서(z)는 아래 일곱 칸입니다. 이웃 위에 한 단 서는 것(골라진 칸)과 화면에 고정되는 것(바 · 드롭다운 · 덮개 · 토스트 · 툴팁)으로 나뉩니다. 모달은 native `<dialog>`의 top layer가 맡아서 z 값이 없습니다 — class-explorer의 `z-50`부터 `z-[1100]`까지 흩어진 값이 여기서 정리됩니다. 떠 있는 판(Floating)은 `dropdown` · `tooltip` 중 하나를 고르고, 모달 안에서 열리면 그 모달 안에 그려져 모달 위에 섭니다.
 
-| 이름 | z |
-| --- | --- |
-| `sticky` | 100 |
-| `dropdown` | 200 |
-| `overlay` | 300 |
-| `toast` | 400 |
-| `tooltip` | 500 |
+| 이름 | z | 쓰는 곳 |
+| --- | --- | --- |
+| `base` | 0 | 바닥 |
+| `raised` | 1 | 골라진 칸(Selectable `grow`)이 나란한 이웃 위에 섭니다 — class-explorer의 `z-10` |
+| `sticky` | 100 | 상단 바 · 하단 바 |
+| `dropdown` | 200 | 메뉴 |
+| `overlay` | 300 | 덮개 |
+| `toast` | 400 | 알림 |
+| `tooltip` | 500 | 설명 풍선 |
 
 ## Breakpoint
 

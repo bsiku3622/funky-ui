@@ -1,25 +1,29 @@
 # Primitives
 
-Primitives는 모양이 없는 바탕입니다. 요소 · 글자 · 아이콘 · 접근성 도구 · 칠 · 누름 · 배치 열두 개가 여기 있고, 토큰과 스타일(`tokens/` · `styles/`)만 읽습니다. Atoms부터 Components까지 모든 층이 이 열두 개 위에 섭니다.
+Primitives는 모양이 없는 바탕입니다. 요소 · 글자 · 아이콘 · 접근성 도구 · 칠 · 누름 · 골라짐 · 띄우기 · 배치 열네 개가 여기 있고, 토큰과 스타일(`tokens/` · `styles/`)만 읽습니다. Atoms부터 Components까지 모든 층이 이 열네 개 위에 섭니다.
 
-열두 개는 두 단으로 나뉩니다.
+열네 개는 두 단으로 나뉩니다.
 
 | 단 | 묶음 | 컴포넌트 | 맡는 일 |
 | --- | --- | --- | --- |
 | 1차 — 바탕 | element | Box | 태그 · ref · 여백 |
 | 1차 — 바탕 | content | Text · Icon | 글자 · 아이콘 |
 | 1차 — 바탕 | a11y | VisuallyHidden · Portal | 귀로 듣는 이름 · 그리는 자리 |
-| 2차 — Box + 능력 하나 | paint | Surface · Paint · Glass | 칠 — 박스는 흑백 면, 요소는 accent × variant, 색 바 위는 유리(모두 hover 색까지) |
+| 2차 — Box + 능력 하나 | paint | Surface · Paint · Glass | 칠 — 박스는 자리의 면(흑백과 뼈대의 보라), 요소는 accent × variant, 색 바 위는 유리(모두 hover 색까지) |
 | 2차 — Box + 능력 하나 | press | Pressable | 누름 — 버튼의 의미 · 커서 · 꺼진 모양 · 몸짓(색은 없음) |
+| 2차 — Box + 능력 하나 | select | Selectable | 골라짐 — 골라졌다는 알림(aria 하나) · 골라진 칸의 모양(색은 없음) |
+| 2차 — Box + 능력 하나 | float | Floating | 띄우기 — 기준 요소 옆에 붙이기 · 층 · 닫자고 알리기 · 포커스 · 등장 |
 | 2차 — Box + 능력 하나 | layout | Stack · Inline · Grid | 배치 |
 
-1차는 서로 기대지 않습니다. 2차는 모두 [Box](#box)의 prop(태그 · 여백)을 그대로 받고 능력을 하나만 더하며, 2차끼리도 서로 기대지 않습니다. 둘 이상이 필요하면 위 층이 class로 묶습니다 — Button은 Pressable(누름)에 Paint(칠)를, 누르는 Card는 Pressable에 Surface(면)를, NavButton은 Pressable에 Glass(유리)를 얹은 것입니다. 이렇게 묶으라고 2차 primitive는 prop을 class 문자열로 바꾸는 함수(`surfaceClass` · `paintClass` · `glassClass` · `pressClass`)를 같이 내놓습니다.
+1차는 서로 기대지 않습니다. 2차는 모두 [Box](#box)의 prop(태그 · 여백)을 그대로 받고 능력을 하나만 더하며, 2차끼리도 서로 기대지 않습니다. 둘 이상이 필요하면 위 층이 묶습니다 — Button은 Pressable(누름) · Selectable(골라짐)에 Paint(칠)를, 누르는 Card는 Pressable에 Surface(면)를, NavButton은 Pressable · Selectable에 Glass(유리)를, Menu는 Floating(띄우기)에 Surface와 고르는 무리(`useSelectableGroup`)를 얹은 것입니다.
+
+묶을 때 모양은 class로, 의미는 훅으로 가져갑니다. class 문자열에는 `type`이나 `aria-checked` 같은 속성이 실리지 않기 때문입니다. 그래서 2차 primitive는 prop을 class 문자열로 바꾸는 함수(`surfaceClass` · `paintClass` · `glassClass` · `pressClass`)와, 의미를 props로 돌려주는 훅(`usePressable` · `useSelectable` · `useSelectableGroup`)을 같이 내놓습니다.
 
 **primitive 중 accent를 갖는 것은 Paint뿐입니다.** Paint에 준 accent는 그 요소를 칠하고, 안쪽 요소가 accent를 따로 주지 않으면 그 색으로 흐릅니다. Box · Surface · 배치 primitive는 색을 모르므로 이 흐름을 끊지도 바꾸지도 않습니다. 바깥에 Paint가 없으면 검정(시스템)입니다. 위 층에서도 accent는 그 색으로 칠해지는 컴포넌트(Button · Badge · Link · Stat …)만 받고, Card처럼 칠하지 않는 박스는 받지 않습니다.
 
 요소를 그리는 컴포넌트는 `as`로 렌더할 태그를 바꾸고, 나머지 props는 그 태그로 그대로 넘깁니다. 같은 이름의 HTML 속성이 있으면 컴포넌트의 prop이 우선하고, React 19라 `ref`도 일반 prop입니다. 예시는 import를 생략합니다. 컴포넌트는 `@studio-baeks/funky-ui`에서, 아이콘은 `lucide-react`에서 가져온 것이고, `navigate`나 `subjects`처럼 앱이 가진 값은 이미 있다고 봅니다.
 
-패키지 CSS의 레이어도 이 층을 따릅니다(`fk.base < fk.primitives < fk.components < fk.utilities`). 그래서 위 층 컴포넌트의 CSS는 Surface · Paint · Glass의 칠을 언제나 덮을 수 있습니다 — 모달 머리 막대가 Paint의 filled를 쓰면서 테두리는 아래 한 줄만 남기는 식입니다.
+패키지 CSS의 레이어도 이 층을 따릅니다(`fk.base < fk.primitives < fk.components < fk.utilities`). 그래서 위 층 컴포넌트의 CSS는 Surface · Paint · Glass의 칠을 언제나 덮을 수 있습니다 — 모달 머리 막대가 Paint의 filled를 쓰면서 테두리는 아래 한 줄만 남기고, 상단 바가 Surface의 `brand` 면에 아래쪽 테두리와 그림자만 더하는 식입니다.
 
 ## 어휘
 
@@ -29,10 +33,11 @@ primitive가 받는 값은 모두 닫힌 집합입니다.
 | --- | --- |
 | `Accent` | `black` `pink` `purple` `cyan` `yellow` `orange` `sky` `green` `red`, 역할 별칭 `system`(black) · `primary`(pink) · `secondary`(purple) · `success`(green) · `error`(red). 색 규칙은 [Color](../foundations/color.md) |
 | `Variant` | `filled` `outline` `hairline` `frameline` `framelineMuted` `plain` `solid` `solidMuted` `muted` `ghost` `ghostMuted` — 레시피는 [Color](../foundations/color.md#variant) |
-| `SurfaceFill` | `none`(면 없음 — 바깥 면이 그대로 보임) · `canvas`(크림 바탕) · `raised`(흰 면) · `sunken`(크림 위 오목한 자리) · `well`(흰 면 안의 오목한 자리, 반투명) · `inverse`(검정) |
+| `SurfaceFill` | `none`(면 없음 — 바깥 면이 그대로 보임) · `canvas`(크림 바탕) · `raised`(흰 면) · `sunken`(크림 위 오목한 자리) · `well`(흰 면 안의 오목한 자리, 반투명) · `inverse`(검정) · `brand`(앱 뼈대의 보라 — 상단 바 · 하단 바에만) |
 | `Border` | `none` · `line`(검정) · `soft`(연한 회색) · `subtle`(카드 안 구분선 색) |
 | `Shadow` | `none` · `raised`(4px) · `floating`(6px) |
 | `PressMotion` | `none`(움직이지 않음, 기본) · `sink`(그림자 위에서 가라앉음) · `raise`(평평하다가 그림자가 올라옴) · `lift`(떠오름) · `tap`(그림자 없이 누르는 순간만 작아짐). 거리와 시간은 [Motion](../foundations/motion.md) |
+| `EnterMotion` | `none`(그냥 나타남) · `rise`(아래에서 4px 떠오름 — 메뉴 · 툴팁) · `pop`(8px — 모달) · `fade`(제자리에서 나타남 — 펼친 본문). 거리와 시간은 [Motion](../foundations/motion.md#등장) |
 | `Space` | `0` `2xs` `xs` `sm` `md` `lg` `xl` `2xl` `3xl` `4xl` `5xl` `6xl` — 0 · 2 · 4 · 6 · 8 · 12 · 16 · 20 · 24 · 32 · 48 · 64px. 안쪽 여백과 형제 사이 간격이 같은 사다리를 씁니다. [Layout](../foundations/layout.md) |
 
 ## Box
@@ -127,7 +132,7 @@ primitive가 받는 값은 모두 닫힌 집합입니다.
 
 ## Portal
 
-자식을 `document.body` 끝에 그립니다. 아래는 화면 구석에 놓을 알림을 body로 옮기는 예입니다.
+자식을 `document.body` 끝에 그립니다. `container`를 주면 body 대신 그 요소 안에 그립니다. 아래는 화면 구석에 놓을 알림을 body로 옮기는 예입니다.
 
 ```tsx
 <Portal>
@@ -137,14 +142,16 @@ primitive가 받는 값은 모두 닫힌 집합입니다.
 
 | prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `children` | `ReactNode` | 필수 | body 끝에 그릴 내용입니다. |
+| `children` | `ReactNode` | 필수 | 그릴 내용입니다. |
+| `container` | `Element \| null` | `document.body` | 그릴 요소입니다. 주지 않거나 `null`이면 body 끝입니다. |
 
-- Tooltip · Menu가 카드의 `overflow`에 잘리지 않도록 쓰는 도구입니다. 모달은 native `<dialog>`의 top layer가 맡아서 Portal이 필요 없습니다.
+- [Floating](#floating)이 이 위에 서서 Tooltip · Menu가 카드의 `overflow`에 잘리지 않게 합니다. 모달은 native `<dialog>`의 top layer가 맡아서 모달 자체에는 Portal이 필요 없습니다.
+- 모달 안에서 여는 판은 `container`로 열린 `<dialog>`를 줍니다. 모달이 열려 있는 동안 `<dialog>` 바깥은 눌리지 않고 top layer 아래에 깔리므로, body 끝에 그린 판은 보이지도 눌리지도 않습니다. Floating이 이 일을 대신 합니다.
 - 마운트 뒤 effect에서 그리지 않고 곧바로 그립니다. 판이 뜨는 순간의 layout effect가 판을 찾아 위치를 재야 하기 때문입니다. 이 패키지는 브라우저 전용이며, `document`가 없으면 `null`을 돌려줍니다.
 
 ## Surface
 
-2차 primitive, 박스의 면입니다(Box + 흑백 면). 흑백 면(`fill`) · 테두리 · 그림자를 고르고, 카드 · 패널 · 모달 · 판처럼 무언가를 담는 박스를 칠합니다. `hoverable`이면 hover · 누르는 중의 흑백 상태 층도 칠합니다. accent가 없습니다 — 색이 있는 요소는 [Paint](#paint)입니다. 아래는 흰 카드 면과, 흰 면 안의 오목한 자리를 나란히 놓은 예입니다.
+2차 primitive, 박스의 면입니다(Box + 면). 면(`fill`) · 테두리 · 그림자를 고르고, 카드 · 패널 · 모달 · 판 · 바처럼 무언가를 담는 박스를 칠합니다. 면은 흑백 다섯에, 앱의 뼈대가 쓰는 보라(`brand`) 하나가 더해집니다. `hoverable`이면 hover · 누르는 중의 흑백 상태 층도 칠합니다. accent가 없습니다 — 색을 고르는 요소는 [Paint](#paint)입니다. 아래는 흰 카드 면과, 흰 면 안의 오목한 자리를 나란히 놓은 예입니다.
 
 ```tsx
 <Surface border="line" shadow="raised" padding="xl">
@@ -170,21 +177,22 @@ primitive가 받는 값은 모두 닫힌 집합입니다.
 | prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `as` | `ElementType` | `"div"` | 렌더할 요소입니다. 모달은 `"dialog"`입니다. |
-| `fill` | `SurfaceFill` | `"raised"` | 흑백 면입니다. `none`은 면 없이 바깥 면을 그대로 보입니다 — 목록 줄 · 아코디언 머리처럼 면 위의 한 칸에 씁니다. |
+| `fill` | `SurfaceFill` | `"raised"` | 면입니다. `none`은 면 없이 바깥 면을 그대로 보입니다 — 목록 줄 · 아코디언 머리처럼 면 위의 한 칸에 씁니다. `brand`는 앱의 뼈대(상단 바 · 하단 바)에만 쓰는 보라 면입니다. |
 | `border` | `Border` | `"none"` | 2px 테두리의 색입니다. |
 | `shadow` | `Shadow` | `"none"` | 깊이입니다. 떠 있는 물건은 `raised`(4px), 모달만 `floating`(6px)입니다. |
 | `hoverable` | `boolean` | `false` | hover · 누르는 중에 흑백 상태 층(글자색의 7% · 12%)을 면 위에 덮습니다. 면 · 글자 · 테두리는 그대로이고, Pressable 없이 혼자 동작합니다. 꺼진 요소에는 걸지 않습니다. |
 | `padding` `paddingX` `paddingY` | [Box](#box)와 같음 | — | Box와 같은 prop입니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 
-- 글자색은 부모를 따르고(`color: inherit`), `inverse`만 흰 글자로 바꿉니다. 검정 면 위에 검정 글자가 생기지 않고, 링크나 버튼으로 그려도 브라우저의 파란 글자가 남지 않습니다.
-- 상태 층은 글자색을 묽혀 만들어서 흰 면 위에서는 회색, 검정 면 위에서는 흰 층이 됩니다. 색 요소의 hover는 [Paint](#paint)의 `hoverable`이고, 상태마다 누가 무엇을 맡는지는 [아래 표](#칠과-누름)에 있습니다.
+- 글자색은 부모를 따르고(`color: inherit`), `inverse`와 `brand`만 흰 글자로 바꿉니다. 어두운 면 위에 검정 글자가 생기지 않고, 링크나 버튼으로 그려도 브라우저의 파란 글자가 남지 않습니다.
+- 상태 층은 글자색을 묽혀 만들어서 흰 면 위에서는 회색, 어두운 면(검정 · 보라) 위에서는 흰 층이 됩니다. 색 요소의 hover는 [Paint](#paint)의 `hoverable`이고, 상태마다 누가 무엇을 맡는지는 [아래 표](#칠--누름--골라짐)에 있습니다.
+- `brand`는 accent가 아니라 자리의 이름입니다. 상단 바 · 하단 바는 색을 고르는 요소가 아니라 앱의 뼈대라서 Paint가 아니라 Surface가 칠합니다. 값은 보라 네온(`#7828c8`)이고 흰 글자가 7.15:1입니다. 바는 Paint가 아니므로 accent를 흘리지 않습니다 — 바 안의 Button 같은 컨트롤은 보라를 물려받지 않고, 바 위에는 accent가 없는 [Glass](#glass)를 얹습니다. 테두리와 그림자는 면이 아니라 바의 CSS가 한쪽에만 겁니다. [Card](../molecules/README.md#card)의 `fill`은 `brand`를 받지 않습니다 — 카드는 흑백 박스입니다.
 - 테두리는 2px 한 굵기라 굵기를 고르지 않고 색만 고릅니다.
 - `surfaceClass(props)`가 같은 prop을 class 문자열로 돌려줍니다. 누르는 카드는 [Pressable](#pressable)에 이 class로 면만 빌려 줍니다(`Card motion`이 그렇게 조립됩니다). 칠한 판 위에 늘어놓으려면 Surface 안에 Stack · Inline · Grid를 넣습니다.
 
 ## Paint
 
-2차 primitive, 요소의 칠입니다(Box + 색). 색의 모든 상태를 맡습니다 — accent(색) × variant(칠하는 방식) 두 축으로 쉬는 글자 · 면 · 테두리를, `selected`로 골라진 색을, `hoverable`로 hover · 누르는 중의 색을 칠합니다. accent를 갖는 primitive는 Paint 하나라, 안쪽 요소는 accent를 따로 주지 않으면 가장 가까운 Paint의 색을 씁니다. Badge · Notice · 상단 바 · 머리 막대가 이 위에 서고, Button은 Pressable(누름)에 이 칠을 얹은 것입니다. 아래는 드랍한 과목 줄을 plain으로 칠한 예입니다. 안쪽 버튼은 accent를 받지 않아 줄의 분홍을 따릅니다.
+2차 primitive, 요소의 칠입니다(Box + 색). 색의 모든 상태를 맡습니다 — accent(색) × variant(칠하는 방식) 두 축으로 쉬는 글자 · 면 · 테두리를, `selected`로 골라진 색을, `hoverable`로 hover · 누르는 중의 색을 칠합니다. accent를 갖는 primitive는 Paint 하나라, 안쪽 요소는 accent를 따로 주지 않으면 가장 가까운 Paint의 색을 씁니다. Badge · Notice · 머리 막대(모달 · `Card.Header`)가 이 위에 서고, Button은 Pressable(누름) · Selectable(골라짐)에 이 칠을 얹은 것입니다. 상단 바 · 하단 바는 색을 고르는 요소가 아니라 앱의 뼈대라서 Paint가 아니라 [Surface](#surface)의 `brand`입니다. 아래는 드랍한 과목 줄을 plain으로 칠한 예입니다. 안쪽 버튼은 accent를 받지 않아 줄의 분홍을 따릅니다.
 
 ```tsx
 <Paint accent="pink" variant="plain" padding="lg">
@@ -201,51 +209,52 @@ hover 색은 Pressable 없이도 켜집니다. 누르는 물건으로 만들려�
 </Pressable>
 ```
 
-칠에 `as={Pressable}`을 줘도 같습니다 — `<Paint as={Pressable} motion="sink" accent="cyan" variant="solid" hoverable>`. Paint는 색만 칠하고, `motion` · `pressed` · `disabled`는 Pressable로 넘어갑니다.
+칠에 `as={Pressable}`을 줘도 같습니다 — `<Paint as={Pressable} motion="sink" accent="cyan" variant="solid" hoverable>`. Paint는 색만 칠하고, `motion` · `disabled`는 Pressable로 넘어갑니다.
 
 | prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `as` | `ElementType` | `"div"` | 렌더할 요소입니다. |
 | `accent` | `Accent` | — | 색입니다. 이 요소를 칠하고 안쪽으로 흐릅니다. 주지 않으면 바깥 Paint의 색, 바깥에도 없으면 검정(시스템)입니다. |
 | `variant` | `Variant` | `"outline"` | 칠하는 방식입니다. 11가지 레시피는 [Color](../foundations/color.md#variant)에 있습니다. |
-| `selected` | `boolean` | `false` | 골라진 상태입니다. 같은 accent의 `filled`로 칠합니다. `aria-pressed` 같은 속성은 쓰는 쪽이 붙입니다. |
+| `selected` | `boolean` | `false` | 골라진 상태입니다. 같은 accent의 `filled`로 칠합니다. 알리는 aria와 골라진 모양(커지기)은 [Selectable](#selectable)입니다. |
 | `hoverable` | `boolean` | `false` | hover · 누르는 중에 색이 반응합니다. variant 표의 Hover 칸(층 · 글자 · 테두리)대로 바뀌고, 누르는 동안 한 단 더 짙어집니다. Pressable 없이 혼자 동작하므로 툴팁을 띄우는 배지처럼 누르지 않는 요소에도 씁니다. 꺼진 요소(`disabled` · `aria-disabled`)에는 걸지 않습니다. |
 | `padding` `paddingX` `paddingY` | [Box](#box)와 같음 | — | Box와 같은 prop입니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 
 - 그림자와 가라앉는 몸짓은 Paint가 하지 않습니다. 그림자 위에 떠 있다가 가라앉는 버튼은 `Pressable motion="sink"` + `paintClass()`이고, Button의 `shadow`가 이 조립을 대신 고릅니다.
-- 테두리가 없는 variant(`ghost` · `ghostMuted`)는 가라앉을 상자가 없어서 그림자를 받지 않습니다. Button은 이 둘에 `shadow`를 줘도 `tap`으로 그립니다.
+- 테두리가 없는 variant(`ghost` · `ghostMuted`)는 가라앉을 상자가 없어서 그림자를 받지 않습니다. Button은 이 둘에 `shadow`를 줘도 `tap`으로 그립니다. 골라지면 `filled`로 칠해져 테두리가 생기므로, 그때는 `shadow`대로 그림자와 커짐을 받습니다.
 - 크기 · 글자 · 아이콘은 Paint가 정하지 않습니다. 그건 Button · Badge처럼 Paint 위에 선 컴포넌트의 몫입니다.
 - `paintClass(props)`가 같은 prop을 class 문자열로 돌려줍니다. Pressable처럼 다른 2차 primitive에 칠을 얹을 때 씁니다.
-- 위 층 컴포넌트는 Paint의 칠을 쓰면서 형태만 자기 CSS로 덮습니다. 상단 바 · 모달 머리 막대는 filled를 쓰고 테두리를 한쪽만 남깁니다.
-- 상태마다 칠과 Pressable이 무엇을 맡는지는 [아래 표](#칠과-누름)에 있습니다.
+- 위 층 컴포넌트는 Paint의 칠을 쓰면서 형태만 자기 CSS로 덮습니다. 모달 머리 막대와 `Card.Header`의 막대는 filled를 쓰고 테두리를 아래 한 줄만 남깁니다.
+- 색 없이 accent만 필요한 위 층은 `useAccent(accent)`를 씁니다. accent를 주면 그 색의 사다리 일곱 칸을 변수로 다시 쓰는 class 하나를 돌려주고, 주지 않으면 `undefined`라서 바깥 색을 그대로 따릅니다. variant 없이 자기 색을 칠하는 Link · Stat · Meter가 쓰고, accent class를 직접 읽는 곳은 이 Paint 모듈 하나입니다.
+- 상태마다 칠 · Pressable · Selectable이 무엇을 맡는지는 [아래 표](#칠--누름--골라짐)에 있습니다.
 
 ## Glass
 
-2차 primitive, 색 바 위의 유리입니다(Box + 유리 칠). 상단 바 · 하단 바처럼 accent로 칠한 바 위에 놓이는 반투명 흰 면이고, 어느 바 위에서도 흰색입니다(흰색 10% 면 · 30% 테두리). accent를 받지 않고, 글자는 바의 글자색을 물려받습니다 — 보라 바 위에서는 흰 글자, 노랑 바 위에서는 검정 글자입니다. 아래는 보라 바 위에 학기 표시와, 지금 화면을 고른 유리를 놓은 예입니다.
+2차 primitive, 색 바 위의 유리입니다(Box + 유리 칠). 상단 바 · 하단 바(Surface의 `brand`)나 accent로 칠한 바(Paint의 filled) 위에 놓이는 반투명 흰 면이고, 어느 바 위에서도 흰색입니다(흰색 10% 면 · 30% 테두리). accent를 받지 않고, 글자는 바의 글자색을 물려받습니다 — 보라 바 위에서는 흰 글자, 노랑 바 위에서는 검정 글자입니다. 아래는 brand 바 위에 학기 표시와, 지금 화면을 고른 유리를 놓은 예입니다.
 
 ```tsx
-<Paint accent="purple" variant="filled" padding="md">
+<Surface fill="brand" padding="md">
   <Glass paddingX="md" paddingY="xs">2026-2</Glass>
   <Glass selected paddingX="md" paddingY="xs">홈</Glass>
-</Paint>
+</Surface>
 ```
 
 | prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `as` | `ElementType` | `"div"` | 렌더할 요소입니다. |
-| `selected` | `boolean` | `false` | 골라진 상태입니다. 더 짙은 유리와 흰 테두리로 칠합니다. `aria-pressed` · `aria-current` 같은 속성은 쓰는 쪽이 붙입니다. |
+| `selected` | `boolean` | `false` | 골라진 상태입니다. 더 짙은 유리와 흰 테두리로 칠합니다. 알리는 aria는 [Selectable](#selectable)(`useSelectable`)이 붙입니다. |
 | `hoverable` | `boolean` | `false` | hover 때 유리가 짙어지고 테두리가 흰색이 됩니다. Pressable 없이 혼자 동작하고, 꺼진 요소에는 걸지 않습니다. |
 | `padding` `paddingX` `paddingY` | [Box](#box)와 같음 | — | Box와 같은 prop입니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 
 - 흰 유리라 흰 면 · 크림 위에서는 보이지 않습니다. 그 자리는 [Paint](#paint)의 몫입니다.
-- 누르는 동안의 색은 없고 몸짓만 있습니다. 누르는 물건이면 [Pressable](#pressable)(`tap`)에 `glassClass()`로 얹습니다 — [NavButton](../atoms/README.md#navbutton)이 그렇게 조립됩니다.
+- 누르는 동안의 색은 없고 몸짓만 있습니다. 누르는 물건이면 [Pressable](#pressable)(`tap`)에 `glassClass()`로 얹고, 골라지는 물건이면 Selectable을 더합니다 — [NavButton](../atoms/README.md#navbutton)이 그렇게 조립됩니다.
 - `glassClass(props)`가 같은 prop을 class 문자열로 돌려줍니다.
 
 ## Pressable
 
-2차 primitive, 누르는 물건입니다(Box + 누름). '눌린다'는 사실과 그 몸짓을 맡습니다 — 버튼의 의미(`type` · `disabled` · `aria-disabled`) · 커서 · 꺼진 모양 · 움직임. 색은 하나도 없습니다. hover 색까지 칠의 `hoverable`이고, Pressable이 그걸 켜 주지 않습니다. 칠은 `surfaceClass()` · `paintClass()` · `glassClass()`로 얹거나, 칠에 `as={Pressable}`을 줍니다 — Button이 Pressable + Paint, 누르는 Card가 Pressable + Surface입니다. 아래는 과목 카드를 `lift`로 눌러 상세로 가게 한 예입니다.
+2차 primitive, 누르는 물건입니다(Box + 누름). '눌린다'는 사실과 그 몸짓을 맡습니다 — 버튼의 의미(`type` · `disabled` · `aria-disabled`) · 커서 · 꺼진 모양 · 움직임. 색은 하나도 없습니다. hover 색까지 칠의 `hoverable`이고, Pressable이 그걸 켜 주지 않습니다. 골라진 상태도 없습니다. 눌림은 순간의 반응이고 골라짐은 남아 있는 상태라서 [Selectable](#selectable)이 따로 맡습니다. 칠은 `surfaceClass()` · `paintClass()` · `glassClass()`로 얹거나, 칠에 `as={Pressable}`을 줍니다 — 누르는 Card가 Pressable + Surface이고, Button은 여기에 Selectable과 Paint를 더한 것입니다. 아래는 과목 카드를 `lift`로 눌러 상세로 가게 한 예입니다.
 
 ```tsx
 <Pressable motion="lift" padding="xl" className={surfaceClass({ border: "line" })} onClick={() => navigate("/courses/phys2")}>
@@ -256,7 +265,7 @@ hover 색은 Pressable 없이도 켜집니다. 누르는 물건으로 만들려�
 </Pressable>
 ```
 
-버튼 모양 없이 칠과 누름만 묶을 때는 칠에 `as={Pressable}`을 주면 한 줄입니다. 칠은 색만 칠하고 `motion` · `pressed` · `disabled`는 Pressable로 넘어갑니다.
+버튼 모양 없이 칠과 누름만 묶을 때는 칠에 `as={Pressable}`을 주면 한 줄입니다. 칠은 색만 칠하고 `motion` · `disabled`는 Pressable로 넘어갑니다.
 
 ```tsx
 <Surface as={Pressable} motion="lift" border="line" padding="xl">탐색 카드</Surface>
@@ -267,7 +276,6 @@ hover 색은 Pressable 없이도 켜집니다. 누르는 물건으로 만들려�
 | --- | --- | --- | --- |
 | `as` | `ElementType` | `"button"` | 렌더할 요소입니다. 링크면 `"a"`나 라우터 링크를 줍니다. |
 | `motion` | `PressMotion` | `"none"` | 몸짓입니다. `none`은 움직이지 않고, `sink`는 4px 그림자 위에서 가라앉고, `raise`는 평평하다가 hover 때 제자리에서 그림자가 올라오고, `lift`는 떠오르고, `tap`은 그림자 없이 누르는 순간만 작아집니다. |
-| `pressed` | `boolean` | `false` | `sink` 몸짓이 눌린 채로 머뭅니다(골라진 버튼). 모양만 바꾸고, `aria-pressed` 같은 속성은 쓰는 쪽이 붙입니다. |
 | `disabled` | `boolean` | `false` | `button`이면 `disabled` 속성이, 그 밖의 요소면 `aria-disabled`가 붙습니다. 불투명도 0.4에 `not-allowed` 커서이고 몸짓이 멈춥니다. |
 | `padding` `paddingX` `paddingY` | [Box](#box)와 같음 | — | Box와 같은 prop입니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. 면은 여기로 얹습니다. |
@@ -278,24 +286,202 @@ hover 색은 Pressable 없이도 켜집니다. 누르는 물건으로 만들려�
 - 칠하지 않으므로 혼자 쓰면 브라우저 기본 버튼 모양(회색 면 · 테두리)이 남습니다. 면은 언제나 칠(`surfaceClass()` · `paintClass()` · `glassClass()` 또는 `as={Pressable}`)로 얹습니다.
 - display와 폭은 태그 그대로입니다(`<button>`은 inline-block). 카드처럼 폭을 채우는 것은 쓰는 쪽이 정합니다 — [Card](../molecules/README.md#card)의 `motion`이 블록 · 폭 100% · 글자 정렬을 줍니다.
 - 기본이 `<button type="button">`이라 안에는 글자 요소만 넣습니다(배치가 필요하면 `Stack as="span"`). 다른 button이나 링크를 넣지 않습니다.
-- `pressClass(props)`가 `disabled`를 뺀 같은 prop을 class 문자열로 돌려줍니다.
+- `pressClass(props)`가 `disabled`를 뺀 같은 prop을 class 문자열로 돌려줍니다. 몸짓 · 커서 · 꺼진 모양만 실리고 `type` · `disabled` 같은 의미는 빠지므로, 누르는 물건을 직접 그릴 때는 아래 `usePressable`을 씁니다.
 
-## 칠과 누름
+### usePressable
 
-색은 칠(Paint · Surface · Glass), 누름은 Pressable입니다. 같은 상태에 각자의 축으로 반응하고, 서로를 켜거나 끄지 않습니다.
+`<Pressable>`을 거치지 않고 누르는 물건을 직접 그릴 때 쓰는 훅입니다. 그릴 요소(`Comp`)와, 그 위에 펼칠 props(`pressProps`)를 돌려줍니다. `<Pressable>` 자신도 이 훅 위에 서고, Button · IconButton · NavButton · 메뉴 칸 · 내비 칸이 같은 훅으로 자기 요소를 그립니다. 한 요소에 누름 · 골라짐 · 칠을 함께 얹을 때 컴포넌트를 `as`로 겹치지 않고 props만 펼쳐 쓰는 길입니다. 아래는 링크로도 쓰는 목록 줄입니다. 면은 Surface의 hover 층이 맡고, 몸짓은 없습니다.
 
-| 상태 | 색 — Paint | 색 — Surface | 색 — Glass | 누름 — Pressable |
-| --- | --- | --- | --- | --- |
-| 쉼 | variant의 FG · BG · Border | 흑백 면 · 테두리 · 그림자 | 흰색 10% 면 · 30% 테두리 | `sink` · `lift`면 4px 그림자 위에 떠 있습니다(`raise`는 평평) |
-| hover | `hoverable`이면 variant의 Hover 칸(층 · 글자 · 테두리) | `hoverable`이면 글자색 7% 층 | `hoverable`이면 흰색 20% 면 · 흰 테두리 | `sink`는 가라앉고, `raise`는 그림자가 올라오고, `lift`는 떠오릅니다. 손가락 커서 |
-| 누르는 중 | `hoverable`이면 press 층으로 한 단 더 짙어집니다 | `hoverable`이면 글자색 12% 층 | — | 한 번 더 작아집니다(`--fk-press-scale`) |
-| 골라짐 | `selected` — 같은 accent의 filled | — | `selected` — 흰색 25% 면 · 흰 테두리 | `pressed` — 눌린 채 머뭅니다 |
-| 꺼짐 | 상태 색을 걸지 않습니다 | 상태 층을 걸지 않습니다 | 상태 색을 걸지 않습니다 | 몸짓을 멈추고 0.4로 흐려지며 `not-allowed` 커서. `disabled` · `aria-disabled`를 붙입니다 |
+```tsx
+function Row({ as, children, ...rest }) {
+  const { Comp, pressProps } = usePressable({
+    as,
+    paddingX: "xl",
+    paddingY: "md",
+    className: surfaceClass({ fill: "none", hoverable: true }),
+  });
+  return (
+    <Comp {...pressProps} {...rest}>
+      {children}
+    </Comp>
+  );
+}
+```
+
+받는 옵션은 `<Pressable>`의 props(`motion` · `disabled` · 여백 · `className`)와 같고, 그릴 요소를 고르는 `as`가 더해집니다.
+
+| 돌려주는 값 | 설명 |
+| --- | --- |
+| `Comp` | 그릴 요소입니다. `as`를 주지 않으면 `"button"`입니다. |
+| `pressProps` | 요소에 펼칠 props입니다. `<button>`이면 `type="button"`과 native `disabled`, 그 밖의 요소면 `aria-disabled`가 들어 있고, `className`에는 몸짓 · 여백 · 받은 `className`이 합쳐져 있습니다. |
+
+- `pressProps.className`은 받은 `className`까지 합친 값입니다. 펼친 뒤에 `className`을 다시 주면 덮어쓰므로, 다른 class는 옵션의 `className`으로 넘기거나 `pressProps.className`과 합쳐서 줍니다.
+- `<button>`으로 치는 것은 `as`가 문자열 `"button"`일 때뿐입니다. 라우터 링크 같은 컴포넌트는 링크로 보고 `aria-disabled`를 붙입니다. 꺼진 모양은 둘 다 같은 class가 그립니다.
+
+## Selectable
+
+2차 primitive, 골라지는 물건입니다(Box + 골라짐). '골라져 있다'는 남아 있는 상태를 맡습니다 — 그 사실을 알리는 aria 하나와, 골라진 칸의 모양(커지기). 눌림은 순간의 반응이고 골라짐은 남아 있는 상태라서 [Pressable](#pressable)과 따로 서고, 고르는 칸은 대개 둘을 같이 씁니다. 색은 하나도 없습니다 — 골라진 색은 칠의 몫이라 Paint · Glass의 `selected`를 주거나 Surface의 `fill`을 바꿉니다. 아래는 학년 버튼 한 줄입니다. 안 골린 칸은 `sink`로 그림자 위에 떠 있고, 골린 칸은 `grow`로 커집니다.
+
+```tsx
+<Inline gap="md">
+  {grades.map((g) => {
+    const picked = grade === g;
+    return (
+      <Selectable
+        key={g}
+        as={Pressable}
+        motion={picked ? "none" : "sink"}
+        selected={picked}
+        grow
+        paddingX="lg"
+        paddingY="sm"
+        className={paintClass({ variant: "outline", selected: picked, hoverable: true })}
+        onClick={() => setGrade(g)}
+      >
+        {g}학년
+      </Selectable>
+    );
+  })}
+</Inline>
+```
+
+| prop | 타입 | 기본값 | 설명 |
+| --- | --- | --- | --- |
+| `as` | `ElementType` | `"div"` | 렌더할 요소입니다. 누르는 칸이면 `as={Pressable}`을 주고 칠은 `className`으로 얹습니다. |
+| `selected` | `boolean` | — | 골라졌는지입니다. 주지 않으면 고르는 물건이 아니라서 aria가 붙지 않습니다. |
+| `role` | `AriaRole` | — | 요소의 role입니다. 골라짐을 알리는 aria가 이걸로 정해집니다. 고르는 무리의 칸이면 `radio` · `tab`을 줍니다. |
+| `current` | `"page" \| "step" \| "location" \| "date" \| "time" \| true` | — | 고른 것이 아니라 '지금 여기'인 것입니다. 내비의 지금 화면은 `"page"`입니다. `aria-current` 하나로 알립니다. |
+| `grow` | `boolean` | `false` | 골라지면 105%로 커져 이웃 위에 서고 4px 그림자를 그대로 둡니다. hover 때는 그림자만 숨기고, 누르면 100%로 돌아옵니다. `selected`일 때만 걸립니다. |
+| `padding` `paddingX` `paddingY` | [Box](#box)와 같음 | — | Box와 같은 prop입니다. |
+| `className` | `string` | — | 마지막에 덧붙는 class입니다. 칠은 여기로 얹습니다. |
+
+골라짐을 알리는 aria는 `selected`가 있을 때 하나만 붙습니다. 어느 속성인지는 아래 순서로 정합니다.
+
+| 위에서부터 | 붙는 속성 |
+| --- | --- |
+| `selected`를 주지 않음 | 없음 |
+| `current`를 줌 | `aria-current` — 골라졌으면 `current` 값을 싣고, 아니면 속성을 붙이지 않습니다 |
+| `role`이 `radio` · `checkbox` · `switch` · `menuitemradio` · `menuitemcheckbox` | `aria-checked` |
+| `role`이 `tab` · `option` · `gridcell` · `row` · `treeitem` | `aria-selected` |
+| 그 밖(role이 없는 그냥 버튼 포함) | `aria-pressed` |
+
+- 칸이 자기 `role`을 넘기면 맞는 속성 하나만 붙으므로, SegmentedControl · Tabs 같은 위 층이 Button의 `aria-pressed`를 지우고 다른 속성으로 바꿔 달 필요가 없습니다. `selected={false}`는 `aria-pressed="false"`처럼 '골라지지 않음'을 알립니다. 고르는 물건이 아니면 `selected`를 아예 주지 않습니다.
+- 기본 요소가 `div`라서, `role`도 `current`도 없이 쓰면 `aria-pressed`가 button이 아닌 요소에 붙습니다. 고르는 칸은 `as={Pressable}`로 button을 그리거나 `role`을 줍니다.
+- `current`는 내비 칸이 씁니다. SideNav · BottomNav의 칸이 `current="page"`로 지금 화면을 알립니다. 내비는 Tab 키로 칸마다 들르는 것이 맞아서 아래 `useSelectableGroup`으로 묶지 않습니다.
+- `grow`는 이웃 위에 서려고 `position: relative`와 `z-index: 1`을 걸고, 4px 그림자를 둔 채 105%(`PRESS.grow`)로 커집니다. hover 때는 가라앉지 않고 제자리에서 그림자만 숨습니다. 이미 고른 칸을 다시 '눌러 들어가게' 하지 않으려는 것이고, class-explorer의 골라진 버튼(`scale-105 z-10`)이 이렇게 움직입니다. 꺼진 요소에는 hover · 누르는 중 규칙을 걸지 않습니다.
+- `grow`는 그 자체로 몸짓이라 같이 쓰는 Pressable의 `motion`은 `none`으로 둡니다. 둘이 겹쳐도 골라진 모양이 이기도록 Selectable의 CSS가 Pressable의 CSS를 읽어 들여 규칙 순서를 뒤로 둡니다. 2차 primitive 사이에 있는 유일한 import입니다.
+- 그림자를 켜지 않은 칩은 커지지 않고 색만 바뀝니다(class-explorer의 색 버튼). `grow`는 주는 쪽이 정합니다 — Button은 `shadow`를 켠 버튼이 골라질 때만 줍니다.
+
+### useSelectable
+
+골라짐의 속입니다. `<Selectable>`과 Button · IconButton · NavButton · 메뉴 칸 · 내비 칸이 같은 훅을 씁니다. 받는 옵션은 `<Selectable>`에서 `as`를 뺀 props와 같고, 요소에 펼칠 `selectProps`를 돌려줍니다 — `role`, 골라짐을 알리는 aria 하나, 골라진 모양과 여백의 `className`입니다. 아래는 지금 화면을 알리는 하단 바의 칸입니다. `usePressable`의 `className`과 하나로 합치려고 `selectProps.className`을 그쪽에 넘겼습니다.
+
+```tsx
+function NavItem({ active, children, ...rest }) {
+  const { selectProps } = useSelectable({ selected: active, current: "page" });
+  const { Comp, pressProps } = usePressable({ as: "a", motion: "tap", className: selectProps.className });
+  return (
+    <Comp {...selectProps} {...pressProps} {...rest}>
+      {children}
+    </Comp>
+  );
+}
+```
+
+두 훅이 각자 `className`을 돌려주므로 나중에 펼친 쪽이 앞의 것을 덮습니다. 위 예에서 `pressProps`가 뒤에 오는 것은 그 안에 `selectProps.className`이 이미 합쳐져 있기 때문입니다.
+
+### useSelectableGroup
+
+고르는 무리의 속입니다. 값 하나를 고르는 줄(SegmentedControl · Tabs)과 동작 목록(Menu)이 같이 씁니다. 무리 요소에 `groupProps`를, 칸마다 `itemProps(값)`을 펼칩니다. 무리의 값 · 누르기 · 방향키 · Home · End · roving tabindex를 맡고, 골라짐의 aria는 칸이 `useSelectable`로 붙이므로(role이 정합니다) 여기서 덮어쓰지 않습니다. 아래는 SegmentedControl이 하는 일을 직접 짠 보기 고르기 줄입니다.
+
+```tsx
+function ViewPicker() {
+  const { groupProps, itemProps } = useSelectableGroup({ value: view, onChange: setView });
+  return (
+    <Inline role="radiogroup" aria-label="보기" gap="sm" {...groupProps}>
+      {views.map((v) => (
+        <Button key={v} role="radio" variant="muted" {...itemProps(v)}>
+          {v}
+        </Button>
+      ))}
+    </Inline>
+  );
+}
+```
+
+| 옵션 | 타입 | 기본값 | 설명 |
+| --- | --- | --- | --- |
+| `value` | `string` | — | 골라진 값입니다. 주지 않으면 고르는 무리가 아니라 동작 목록이라, 칸에 골라짐을 알리지 않고 Tab 순서도 건드리지 않습니다. |
+| `onChange` | `(value) => void` | — | 칸을 누르면 부릅니다. `selectOnFocus`면 방향키로 옮길 때도 부릅니다. |
+| `selectOnFocus` | `boolean` | `true` | 방향키로 옮기면 바로 고릅니다(라디오 · 탭). 메뉴처럼 포커스만 옮기려면 `false`를 줍니다. |
+| `orientation` | `"horizontal" \| "vertical" \| "both"` | `"both"` | 방향키의 축입니다. `horizontal`은 ← →, `vertical`은 ↑ ↓, `both`는 넷 다 씁니다. 세로 목록은 `vertical`입니다. |
+
+돌려주는 값은 무리 요소에 펼칠 `groupProps`(`onKeyDown`)와, 칸마다 부르는 `itemProps(값)`입니다. `itemProps`는 `data-fk-value` · `selected` · `tabIndex` · `onClick`을 줍니다.
+
+- 방향키는 다음(이전) 칸으로 포커스를 옮기고, 끝에서는 처음으로 돌아옵니다. Home · End는 처음 · 끝 칸으로 갑니다. 꺼진 칸(`disabled` · `aria-disabled`)은 건너뜁니다.
+- 골라진 칸만 `tabIndex={0}`이고 나머지는 `-1`입니다(roving tabindex). Tab 키로는 무리에 한 번만 들어오고, 무리 안은 방향키로 옮깁니다. 그래서 `value`는 늘 칸 중 하나여야 합니다 — 어느 칸과도 맞지 않으면 Tab으로 들어올 칸이 없습니다.
+- 무리는 `data-fk-value`로 칸을 찾습니다. `itemProps`를 펼치지 않은 칸은 방향키가 지나칩니다.
+- SegmentedControl과 Tabs는 기본 설정으로, Menu는 `selectOnFocus: false` · `orientation: "vertical"`로 이 위에 섭니다. Menu는 메뉴라서 옮겨도 고르지 않고, Enter나 누름으로 고릅니다.
+
+## 칠 · 누름 · 골라짐
+
+색은 칠(Paint · Surface · Glass), 누름은 Pressable, 골라짐은 Selectable입니다. 같은 상태에 각자의 축으로 반응하고, 서로를 켜거나 끄지 않습니다.
+
+| 상태 | 색 — Paint | 색 — Surface | 색 — Glass | 누름 — Pressable | 골라짐 — Selectable |
+| --- | --- | --- | --- | --- | --- |
+| 쉼 | variant의 FG · BG · Border | 면 · 테두리 · 그림자 | 흰색 10% 면 · 30% 테두리 | `sink` · `lift`면 4px 그림자 위에 떠 있습니다(`raise`는 평평) | `grow`면 골라진 칸이 105%로 커져 이웃 위에 서고 4px 그림자를 둡니다 |
+| hover | `hoverable`이면 variant의 Hover 칸(층 · 글자 · 테두리) | `hoverable`이면 글자색 7% 층 | `hoverable`이면 흰색 20% 면 · 흰 테두리 | `sink`는 가라앉고, `raise`는 그림자가 올라오고, `lift`는 떠오릅니다. 손가락 커서 | 커진 채 제자리에서 그림자만 숨깁니다 |
+| 누르는 중 | `hoverable`이면 press 층으로 한 단 더 짙어집니다 | `hoverable`이면 글자색 12% 층 | — | 한 번 더 작아집니다(`--fk-press-scale`) | 100%로 돌아옵니다 |
+| 골라짐 | `selected` — 같은 accent의 filled | — | `selected` — 흰색 25% 면 · 흰 테두리 | — | aria 하나(`aria-pressed` · `aria-checked` · `aria-selected` · `aria-current`) |
+| 꺼짐 | 상태 색을 걸지 않습니다 | 상태 층을 걸지 않습니다 | 상태 색을 걸지 않습니다 | 몸짓을 멈추고 0.4로 흐려지며 `not-allowed` 커서. `disabled` · `aria-disabled`를 붙입니다 | hover · 누르는 중 규칙을 걸지 않습니다 |
 
 - hover 색은 브라우저의 `:hover` · `:active`가 켭니다. 그래서 칠은 Pressable 없이도 hover 색을 내고(툴팁을 띄우는 배지, 면 위의 목록 줄), Pressable은 칠 없이도 가라앉습니다(흑백 면을 빌린 카드). 포커스 고리는 어느 쪽도 아니고 전역 스타일시트가 겁니다.
-- 두 축에 걸치는 것은 꺼짐뿐입니다. Pressable이 `disabled` · `aria-disabled`를 붙이고, 두 primitive가 그 HTML 상태를 읽어 각자의 축에서 멈춥니다.
-- `transition-property`는 한 속성이라 둘이 자기 속성만 적으면 한 요소 위에서 서로를 덮습니다. 그래서 둘 다 색과 몸짓을 합친 한 목록(`STATE_TRANSITION`)을 씁니다.
-- Button이 둘을 묶는 자리입니다. `selected`를 Paint의 `selected`와 Pressable의 `pressed`로 나눠 주고, `shadow`로 몸짓(`sink` · `raise` · `tap`)을 고릅니다.
+- 골라짐은 눌림과 달리 남아 있는 상태입니다. 색은 칠의 `selected`가, 알림과 커지기는 Selectable이 맡으므로 서로 없이도 쓸 수 있습니다 — 칠 없이 Selectable만 써도 aria가 붙고, Selectable 없이 칠의 `selected`만 줘도 색은 바뀝니다.
+- 여러 축에 걸치는 것은 꺼짐뿐입니다. Pressable이 `disabled` · `aria-disabled`를 붙이고, 나머지 primitive가 그 HTML 상태를 읽어 각자의 축에서 멈춥니다.
+- `transition-property`는 한 속성이라 자기 속성만 적으면 한 요소 위에서 서로를 덮습니다. 그래서 칠 · Pressable · Selectable 모두 색과 몸짓을 합친 한 목록(`STATE_TRANSITION`)을 씁니다.
+- Button이 셋을 묶는 자리입니다. `selected`를 Paint의 `selected`(색)와 Selectable의 `selected`(알림)로 나눠 주고, `shadow`로 몸짓을 고릅니다 — 켜면 `sink`, `"hover"`면 `raise`, 끄면 `tap`입니다. `shadow`를 켠(`true`) 버튼이 골라지면 `sink` 대신 `grow`가 몸짓을 맡아 Pressable의 `motion`은 `none`이 됩니다.
+
+## Floating
+
+2차 primitive, 떠 있는 판입니다(Box + 띄우기). 판이 **어디에 · 언제** 있는지를 맡습니다 — 기준 요소 옆에 붙이기(화면 밖으로 나가면 뒤집기) · 문서 끝에 그리기([Portal](#portal)) · 쌓는 층 · 바깥 누름과 Esc로 닫자고 알리기 · 열릴 때의 포커스 · 등장 몸짓. 면은 칠하지 않습니다 — `surfaceClass()`로 얹습니다. `open` prop이 없고, 그려져 있는 동안이 열려 있는 동안입니다. 아래는 버튼 옆에 붙는 메뉴 판입니다.
+
+```tsx
+<span ref={anchor}>
+  <Button onClick={() => setOpen(!open)}>학기</Button>
+  {open && (
+    <Floating
+      anchor={anchor}
+      role="menu"
+      onDismiss={() => setOpen(false)}
+      className={surfaceClass({ border: "line", shadow: "raised" })}
+    >
+      …
+    </Floating>
+  )}
+</span>
+```
+
+| prop | 타입 | 기본값 | 설명 |
+| --- | --- | --- | --- |
+| `as` | `ElementType` | `"div"` | 렌더할 요소입니다. `role` · `id` · `aria-label` · `onKeyDown` 같은 나머지 props는 이 요소로 그대로 넘어갑니다. |
+| `anchor` | `RefObject<HTMLElement \| null>` | 필수 | 기준 요소입니다. 판이 이 요소 옆에 붙고, 이 요소를 누르는 것은 '바깥'이 아닙니다. |
+| `placement` | `"top" \| "bottom"` | `"bottom"` | 기준 요소의 위 · 아래입니다. 화면 밖으로 나가면 반대쪽으로 뒤집습니다. |
+| `align` | `"start" \| "center" \| "end"` | `"start"` | 판을 기준 요소의 어느 끝에 맞출지 정합니다. `center`가 아니면 판이 기준 요소보다 좁아지지 않습니다. |
+| `layer` | `"dropdown" \| "tooltip"` | `"dropdown"` | 쌓는 층입니다. `dropdown`은 z 200이고, 설명 풍선은 `tooltip`으로 z 500입니다. |
+| `enter` | `EnterMotion` | `"rise"` | 등장 몸짓입니다. `none` `rise` `pop` `fade` 중에서 고릅니다. |
+| `onDismiss` | `(reason: "outside" \| "escape") => void` | — | 판 바깥을 누르거나 Esc를 누르면 부릅니다. 주지 않으면 스스로 닫자고 하지 않는 판이라 여는 쪽이 닫습니다. |
+| `initialFocus` | `(panel: HTMLElement) => HTMLElement \| null \| undefined` | — | 열릴 때 포커스를 줄 요소를 판 안에서 고릅니다. 판이 그려진 직후 한 번만 부릅니다. |
+| `padding` `paddingX` `paddingY` | [Box](#box)와 같음 | — | Box와 같은 prop입니다. |
+| `style` | `CSSProperties` | — | 위치(`position` · `top` · `left`, `align`이 `center`가 아니면 `minWidth`까지)는 Floating이 정하므로 같은 속성을 주면 위치가 이깁니다. `center`일 때는 폭을 건드리지 않아 준 `minWidth`가 그대로 남습니다. |
+| `className` | `string` | — | 마지막에 덧붙는 class입니다. 면은 여기로 얹습니다. |
+
+- 기준 요소 안을 누르는 것은 바깥이 아니라서 `onDismiss`가 불리지 않습니다. 여는 버튼을 다시 누르면 버튼의 `onClick`이 판을 닫습니다. 기준 요소를 바깥으로 치면 pointerdown에 닫히고 같은 누름의 click에 다시 열릴 수 있기 때문입니다.
+- 기준 요소가 열린 모달(`<dialog>`) 안에 있으면 판을 body가 아니라 그 `<dialog>` 안에 그립니다([Portal](#portal)의 `container`). 모달은 top layer에 올라 바깥을 누를 수 없게 만들고 z-index로는 그 층을 넘을 수 없어서, body 끝에 그린 판은 모달 뒤에 깔려 보이지도 눌리지도 않습니다.
+- Esc는 판에서 멈춥니다. 판이 Esc의 기본 동작(`preventDefault`)을 막아서, 모달 안의 판이면 첫 Esc는 판만 닫고 다음 Esc가 모달을 닫습니다. `onDismiss`를 주지 않은 판은 Esc도 바깥 누름도 듣지 않으므로 Esc가 그대로 모달로 갑니다.
+- 열릴 때의 포커스는 `initialFocus`가 고른 요소로 갑니다(Menu는 골라진 칸, 없으면 첫 칸). 닫힐 때 포커스를 돌려주는 일은 여는 쪽이 정합니다 — Menu는 Esc로 닫으면 여는 버튼으로 돌려주고, 바깥을 눌러 닫으면 누른 자리에 둡니다.
+- 위치는 `position: fixed` 좌표입니다. 기준 요소와 8px 띄워 붙고, 스크롤과 창 크기가 바뀔 때마다 다시 재서 기준 요소를 따라갑니다. 좌우는 화면 가장자리 8px 안에 묶습니다.
+- 등장은 기본 `rise`입니다. 퇴장은 없습니다. 이유는 [Motion](../foundations/motion.md#등장)에 있습니다.
+- [Tooltip](../molecules/README.md#tooltip)은 `layer="tooltip"` · `align="center"`로, [Menu](../molecules/README.md#menu)는 `initialFocus` · `onDismiss`로 이 위에 섭니다.
 
 ## Stack
 

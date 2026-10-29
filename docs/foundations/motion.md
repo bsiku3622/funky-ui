@@ -1,6 +1,6 @@
 # Motion
 
-funky-ui의 움직임 — 시간, 곡선, 누름의 거리 — 을 정리한 문서입니다. 숫자의 정본은 `tokens/motion.ts`입니다.
+funky-ui의 움직임 — 시간, 곡선, 누름의 거리, 판이 나타나는 몸짓 — 을 정리한 문서입니다. 숫자의 정본은 `tokens/motion.ts`입니다.
 
 ## 눌림
 
@@ -8,11 +8,9 @@ funky-ui의 움직임 — 시간, 곡선, 누름의 거리 — 을 정리한 문
 
 가라앉는 거리는 그림자 거리와 같아야 합니다. 다르면 그림자가 본체 뒤로 비져 나오므로, 거리는 `PRESS.sink = ELEVATION.raised.offset`으로 묶여 있습니다. Motion이 Layout을 읽는 유일한 자리입니다.
 
-그림자를 켜지 않은 컨트롤은 가라앉지 않고 층(색)만 바뀌며, 누르는 순간만 작아집니다(`tap`). 테두리가 없는 Ghost는 가라앉을 상자가 없어서 그림자를 받지 않고 언제나 `tap`입니다.
+그림자를 켜지 않은 컨트롤은 가라앉지 않고 층(색)만 바뀌며, 누르는 순간만 작아집니다(`tap`). 테두리가 없는 Ghost는 가라앉을 상자가 없어서 그림자를 받지 않고 `tap`입니다. 골라지면 `filled`(테두리가 있는 면)가 되므로, 그때는 다른 버튼처럼 그림자와 커짐을 받습니다.
 
-선택된 컨트롤은 **눌린 채로** 있습니다(`pressed`). 그림자를 켠 버튼이 골리면 가라앉은 자리에 그대로 머물러, 무엇이 골라져 있는지를 모양으로도 말합니다.
-
-몸짓은 [Pressable](../primitives/README.md#pressable) 하나가 맡습니다 — `none`(움직이지 않음, 기본) · `sink`(가라앉음) · `raise`(그림자가 올라옴) · `lift`(떠오름) · `tap`(작아짐만) 다섯과, `sink`가 눌린 채 머무는 `pressed`입니다. hover 때 바뀌는 층(색)은 칠([Paint](../primitives/README.md#paint)의 `hoverable`)이라 몸짓과 따로 섭니다. Button은 `shadow`로 몸짓을 고릅니다 — 켜면 `sink`, `"hover"`면 `raise`, 끄면 `tap`입니다.
+몸짓은 [Pressable](../primitives/README.md#pressable) 하나가 맡습니다 — `none`(움직이지 않음, 기본) · `sink`(가라앉음) · `raise`(그림자가 올라옴) · `lift`(떠오름) · `tap`(작아짐만) 다섯입니다. 눌림은 순간의 반응이라, 골라져 남아 있는 칸의 모양은 여기에 없습니다([커짐](#커짐)). hover 때 바뀌는 층(색)은 칠([Paint](../primitives/README.md#paint)의 `hoverable`)이라 몸짓과 따로 섭니다. Button은 `shadow`로 몸짓을 고릅니다 — 켜면 `sink`, `"hover"`면 `raise`, 끄면 `tap`입니다.
 
 목록 줄 · 아코디언 머리 · 메뉴 항목처럼 누르지만 움직이지 않는 것은 `none`입니다(Pressable의 기본값). 반응은 칠의 hover 층이 맡습니다.
 
@@ -28,13 +26,37 @@ funky-ui의 움직임 — 시간, 곡선, 누름의 거리 — 을 정리한 문
 <Card motion="lift" as={Link} to="/trade">…</Card>
 ```
 
+## 커짐
+
+골라진 칸은 가라앉지 않고 커집니다. 그림자를 켠 버튼이 골리면 105%로 커져 이웃 위에 서고, 4px 그림자를 그대로 둡니다. hover 때는 가라앉는 대신 제자리에서 그림자만 숨고, 누르는 순간 100%로 돌아옵니다. 이미 고른 칸을 다시 '눌러 들어가게' 하지 않으려는 것이고, class-explorer의 골라진 버튼(`scale-105 z-10`)이 이렇게 움직입니다.
+
+이 모양은 눌림(Pressable)이 아니라 골라짐([Selectable](../primitives/README.md#selectable))의 `grow`입니다. 눌림은 순간의 반응이고 골라짐은 남아 있는 상태라서 따로 서고, 커지는 칸은 그 자체로 몸짓이라 Pressable의 `motion`은 `none`으로 둡니다. 크기 1.05는 `PRESS.grow`이고, AppBar 로고가 hover 때 커지는 크기이기도 합니다.
+
+Button은 `shadow`를 켠(`true`) 버튼이 골라질 때만 `grow`를 줍니다. 그림자를 켜지 않은 칩과 `shadow="hover"` 버튼은 커지지 않고 색만 바뀝니다. 색은 이 모양과 따로 칠의 `selected`가 칠하므로, 골라진 칸은 `filled`로 바뀌는 동시에 커집니다.
+
+## 등장
+
+새로 나타나는 판의 몸짓은 셋입니다(`ENTER`). 판이 클수록 멀리서, 오래 옵니다.
+
+| 이름 | 거리 | 시간 | 쓰는 곳 |
+| --- | --- | --- | --- |
+| `rise` | 4px | `fast` 100ms | 기준 요소 옆에 붙는 작은 판 — 메뉴 · 툴팁 |
+| `pop` | 8px | `base` 200ms | 화면 가운데 큰 판 — 모달 |
+| `fade` | 0 | `slow` 300ms | 제자리에서 — 펼친 아코디언 본문 (class-explorer의 `fade-in duration-300`) |
+
+`rise`와 `pop`은 아래에서 거리만큼 떠오르면서 투명에서 불투명으로 바뀌고, `fade`는 움직이지 않고 불투명해지기만 합니다. `fade`가 위치를 건드리지 않는 이유는 커져 있거나 옮겨진 요소에도 그대로 걸 수 있게 하려는 것입니다. 곡선은 셋 모두 `out`입니다. 모달 뒤의 막은 `fade`를 `pop`과 같은 `base` 시간으로 걸어 제자리에서 나타납니다.
+
+몸짓은 [Floating](../primitives/README.md#floating)의 `enter`(기본 `rise`)로 고릅니다. 모달은 `pop`을, 아코디언 본문은 `fade`를 씁니다. 키프레임은 `styles/enter.css.ts`가 `ENTER`에서 만들고, 값 자체는 `/tokens`의 `ENTER`로 읽습니다. 움직임을 줄인 사람에게는 맨 아래 규칙대로 시간이 거의 0으로 줄어 곧바로 나타납니다.
+
+**퇴장은 없습니다.** 닫는 모션을 보이려면 판을 그 시간만큼 더 들고 있어야 하는데, 그사이 한 번 더 누르면 판 뒤의 화면이 눌립니다. class-explorer의 Ask 창 규칙에서 온 것입니다.
+
 ## 시간 · 곡선
 
 | 이름 | 값 | 쓰는 곳 |
 | --- | --- | --- |
-| `fast` | 100ms | 눌림 · 색 바뀜 (class-explorer의 duration-100) |
-| `base` | 200ms | 펼침 · 나타남 |
-| `slow` | 300ms | 막대 길이 |
+| `fast` | 100ms | 눌림 · 색 바뀜 (class-explorer의 duration-100) · 메뉴와 툴팁의 등장(`rise`) |
+| `base` | 200ms | 펼침 · 나타남 — 모달의 등장(`pop`)과 뒤 막 |
+| `slow` | 300ms | 막대 길이 · 펼친 본문의 등장(`fade`) |
 | `crawl` | 700ms | 시간선 위 캐럿처럼 연속으로 움직이는 위치 전용 |
 | `standard` | `cubic-bezier(0.2, 0, 0, 1)` | 기본 곡선 |
 | `out` | `cubic-bezier(0, 0, 0.2, 1)` | 나타남 |

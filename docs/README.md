@@ -14,7 +14,7 @@ Atoms와 Molecules까지는 어떤 앱에도 쓸 수 있는 범용 층이고, Co
 | 층 | 문서 | 하는 일 |
 | --- | --- | --- |
 | Foundations | [foundations](foundations/README.md) | 숫자와 hex가 사는 다섯 시스템 |
-| Primitives | [primitives](primitives/README.md) | 1차 바탕(Box · Text · Icon · 접근성)과, Box 위에 능력 하나를 얹은 2차(칠 — Surface · Paint · Glass, 누름 — Pressable, 배치) |
+| Primitives | [primitives](primitives/README.md) | 1차 바탕(Box · Text · Icon · 접근성)과, Box 위에 능력 하나를 얹은 2차(칠 — Surface · Paint · Glass, 누름 — Pressable, 골라짐 — Selectable, 띄우기 — Floating, 배치) |
 | Atoms | [atoms](atoms/README.md) | 한 가지 일을 하는 컨트롤 — accent × variant 축이 여기서 시작합니다 |
 | Molecules | [molecules](molecules/README.md) | atom을 묶은 범용 조합 |
 | Components | [components](components/README.md) | class-explorer 전용 조합 |

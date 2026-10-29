@@ -10,7 +10,7 @@ palette.ts (hex)  →  color.ts (역할)  →  color-recipes.ts (variant 규칙)
 
 ## 면 · 잉크 · 선
 
-흑백 면에는 "회색" 대신 자리의 이름을 붙였습니다. 같은 회색이라도 어디에 깔리느냐에 따라 뜻이 다르기 때문입니다.
+흑백 면에는 "회색" 대신 자리의 이름을 붙였습니다. 같은 회색이라도 어디에 깔리느냐에 따라 뜻이 다르기 때문입니다. 표의 마지막 `brand`만 흑백이 아닙니다.
 
 | 역할 | 값 | 쓰는 곳 |
 | --- | --- | --- |
@@ -19,6 +19,9 @@ palette.ts (hex)  →  color.ts (역할)  →  color-recipes.ts (variant 규칙)
 | `surface.sunken` | `#fff0b8` | 크림 위의 오목한 자리 |
 | `surface.well` | `rgba(0,0,0,.05)` | 흰 면 안의 오목한 자리 — 표 머리 · 막대 홈 |
 | `surface.inverse` | `#000000` | 반전 면 — 선택 · 시간표 머리 |
+| `surface.brand` | `#7828c8` | 구조 면 — 상단 바 · 하단 바의 보라. 글자는 흰색(7.15:1) |
+
+`brand`는 앱의 뼈대가 쓰는 보라 한 자리입니다. 상단 바 · 하단 바는 색을 고르는 요소가 아니라서 accent가 아니라 면의 이름을 받았고, 값은 accent의 보라와 같은 네온입니다. 바는 [Paint](../primitives/README.md#paint)가 아니라 [Surface](../primitives/README.md#surface)가 칠하므로 accent가 흐르지 않고, 그 위의 버튼은 accent가 없는 흰 유리([Glass](../primitives/README.md#glass))입니다.
 
 글자는 `#222`, 선은 `#000`입니다. 굵은 선은 완전한 검정일 때만 제대로 섭니다.
 
@@ -99,15 +102,15 @@ variant는 같은 accent를 어디에, 얼마나 진하게 칠하는지를 정�
 
 ### Paint — 레시피를 쓰는 primitive
 
-이 표는 [Paint](../primitives/README.md#paint) primitive가 그대로 씁니다. `<Paint accent variant>`가 레시피를 글자 · 면 · 테두리로 칠하고, `hoverable`을 주면 표의 Hover 칸대로 hover · 누르는 중에 색이 바뀝니다 — Pressable 없이도 동작합니다. 그림자 속으로 가라앉는 몸짓은 색이 아니라 누름([Pressable](../primitives/README.md#pressable))의 몫이라, Button은 Pressable에 이 칠을 얹은 것입니다. Badge · Notice · 바(상단 바 · 머리 막대)도 전부 Paint 위에 섭니다. 흑백 박스(카드 · 패널 · 모달 판)는 [Surface](../primitives/README.md#surface)가 칠하고, 거기에는 accent가 없습니다 — 박스는 흑백, 색은 요소입니다.
+이 표는 [Paint](../primitives/README.md#paint) primitive가 그대로 씁니다. `<Paint accent variant>`가 레시피를 글자 · 면 · 테두리로 칠하고, `hoverable`을 주면 표의 Hover 칸대로 hover · 누르는 중에 색이 바뀝니다 — Pressable 없이도 동작합니다. 그림자 속으로 가라앉는 몸짓은 색이 아니라 누름([Pressable](../primitives/README.md#pressable))의 몫이라, Button은 Pressable · Selectable에 이 칠을 얹은 것입니다. Badge · Notice · 머리 막대(모달 · `Card.Header`)도 전부 Paint 위에 섭니다. 박스(카드 · 패널 · 모달 판 · 바)는 [Surface](../primitives/README.md#surface)가 칠하고, 거기에는 accent가 없습니다 — 박스는 자리의 색(흑백, 그리고 바의 보라 `brand`), 색은 요소입니다.
 
 ### 선택
 
-선택은 따로 된 variant가 아니라 상태입니다. `selected`를 주면 같은 accent의 `filled`로 칠해지고 `aria-pressed`가 붙습니다. 그래서 안 골린 칸은 `muted`, 골린 칸은 검정 블록이 되는 class-explorer의 학기 고르기도, 초록 Outline이 초록 블록이 되는 Trade의 "유지"도 같은 규칙입니다. 그림자를 켠 버튼은 골리면 눌린 채로 있습니다 ([Motion](motion.md)).
+선택은 따로 된 variant가 아니라 상태입니다. `selected`를 주면 같은 accent의 `filled`로 칠해집니다. 그래서 안 골린 칸은 `muted`, 골린 칸은 검정 블록이 되는 class-explorer의 학기 고르기도, 초록 Outline이 초록 블록이 되는 Trade의 "유지"도 같은 규칙입니다. 색은 여기까지입니다. 골라졌다는 알림은 [Selectable](../primitives/README.md#selectable)이 role에 맞는 aria 하나(`aria-pressed` · `aria-checked` · `aria-selected` · `aria-current`)로 붙이고, 그림자를 켠 버튼은 골리면 커집니다 ([Motion](motion.md#커짐)).
 
 ### accent는 Paint에서 흐릅니다
 
-accent는 CSS 변수라 아래로 흐르고, 그 변수를 정하는 것은 그 색으로 칠해지는 요소뿐입니다 — primitive에서는 Paint 하나, 위 층에서는 Paint를 쓰는 컴포넌트(Button · Badge · Notice · 바)와 Variant 없이 자기 색을 칠하는 컴포넌트(Link · Stat · Meter)입니다. 컨트롤에 accent를 주지 않으면 가장 가까운 바깥 Paint의 accent를 쓰고, 바깥에도 없으면 검정입니다. Box · Surface · Card · Stack처럼 색을 모르는 박스는 이 흐름을 끊지도 바꾸지도 않습니다.
+accent는 CSS 변수라 아래로 흐르고, 그 변수를 정하는 것은 그 색으로 칠해지는 요소뿐입니다 — primitive에서는 Paint 하나, 위 층에서는 Paint를 쓰는 컴포넌트(Button · Badge · Notice · 머리 막대)와 Variant 없이 자기 색을 칠하는 컴포넌트(Link · Stat · Meter — Paint가 내놓는 `useAccent`로 accent만 겁니다)입니다. 컨트롤에 accent를 주지 않으면 가장 가까운 바깥 Paint의 accent를 쓰고, 바깥에도 없으면 검정입니다. Box · Surface · Card · Stack처럼 색을 모르는 박스는 이 흐름을 끊지도 바꾸지도 않습니다. 보라로 칠한 상단 바 · 하단 바도 Surface라서 accent를 흘리지 않습니다.
 
 드랍한 과목 줄 안의 버튼이 줄의 색을 따르는 식입니다.
 
@@ -132,7 +135,7 @@ hover와 press는 면을 바꾸지 않고 위에 층을 얹습니다(Paint의 `h
 
 검정 accent의 accent 층은 회색 층과 같은 값입니다(검정 15%는 지나치게 어둡습니다). hover 층이 없는 Hairline · Muted도 누르는 순간에는 accent 층을 얹어 눌렸다는 것을 보입니다.
 
-흑백 면(Surface)의 `hoverable`은 이 표 대신 글자색에서 층을 만듭니다. 글자색의 7%(hover) · 12%(누르는 중)라 흰 면 위에서는 회색 층과 같은 세기이고, 검정 면 위에서는 흰 층이 됩니다. 면 위의 목록 줄은 면 없이(`fill="none"`) 이 층만 얹습니다.
+면(Surface)의 `hoverable`은 이 표 대신 글자색에서 층을 만듭니다. 글자색의 7%(hover) · 12%(누르는 중)라 흰 면 위에서는 회색 층과 같은 세기이고, 어두운 면(검정, 보라 `brand`) 위에서는 흰 층이 됩니다. 면 위의 목록 줄은 면 없이(`fill="none"`) 이 층만 얹습니다.
 
 ## Focus
 

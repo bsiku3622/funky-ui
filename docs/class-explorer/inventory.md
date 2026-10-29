@@ -32,7 +32,7 @@ class-explorer `frontend/src`의 모든 컴포넌트를 세고, funky-ui의 층(
 계측이 요구한 축은 셋이었고, funky-ui는 그 셋을 그대로 만들었습니다.
 
 - **accent × variant** — 버튼 102종이 "어떤 색(accent 9)을 어떻게 칠하는가(variant 11)" 두 축 안으로 들어옵니다. 규칙은 [Color](../foundations/color.md)의 레시피 표입니다.
-- **selected는 상태** — 41번 쓰인 `isSelected`는 variant가 아니라 "같은 accent의 filled로 바뀜"입니다.
+- **selected는 상태** — 41번 쓰인 `isSelected`는 variant가 아니라 "같은 accent의 filled로 바뀜"입니다. 그림자를 켠 버튼이면 거기에 105%로 커지는 모양이 따라옵니다(class-explorer의 골린 버튼과 같습니다).
 - **그림자 두 단** — 33개 값이 `raised`(4px)와 `floating`(6px, 모달 전용)으로 모입니다.
 
 자세한 대응은 [이관표](migration.md)에 있습니다.
@@ -48,8 +48,8 @@ class-explorer의 컴포넌트를 funky-ui의 층에 놓으면 이렇습니다. 
 | `atoms/RetroButton` · raw `<button>` 102종 | `Button` · `IconButton` | accent × variant × size × shadow |
 | `atoms/RetroChip` · 배지 43종 | `Badge` | 같은 레시피, hover 없음 |
 | `atoms/RetroSpinner` | `Spinner` | 모양 그대로 (paper-ui에서 옮긴 고리) |
-| 상단 바 · 학기 선택의 유리 버튼 | `NavButton` (Pressable + `Glass`) | 재원님 스케치의 Glass variant를 따로 뺐고, 유리 칠은 `Glass` primitive입니다 |
-| 폼 입력 · select · textarea | `Input` · `Select` · `Textarea` | 그림자는 `shadow` prop |
+| 상단 바 · 학기 선택의 유리 버튼 | `NavButton` (Pressable + Selectable + `Glass`) | 재원님 스케치의 Glass variant를 따로 뺐고, 유리 칠은 `Glass` primitive입니다 |
+| 폼 입력 · select · textarea | `Input` · `Select` · `Textarea` | 그림자는 `shadow` prop이고 포커스에 거둡니다 — 반대 규칙(Trade 검색칸)은 두지 않았습니다. 면은 `Surface`에서 빌립니다 |
 | 체크박스 (native 그대로였음) | `Checkbox` · `Radio` · `Switch` | |
 | 폼 이름표 (`labelClass`) | `Label` | overline 글자 |
 | 카드 안 구분선 (`border-black/10`) | `Divider` | |
@@ -68,7 +68,7 @@ class-explorer의 컴포넌트를 funky-ui의 층에 놓으면 이렇습니다. 
 | `atoms/RetroTooltip` | `Tooltip` (`disabled`로 ⌘ 누를 때만) |
 | `atoms/SearchInput` | `SearchField` |
 | `TermSwitcher`의 목록 | `Menu` |
-| 모달 겹판 7개 | `Modal` (native `<dialog>`) |
+| 모달 겹판 7개 | `Modal` (native `<dialog>`) — 안에서 여는 `Menu` · `Tooltip`도 그 안에 그려져 보입니다 |
 | 화면 전환 버튼 줄 (Browse의 Students · Teachers …) | `Tabs` |
 | 값 고르는 버튼 줄 (급식 끼니 · 필터 · 학기) | `SegmentedControl` |
 | 오류 · 안내 상자 (`bg-retro-primary/10 border-retro-primary`) | `Notice` — Paint(plain) 위 |
@@ -79,9 +79,9 @@ class-explorer의 컴포넌트를 funky-ui의 층에 놓으면 이렇습니다. 
 
 | class-explorer | funky-ui |
 | --- | --- |
-| `Navigation` | `AppBar` |
+| `Navigation` | `AppBar` (보라는 Surface `brand`이고 `accent`를 받지 않음) |
 | `Sidebar` | `SideNav` |
-| `BottomNav` | `BottomNav` (펼친 More 판은 앱에 남음) |
+| `BottomNav` | `BottomNav` (보라는 Surface `brand`이고 `accent`를 받지 않음, 펼친 More 판은 앱에 남음) |
 | `TermSwitcher` | `TermSwitcher` |
 | `atoms/StudentBadge` | `StudentBadge` (진동 `buzz` 포함) |
 | `atoms/StudentCard` · `atoms/TeacherCard` | `PersonCard` |
@@ -98,7 +98,8 @@ class-explorer의 컴포넌트를 funky-ui의 층에 놓으면 이렇습니다. 
 
 검수에서 정할 것들입니다.
 
-- **실행 중에 정해지는 색의 버튼** — `MajorPicker`는 학과색(hex 11가지)으로 고른 버튼을 칠합니다. 학과색은 네온 accent 아홉 밖의 색이라 `Button`으로는 칠할 수 없습니다. `ClassTile` · `StudentBadge`처럼 `color`(hex)를 받는 탈출구를 Button에 둘지, 학과를 accent에 묶을지 정해야 합니다.
+- **실행 중에 정해지는 색의 버튼** — `MajorPicker`는 학과색(hex 11가지)으로 고른 버튼을 칠합니다. 학과색은 네온 accent 아홉 밖의 색이라 `Button`으로는 칠할 수 없습니다. hex를 받는 탈출구를 Button(Paint)에 두지는 않기로 했습니다 — 실행 중에 색을 계산하지 않는다는 규칙을 깨고, 임의의 색에서는 글자 대비(WCAG)도 보장할 수 없기 때문입니다. 지금 실행 중의 색은 Components가 `--fk-tone`(`toneStyle`)으로만 칠합니다(`ClassTile` · `StudentBadge`). 남은 것은 학과를 accent에 묶을지, 학과색 버튼도 그 길(Components)에 올릴지입니다.
+- **고른 카드** — EntityCard의 `isActive`(`scale-105 shadow-retro-lg`)는 가이드에만 있고 코드에는 없습니다. 쓰이는 곳이 없어 `Card`에 `selected`는 더하지 않았습니다.
 - **떠 있는 창 · 아래에서 올라오는 판** — Ask의 데스크탑 미니 창(`Window`)과 모바일 전체 화면 판(`Sheet`). 지금은 `agent/AgentPanel` 안에 있습니다.
 - **좌우로 훑는 글자** (`MarqueeText`) — 범용 primitive 후보입니다.
 - **어두운 면 위의 글자 링크** — 랜딩 · 개인정보 화면의 바닥글(`text-white/40 hover:text-white`).

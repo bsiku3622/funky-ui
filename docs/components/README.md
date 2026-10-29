@@ -12,7 +12,7 @@ Components는 class-explorer 전용 컴포넌트입니다. 앱 셸(상단 바 ·
 
 ## AppBar
 
-상단 바입니다. accent 면 · 아래 2px 검정 선 · 아래로 4px 그림자이고 높이는 80px입니다. 아래는 로고를 누르면 홈으로 가고, 오른쪽에 학기 선택을 둔 화면 고정 바입니다.
+상단 바입니다. 보라(`brand`) 면 · 아래 2px 검정 선 · 아래로 4px 그림자이고 높이는 80px입니다. 아래는 로고를 누르면 홈으로 가고, 오른쪽에 학기 선택을 둔 화면 고정 바입니다.
 
 ```tsx
 <AppBar
@@ -28,12 +28,13 @@ Components는 class-explorer 전용 컴포넌트입니다. 앱 셸(상단 바 ·
 | `brand` | `ReactNode` | 필수 | 로고 글자입니다. 기울어진(−6°) 900 대문자로 그립니다. |
 | `onBrandClick` | `() => void` | — | 주면 로고가 button이 되고, 주지 않으면 글자(`<span>`)로 그립니다. |
 | `actions` | `ReactNode` | — | 오른쪽 끝입니다. 학기 선택 · 계정 · 로그아웃을 둡니다. |
-| `accent` | `Accent` | `"purple"` | 바의 색입니다. |
 | `fixed` | `boolean` | `false` | 화면 위에 고정합니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 
 - `fixed`면 문서 흐름에서 빠지므로(`position: fixed`, `z-index` 100) 본문 위쪽에 바 높이(80px)만큼 여백을 둡니다. `SideNav`의 `fixed`는 이 바 아래(80px)에서 시작합니다.
-- 바는 [Paint](../primitives/README.md#paint)의 `filled`로 칠하고, 테두리만 아래 한 줄로 덮습니다. 바의 글자색은 accent의 `ink`이고, `actions`의 NavButton은 흰 유리 위에 그 글자색을 물려받습니다. 그래서 밝은 바(시안 · 노랑)에서는 흰 유리 위 검정 글자가 되어, 어느 accent에서도 글자 대비가 맞습니다.
+- 바는 [Surface](../primitives/README.md#surface)의 `brand`(보라 면 · 흰 글자, 대비 7.15:1)로 칠합니다. 아래 2px 검정 선과 아래로만 내려가는 4px 그림자는 셸 CSS가 그립니다.
+- `accent`가 없습니다. 바는 앱의 뼈대이지 버튼처럼 색을 고르는 요소가 아니고, class-explorer의 바도 보라 하나뿐이기 때문입니다. accent는 그 색으로 칠해지는 요소(Paint 위에 선 것)만 받는다는 [Primitives](../primitives/README.md)의 규칙과도 맞습니다.
+- 바가 Paint가 아니라 Surface라서 `actions` 안의 요소는 보라 accent를 물려받지 않습니다. accent를 주지 않은 Button · Badge는 검정(시스템)이 되고, 바 위에는 NavButton을 둡니다. NavButton은 accent를 쓰지 않으므로 영향이 없고, 흰 유리 위에 바의 흰 글자를 물려받습니다.
 
 ## SideNav
 
@@ -81,7 +82,9 @@ Components는 class-explorer 전용 컴포넌트입니다. 앱 셸(상단 바 ·
 | `onClick` | `() => void` | — | 눌렀을 때 부릅니다. |
 | `children` | `ReactNode` | — | 메뉴 이름입니다. |
 
-- [Pressable](../primitives/README.md#pressable)(누름)에 [Paint](../primitives/README.md#paint)(칠)를 얹은 버튼입니다. 지금 화면은 검정 `filled`가 4px 그림자 위에 떠 있고(`sink` — hover 때 가라앉음), 나머지는 `ghostMuted`로 물러나 hover 때 글자만 진해집니다(`tap`). 골라짐(`selected`)이 아니라 variant를 바꾸는 것이라, 지금 화면 칸은 눌린 채가 아니라 떠 있습니다.
+- [Pressable](../primitives/README.md#pressable)(누름)과 [Selectable](../primitives/README.md#selectable)(골라짐)에 [Paint](../primitives/README.md#paint)(칠)를 얹은 버튼입니다. 지금 화면은 검정 `filled`가 4px 그림자 위에 떠 있고(`sink` — hover 때 가라앉음), 나머지는 `ghostMuted`로 물러나 hover 때 글자만 진해집니다(`tap`). 골라진 버튼(`selected` + `shadow`)처럼 커지지 않고 variant만 바꿉니다 — class-explorer의 사이드바가 그렇습니다.
+- 지금 화면은 `aria-current="page"` 하나로 알립니다. 눌러서 켠 버튼(`aria-pressed`)이나 고른 값(`aria-checked`)이 아니라 '지금 여기'이기 때문입니다.
+- 방향키 무리로 묶지 않습니다(`useSelectableGroup`을 쓰지 않습니다). 내비는 Tab 키로 칸마다 들르는 것이 맞아서입니다. 묶으면 roving tabindex 때문에 Tab이 지금 화면 한 칸에만 들어오고, 나머지 메뉴에는 방향키를 아는 사람만 닿습니다.
 - 링크가 아니라 `<button>`입니다. 화면 이동은 `onClick`에서 합니다.
 
 ## BottomNav
@@ -98,14 +101,13 @@ Components는 class-explorer 전용 컴포넌트입니다. 앱 셸(상단 바 ·
 
 | prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `accent` | `Accent` | `"purple"` | 바의 색입니다. |
 | `fixed` | `boolean` | `false` | 화면 아래에 고정합니다. 넓은 화면(md 이상)에서는 숨습니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 | `children` | `ReactNode` | — | `BottomNav.Item`들입니다. |
 
-- 바는 AppBar와 같이 Paint의 `filled`이고 테두리만 위 한 줄입니다.
+- 바는 AppBar와 같이 Surface의 `brand`이고, 검정 선(위 2px)과 4px 그림자는 위쪽으로만 둡니다. `accent`가 없는 이유도 AppBar와 같습니다.
 - 다섯 칸까지만 넣습니다. 칸이 폭을 똑같이 나누므로 칸이 늘면 라벨과 누르는 자리가 함께 좁아집니다.
-- 칸 글자는 바의 글자색(accent의 `ink`)을 물려받아 어느 accent 바에서도 읽힙니다. 쉬는 칸은 60% 로 묽어집니다.
+- 칸 글자는 바의 흰 글자를 물려받습니다. 쉬는 칸은 60% 로 묽어집니다.
 
 ### BottomNav.Item
 
@@ -119,6 +121,7 @@ SideNav.Item과 같은 prop입니다.
 | `children` | `ReactNode` | — | 칸 이름입니다. 9px 대문자로 그립니다. |
 
 - 몸짓은 [Pressable](../primitives/README.md#pressable)의 `tap`입니다. 바 위라 그림자 없이 누르는 순간만 작아집니다.
+- 키보드와 aria 규칙은 SideNav.Item과 같습니다. Tab으로 칸마다 들르고, 지금 화면은 `aria-current="page"` 하나로 알립니다. 방향키 무리로 묶지 않는 이유도 [SideNav.Item](#sidenavitem)에 있습니다.
 
 ## TermSwitcher
 
@@ -143,6 +146,7 @@ SideNav.Item과 같은 prop입니다.
 
 - 학기가 둘 미만이면 아무것도 그리지 않습니다(`null`). `value`와 맞는 항목이 없으면 버튼에 `TERM`을 적습니다.
 - 안쪽은 `Menu`(`align="end"`, `aria-label="학기"`)와 NavButton입니다. 어두운 바 위에서 쓰도록 만든 것이라 밝은 면 위에는 두지 않습니다.
+- 목록은 [Menu](../molecules/README.md#menu)가 그립니다. `value`가 있어서 항목은 `menuitemradio`이고, 열면 지금 학기에 포커스가 가며 지금 학기는 체크와 검정 면으로 보입니다. ↑ ↓ · Home · End는 포커스만 옮기고 Enter나 누름으로 골라야 `onChange`가 불립니다 — 방향키로 훑는 동안 학기가 바뀌지 않습니다. Esc나 선택으로 닫히면 포커스가 버튼으로 돌아오고, 바깥을 누르면 포커스를 옮기지 않고 닫힙니다.
 
 ## StudentBadge
 
