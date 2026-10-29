@@ -2,7 +2,7 @@
 
 Atoms는 한 가지 일을 하는 컨트롤과 표시입니다. Primitives와 토큰 · 스타일만 읽고, 어떤 앱에도 쓸 수 있는 범용 층이라 class-explorer를 모릅니다. 누르는 버튼, 읽는 라벨, 입력 칸, 켜고 끄는 표식이 여기 있습니다.
 
-Button · IconButton은 [Pressable](../primitives/README.md#pressable)(누름)에 [Paint](../primitives/README.md#paint)(칠)를 얹은 것이고, Badge는 Paint 위에 섭니다. 색(accent × variant · selected · hover 색)은 Paint가, 누름(버튼의 의미 · 커서 · 그림자와 눌림)은 Pressable이 맡고, 이 셋은 크기 · 글자 · 아이콘만 얹습니다. `accent`는 색 이름(아홉 가지와 역할 별칭 다섯)이고, `variant`는 같은 accent를 어디에 얼마나 진하게 칠할지 정하는 열한 가지 규칙입니다. 색을 이 두 축으로만 고르는 이유는 [원칙](../get-started/principles.md), 값과 규칙은 [Color](../foundations/color.md), 크기 사다리는 [Shape](../foundations/shape.md)에 있습니다. 요소를 그리는 컴포넌트가 `as`와 나머지 props를 다루는 방식은 [Primitives](../primitives/README.md)와 같고, Input · Textarea · Select · Checkbox · Radio · Switch는 native 요소를 감싸므로 `ref`와 폼 속성이 그대로 갑니다. 예시는 import를 생략하며, `on`이나 `studentId`처럼 앱이 가진 상태와 핸들러는 이미 있다고 봅니다.
+Button · IconButton은 [Pressable](../primitives/README.md#pressable)(누름)에 [Paint](../primitives/README.md#paint)(칠)를 얹은 것이고, Badge는 Paint 위에 섭니다(NavButton은 Pressable에 [Glass](../primitives/README.md#glass)의 유리 칠을 얹은 것입니다). 색(accent × variant · selected · hover 색)은 Paint가, 누름(버튼의 의미 · 커서 · 그림자와 눌림)은 Pressable이 맡고, 이 셋은 크기 · 글자 · 아이콘만 얹습니다. `accent`는 색 이름(아홉 가지와 역할 별칭 다섯)이고, `variant`는 같은 accent를 어디에 얼마나 진하게 칠할지 정하는 열한 가지 규칙입니다. 색을 이 두 축으로만 고르는 이유는 [원칙](../get-started/principles.md), 값과 규칙은 [Color](../foundations/color.md), 크기 사다리는 [Shape](../foundations/shape.md)에 있습니다. 요소를 그리는 컴포넌트가 `as`와 나머지 props를 다루는 방식은 [Primitives](../primitives/README.md)와 같고, Input · Textarea · Select · Checkbox · Radio · Switch는 native 요소를 감싸므로 `ref`와 폼 속성이 그대로 갑니다. 예시는 import를 생략하며, `on`이나 `studentId`처럼 앱이 가진 상태와 핸들러는 이미 있다고 봅니다.
 
 | 묶음 | 컴포넌트 |
 | --- | --- |
@@ -90,7 +90,7 @@ Button은 Pressable과 Paint를 이렇게 묶습니다 — `shadow`를 켜면 `p
 
 - 반투명 유리 면 · 진한 글자 · 반투명 테두리이고, hover 때 테두리가 진해집니다. 글자와 유리는 바의 글자색(`currentColor`)에서 나오므로, 보라 바 위에서는 흰 유리, 시안 바 위에서는 검은 유리가 됩니다. 상단 바 · 하단 바 · 학기 선택에만 쓰고, 흰 면 · 크림 위에서는 Button을 씁니다.
 - `accent`와 `variant`가 없습니다. 색은 놓인 바가 정합니다.
-- 몸짓은 [Pressable](../primitives/README.md#pressable)의 `tap`입니다. 바 위에는 그림자를 두지 않으므로 누르는 순간만 작아집니다.
+- [Pressable](../primitives/README.md#pressable)의 `tap`에 [Glass](../primitives/README.md#glass)의 유리 칠(`hoverable`)을 얹은 버튼입니다. 바 위에는 그림자를 두지 않으므로 누르는 순간만 작아집니다. 버튼이 아닌 자리에 같은 유리가 필요하면 Glass를 직접 씁니다.
 - `children` 없이 `icon`만 주면 정사각 아이콘 버튼이 되고, 이때만 `label`이 `aria-label`로 붙습니다.
 
 ## Link

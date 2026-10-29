@@ -48,7 +48,7 @@ class-explorer의 컴포넌트를 funky-ui의 층에 놓으면 이렇습니다. 
 | `atoms/RetroButton` · raw `<button>` 102종 | `Button` · `IconButton` | accent × variant × size × shadow |
 | `atoms/RetroChip` · 배지 43종 | `Badge` | 같은 레시피, hover 없음 |
 | `atoms/RetroSpinner` | `Spinner` | 모양 그대로 (paper-ui에서 옮긴 고리) |
-| 상단 바 · 학기 선택의 유리 버튼 | `NavButton` | 재원님 스케치의 Glass variant를 따로 뺐습니다 |
+| 상단 바 · 학기 선택의 유리 버튼 | `NavButton` (Pressable + `Glass`) | 재원님 스케치의 Glass variant를 따로 뺐고, 유리 칠은 `Glass` primitive입니다 |
 | 폼 입력 · select · textarea | `Input` · `Select` · `Textarea` | 그림자는 `shadow` prop |
 | 체크박스 (native 그대로였음) | `Checkbox` · `Radio` · `Switch` | |
 | 폼 이름표 (`labelClass`) | `Label` | overline 글자 |

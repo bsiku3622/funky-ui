@@ -1,25 +1,25 @@
 # Primitives
 
-Primitives는 모양이 없는 바탕입니다. 요소 · 글자 · 아이콘 · 접근성 도구 · 칠 · 누름 · 배치 열한 개가 여기 있고, 토큰과 스타일(`tokens/` · `styles/`)만 읽습니다. Atoms부터 Components까지 모든 층이 이 열한 개 위에 섭니다.
+Primitives는 모양이 없는 바탕입니다. 요소 · 글자 · 아이콘 · 접근성 도구 · 칠 · 누름 · 배치 열두 개가 여기 있고, 토큰과 스타일(`tokens/` · `styles/`)만 읽습니다. Atoms부터 Components까지 모든 층이 이 열두 개 위에 섭니다.
 
-열한 개는 두 단으로 나뉩니다.
+열두 개는 두 단으로 나뉩니다.
 
 | 단 | 묶음 | 컴포넌트 | 맡는 일 |
 | --- | --- | --- | --- |
 | 1차 — 바탕 | element | Box | 태그 · ref · 여백 |
 | 1차 — 바탕 | content | Text · Icon | 글자 · 아이콘 |
 | 1차 — 바탕 | a11y | VisuallyHidden · Portal | 귀로 듣는 이름 · 그리는 자리 |
-| 2차 — Box + 능력 하나 | paint | Surface · Paint | 칠 — 박스는 흑백 면, 요소는 accent × variant(둘 다 hover 색까지) |
+| 2차 — Box + 능력 하나 | paint | Surface · Paint · Glass | 칠 — 박스는 흑백 면, 요소는 accent × variant, 색 바 위는 유리(모두 hover 색까지) |
 | 2차 — Box + 능력 하나 | press | Pressable | 누름 — 버튼의 의미 · 커서 · 꺼진 모양 · 몸짓(색은 없음) |
 | 2차 — Box + 능력 하나 | layout | Stack · Inline · Grid | 배치 |
 
-1차는 서로 기대지 않습니다. 2차는 모두 [Box](#box)의 prop(태그 · 여백)을 그대로 받고 능력을 하나만 더하며, 2차끼리도 서로 기대지 않습니다. 둘 이상이 필요하면 위 층이 class로 묶습니다 — Button은 Pressable(누름)에 Paint(칠)를 얹은 것이고, 누르는 Card는 Pressable에 Surface(면)를 얹은 것입니다. 이렇게 묶으라고 2차 primitive는 prop을 class 문자열로 바꾸는 함수(`surfaceClass` · `paintClass` · `pressClass`)를 같이 내놓습니다.
+1차는 서로 기대지 않습니다. 2차는 모두 [Box](#box)의 prop(태그 · 여백)을 그대로 받고 능력을 하나만 더하며, 2차끼리도 서로 기대지 않습니다. 둘 이상이 필요하면 위 층이 class로 묶습니다 — Button은 Pressable(누름)에 Paint(칠)를, 누르는 Card는 Pressable에 Surface(면)를, NavButton은 Pressable에 Glass(유리)를 얹은 것입니다. 이렇게 묶으라고 2차 primitive는 prop을 class 문자열로 바꾸는 함수(`surfaceClass` · `paintClass` · `glassClass` · `pressClass`)를 같이 내놓습니다.
 
 **primitive 중 accent를 갖는 것은 Paint뿐입니다.** Paint에 준 accent는 그 요소를 칠하고, 안쪽 요소가 accent를 따로 주지 않으면 그 색으로 흐릅니다. Box · Surface · 배치 primitive는 색을 모르므로 이 흐름을 끊지도 바꾸지도 않습니다. 바깥에 Paint가 없으면 검정(시스템)입니다. 위 층에서도 accent는 그 색으로 칠해지는 컴포넌트(Button · Badge · Link · 토글 …)만 받고, Card처럼 칠하지 않는 박스는 받지 않습니다.
 
 요소를 그리는 컴포넌트는 `as`로 렌더할 태그를 바꾸고, 나머지 props는 그 태그로 그대로 넘깁니다. 같은 이름의 HTML 속성이 있으면 컴포넌트의 prop이 우선하고, React 19라 `ref`도 일반 prop입니다. 예시는 import를 생략합니다. 컴포넌트는 `@studio-baeks/funky-ui`에서, 아이콘은 `lucide-react`에서 가져온 것이고, `navigate`나 `subjects`처럼 앱이 가진 값은 이미 있다고 봅니다.
 
-패키지 CSS의 레이어도 이 층을 따릅니다(`fk.base < fk.primitives < fk.components < fk.utilities`). 그래서 위 층 컴포넌트의 CSS는 Surface · Paint의 칠을 언제나 덮을 수 있습니다 — 모달 머리 막대가 Paint의 solid를 쓰면서 테두리는 아래 한 줄만 남기는 식입니다.
+패키지 CSS의 레이어도 이 층을 따릅니다(`fk.base < fk.primitives < fk.components < fk.utilities`). 그래서 위 층 컴포넌트의 CSS는 Surface · Paint · Glass의 칠을 언제나 덮을 수 있습니다 — 모달 머리 막대가 Paint의 solid를 쓰면서 테두리는 아래 한 줄만 남기는 식입니다.
 
 ## 어휘
 
@@ -218,6 +218,29 @@ hover 색은 Pressable 없이도 켜집니다. 누르는 물건으로 만들려�
 - 위 층 컴포넌트는 Paint의 칠을 쓰면서 형태만 자기 CSS로 덮습니다. 상단 바 · 모달 머리 막대는 solid를 쓰고 테두리를 한쪽만 남깁니다.
 - 상태마다 칠과 Pressable이 무엇을 맡는지는 [아래 표](#칠과-누름)에 있습니다.
 
+## Glass
+
+2차 primitive, 색 바 위의 유리입니다(Box + 유리 칠). 상단 바 · 하단 바처럼 accent로 칠한 바 위에 놓이는 반투명 면이고, 면과 테두리를 바의 글자색(`currentColor`)에서 묽혀 만듭니다. 그래서 보라 · 검정 바 위에서는 흰 유리, 시안 · 노랑 바 위에서는 검은 유리가 되고, accent를 받지 않습니다 — 색은 놓인 바가 정합니다. 아래는 보라 바 위에 학기 표시와, 지금 화면을 고른 유리를 놓은 예입니다.
+
+```tsx
+<Paint accent="purple" variant="solid" padding="md">
+  <Glass paddingX="md" paddingY="xs">2026-2</Glass>
+  <Glass selected paddingX="md" paddingY="xs">홈</Glass>
+</Paint>
+```
+
+| prop | 타입 | 기본값 | 설명 |
+| --- | --- | --- | --- |
+| `as` | `ElementType` | `"div"` | 렌더할 요소입니다. |
+| `selected` | `boolean` | `false` | 골라진 상태입니다. 더 짙은 유리와 글자색 테두리로 칠합니다. `aria-pressed` · `aria-current` 같은 속성은 쓰는 쪽이 붙입니다. |
+| `hoverable` | `boolean` | `false` | hover 때 유리가 짙어지고 테두리가 글자색이 됩니다. Pressable 없이 혼자 동작하고, 꺼진 요소에는 걸지 않습니다. |
+| `padding` `paddingX` `paddingY` | [Box](#box)와 같음 | — | Box와 같은 prop입니다. |
+| `className` | `string` | — | 마지막에 덧붙는 class입니다. |
+
+- 글자색은 바에서 물려받습니다. 흰 면 · 크림 위에서는 쓰지 않습니다 — 묽힐 글자색이 검정뿐이라 회색 상자가 되고, 그 자리는 [Paint](#paint)의 몫입니다.
+- 누르는 동안의 색은 없고 몸짓만 있습니다. 누르는 물건이면 [Pressable](#pressable)(`tap`)에 `glassClass()`로 얹습니다 — [NavButton](../atoms/README.md#navbutton)이 그렇게 조립됩니다.
+- `glassClass(props)`가 같은 prop을 class 문자열로 돌려줍니다.
+
 ## Pressable
 
 2차 primitive, 누르는 물건입니다(Box + 누름). '눌린다'는 사실과 그 몸짓을 맡습니다 — 버튼의 의미(`type` · `disabled` · `aria-disabled`) · 커서 · 꺼진 모양 · 움직임. 색은 하나도 없습니다. hover 색까지 Paint의 `hoverable`이고, Pressable이 그걸 켜 주지 않습니다. 흑백 면은 `surfaceClass()`, 색은 `paintClass()`로 얹습니다 — Button이 Pressable + Paint, 누르는 Card가 Pressable + Surface입니다. 아래는 과목 카드를 `lift`로 눌러 상세로 가게 한 예입니다.
@@ -250,15 +273,15 @@ hover 색은 Pressable 없이도 켜집니다. 누르는 물건으로 만들려�
 
 ## 칠과 누름
 
-색은 칠(Paint · Surface), 누름은 Pressable입니다. 같은 상태에 각자의 축으로 반응하고, 서로를 켜거나 끄지 않습니다.
+색은 칠(Paint · Surface · Glass), 누름은 Pressable입니다. 같은 상태에 각자의 축으로 반응하고, 서로를 켜거나 끄지 않습니다.
 
-| 상태 | 색 — Paint | 색 — Surface | 누름 — Pressable |
-| --- | --- | --- | --- |
-| 쉼 | variant의 FG · BG · Border | 흑백 면 · 테두리 · 그림자 | `press` · `lift`면 4px 그림자 위에 떠 있습니다 |
-| hover | `hoverable`이면 variant의 Hover 칸(층 · 글자 · 테두리) | `hoverable`이면 글자색 7% 층 | `press`는 가라앉고 `lift`는 떠오릅니다. 손가락 커서 |
-| 누르는 중 | `hoverable`이면 press 층으로 한 단 더 짙어집니다 | `hoverable`이면 글자색 12% 층 | 한 번 더 작아집니다(`--fk-press-scale`) |
-| 골라짐 | `selected` — 같은 accent의 solid | — | `pressed` — 눌린 채 머뭅니다 |
-| 꺼짐 | 상태 색을 걸지 않습니다 | 상태 층을 걸지 않습니다 | 몸짓을 멈추고 0.4로 흐려지며 `not-allowed` 커서. `disabled` · `aria-disabled`를 붙입니다 |
+| 상태 | 색 — Paint | 색 — Surface | 색 — Glass | 누름 — Pressable |
+| --- | --- | --- | --- | --- |
+| 쉼 | variant의 FG · BG · Border | 흑백 면 · 테두리 · 그림자 | 글자색 10% 면 · 30% 테두리 | `press` · `lift`면 4px 그림자 위에 떠 있습니다 |
+| hover | `hoverable`이면 variant의 Hover 칸(층 · 글자 · 테두리) | `hoverable`이면 글자색 7% 층 | `hoverable`이면 20% 면 · 글자색 테두리 | `press`는 가라앉고 `lift`는 떠오릅니다. 손가락 커서 |
+| 누르는 중 | `hoverable`이면 press 층으로 한 단 더 짙어집니다 | `hoverable`이면 글자색 12% 층 | — | 한 번 더 작아집니다(`--fk-press-scale`) |
+| 골라짐 | `selected` — 같은 accent의 solid | — | `selected` — 25% 면 · 글자색 테두리 | `pressed` — 눌린 채 머뭅니다 |
+| 꺼짐 | 상태 색을 걸지 않습니다 | 상태 층을 걸지 않습니다 | 상태 색을 걸지 않습니다 | 몸짓을 멈추고 0.4로 흐려지며 `not-allowed` 커서. `disabled` · `aria-disabled`를 붙입니다 |
 
 - hover 색은 브라우저의 `:hover` · `:active`가 켭니다. 그래서 칠은 Pressable 없이도 hover 색을 내고(툴팁을 띄우는 배지, 면 위의 목록 줄), Pressable은 칠 없이도 가라앉습니다(흑백 면을 빌린 카드). 포커스 고리는 어느 쪽도 아니고 전역 스타일시트가 겁니다.
 - 두 축에 걸치는 것은 꺼짐뿐입니다. Pressable이 `disabled` · `aria-disabled`를 붙이고, 두 primitive가 그 HTML 상태를 읽어 각자의 축에서 멈춥니다.

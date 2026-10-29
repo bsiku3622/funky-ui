@@ -16,7 +16,7 @@ funky-ui/
     │       │                   #   · typography · shape · layout · motion · vocabulary(축) · variables(--fk-*) · layers
     │       ├── styles/         # 공유 class — accent · variant · slots(레시피 → 슬롯) · space · typography · global
     │       ├── internal/       # cx · polymorphic · glyphs · useAnchor
-    │       ├── primitives/     # 1차 Box · Text · Icon · VisuallyHidden · Portal → 2차 Surface · Paint · Pressable · Stack · Inline · Grid
+    │       ├── primitives/     # 1차 Box · Text · Icon · VisuallyHidden · Portal → 2차 Surface · Paint · Glass · Pressable · Stack · Inline · Grid
     │       ├── atoms/          # 범용 컨트롤
     │       ├── molecules/      # 범용 조합
     │       └── components/     # class-explorer 전용
@@ -33,21 +33,21 @@ Foundations (Color · Typography → Shape → Layout → Motion) → Primitives
 
 각 층은 자기보다 앞의 층만 import 합니다. Atoms · Molecules 는 범용이고 class-explorer 의 데이터나 뜻(학번 · 학과 · 교시)을 모릅니다. 그런 것은 Components 에만 둡니다.
 
-Primitives 안은 두 단입니다(`PRIMITIVE_TIERS`). 1차(Box · Text · Icon · VisuallyHidden · Portal)는 서로 기대지 않고, 2차는 Box 위에 능력 하나 — 칠(Surface · Paint) · 누름(Pressable) · 배치(Stack · Inline · Grid)입니다. 2차끼리는 서로 import 하지 않습니다. 둘 이상이 필요하면 Atom 부터 `surfaceClass()` · `paintClass()` · `pressClass()` 로 class 를 빌려 묶습니다 — Button = Pressable + paintClass, 누르는 Card = Pressable + surfaceClass. 인벤토리(`inventory.ts`)를 바꾸면 Playground 사이드바 · README 의 표 · docs 를 같이 고칩니다.
+Primitives 안은 두 단입니다(`PRIMITIVE_TIERS`). 1차(Box · Text · Icon · VisuallyHidden · Portal)는 서로 기대지 않고, 2차는 Box 위에 능력 하나 — 칠(Surface · Paint · Glass) · 누름(Pressable) · 배치(Stack · Inline · Grid)입니다. 2차끼리는 서로 import 하지 않습니다. 둘 이상이 필요하면 Atom 부터 `surfaceClass()` · `paintClass()` · `pressClass()` 로 class 를 빌려 묶습니다 — Button = Pressable + paintClass, 누르는 Card = Pressable + surfaceClass, NavButton = Pressable + glassClass. 인벤토리(`inventory.ts`)를 바꾸면 Playground 사이드바 · README 의 표 · docs 를 같이 고칩니다.
 
 ## 색
 
 - hex 는 `tokens/palette.ts` 에만 씁니다. 다른 파일은 고르기만 합니다.
 - accent 사다리 다섯 칸(ink · solidInk · solid · soft · softInk)의 규칙은 docs/foundations/color.md 에 있습니다. 값을 바꾸면 Playground › Color 의 대비 배지가 목표(글자 칸 AA)를 지키는지 확인합니다.
 - variant 는 `tokens/color-recipes.ts` 의 칸 이름 표 하나가 정합니다. `styles/slots.ts` 가 그 이름을 변수로 옮기고, `Paint` 는 슬롯 일곱(`--fk-fg` · `--fk-bg` · `--fk-border` · hover 셋 · press 하나)만 읽습니다.
-- **칠은 primitive 둘이 나눠 맡습니다.** 박스는 `Surface`(흑백 면 · 테두리 · 그림자 · hoverable 흑백 상태 층 — 면 위의 줄은 `fill="none"`), 요소는 `Paint`(accent × variant · selected · hoverable — 색의 모든 상태). `Pressable` 은 누르는 물건(의미 · 커서 · 꺼짐 · 몸짓)이고 색이 없습니다 — hover 색도 칠(Paint · Surface)의 `hoverable` 이고, Pressable 이 켜 주지 않습니다. 위 층은 이 둘을 렌더하거나 `surfaceClass()` · `paintClass()` 로 class 만 빌려 옵니다 — 칠을 다시 조립하지 않습니다. `Box` 는 태그 · ref · 여백만 다루고 색을 모릅니다.
+- **칠은 primitive 셋이 나눠 맡습니다.** 박스는 `Surface`(흑백 면 · 테두리 · 그림자 · hoverable 흑백 상태 층 — 면 위의 줄은 `fill="none"`), 요소는 `Paint`(accent × variant · selected · hoverable — 색의 모든 상태), 색 바 위는 `Glass`(바의 글자색을 묽힌 유리 · selected · hoverable — accent 없음). `Pressable` 은 누르는 물건(의미 · 커서 · 꺼짐 · 몸짓)이고 색이 없습니다 — hover 색도 칠(Paint · Surface · Glass)의 `hoverable` 이고, Pressable 이 켜 주지 않습니다. 위 층은 이 셋을 렌더하거나 `surfaceClass()` · `paintClass()` · `glassClass()` 로 class 만 빌려 옵니다 — 칠을 다시 조립하지 않습니다. `Box` 는 태그 · ref · 여백만 다루고 색을 모릅니다.
 - ⚠️ variant 는 슬롯 일곱을 **전부** 씁니다. 변수는 상속되므로 하나라도 비우면 바깥 컨트롤의 값이 새어 들어옵니다.
 - ⚠️ **accent 는 그 색으로 칠해지는 요소만 갖습니다.** primitive 에서는 Paint 하나이고, 위 층에서는 Paint 를 쓰는 컴포넌트와 Variant 없이 자기 색을 칠하는 컴포넌트(Link · 토글 · Stat · Meter — `accentClass` 를 직접 붙입니다)입니다. CSS 변수라 아래로 흐르고 `:root` 는 검정(시스템)입니다. Box · Surface · 배치 · Card · Accordion 에 accent prop 을 다시 달지 않습니다 — 칠하지 않는 박스가 안쪽 색을 바꾸면 색이 어디서 왔는지 화면에서 찾을 수 없습니다. `X as ElementType` 으로 넓힌 자리는 타입 검사가 못 잡으니, accent 가 Surface · Pressable 로 흘러 DOM 속성으로 새지 않는지 봅니다.
 - 런타임에 색을 계산하지 않습니다. 실행 중에 정해지는 색(학과 · 학번)은 Components 에서 `--fk-tone` 하나로 받습니다.
 
 ## 스타일
 
-- 패키지 CSS 는 전부 `fk` 레이어 안에 듭니다(`fk.reset < theme < base < primitives < components < utilities`). 층 구조를 그대로 옮긴 순서라 위 층 CSS 는 Surface · Paint 의 칠을 언제나 덮습니다 — 모달 머리 막대가 Paint 의 solid 를 쓰고 테두리만 아래 한 줄로 덮는 식입니다. 소비 앱은 CSS 맨 위에 `@layer fk, theme, base, components, utilities;` 를 둡니다.
+- 패키지 CSS 는 전부 `fk` 레이어 안에 듭니다(`fk.reset < theme < base < primitives < components < utilities`). 층 구조를 그대로 옮긴 순서라 위 층 CSS 는 Surface · Paint · Glass 의 칠을 언제나 덮습니다 — 모달 머리 막대가 Paint 의 solid 를 쓰고 테두리만 아래 한 줄로 덮는 식입니다. 소비 앱은 CSS 맨 위에 `@layer fk, theme, base, components, utilities;` 를 둡니다.
 - vanilla-extract 의 `.css.ts` 는 함수를 export 할 수 없습니다. 규칙을 만드는 함수는 일반 모듈(`styles/slots.ts` · `tokens/typography-recipes.ts`)에 둡니다.
 - `style()` 의 selector 는 자기 자신(`&`)을 겨눠야 합니다. 형제 · 자식을 꾸미는 규칙은 대상 쪽 style 에 `${other}:checked + &` 로 겁니다.
 - 그림자는 `raised`(4px) · `floating`(6px, 모달 전용) 두 단뿐입니다. blur 는 0.
