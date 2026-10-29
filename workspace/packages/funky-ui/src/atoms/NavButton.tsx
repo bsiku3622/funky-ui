@@ -26,7 +26,7 @@ const PressableRoot = Pressable as ElementType;
 
 /**
  * 색 바 위의 버튼 — Pressable(tap)에 Glass(유리 칠)를 얹은 것: 반투명 유리 면 · 진한 글자 · 반투명 테두리, hover 때 테두리가 진해집니다.
- * 글자와 유리는 바의 글자색에서 나옵니다. 상단 바 · 하단 바 · 학기 선택에만 씁니다 — 흰 면 · 크림
+ * 유리는 어느 바 위에서도 흰색이고, 글자는 바의 글자색을 물려받습니다. 상단 바 · 하단 바 · 학기 선택에만 씁니다 — 흰 면 · 크림
  * 위에서는 Button.
  */
 export function NavButton<E extends ElementType = "button">({

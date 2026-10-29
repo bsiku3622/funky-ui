@@ -47,7 +47,7 @@ export function PlaygroundShell({ children }: { children: ReactNode }) {
           <div key={layer} className={s.navLayer}>
             <p className={s.navLayerTitle}>
               {LAYER_LABEL[layer]}
-              <Badge size="sm" variant={layer === "components" ? "tonal" : "outline"} accent={layer === "components" ? "purple" : undefined}>
+              <Badge size="sm" variant={layer === "components" ? "solid" : "outline"} accent={layer === "components" ? "purple" : undefined}>
                 {LAYER_COUNT[layer]}
               </Badge>
             </p>

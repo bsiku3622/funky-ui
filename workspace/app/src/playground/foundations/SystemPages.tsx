@@ -121,7 +121,7 @@ export function ShapePage() {
         />
       </Section>
       <Section title="배지 · 아이콘">
-        <Table head={["badge", "height", "inset", "font", "sample"]} rows={BADGE_SIZES.map((s) => [s, BADGE.height[s], BADGE.inset[s], BADGE.font[s], <Badge size={s} variant="solid">이 기기</Badge>])} />
+        <Table head={["badge", "height", "inset", "font", "sample"]} rows={BADGE_SIZES.map((s) => [s, BADGE.height[s], BADGE.inset[s], BADGE.font[s], <Badge size={s} variant="filled">이 기기</Badge>])} />
         <Table head={["icon", "px"]} rows={Object.entries(ICON).map(([n, v]) => [n, v])} />
       </Section>
     </div>
@@ -191,7 +191,7 @@ export function MotionPage() {
         note="sink — 그림자를 켠 버튼 · 사람 카드. raise — 평평한 칩(hover 때 제자리에서 그림자가 올라옵니다). lift — 탐색 카드(위로 4px, 그림자는 화면에 그대로 남아 길어집니다). tap — 그림자를 끈 버튼. 몸짓이 없는 누르는 물건(목록 줄)은 none 입니다."
       >
         <Stage bg="canvas">
-          <Button shadow variant="tonal" accent="cyan">
+          <Button shadow variant="solid" accent="cyan">
             sink
           </Button>
           <Button shadow="hover" variant="outline">

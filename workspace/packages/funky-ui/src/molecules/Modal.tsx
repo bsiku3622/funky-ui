@@ -30,7 +30,7 @@ const PaintRoot = Paint as ElementType;
 /**
  * 모달 — native `<dialog>` 의 `showModal()` 위에 섭니다. 포커스 가두기 · Esc · 뒤 화면 비활성 ·
  * 가장 위 층은 브라우저가 맡으므로 z-index 를 고르지 않습니다. 판은 `Surface`(흰 면 · 2px · 시스템에서
- * 유일한 6px 그림자), 머리 막대는 `Paint` 의 solid 입니다.
+ * 유일한 6px 그림자), 머리 막대는 `Paint` 의 filled 입니다.
  */
 export function Modal({
   open,
@@ -78,7 +78,7 @@ export function Modal({
       {open && (
         <div className={modalContent}>
           {title !== undefined ? (
-            <PaintRoot accent={accent} variant="solid" className={modalHeader}>
+            <PaintRoot accent={accent} variant="filled" className={modalHeader}>
               <span id={titleId} className={modalTitle}>
                 {title}
               </span>

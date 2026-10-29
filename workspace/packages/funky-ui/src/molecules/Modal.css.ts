@@ -44,7 +44,7 @@ export const modalHeader = style(
     gap: px(SPACE.lg),
     paddingInline: px(SPACE["2xl"]),
     paddingBlock: px(SPACE.lg),
-    // 칠은 Paint(solid)가 하고, 테두리는 아래 한 줄만 남깁니다
+    // 칠은 Paint(filled)가 하고, 테두리는 아래 한 줄만 남깁니다
     borderWidth: `0 0 ${vars.stroke.base}`,
     borderColor: vars.line.base,
   }),

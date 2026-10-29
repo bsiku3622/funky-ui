@@ -124,7 +124,7 @@ export function ColorPage() {
                             <Stack gap="2xs">
                               <span className={k.mono}>{value}</span>
                               {n !== null && (
-                                <Badge size="sm" variant={n >= 4.5 ? "outline" : "solid"} accent={n >= 4.5 ? "black" : "red"}>
+                                <Badge size="sm" variant={n >= 4.5 ? "outline" : "filled"} accent={n >= 4.5 ? "black" : "red"}>
                                   {ratio(n)}
                                 </Badge>
                               )}
@@ -188,7 +188,7 @@ export function ColorPage() {
                     {(["black", "green", "purple"] as const).map((a) => (
                       <td key={a} className={k.td}>
                         <Button size="xs" accent={a} variant={v}>
-                          {v === "tonal" || v === "solid" ? "선택" : "유지"}
+                          {v === "solid" || v === "filled" ? "선택" : "유지"}
                         </Button>
                       </td>
                     ))}
@@ -199,8 +199,9 @@ export function ColorPage() {
           </table>
         </div>
         <Text as="p" variant="caption" tone="muted" style={{ margin: 0, maxWidth: 760 }}>
-          해석을 하나 더했습니다 — Tonal 의 글자를 표의 Black 대신 <b>ink</b> 로 둡니다. 밝은 accent 에서는 ink 가 곧 검정이라 같은 값이고,
-          보라처럼 ink 가 흰색인 accent 에서는 검정 글자가 2.2:1 로 읽히지 않습니다. 그래서 Tonal = Solid 면 + 검정 테두리입니다.
+          이름은 스케치와 다릅니다 — 스케치의 Solid(면과 같은 색 테두리)는 <b>filled</b>, Tonal(면 + 검정 테두리)은 <b>solid</b> 입니다.
+          해석도 하나 더했습니다 — solid 의 글자를 표의 Black 대신 <b>ink</b> 로 둡니다. 밝은 accent 에서는 ink 가 곧 검정이라 같은 값이고,
+          보라처럼 ink 가 흰색인 accent 에서는 검정 글자가 2.2:1 로 읽히지 않습니다. 그래서 solid = filled 면 + 검정 테두리입니다.
         </Text>
       </Section>
 
@@ -216,7 +217,7 @@ export function ColorPage() {
 
       <Section
         title="Interaction 오버레이"
-        note="hover · press 는 면을 바꾸지 않고 위에 층을 얹습니다. 그래서 밑이 크림이든 흰색이든 색면이든 같은 규칙으로 한 단 바뀝니다. Solid · Tonal 은 흰 층, Plain · TonalMuted 는 회색 층, Outline · Frameline 은 accent 층."
+        note="hover · press 는 면을 바꾸지 않고 위에 층을 얹습니다. 그래서 밑이 크림이든 흰색이든 색면이든 같은 규칙으로 한 단 바뀝니다. Filled · Solid 는 흰 층, Plain · SolidMuted 는 회색 층, Outline · Frameline 은 accent 층."
       >
         <Grid columns="repeat(auto-fill, minmax(200px, 1fr))" gap="xl">
           {(
@@ -237,8 +238,8 @@ export function ColorPage() {
       <Section title="Focus" note="포커스는 2px 를 2px 띄운 핑크 고리 하나입니다. 키보드(Tab)로 와 보세요.">
         <Stage bg="raised">
           <Button variant="outline">Tab 으로 포커스</Button>
-          <Button accent="green" variant="solid">
-            solid
+          <Button accent="green" variant="filled">
+            filled
           </Button>
           <Surface padding="md" border="line" style={{ outline: `2px solid ${FOCUS}`, outlineOffset: 2 }}>
             <Text variant="caption" weight="black">

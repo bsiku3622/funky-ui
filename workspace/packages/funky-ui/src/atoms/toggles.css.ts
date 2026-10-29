@@ -3,7 +3,8 @@
  *
  * native input 을 투명하게 표식 위에 겹쳐 두고, 보이는 상자는 형제 span 이 그립니다. 그래서
  * 폼 · 키보드 · 스크린 리더는 native 가 맡고, 생김새만 funky 입니다.
- * 켜진 색은 지금 accent 의 solid 이고, 그 위 표식은 accent 의 ink 입니다.
+ * 켜진 색은 지금 accent(바깥 Paint 의 색, 없으면 검정)의 원색이고, 그 위 표식은 그 accent 의 ink 입니다.
+ * 토글은 accent 를 고르지 않습니다.
  *
  * vanilla-extract 는 selector 가 자기 자신(`&`)을 겨눠야 하므로, 상태 규칙은 **보이는 표식 쪽**에
  * `${native}:checked + &` 로 겁니다.

@@ -53,10 +53,10 @@ export interface AppBarProps {
   className?: string;
 }
 
-/** 상단 바 — `Paint` 의 solid(accent 면 · ink 글자) · 아래 2px 검정 · 아래로 4px 그림자 */
+/** 상단 바 — `Paint` 의 filled(accent 면 · ink 글자) · 아래 2px 검정 · 아래로 4px 그림자 */
 export function AppBar({ brand: label, onBrandClick, actions, accent = "purple", fixed = false, className }: AppBarProps) {
   return (
-    <PaintRoot as="header" accent={accent} variant="solid" className={cx(appBar, fixed && appBarFixed, className)}>
+    <PaintRoot as="header" accent={accent} variant="filled" className={cx(appBar, fixed && appBarFixed, className)}>
       {onBrandClick ? (
         <button type="button" className={cx(brand, brandButton)} onClick={onBrandClick}>
           {label}
@@ -104,16 +104,16 @@ export interface SideNavItemProps {
 }
 
 /**
- * Pressable + Paint — 지금 화면은 검정 solid 가 4px 위에 떠 있고(hover 때 가라앉음), 나머지는 ghostMuted 로
+ * Pressable + Paint — 지금 화면은 검정 filled 가 4px 위에 떠 있고(hover 때 가라앉음), 나머지는 ghostMuted 로
  * 물러납니다. 골라짐(selected)이 아니라 variant 를 바꾸는 것이라 지금 화면 칸은 눌린 채가 아니라 떠 있습니다.
  */
 function SideNavItem({ icon, active = false, onClick, children }: SideNavItemProps) {
   return (
     <PressableRoot
-      {...pressOf(active ? "solid" : "ghostMuted", active, undefined)}
+      {...pressOf(active ? "filled" : "ghostMuted", active, undefined)}
       aria-current={active ? "page" : undefined}
       onClick={onClick}
-      className={cx(paintClass({ accent: "black", variant: active ? "solid" : "ghostMuted", hoverable: true }), sideItem)}
+      className={cx(paintClass({ accent: "black", variant: active ? "filled" : "ghostMuted", hoverable: true }), sideItem)}
     >
       <Icon icon={icon} size="lg" />
       <span>{children}</span>
@@ -135,7 +135,7 @@ export interface BottomNavProps {
 /** 모바일 하단 바 — 다섯 칸까지. 여덟 칸을 욱여넣으면 칸이 좁아져 이름이 잘리고 손가락이 옆 칸을 누릅니다 */
 export function BottomNav({ accent = "purple", fixed = false, className, children }: BottomNavProps) {
   return (
-    <PaintRoot as="nav" accent={accent} variant="solid" className={cx(bottomNav, fixed && bottomNavFixed, className)}>
+    <PaintRoot as="nav" accent={accent} variant="filled" className={cx(bottomNav, fixed && bottomNavFixed, className)}>
       {children}
     </PaintRoot>
   );

@@ -22,7 +22,7 @@ export interface ButtonOwnProps {
    * 그림자가 올라옵니다(raise). 테두리가 없는 variant(ghost)는 그림자를 받지 않습니다
    */
   shadow?: boolean | "hover";
-  /** 골라진 상태 — 같은 accent 의 solid 로 바뀌고 `aria-pressed` 가 붙습니다. 그림자를 켰으면 눌린 채로 있습니다 */
+  /** 골라진 상태 — 같은 accent 의 filled 로 바뀌고 `aria-pressed` 가 붙습니다. 그림자를 켰으면 눌린 채로 있습니다 */
   selected?: boolean;
   loading?: boolean;
   /** 앞 아이콘 — 크기와 굵기는 버튼 크기가 정합니다 */
@@ -62,7 +62,7 @@ export function pressOf(variant: Variant, shadow: boolean | "hover", selected: b
  * ```tsx
  * <Button accent="green" variant="outline">유지</Button>
  * <Button variant="muted" selected={on}>전체</Button>
- * <Button as={Link} to="/trade" accent="cyan" variant="tonal" shadow iconEnd={ArrowRight}>Trade</Button>
+ * <Button as={Link} to="/trade" accent="cyan" variant="solid" shadow iconEnd={ArrowRight}>Trade</Button>
  * ```
  */
 export function Button<E extends ElementType = "button">({

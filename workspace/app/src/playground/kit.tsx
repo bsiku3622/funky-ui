@@ -97,7 +97,7 @@ function MatrixRow({ variant, cell }: { variant: Variant; cell: (accent: AccentN
 
 export function LayerBadge({ layer }: { layer: string }) {
   return (
-    <Badge variant={layer === "components" ? "tonal" : "outline"} accent={layer === "components" ? "purple" : undefined} size="sm">
+    <Badge variant={layer === "components" ? "solid" : "outline"} accent={layer === "components" ? "purple" : undefined} size="sm">
       {layer}
     </Badge>
   );

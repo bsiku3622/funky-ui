@@ -179,7 +179,7 @@ function ClassSummary() {
     <Stack gap="xs">
       <Inline gap="md">
         <Text variant="heading">미적분학1</Text>
-        <Badge size="sm" variant="tonal">
+        <Badge size="sm" variant="solid">
           수학
         </Badge>
       </Inline>
@@ -225,7 +225,7 @@ const card: Spec = {
   code: (v) =>
     jsx("Card", [...(opt(v.motion) ? LINK_ATTRS : []), ...printed(card, v)], [
       jsx("Stack", ['gap="xs"'], [
-        jsx("Inline", ['gap="md"'], ['<Text variant="heading">미적분학1</Text>', '<Badge size="sm" variant="tonal">수학</Badge>']),
+        jsx("Inline", ['gap="md"'], ['<Text variant="heading">미적분학1</Text>', '<Badge size="sm" variant="solid">수학</Badge>']),
         '<Text variant="caption" tone="muted">형설202 · 월 3–4교시</Text>',
       ]),
     ]),
@@ -237,7 +237,7 @@ const card: Spec = {
         <Stage>
           <Frame width={360}>
             <Card padding="0">
-              <Card.Header title="Today" icon={CalendarDays} actions={<Badge size="sm" variant="solid">3</Badge>} />
+              <Card.Header title="Today" icon={CalendarDays} actions={<Badge size="sm" variant="filled">3</Badge>} />
               <Card.Section divided>
                 <TodayRows />
               </Card.Section>
@@ -248,12 +248,12 @@ const card: Spec = {
     },
     {
       title: "Header bar",
-      note: "tone=\"bar\" 는 머리를 Paint 의 solid 로 칠합니다 (모달 머리와 같은 모양). 막대 색은 Card.Header 의 accent 로 고르고, 카드 판은 흑백 그대로입니다. 막대 위의 solid 배지는 accent 를 따로 줍니다 — 안 주면 막대와 같은 색이 됩니다.",
+      note: "tone=\"bar\" 는 머리를 Paint 의 filled 로 칠합니다 (모달 머리와 같은 모양). 막대 색은 Card.Header 의 accent 로 고르고, 카드 판은 흑백 그대로입니다. 막대 위의 filled 배지는 accent 를 따로 줍니다 — 안 주면 막대와 같은 색이 됩니다.",
       render: () => (
         <Stage>
           <Frame width={360}>
             <Card padding="0">
-              <Card.Header tone="bar" accent="purple" title="Meal" icon={Utensils} actions={<Badge size="sm" accent="black" variant="solid">점심</Badge>} />
+              <Card.Header tone="bar" accent="purple" title="Meal" icon={Utensils} actions={<Badge size="sm" accent="black" variant="filled">점심</Badge>} />
               <Card.Section>
                 <Text>{MEAL}</Text>
               </Card.Section>
@@ -326,7 +326,7 @@ const sectionTitle: Spec = {
         <Stage>
           <Frame width={360}>
             <Stack gap="2xl">
-              <SectionTitle title="Friends" icon={User} trailing={<Badge size="sm" variant="solid">12</Badge>} />
+              <SectionTitle title="Friends" icon={User} trailing={<Badge size="sm" variant="filled">12</Badge>} />
               <SectionTitle
                 title="Today"
                 icon={CalendarDays}
@@ -355,7 +355,7 @@ const sectionTitle: Spec = {
                 </Card>
               </Stack>
               <Stack gap="lg">
-                <SectionTitle title="Meal" icon={Utensils} trailing={<Badge size="sm" variant="tonal" accent="orange">점심</Badge>} />
+                <SectionTitle title="Meal" icon={Utensils} trailing={<Badge size="sm" variant="solid" accent="orange">점심</Badge>} />
                 <Card padding="xl">
                   <Text>{MEAL}</Text>
                 </Card>
@@ -426,7 +426,7 @@ const pageHeader: Spec = {
               subtitle="2026-2 학사일정"
               icon={CalendarDays}
               action={
-                <Button variant="solid" shadow icon={Plus}>
+                <Button variant="filled" shadow icon={Plus}>
                   일정 추가
                 </Button>
               }
@@ -472,10 +472,10 @@ function ControlledAccordion() {
       </Inline>
       <Accordion title="Prerequisites" icon={BookOpen} open={open} onOpenChange={setOpen}>
         <Inline gap="md" wrap>
-          <Badge variant="tonal" accent="purple">
+          <Badge variant="solid" accent="purple">
             미적분학1
           </Badge>
-          <Badge variant="tonal" accent="purple">
+          <Badge variant="solid" accent="purple">
             일반물리학
           </Badge>
         </Inline>
@@ -504,7 +504,7 @@ const accordion: Spec = {
         icon={icon(v.icon)}
         trailing={
           v.trailing ? (
-            <Badge size="sm" variant="solid">
+            <Badge size="sm" variant="filled">
               {ENROLLED.length}
             </Badge>
           ) : undefined
@@ -520,7 +520,7 @@ const accordion: Spec = {
       "Accordion",
       [
         ...printed(accordion, { title: v.title, icon: v.icon, defaultOpen: v.defaultOpen }),
-        v.trailing ? `trailing={<Badge size="sm" variant="solid">${ENROLLED.length}</Badge>}` : undefined,
+        v.trailing ? `trailing={<Badge size="sm" variant="filled">${ENROLLED.length}</Badge>}` : undefined,
       ],
       [jsx("Stack", ['gap="md"'], ENROLLED.map((name) => `<Text>${name}</Text>`))],
     ),
@@ -536,14 +536,14 @@ const accordion: Spec = {
               title="Prerequisites"
               icon={BookOpen}
               trailing={
-                <Badge size="sm" variant="solid">
+                <Badge size="sm" variant="filled">
                   2
                 </Badge>
               }
             >
               <Inline gap="md" wrap>
-                <Badge accent="green" variant="tonal">미적분학1</Badge>
-                <Badge accent="green" variant="tonal">일반물리학</Badge>
+                <Badge accent="green" variant="solid">미적분학1</Badge>
+                <Badge accent="green" variant="solid">일반물리학</Badge>
               </Inline>
             </Accordion>
           </Frame>
@@ -575,7 +575,7 @@ const VIEWS: ChoiceOption<string>[] = [
 const segmentedControl: Spec = {
   name: "SegmentedControl",
   summary:
-    "여러 값 중 하나를 고르는 버튼 줄. 안 고른 칸은 variant(기본 muted), 고른 칸은 같은 accent 의 solid 입니다. 방향키로 옮기고, Tab 키는 고른 칸 하나에만 들어옵니다.",
+    "여러 값 중 하나를 고르는 버튼 줄. 안 고른 칸은 variant(기본 muted), 고른 칸은 같은 accent 의 filled 입니다. 방향키로 옮기고, Tab 키는 고른 칸 하나에만 들어옵니다.",
   controls: {
     accent: { kind: "select", options: ACCENT_OR_NONE },
     variant: { kind: "select", options: VARIANTS },
@@ -600,7 +600,7 @@ const segmentedControl: Spec = {
   sections: [
     {
       title: "Variant — 안 고른 칸",
-      note: "고른 칸은 어느 variant 든 같은 accent 의 solid 입니다. 안 고른 칸만 variant 를 따릅니다.",
+      note: "고른 칸은 어느 variant 든 같은 accent 의 filled 입니다. 안 고른 칸만 variant 를 따릅니다.",
       render: () => (
         <Stage bg="raised">
           <Stack gap="md">
@@ -709,13 +709,13 @@ const tabs: Spec = {
   sections: [
     {
       title: "Variant · shadow",
-      note: "안 고른 탭의 칠과 그림자를 바꿉니다. 고른 탭은 같은 accent 의 solid 입니다.",
+      note: "안 고른 탭의 칠과 그림자를 바꿉니다. 고른 탭은 같은 accent 의 filled 입니다.",
       render: () => (
         <Stage bg="raised">
           <Stack gap="xl" align="center">
             <BrowseTabs panels={false} />
             <BrowseTabs panels={false} variant="muted" shadow={false} />
-            <BrowseTabs panels={false} variant="tonal" accent="pink" />
+            <BrowseTabs panels={false} variant="solid" accent="pink" />
           </Stack>
         </Stage>
       ),
@@ -846,7 +846,7 @@ const moveFooter = (close: () => void) => (
     <Button size="sm" variant="ghost" onClick={close}>
       취소
     </Button>
-    <Button size="sm" variant="solid" accent="green" onClick={close}>
+    <Button size="sm" variant="filled" accent="green" onClick={close}>
       이동
     </Button>
   </>
@@ -896,7 +896,7 @@ const modal: Spec = {
                 ...[
                   "<>",
                   '  <Button variant="ghost" onClick={close}>취소</Button>',
-                  '  <Button variant="solid" accent="green" onClick={close}>이동</Button>',
+                  '  <Button variant="filled" accent="green" onClick={close}>이동</Button>',
                   "</>",
                 ].map(indent),
                 "}",
@@ -935,7 +935,7 @@ const modal: Spec = {
                 <Button size="sm" variant="ghost" onClick={close}>
                   취소
                 </Button>
-                <Button size="sm" variant="solid" accent="red" onClick={close}>
+                <Button size="sm" variant="filled" accent="red" onClick={close}>
                   삭제
                 </Button>
               </>
@@ -952,7 +952,7 @@ const modal: Spec = {
             size="sm"
             dismissible={false}
             footer={(close) => (
-              <Button size="sm" variant="solid" onClick={close}>
+              <Button size="sm" variant="filled" onClick={close}>
                 제출
               </Button>
             )}

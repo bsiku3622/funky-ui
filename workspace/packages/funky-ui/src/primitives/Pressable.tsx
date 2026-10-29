@@ -32,7 +32,7 @@ export function pressClass({ motion = "none", pressed = false, ...box }: Omit<Pr
  * 기본은 `<button type="button">`, 링크면 `as="a"` 나 라우터 링크.
  *
  * ```tsx
- * <Paint as={Pressable} motion="sink" accent="cyan" variant="tonal" hoverable>Preview</Paint>
+ * <Paint as={Pressable} motion="sink" accent="cyan" variant="solid" hoverable>Preview</Paint>
  * ```
  */
 export function Pressable<E extends ElementType = "button">({

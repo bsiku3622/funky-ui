@@ -42,7 +42,7 @@ function TermChips() {
 const button: Spec = {
   name: "Button",
   summary:
-    "accent(색) × variant(칠하는 방식) × size × shadow. 고르면 같은 accent 의 solid 로 바뀌고, 그림자를 켜면 hover 때 그림자 속으로 가라앉습니다. shadow=\"hover\" 면 평평하다가 hover 때 그림자가 올라옵니다.",
+    "accent(색) × variant(칠하는 방식) × size × shadow. 고르면 같은 accent 의 filled 로 바뀌고, 그림자를 켜면 hover 때 그림자 속으로 가라앉습니다. shadow=\"hover\" 면 평평하다가 hover 때 그림자가 올라옵니다.",
   controls: {
     accent: { kind: "select", options: ACCENT_OPTIONS },
     variant: { kind: "select", options: VARIANTS },
@@ -55,7 +55,7 @@ const button: Spec = {
     iconEnd: { kind: "icon" },
     children: { kind: "text" },
   },
-  initial: { accent: "cyan", variant: "tonal", shadow: true, icon: "Eye", iconEnd: "none", children: "Preview" },
+  initial: { accent: "cyan", variant: "solid", shadow: true, icon: "Eye", iconEnd: "none", children: "Preview" },
   defaults: { accent: "black", variant: "outline", size: "md", shadow: false, selected: false, loading: false, disabled: false },
   render: (v) => (
     <Button
@@ -105,7 +105,7 @@ const button: Spec = {
       note: "그림자는 4px 한 단뿐입니다. hover 때 본체가 그림자 자리로 가라앉고(translate 4px · 그림자 0), 누르는 순간 한 번 더 작아집니다. 테두리가 없는 ghost 는 가라앉을 상자가 없어 그림자를 받지 않습니다.",
       render: () => (
         <Stage bg="raised">
-          {(["solid", "tonal", "outline", "plain", "frameline"] as const).map((v, i) => (
+          {(["filled", "solid", "outline", "plain", "frameline"] as const).map((v, i) => (
             <Button key={v} shadow variant={v} accent={(["black", "cyan", "black", "orange", "green"] as const)[i]}>
               {v}
             </Button>
@@ -127,7 +127,7 @@ const button: Spec = {
           <Button size="xs" accent="green" variant="plain" shadow="hover">
             + 세계사의이해
           </Button>
-          <Button size="sm" accent="cyan" variant="tonal" shadow="hover">
+          <Button size="sm" accent="cyan" variant="solid" shadow="hover">
             Preview
           </Button>
         </Stage>
@@ -135,13 +135,13 @@ const button: Spec = {
     },
     {
       title: "Selected — 고르면 solid",
-      note: "선택은 따로 된 variant 가 아니라 상태입니다. 안 골린 칸은 고른 variant, 골린 칸은 같은 accent 의 solid. 그림자를 켠 버튼은 골리면 눌린 채로 있습니다.",
+      note: "선택은 따로 된 variant 가 아니라 상태입니다. 안 골린 칸은 고른 variant, 골린 칸은 같은 accent 의 filled. 그림자를 켠 버튼은 골리면 눌린 채로 있습니다.",
       render: () => (
         <Stage bg="raised">
           <Stack gap="lg" align="center">
             <Text variant="overline">Trade · 유지 / 이동 / 드랍 (accent 가 뜻을 짊어짐)</Text>
             <TradeRow />
-            <Text variant="overline">Admin · 학기 고르기 (muted → solid black)</Text>
+            <Text variant="overline">Admin · 학기 고르기 (muted → filled black)</Text>
             <TermChips />
           </Stack>
         </Stage>
@@ -153,7 +153,7 @@ const button: Spec = {
       render: () => (
         <Stage bg="raised">
           {CONTROL_SIZES.map((s) => (
-            <Button key={s} size={s} variant="tonal" accent="yellow" shadow icon={Download}>
+            <Button key={s} size={s} variant="solid" accent="yellow" shadow icon={Download}>
               {s}
             </Button>
           ))}
@@ -165,16 +165,16 @@ const button: Spec = {
       note: "지금 하드코딩된 버튼들을 새 API 로 옮긴 모습입니다. 왼쪽부터 SyllabusPanel 의 Preview · Download, MaterialReviewPanel 의 Approve · Reject, Admin 의 Refetch · Demo, 닫기 아이콘.",
       render: () => (
         <Stage bg="raised">
-          <Button size="sm" accent="cyan" variant="tonal" shadow icon={Eye}>
+          <Button size="sm" accent="cyan" variant="solid" shadow icon={Eye}>
             Preview
           </Button>
           <Button size="sm" variant="outline" shadow icon={Download}>
             Download
           </Button>
-          <Button size="sm" accent="green" variant="tonal" shadow icon={Check}>
+          <Button size="sm" accent="green" variant="solid" shadow icon={Check}>
             Approve
           </Button>
-          <Button size="sm" accent="pink" variant="tonal" shadow icon={X}>
+          <Button size="sm" accent="pink" variant="solid" shadow icon={X}>
             Reject
           </Button>
           <Button size="xs" variant="muted" icon={RefreshCw}>
@@ -186,7 +186,7 @@ const button: Spec = {
           <Button size="xs" accent="red" variant="ghost" icon={Trash2}>
             삭제
           </Button>
-          <Button as="a" href="#" accent="yellow" variant="tonal" shadow iconEnd={ArrowRight}>
+          <Button as="a" href="#" accent="yellow" variant="solid" shadow iconEnd={ArrowRight}>
             Trade 열기
           </Button>
         </Stage>
@@ -197,7 +197,7 @@ const button: Spec = {
       render: () => (
         <Stage bg="raised">
           <Button disabled>disabled</Button>
-          <Button accent="green" variant="solid" loading>
+          <Button accent="green" variant="filled" loading>
             저장
           </Button>
           <Button variant="outline" fullWidth={false} icon={RefreshCw}>
@@ -219,7 +219,7 @@ const badge: Spec = {
     icon: { kind: "icon" },
     children: { kind: "text" },
   },
-  initial: { accent: "cyan", variant: "tonal", size: "md", icon: "none", children: "계획" },
+  initial: { accent: "cyan", variant: "solid", size: "md", icon: "none", children: "계획" },
   defaults: { accent: "black", variant: "outline", size: "md" },
   render: (v) => (
     <Badge accent={v.accent as never} variant={v.variant as Variant} size={v.size as never} icon={icon(v.icon)}>
@@ -245,14 +245,14 @@ const badge: Spec = {
       render: () => (
         <Stage bg="raised">
           {BADGE_SIZES.map((s) => (
-            <Badge key={s} size={s} variant="solid">
+            <Badge key={s} size={s} variant="filled">
               {s}
             </Badge>
           ))}
-          <Badge variant="tonal" accent="cyan">
+          <Badge variant="solid" accent="cyan">
             계획 미리보기
           </Badge>
-          <Badge variant="solid">이 기기</Badge>
+          <Badge variant="filled">이 기기</Badge>
           <Badge variant="muted">mobile</Badge>
           <Badge variant="plain" accent="pink">
             지금

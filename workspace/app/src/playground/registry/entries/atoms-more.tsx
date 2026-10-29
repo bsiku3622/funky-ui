@@ -88,7 +88,7 @@ const iconButton: Spec = {
   },
   // icon · label 을 맨 앞에 둬서 코드가 `icon={…} label="…"` 순서로 찍힙니다
   defaults: { icon: undefined, label: undefined, accent: "black", variant: "ghostMuted", size: "md", shadow: false, selected: false, disabled: false },
-  initial: { icon: "RefreshCw", label: "새로고침", accent: "cyan", variant: "tonal", shadow: true },
+  initial: { icon: "RefreshCw", label: "새로고침", accent: "cyan", variant: "solid", shadow: true },
   render: (v) => {
     const glyph = icon(v.icon);
     if (!glyph) {
@@ -162,10 +162,10 @@ const iconButton: Spec = {
 
 /* ── NavButton ───────────────────────────────────────────────────────── */
 
-/** 상단 바(AppBar)와 같은 보라 solid — Overview 의 크림 바탕에서도 흰 글자가 읽히게 감쌉니다 */
+/** 상단 바(AppBar)와 같은 보라 filled — Overview 의 크림 바탕에서도 흰 글자가 읽히게 감쌉니다 */
 function Bar({ children }: { children: ReactNode }) {
   return (
-    <Paint accent="purple" variant="solid" padding="md">
+    <Paint accent="purple" variant="filled" padding="md">
       {children}
     </Paint>
   );
@@ -363,10 +363,10 @@ const spinner: Spec = {
       render: () => (
         <Stage bg="raised">
           <Button loading>저장</Button>
-          <Button variant="solid" accent="green" loading>
+          <Button variant="filled" accent="green" loading>
             저장
           </Button>
-          <Button variant="tonal" accent="pink" size="lg" shadow loading>
+          <Button variant="solid" accent="pink" size="lg" shadow loading>
             다시 시도
           </Button>
         </Stage>
@@ -476,7 +476,7 @@ const input: Spec = {
             {CONTROL_SIZES.map((s) => (
               <Inline key={s} gap="md">
                 <Input size={s} placeholder={s} aria-label={s} style={{ width: 180 }} />
-                <Button size={s} variant="solid" icon={Search}>
+                <Button size={s} variant="filled" icon={Search}>
                   검색
                 </Button>
               </Inline>
@@ -656,18 +656,20 @@ const selectSpec: Spec = {
 
 type Toggle = typeof Checkbox;
 
-/** 세 토글이 같이 쓰는 표본 — 켜진 accent 와 상태 */
-function accentSection(Toggle: Toggle): Section {
+/** 세 토글이 같이 쓰는 표본 — 켜진 색은 고르지 않고 바깥 Paint 를 따릅니다 */
+function colorSection(Toggle: Toggle): Section {
   return {
-    title: "Accent",
-    note: "켜진 색은 지금 accent 의 solid 이고, 그 위 표식은 accent 의 ink 입니다. accent 를 주지 않으면 바깥 accent 를, 바깥에도 없으면 검정을 씁니다.",
+    title: "켜진 색",
+    note: "토글은 accent 를 고르지 않습니다. 켜진 색은 검정이고, 색이 있는 Paint 안에 놓이면 다른 요소처럼 그 색을 따릅니다.",
     render: () => (
       <Stage bg="raised">
-        {ACCENTS.map((a) => (
-          <Toggle key={a} accent={a} defaultChecked>
-            {a}
-          </Toggle>
-        ))}
+        <Toggle defaultChecked>바깥에 Paint 없음</Toggle>
+        <Paint accent="green" variant="plain" paddingX="md" paddingY="xs">
+          <Toggle defaultChecked>초록 Paint 안</Toggle>
+        </Paint>
+        <Paint accent="pink" variant="plain" paddingX="md" paddingY="xs">
+          <Toggle defaultChecked>분홍 Paint 안</Toggle>
+        </Paint>
       </Stage>
     ),
   };
@@ -692,22 +694,21 @@ function statesSection(Toggle: Toggle): Section {
 
 const checkbox: Spec = {
   name: "Checkbox",
-  summary: "여러 개 중 여럿을 고르는 표식입니다. 켜지면 accent 로 꽉 차고 체크가 섭니다. 폼 · 키보드 · 스크린 리더는 native checkbox 가 맡고 생김새만 funky 입니다.",
+  summary: "여러 개 중 여럿을 고르는 표식입니다. 켜지면 검정으로 꽉 차고 체크가 섭니다(색이 있는 Paint 안에서는 그 색). 폼 · 키보드 · 스크린 리더는 native checkbox 가 맡고 생김새만 funky 입니다.",
   controls: {
-    accent: { kind: "select", options: ACCENT_OPTIONS },
     disabled: { kind: "boolean" },
     defaultChecked: { kind: "boolean" },
     children: { kind: "text" },
   },
-  initial: { accent: "green", defaultChecked: true, children: "공강인 친구만 보기" },
-  defaults: { accent: "black", disabled: false, defaultChecked: false },
+  initial: { defaultChecked: true, children: "공강인 친구만 보기" },
+  defaults: { disabled: false, defaultChecked: false },
   // defaultChecked 가 바뀌면 다시 세워서 새 처음 값이 반영되게 합니다
   render: (v) => (
-    <Checkbox key={String(v.defaultChecked)} accent={v.accent as Accent} disabled={Boolean(v.disabled)} defaultChecked={Boolean(v.defaultChecked)}>
+    <Checkbox key={String(v.defaultChecked)} disabled={Boolean(v.disabled)} defaultChecked={Boolean(v.defaultChecked)}>
       {String(v.children ?? "")}
     </Checkbox>
   ),
-  sections: [accentSection(Checkbox), statesSection(Checkbox)],
+  sections: [colorSection(Checkbox), statesSection(Checkbox)],
 };
 
 const RADIO_OPTIONS = [
@@ -717,12 +718,12 @@ const RADIO_OPTIONS = [
 ] as const;
 
 /** 같은 name 으로 묶인 라디오 셋 — name 은 인스턴스마다 달라야 해서 useId 로 만듭니다 */
-function RadioGroupDemo({ accent, disabled }: { accent: Accent; disabled: boolean }) {
+function RadioGroupDemo({ disabled }: { disabled: boolean }) {
   const name = useId();
   return (
     <Stack gap="md" align="start">
       {RADIO_OPTIONS.map(([value, text], i) => (
-        <Radio key={value} name={name} value={value} accent={accent} disabled={disabled} defaultChecked={i === 0}>
+        <Radio key={value} name={name} value={value} disabled={disabled} defaultChecked={i === 0}>
           {text}
         </Radio>
       ))}
@@ -732,39 +733,36 @@ function RadioGroupDemo({ accent, disabled }: { accent: Accent; disabled: boolea
 
 const radio: Spec = {
   name: "Radio",
-  summary: "여럿 중 하나를 고르는 표식입니다. 모서리는 각진 채로, 켜지면 안에 accent 정사각형이 찍힙니다. 같은 name 끼리 묶이고, 키보드는 native radio 그대로입니다.",
+  summary: "여럿 중 하나를 고르는 표식입니다. 모서리는 각진 채로, 켜지면 안에 검정 정사각형이 찍힙니다(색이 있는 Paint 안에서는 그 색). 같은 name 끼리 묶이고, 키보드는 native radio 그대로입니다.",
   controls: {
-    accent: { kind: "select", options: ACCENT_OPTIONS },
     disabled: { kind: "boolean" },
   },
-  initial: { accent: "cyan" },
-  defaults: { accent: "black", disabled: false },
-  render: (v) => <RadioGroupDemo accent={v.accent as Accent} disabled={Boolean(v.disabled)} />,
+  defaults: { disabled: false },
+  render: (v) => <RadioGroupDemo disabled={Boolean(v.disabled)} />,
   // 하나만 찍으면 묶음이 안 보여서, 같은 name 의 셋을 찍습니다
   code: (v) =>
     RADIO_OPTIONS.map(([value, text], i) =>
-      printJsx("Radio", { accent: v.accent, disabled: v.disabled, name: "action", value, ...(i === 0 ? { defaultChecked: true } : {}), children: text }, radio.defaults),
+      printJsx("Radio", { disabled: v.disabled, name: "action", value, ...(i === 0 ? { defaultChecked: true } : {}), children: text }, radio.defaults),
     ).join("\n"),
-  sections: [accentSection(Radio), statesSection(Radio)],
+  sections: [colorSection(Radio), statesSection(Radio)],
 };
 
 const switchSpec: Spec = {
   name: "Switch",
-  summary: "켜고 끄는 스위치입니다. 각진 트랙 위를 각진 손잡이가 건너가고, native checkbox 에 role=switch 를 붙였습니다. 켜진 색은 accent 의 solid 입니다.",
+  summary: "켜고 끄는 스위치입니다. 각진 트랙 위를 각진 손잡이가 건너가고, native checkbox 에 role=switch 를 붙였습니다. 켜진 트랙은 검정입니다(색이 있는 Paint 안에서는 그 색).",
   controls: {
-    accent: { kind: "select", options: ACCENT_OPTIONS },
     disabled: { kind: "boolean" },
     defaultChecked: { kind: "boolean" },
     children: { kind: "text" },
   },
-  initial: { accent: "pink", defaultChecked: true, children: "급식 알림" },
-  defaults: { accent: "black", disabled: false, defaultChecked: false },
+  initial: { defaultChecked: true, children: "급식 알림" },
+  defaults: { disabled: false, defaultChecked: false },
   render: (v) => (
-    <Switch key={String(v.defaultChecked)} accent={v.accent as Accent} disabled={Boolean(v.disabled)} defaultChecked={Boolean(v.defaultChecked)}>
+    <Switch key={String(v.defaultChecked)} disabled={Boolean(v.disabled)} defaultChecked={Boolean(v.defaultChecked)}>
       {String(v.children ?? "")}
     </Switch>
   ),
-  sections: [accentSection(Switch), statesSection(Switch)],
+  sections: [colorSection(Switch), statesSection(Switch)],
 };
 
 /* ── Label ───────────────────────────────────────────────────────────── */

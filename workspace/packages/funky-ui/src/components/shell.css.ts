@@ -18,7 +18,7 @@ export const appBar = style(
     gap: px(SPACE.xl),
     height: px(CONTAINER.shell.bar),
     paddingInline: px(SPACE["3xl"]),
-    // 칠은 Paint(solid)가 하고, 테두리는 아래 한 줄만 남깁니다
+    // 칠은 Paint(filled)가 하고, 테두리는 아래 한 줄만 남깁니다
     borderWidth: `0 0 ${vars.stroke.base}`,
     borderColor: vars.line.base,
     boxShadow: `0 ${vars.press.sink} 0 0 ${vars.shadowColor}`,
@@ -130,7 +130,7 @@ export const bottomNav = style(
     display: "flex",
     alignItems: "stretch",
     height: px(CONTAINER.shell.bottomBar),
-    // 칠은 Paint(solid)가 하고, 테두리는 위 한 줄만 남깁니다
+    // 칠은 Paint(filled)가 하고, 테두리는 위 한 줄만 남깁니다
     borderWidth: `${vars.stroke.base} 0 0`,
     borderColor: vars.line.base,
     boxShadow: `0 calc(-1 * ${vars.press.sink}) 0 0 ${vars.shadowColor}`,

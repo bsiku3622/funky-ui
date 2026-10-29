@@ -51,9 +51,9 @@ export const LINE = {
  * accent 오버레이(`tint`)는 accent 마다 따로 있어 `ACCENT_COLORS` 에 들어 있습니다.
  */
 export const OVERLAY = {
-  /** Solid · Tonal 의 hover — 반투명 흰색 */
+  /** Filled · Solid 의 hover — 반투명 흰색 */
   hoverWhite: alpha(NEUTRALS.white, 0.3),
-  /** Plain · TonalMuted 의 hover — 반투명 회색 */
+  /** Plain · SolidMuted 의 hover — 반투명 회색 */
   hoverGray: alpha(NEUTRALS.black, 0.07),
   pressWhite: alpha(NEUTRALS.white, 0.45),
   pressGray: alpha(NEUTRALS.black, 0.12),
@@ -62,20 +62,20 @@ export const OVERLAY = {
 } as const;
 
 /**
- * Glass — 색 바(상단 · 하단 바) 위의 유리 (`Glass` primitive · NavButton). 바의 글자색(`currentColor`)을 묽혀
- * 만들므로, 보라 바 위에서는 흰 유리, 시안 바 위에서는 검은 유리가 됩니다.
+ * Glass — 색 바(상단 · 하단 바) 위의 유리 (`Glass` primitive · NavButton). 어느 바 위에서도 흰 유리입니다 —
+ * 반투명 흰 면 · 흰 테두리이고, 글자색은 바에서 물려받습니다(보라 바 위 흰 글자 · 노랑 바 위 검정 글자).
  */
 const currentOf = (pct: number) => `color-mix(in srgb, currentColor ${pct}%, transparent)`;
 export const GLASS = {
-  bg: currentOf(10),
-  bgHover: currentOf(20),
-  bgSelected: currentOf(25),
-  border: currentOf(30),
-  borderHover: "currentColor",
+  bg: alpha(NEUTRALS.white, 0.1),
+  bgHover: alpha(NEUTRALS.white, 0.2),
+  bgSelected: alpha(NEUTRALS.white, 0.25),
+  border: alpha(NEUTRALS.white, 0.3),
+  borderHover: NEUTRALS.white,
 } as const;
 
 /**
- * 흑백 면의 상태 층 — Surface 의 `hoverable`. 유리처럼 면의 글자색을 묽혀 만들므로 밝은 면에서는 회색 층
+ * 흑백 면의 상태 층 — Surface 의 `hoverable`. 면의 글자색을 묽혀 만들므로 밝은 면에서는 회색 층
  * (`OVERLAY.hoverGray` · `pressGray` 와 같은 세기), 검정 면(inverse) 위에서는 흰 층이 됩니다.
  */
 export const STATE_LAYER = {

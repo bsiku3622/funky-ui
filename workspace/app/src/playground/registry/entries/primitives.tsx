@@ -389,10 +389,10 @@ const paint: Spec = {
                   {a}
                 </Text>
                 <Inline gap="md">
-                  <Button size="sm" variant="tonal">
+                  <Button size="sm" variant="solid">
                     유지
                   </Button>
-                  <Badge variant="solid">계획</Badge>
+                  <Badge variant="filled">계획</Badge>
                   <Switch defaultChecked aria-label="알림" />
                 </Inline>
               </Stack>
@@ -415,7 +415,7 @@ const paint: Spec = {
           <Pressable motion="sink" padding="md" className={surfaceClass({ border: "line" })}>
             <Text variant="label">누름만 · Pressable</Text>
           </Pressable>
-          <Pressable motion="sink" padding="md" className={paintClass({ accent: "cyan", variant: "tonal", hoverable: true })}>
+          <Pressable motion="sink" padding="md" className={paintClass({ accent: "cyan", variant: "solid", hoverable: true })}>
             <Text variant="label">둘 다 · Button</Text>
           </Pressable>
           <Pressable motion="sink" pressed padding="md" className={paintClass({ accent: "cyan", variant: "muted", selected: true, hoverable: true })}>
@@ -426,7 +426,7 @@ const paint: Spec = {
     },
     {
       title: "버튼이 아닌 요소를 칠하기",
-      note: "같은 레시피로 버튼 아닌 요소도 칠합니다 — Trade 의 과목 줄(plain), 시간표의 지금(plain pink), 상단 바(solid). 위 층 컴포넌트는 Paint 의 칠을 쓰면서 테두리 같은 형태만 자기 CSS 로 덮습니다.",
+      note: "같은 레시피로 버튼 아닌 요소도 칠합니다 — Trade 의 과목 줄(plain), 시간표의 지금(plain pink), 상단 바(filled). 위 층 컴포넌트는 Paint 의 칠을 쓰면서 테두리 같은 형태만 자기 CSS 로 덮습니다.",
       render: () => (
         <Stage bg="raised">
           <Stack gap="md" style={{ width: 300 }}>
@@ -440,12 +440,12 @@ const paint: Spec = {
                 </Text>
               </Stack>
             </Paint>
-            <Paint accent="green" variant="tonalMuted" padding="lg">
+            <Paint accent="green" variant="solidMuted" padding="lg">
               <Text variant="caption" weight="black">
                 세계사의이해 · 유지
               </Text>
             </Paint>
-            <Paint accent="purple" variant="solid" padding="lg">
+            <Paint accent="purple" variant="filled" padding="lg">
               <Text variant="caption" weight="black" tone="inherit">
                 CLASS EXPLORER — 상단 바의 칠
               </Text>
@@ -459,12 +459,12 @@ const paint: Spec = {
 
 /* ── Glass ───────────────────────────────────────────────────────────── */
 
-/** 유리가 놓일 바 — accent solid 바의 글자색(ink)에서 유리가 나옵니다 */
+/** 유리가 놓일 바 — accent filled 바. 유리는 흰색이고, 글자는 바의 ink 를 물려받습니다 */
 const GLASS_BARS = ["purple", "black", "pink", "cyan", "yellow", "green"] as const;
 
 function GlassBar({ accent, children }: { accent: Accent; children: ReactNode }) {
   return (
-    <Paint accent={accent} variant="solid" padding="md">
+    <Paint accent={accent} variant="filled" padding="md">
       <Inline gap="sm">{children}</Inline>
     </Paint>
   );
@@ -473,7 +473,7 @@ function GlassBar({ accent, children }: { accent: Accent; children: ReactNode })
 const glass: Spec = {
   name: "Glass",
   summary:
-    "바 위의 유리 — 색 바(상단 · 하단 바) 위에 놓이는 반투명 면입니다. 바의 글자색을 묽혀 만들어서 어느 accent 바 위에서도 읽히고, accent 를 받지 않습니다 — 색은 놓인 바가 정합니다. hoverable 이면 hover 때 유리가 짙어지고 테두리가 글자색이 되며, selected 는 더 짙은 유리입니다. NavButton 이 Pressable(tap) 위에 이 유리를 얹은 것입니다.",
+    "바 위의 유리 — 색 바(상단 · 하단 바) 위에 놓이는 반투명 흰 면입니다. 어느 바 위에서도 흰 유리이고(흰색 10% 면 · 30% 테두리), 글자는 바의 글자색을 물려받으며, accent 를 받지 않습니다. hoverable 이면 hover 때 유리가 짙어지고 테두리가 흰색이 되며, selected 는 더 짙은 유리입니다. NavButton 이 Pressable(tap) 위에 이 유리를 얹은 것입니다.",
   controls: {
     bar: { kind: "select", options: GLASS_BARS },
     selected: { kind: "boolean" },
@@ -492,12 +492,12 @@ const glass: Spec = {
   ),
   code: (v) => {
     const attrs = [v.selected ? "selected" : "", v.hoverable ? "hoverable" : "", v.padding !== "0" ? `padding="${String(v.padding)}"` : ""].filter(Boolean);
-    return `<Paint accent="${String(v.bar)}" variant="solid" padding="md">\n  <Glass${attrs.length ? ` ${attrs.join(" ")}` : ""}>${String(v.children ?? "")}</Glass>\n</Paint>`;
+    return `<Paint accent="${String(v.bar)}" variant="filled" padding="md">\n  <Glass${attrs.length ? ` ${attrs.join(" ")}` : ""}>${String(v.children ?? "")}</Glass>\n</Paint>`;
   },
   sections: [
     {
-      title: "바 색을 따라갑니다",
-      note: "Glass 는 accent 를 받지 않습니다. 바의 글자색(accent 의 ink)을 묽혀 만들어서 보라 · 검정 · 분홍 바 위에서는 흰 유리, 시안 · 노랑 · 초록 바 위에서는 검은 유리가 됩니다. 흰 면 · 크림 위에서는 쓰지 않습니다 — 그 자리는 Paint 입니다.",
+      title: "어느 바 위에서도 흰 유리",
+      note: "Glass 는 accent 를 받지 않고, 어느 바 위에서도 흰 유리입니다. 글자는 바의 글자색(accent 의 ink)을 물려받아 보라 · 검정 바 위에서는 흰 글자, 분홍 · 시안 · 노랑 · 초록 바 위에서는 검정 글자가 됩니다. 흰 유리라 흰 면 · 크림 위에서는 보이지 않습니다 — 그 자리는 Paint 입니다.",
       render: () => (
         <Stage bg="raised">
           <Stack gap="md">
@@ -866,7 +866,7 @@ const text: Spec = {
               <Labeled name="Inline 안의 Text">
                 <Inline gap="md">
                   <Text truncate>미적분학 II · 영어강의 · 김예시 선생님 · 월 3-4교시</Text>
-                  <Badge variant="solid" accent="cyan">
+                  <Badge variant="filled" accent="cyan">
                     4
                   </Badge>
                 </Inline>
@@ -1069,7 +1069,7 @@ const visuallyHidden: Spec = {
     const hidden = String(v.children ?? "");
     return (
       <Stack gap="md" align="center">
-        <Badge variant="solid" accent="pink" size="lg">
+        <Badge variant="filled" accent="pink" size="lg">
           3
           <VisuallyHidden>{hidden}</VisuallyHidden>
         </Badge>
@@ -1079,7 +1079,7 @@ const visuallyHidden: Spec = {
       </Stack>
     );
   },
-  code: (v) => `<Badge variant="solid">\n  3\n  <VisuallyHidden>${String(v.children ?? "")}</VisuallyHidden>\n</Badge>`,
+  code: (v) => `<Badge variant="filled">\n  3\n  <VisuallyHidden>${String(v.children ?? "")}</VisuallyHidden>\n</Badge>`,
   sections: [
     {
       title: "쓰는 자리",

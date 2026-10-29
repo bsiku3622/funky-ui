@@ -3,28 +3,28 @@ import type { ComponentPropsWithRef, ReactNode } from "react";
 
 import { cx } from "../internal/cx";
 import { CheckGlyph } from "../internal/glyphs";
-import { accentClass } from "../styles/accent.css";
-import { resolveAccent, type Accent } from "../tokens/vocabulary";
 import { checkBox, checkNative, control, native, radioBox, radioDot, radioNative, switchNative, thumb, toggleRoot, track } from "./toggles.css";
 
+/**
+ * accent 를 고르지 않습니다 — 켜진 색은 검정이고, 색이 있는 Paint 안에서는 다른 요소처럼 그 색을 따릅니다.
+ * class-explorer 에 색을 고르는 토글이 없었습니다(학번 색 필터 칩은 런타임 색이라 Components 몫입니다).
+ */
 interface ToggleOwnProps {
-  /** 켜진 색 (기본: 바깥 accent, 없으면 검정) */
-  accent?: Accent;
   /** 옆에 붙는 글자 — 누르는 자리가 글자까지 넓어집니다 */
   children?: ReactNode;
 }
 
 type ToggleProps = Omit<ComponentPropsWithRef<"input">, "type" | "children"> & ToggleOwnProps;
 
-function rootClass(accent: Accent | undefined, className: string | undefined) {
-  return cx(toggleRoot, accent && accentClass[resolveAccent(accent)], className);
+function rootClass(className: string | undefined) {
+  return cx(toggleRoot, className);
 }
 
 export type CheckboxProps = ToggleProps;
 
-export function Checkbox({ accent, children, className, ...rest }: CheckboxProps) {
+export function Checkbox({ children, className, ...rest }: CheckboxProps) {
   return (
-    <label className={rootClass(accent, className)}>
+    <label className={rootClass(className)}>
       <span className={control}>
         <input type="checkbox" className={cx(native, checkNative)} {...rest} />
         <span className={checkBox} aria-hidden="true">
@@ -38,9 +38,9 @@ export function Checkbox({ accent, children, className, ...rest }: CheckboxProps
 
 export type RadioProps = ToggleProps;
 
-export function Radio({ accent, children, className, ...rest }: RadioProps) {
+export function Radio({ children, className, ...rest }: RadioProps) {
   return (
-    <label className={rootClass(accent, className)}>
+    <label className={rootClass(className)}>
       <span className={control}>
         <input type="radio" className={cx(native, radioNative)} {...rest} />
         <span className={radioBox} aria-hidden="true">
@@ -55,9 +55,9 @@ export function Radio({ accent, children, className, ...rest }: RadioProps) {
 export type SwitchProps = ToggleProps;
 
 /** 켜고 끄는 스위치 — native checkbox 에 `role="switch"` 를 붙입니다 */
-export function Switch({ accent, children, className, ...rest }: SwitchProps) {
+export function Switch({ children, className, ...rest }: SwitchProps) {
   return (
-    <label className={rootClass(accent, className)}>
+    <label className={rootClass(className)}>
       <span className={control}>
         <input type="checkbox" role="switch" className={cx(native, switchNative)} {...rest} />
         <span className={track} aria-hidden="true">

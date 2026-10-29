@@ -1,7 +1,7 @@
 /**
  * 하나를 고르는 줄 — SegmentedControl(값 고르기) · Tabs(화면 바꾸기).
  *
- * 둘 다 버튼 무리이고 규칙도 같습니다: 안 골린 것은 `variant`, 골린 것은 같은 accent 의 solid.
+ * 둘 다 버튼 무리이고 규칙도 같습니다: 안 골린 것은 `variant`, 골린 것은 같은 accent 의 filled.
  * 다른 건 뜻과 기본 생김새입니다 — 값이면 radiogroup(기본 muted · sm · 그림자 없음 · 간격 sm),
  * 화면이면 tablist(기본 outline · sm · 그림자 · 간격 md, class-explorer 의 화면 전환 버튼).
  * 방향키로 옮겨 다니고, Tab 키로는 골린 칸 하나에만 들어옵니다.

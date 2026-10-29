@@ -27,7 +27,7 @@ export function Home() {
             크림 위 네온, 2px 검정 선, 하드 그림자. 누르면 그림자 속으로 가라앉는 neo-brutalist 디자인 시스템.
           </Text>
           <Inline gap="md" wrap>
-            <Button as={Link} to="/playground" accent="cyan" variant="tonal" size="lg" shadow iconEnd={ArrowRight}>
+            <Button as={Link} to="/playground" accent="cyan" variant="solid" size="lg" shadow iconEnd={ArrowRight}>
               Playground
             </Button>
             <Button as={Link} to="/docs" size="lg" shadow icon={BookOpen}>
@@ -35,7 +35,7 @@ export function Home() {
             </Button>
           </Inline>
           <Inline gap="sm" wrap>
-            <Button size="xs" accent="green" variant="solid">
+            <Button size="xs" accent="green" variant="filled">
               유지
             </Button>
             <Button size="xs" accent="green" variant="outline">
@@ -44,16 +44,16 @@ export function Home() {
             <Button size="xs" accent="orange" variant="plain">
               3분반
             </Button>
-            <Button size="xs" accent="green" variant="tonalMuted">
+            <Button size="xs" accent="green" variant="solidMuted">
               세계사의이해
             </Button>
             <Button size="xs" variant="muted">
               이름 바꾸기
             </Button>
-            <Button size="xs" accent="cyan" variant="tonal" shadow icon={Eye}>
+            <Button size="xs" accent="cyan" variant="solid" shadow icon={Eye}>
               Preview
             </Button>
-            <Badge accent="cyan" variant="tonal">
+            <Badge accent="cyan" variant="solid">
               계획
             </Badge>
             <StudentBadge cohort="25" name="김예시" color="#00b327" />
@@ -70,7 +70,7 @@ export function Home() {
                 <Stack gap="md">
                   <Inline justify="between">
                     <Text variant="overline">0{i + 1}</Text>
-                    <Badge size="sm" accent={layer === "components" ? "purple" : undefined} variant={layer === "components" ? "tonal" : "solid"}>
+                    <Badge size="sm" accent={layer === "components" ? "purple" : undefined} variant={layer === "components" ? "solid" : "filled"}>
                       {LAYER_COUNT[layer]}
                     </Badge>
                   </Inline>

@@ -17,7 +17,7 @@ export interface PaintOwnProps extends BoxOwnProps {
   accent?: Accent;
   /** 칠하는 방식 (기본 `outline`) — 11 가지 레시피는 docs/foundations/color.md */
   variant?: Variant;
-  /** 골라진 상태 — 같은 accent 의 solid 로 칠합니다. aria 속성(pressed · checked · selected)은 쓰는 쪽이 붙입니다 */
+  /** 골라진 상태 — 같은 accent 의 filled 로 칠합니다. aria 속성(pressed · checked · selected)은 쓰는 쪽이 붙입니다 */
   selected?: boolean;
   /**
    * hover · 누르는 중에 색이 반응합니다 — variant 표의 Hover 칸대로. Pressable 없이 혼자 동작하므로 누르지 않는
@@ -43,7 +43,7 @@ export function paintClass({ accent, variant = "outline", selected = false, hove
  *
  * ```tsx
  * <Paint accent="green" variant="plain" padding="md">유지 중인 과목</Paint>
- * <Pressable motion="sink" className={paintClass({ accent: "cyan", variant: "tonal", hoverable: true })}>Preview</Pressable>
+ * <Pressable motion="sink" className={paintClass({ accent: "cyan", variant: "solid", hoverable: true })}>Preview</Pressable>
  * ```
  */
 export function Paint<E extends ElementType = "div">({

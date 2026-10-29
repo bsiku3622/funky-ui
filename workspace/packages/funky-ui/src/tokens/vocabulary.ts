@@ -27,14 +27,14 @@ export function resolveAccent(accent: Accent): AccentName {
 
 /** Variant — 같은 accent 를 얼마나 진하게, 어디에 칠하는가 (규칙은 `color-recipes.ts`) */
 export const VARIANTS = [
-  "solid",
+  "filled",
   "outline",
   "hairline",
   "frameline",
   "framelineMuted",
   "plain",
-  "tonal",
-  "tonalMuted",
+  "solid",
+  "solidMuted",
   "muted",
   "ghost",
   "ghostMuted",

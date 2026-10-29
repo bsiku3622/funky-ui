@@ -249,7 +249,7 @@ function SystemStatus() {
   return (
     <Stack gap="xs" align="start">
       <Text variant="overline">System Status</Text>
-      <Badge size="sm" variant="tonal" accent="green">
+      <Badge size="sm" variant="solid" accent="green">
         API Online
       </Badge>
     </Stack>
@@ -279,7 +279,7 @@ function SideNavDemo({ footer, height = 440 }: { footer: boolean; height?: numbe
 const sideNav: Spec = {
   name: "SideNav",
   summary:
-    "데스크톱 왼쪽 메뉴. 폭 256px 이고 메뉴만 스크롤되며 footer 는 늘 보입니다. 지금 화면은 검정 solid 가 4px 위에 떠 있고, 나머지는 약한 잉크로 물러납니다.",
+    "데스크톱 왼쪽 메뉴. 폭 256px 이고 메뉴만 스크롤되며 footer 는 늘 보입니다. 지금 화면은 검정 filled 가 4px 위에 떠 있고, 나머지는 약한 잉크로 물러납니다.",
   controls: {
     footer: { kind: "boolean" },
   },
@@ -370,7 +370,7 @@ const termSwitcher: Spec = {
   summary: "학기 선택. 상단 바 위의 유리 버튼이 Menu 를 엽니다. 학기가 둘 미만이면 아무것도 그리지 않습니다.",
   stage: "dark",
   render: () => (
-    <Paint accent="purple" variant="solid" padding="lg">
+    <Paint accent="purple" variant="filled" padding="lg">
       <TermDemo />
     </Paint>
   ),

@@ -54,7 +54,7 @@ export interface CardHeaderProps {
   icon?: IconComponent;
   /** 오른쪽 끝 — 개수 · 버튼 */
   actions?: ReactNode;
-  /** `bar` 는 Paint 의 solid 로 칠한 머리 막대 (모달 머리와 같은 모양) */
+  /** `bar` 는 Paint 의 filled 로 칠한 머리 막대 (모달 머리와 같은 모양) */
   tone?: "plain" | "bar";
   /** 머리 막대의 색 (`tone="bar"` 일 때, 기본 검정) */
   accent?: Accent;
@@ -78,7 +78,7 @@ function CardHeader({ title, icon, actions, tone = "plain", accent, className }:
     </>
   );
   return bar ? (
-    <PaintRoot as={Inline} accent={accent} variant="solid" justify="between" gap="md" className={cx(cardHeader, cardHeaderBar, className)}>
+    <PaintRoot as={Inline} accent={accent} variant="filled" justify="between" gap="md" className={cx(cardHeader, cardHeaderBar, className)}>
       {content}
     </PaintRoot>
   ) : (
