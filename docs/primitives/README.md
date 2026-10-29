@@ -9,7 +9,7 @@ Primitives는 모양이 없는 바탕입니다. 요소 · 글자 · 아이콘 ·
 | 1차 — 바탕 | element | Box | 태그 · ref · 여백 |
 | 1차 — 바탕 | content | Text · Icon | 글자 · 아이콘 |
 | 1차 — 바탕 | a11y | VisuallyHidden · Portal | 귀로 듣는 이름 · 그리는 자리 |
-| 2차 — Box + 능력 하나 | paint | Surface · Paint | 칠 — 박스는 흑백 면, 요소는 accent × variant(hover 색까지) |
+| 2차 — Box + 능력 하나 | paint | Surface · Paint | 칠 — 박스는 흑백 면, 요소는 accent × variant(둘 다 hover 색까지) |
 | 2차 — Box + 능력 하나 | press | Pressable | 누름 — 버튼의 의미 · 커서 · 꺼진 모양 · 몸짓(색은 없음) |
 | 2차 — Box + 능력 하나 | layout | Stack · Inline · Grid | 배치 |
 
@@ -29,7 +29,7 @@ primitive가 받는 값은 모두 닫힌 집합입니다.
 | --- | --- |
 | `Accent` | `black` `pink` `purple` `cyan` `yellow` `orange` `sky` `green` `red`, 역할 별칭 `system`(black) · `primary`(pink) · `secondary`(purple) · `success`(green) · `error`(red). 색 규칙은 [Color](../foundations/color.md) |
 | `Variant` | `solid` `outline` `hairline` `frameline` `framelineMuted` `plain` `tonal` `tonalMuted` `muted` `ghost` `ghostMuted` — 레시피는 [Color](../foundations/color.md#variant) |
-| `SurfaceFill` | `canvas`(크림 바탕) · `raised`(흰 면) · `sunken`(크림 위 오목한 자리) · `well`(흰 면 안의 오목한 자리, 반투명) · `inverse`(검정) |
+| `SurfaceFill` | `none`(면 없음 — 바깥 면이 그대로 보임) · `canvas`(크림 바탕) · `raised`(흰 면) · `sunken`(크림 위 오목한 자리) · `well`(흰 면 안의 오목한 자리, 반투명) · `inverse`(검정) |
 | `Border` | `none` · `line`(검정) · `soft`(연한 회색) · `subtle`(카드 안 구분선 색) |
 | `Shadow` | `none` · `raised`(4px) · `floating`(6px) |
 | `PressMotion` | `press`(그림자 위에서 가라앉음) · `lift`(떠오름) · `tap`(그림자 없이 누르는 순간만 작아짐). 거리와 시간은 [Motion](../foundations/motion.md) |
@@ -144,7 +144,7 @@ primitive가 받는 값은 모두 닫힌 집합입니다.
 
 ## Surface
 
-2차 primitive, 박스의 면입니다(Box + 흑백 면). 흑백 면(`fill`) · 테두리 · 그림자를 고르고, 카드 · 패널 · 모달 · 판처럼 무언가를 담는 박스를 칠합니다. accent가 없습니다 — 색이 있는 요소는 [Paint](#paint)입니다. 아래는 흰 카드 면과, 흰 면 안의 오목한 자리를 나란히 놓은 예입니다.
+2차 primitive, 박스의 면입니다(Box + 흑백 면). 흑백 면(`fill`) · 테두리 · 그림자를 고르고, 카드 · 패널 · 모달 · 판처럼 무언가를 담는 박스를 칠합니다. `hoverable`이면 hover · 누르는 중의 흑백 상태 층도 칠합니다. accent가 없습니다 — 색이 있는 요소는 [Paint](#paint)입니다. 아래는 흰 카드 면과, 흰 면 안의 오목한 자리를 나란히 놓은 예입니다.
 
 ```tsx
 <Surface border="line" shadow="raised" padding="xl">
@@ -155,16 +155,30 @@ primitive가 받는 값은 모두 닫힌 집합입니다.
 </Surface>
 ```
 
+면 위의 목록 줄은 면을 따로 칠하지 않습니다(`fill="none"`). 바깥 면을 그대로 보이다가 hover 때 층을 얹습니다. 아래는 흰 면 위의 검색 추천 줄입니다.
+
+```tsx
+<Surface border="line">
+  {subjects.map((s) => (
+    <Surface key={s} fill="none" hoverable paddingX="xl" paddingY="md">
+      {s}
+    </Surface>
+  ))}
+</Surface>
+```
+
 | prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `as` | `ElementType` | `"div"` | 렌더할 요소입니다. 모달은 `"dialog"`입니다. |
-| `fill` | `SurfaceFill` | `"raised"` | 흑백 면입니다. |
+| `fill` | `SurfaceFill` | `"raised"` | 흑백 면입니다. `none`은 면 없이 바깥 면을 그대로 보입니다 — 목록 줄 · 아코디언 머리처럼 면 위의 한 칸에 씁니다. |
 | `border` | `Border` | `"none"` | 2px 테두리의 색입니다. |
 | `shadow` | `Shadow` | `"none"` | 깊이입니다. 떠 있는 물건은 `raised`(4px), 모달만 `floating`(6px)입니다. |
+| `hoverable` | `boolean` | `false` | hover · 누르는 중에 흑백 상태 층(글자색의 7% · 12%)을 면 위에 덮습니다. 면 · 글자 · 테두리는 그대로이고, Pressable 없이 혼자 동작합니다. 꺼진 요소에는 걸지 않습니다. |
 | `padding` `paddingX` `paddingY` | [Box](#box)와 같음 | — | Box와 같은 prop입니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 
 - 글자색은 부모를 따르고(`color: inherit`), `inverse`만 흰 글자로 바꿉니다. 검정 면 위에 검정 글자가 생기지 않고, 링크나 버튼으로 그려도 브라우저의 파란 글자가 남지 않습니다.
+- 상태 층은 글자색을 묽혀 만들어서 흰 면 위에서는 회색, 검정 면 위에서는 흰 층이 됩니다. 색 요소의 hover는 [Paint](#paint)의 `hoverable`이고, 상태마다 누가 무엇을 맡는지는 [아래 표](#칠과-누름)에 있습니다.
 - 테두리는 2px 한 굵기라 굵기를 고르지 않고 색만 고릅니다.
 - `surfaceClass(props)`가 같은 prop을 class 문자열로 돌려줍니다. 누르는 카드는 [Pressable](#pressable)에 이 class로 면만 빌려 줍니다(`Card motion`이 그렇게 조립됩니다). 칠한 판 위에 늘어놓으려면 Surface 안에 Stack · Inline · Grid를 넣습니다.
 
@@ -202,7 +216,7 @@ hover 색은 Pressable 없이도 켜집니다. 누르는 물건으로 만들려�
 - 크기 · 글자 · 아이콘은 Paint가 정하지 않습니다. 그건 Button · Badge처럼 Paint 위에 선 컴포넌트의 몫입니다.
 - `paintClass(props)`가 같은 prop을 class 문자열로 돌려줍니다. Pressable처럼 다른 2차 primitive에 칠을 얹을 때 씁니다.
 - 위 층 컴포넌트는 Paint의 칠을 쓰면서 형태만 자기 CSS로 덮습니다. 상단 바 · 모달 머리 막대는 solid를 쓰고 테두리를 한쪽만 남깁니다.
-- 상태마다 Paint와 Pressable이 무엇을 맡는지는 [아래 표](#paint와-pressable)에 있습니다.
+- 상태마다 칠과 Pressable이 무엇을 맡는지는 [아래 표](#칠과-누름)에 있습니다.
 
 ## Pressable
 
@@ -234,19 +248,19 @@ hover 색은 Pressable 없이도 켜집니다. 누르는 물건으로 만들려�
 - 기본이 `<button type="button">`이라 안에는 글자 요소만 넣습니다(배치가 필요하면 `Stack as="span"`). 다른 button이나 링크를 넣지 않습니다.
 - `pressClass(props)`가 `disabled`를 뺀 같은 prop을 class 문자열로 돌려줍니다.
 
-## Paint와 Pressable
+## 칠과 누름
 
-Paint는 색, Pressable은 누름입니다. 둘은 같은 상태에 각자의 축으로 반응하고, 서로를 켜거나 끄지 않습니다.
+색은 칠(Paint · Surface), 누름은 Pressable입니다. 같은 상태에 각자의 축으로 반응하고, 서로를 켜거나 끄지 않습니다.
 
-| 상태 | 색 — Paint | 누름 — Pressable |
-| --- | --- | --- |
-| 쉼 | variant의 FG · BG · Border | `press` · `lift`면 4px 그림자 위에 떠 있습니다 |
-| hover | `hoverable`이면 variant의 Hover 칸(층 · 글자 · 테두리) | `press`는 가라앉고 `lift`는 떠오릅니다. 손가락 커서 |
-| 누르는 중 | `hoverable`이면 press 층으로 한 단 더 짙어집니다 | 한 번 더 작아집니다(`--fk-press-scale`) |
-| 골라짐 | `selected` — 같은 accent의 solid | `pressed` — 눌린 채 머뭅니다 |
-| 꺼짐 | 상태 색을 걸지 않습니다 | 몸짓을 멈추고 0.4로 흐려지며 `not-allowed` 커서. `disabled` · `aria-disabled`를 붙입니다 |
+| 상태 | 색 — Paint | 색 — Surface | 누름 — Pressable |
+| --- | --- | --- | --- |
+| 쉼 | variant의 FG · BG · Border | 흑백 면 · 테두리 · 그림자 | `press` · `lift`면 4px 그림자 위에 떠 있습니다 |
+| hover | `hoverable`이면 variant의 Hover 칸(층 · 글자 · 테두리) | `hoverable`이면 글자색 7% 층 | `press`는 가라앉고 `lift`는 떠오릅니다. 손가락 커서 |
+| 누르는 중 | `hoverable`이면 press 층으로 한 단 더 짙어집니다 | `hoverable`이면 글자색 12% 층 | 한 번 더 작아집니다(`--fk-press-scale`) |
+| 골라짐 | `selected` — 같은 accent의 solid | — | `pressed` — 눌린 채 머뭅니다 |
+| 꺼짐 | 상태 색을 걸지 않습니다 | 상태 층을 걸지 않습니다 | 몸짓을 멈추고 0.4로 흐려지며 `not-allowed` 커서. `disabled` · `aria-disabled`를 붙입니다 |
 
-- hover 색은 브라우저의 `:hover` · `:active`가 켭니다. 그래서 Paint는 Pressable 없이도 hover 색을 내고(툴팁을 띄우는 배지), Pressable은 칠 없이도 가라앉습니다(흑백 면을 빌린 카드). 포커스 고리는 둘 다 아니고 전역 스타일시트가 겁니다.
+- hover 색은 브라우저의 `:hover` · `:active`가 켭니다. 그래서 칠은 Pressable 없이도 hover 색을 내고(툴팁을 띄우는 배지, 면 위의 목록 줄), Pressable은 칠 없이도 가라앉습니다(흑백 면을 빌린 카드). 포커스 고리는 어느 쪽도 아니고 전역 스타일시트가 겁니다.
 - 두 축에 걸치는 것은 꺼짐뿐입니다. Pressable이 `disabled` · `aria-disabled`를 붙이고, 두 primitive가 그 HTML 상태를 읽어 각자의 축에서 멈춥니다.
 - `transition-property`는 한 속성이라 둘이 자기 속성만 적으면 한 요소 위에서 서로를 덮습니다. 그래서 둘 다 색과 몸짓을 합친 한 목록(`STATE_TRANSITION`)을 씁니다.
 - Button이 둘을 묶는 자리입니다. `selected`를 Paint의 `selected`와 Pressable의 `pressed`로 나눠 주고, `shadow`로 몸짓(`press` · `tap`)을 고릅니다.

@@ -88,7 +88,7 @@ Trade 화면은 색이 뜻을 짊어지는 대표 자리라 따로 적습니다.
 | Tailwind `red-500` · `red-600` | `red` |
 | `retro-bg` | `surface.canvas` |
 | `retro-fg` | `ink.primary` |
-| `retro-accent-light` (#f0fdff hover 면) | 없앰 — hover는 회색 층(`overlay.hoverGray`) |
+| `retro-accent-light` (#f0fdff hover 면) | 없앰 — 흑백 면 위의 줄이면 Surface `hoverable`(글자색 7% 층), 색 요소면 Paint `hoverable` |
 | `bg-black/5` · `bg-black/[0.03]` | `surface.well` |
 | `border-black/10` | `line.subtle` (`Divider`) |
 | `border-black/20` · `/30` | `line.soft` |
