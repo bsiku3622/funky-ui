@@ -1,0 +1,168 @@
+/**
+ * 앱 셸 — AppBar(상단 바) · SideNav(데스크톱 왼쪽 메뉴) · BottomNav(모바일 하단 바) · TermSwitcher.
+ *
+ * 자리(fixed · 높이)는 class-explorer 의 셸 치수(`CONTAINER.shell`)를 따르고, 화면에 고정할지는
+ * `fixed` 로 고릅니다. 메뉴 순서는 앱(`lib/navigation.ts`)이 정합니다 — 셸은 그리기만 합니다.
+ */
+import type { ReactNode } from "react";
+
+import { cx } from "../internal/cx";
+import { ChevronDownGlyph } from "../internal/glyphs";
+import { NavButton } from "../atoms/NavButton";
+import { controlClass } from "../atoms/Button";
+import { Menu } from "../molecules/floating";
+import { Icon, type IconComponent } from "../primitives/Icon";
+import { accentClass } from "../styles/accent.css";
+import { resolveAccent, type Accent } from "../tokens/vocabulary";
+import {
+  appBar,
+  appBarActions,
+  appBarFixed,
+  brand,
+  brandButton,
+  bottomItem,
+  bottomItemActive,
+  bottomItemLabel,
+  bottomNav,
+  bottomNavFixed,
+  sideItem,
+  sideItemIdle,
+  sideNav,
+  sideNavBody,
+  sideNavFixed,
+  sideNavFooter,
+  sideSection,
+  sideSectionLabel,
+} from "./shell.css";
+
+export interface AppBarProps {
+  /** 로고 글자 — 기울어진 900 대문자로 그립니다 */
+  brand: ReactNode;
+  onBrandClick?: () => void;
+  /** 오른쪽 끝 — 학기 선택 · 계정 · 로그아웃 */
+  actions?: ReactNode;
+  /** 기본 보라 */
+  accent?: Accent;
+  /** 화면 위에 고정 (기본 false) */
+  fixed?: boolean;
+  className?: string;
+}
+
+/** 상단 바 — accent 면 · 아래 2px 검정 · 아래로 4px 그림자 */
+export function AppBar({ brand: label, onBrandClick, actions, accent = "purple", fixed = false, className }: AppBarProps) {
+  return (
+    <header className={cx(appBar, fixed && appBarFixed, accentClass[resolveAccent(accent)], className)}>
+      {onBrandClick ? (
+        <button type="button" className={cx(brand, brandButton)} onClick={onBrandClick}>
+          {label}
+        </button>
+      ) : (
+        <span className={brand}>{label}</span>
+      )}
+      {actions && <div className={appBarActions}>{actions}</div>}
+    </header>
+  );
+}
+
+export interface SideNavProps {
+  /** 맨 아래에 붙는 자리 (System Status) — 메뉴만 스크롤되고 이건 늘 보입니다 */
+  footer?: ReactNode;
+  /** 상단 바 아래 왼쪽에 고정 (기본 false) */
+  fixed?: boolean;
+  className?: string;
+  children?: ReactNode;
+}
+
+export function SideNav({ footer, fixed = false, className, children }: SideNavProps) {
+  return (
+    <aside className={cx(sideNav, fixed && sideNavFixed, className)}>
+      <nav className={sideNavBody}>{children}</nav>
+      {footer && <div className={sideNavFooter}>{footer}</div>}
+    </aside>
+  );
+}
+
+function SideNavSection({ label, children }: { label?: ReactNode; children?: ReactNode }) {
+  return (
+    <div className={sideSection}>
+      {label && <p className={sideSectionLabel}>{label}</p>}
+      {children}
+    </div>
+  );
+}
+
+export interface SideNavItemProps {
+  icon: IconComponent;
+  active?: boolean;
+  onClick?: () => void;
+  children?: ReactNode;
+}
+
+/** 지금 화면은 검정 solid 가 4px 위에 떠 있고, 나머지는 약한 잉크로 물러납니다 */
+function SideNavItem({ icon, active = false, onClick, children }: SideNavItemProps) {
+  return (
+    <button
+      type="button"
+      aria-current={active ? "page" : undefined}
+      onClick={onClick}
+      className={cx(sideItem, active ? controlClass({ accent: "black", variant: "solid", shadow: true }) : sideItemIdle)}
+    >
+      <Icon icon={icon} size="lg" />
+      <span>{children}</span>
+    </button>
+  );
+}
+
+SideNav.Section = SideNavSection;
+SideNav.Item = SideNavItem;
+
+export interface BottomNavProps {
+  accent?: Accent;
+  /** 화면 아래에 고정 (기본 false) — 넓은 화면(md 이상)에서는 숨습니다 */
+  fixed?: boolean;
+  className?: string;
+  children?: ReactNode;
+}
+
+/** 모바일 하단 바 — 다섯 칸까지. 여덟 칸을 욱여넣으면 칸이 좁아져 이름이 잘리고 손가락이 옆 칸을 누릅니다 */
+export function BottomNav({ accent = "purple", fixed = false, className, children }: BottomNavProps) {
+  return <nav className={cx(bottomNav, fixed && bottomNavFixed, accentClass[resolveAccent(accent)], className)}>{children}</nav>;
+}
+
+function BottomNavItem({ icon, active = false, onClick, children }: SideNavItemProps) {
+  return (
+    <button type="button" aria-current={active ? "page" : undefined} onClick={onClick} className={cx(bottomItem, active && bottomItemActive)}>
+      <Icon icon={icon} size="lg" />
+      <span className={bottomItemLabel}>{children}</span>
+    </button>
+  );
+}
+
+BottomNav.Item = BottomNavItem;
+
+export interface TermOption {
+  value: string;
+  label: string;
+}
+
+export interface TermSwitcherProps {
+  terms: readonly TermOption[];
+  value: string;
+  onChange: (value: string) => void;
+}
+
+/** 학기 선택 — 상단 바 위 유리 버튼이 목록을 엽니다. 학기가 쌓여도 바를 잡아먹지 않습니다 */
+export function TermSwitcher({ terms, value, onChange }: TermSwitcherProps) {
+  if (terms.length < 2) return null;
+  const current = terms.find((t) => t.value === value);
+  return (
+    <Menu
+      aria-label="학기"
+      align="end"
+      value={value}
+      items={terms}
+      onSelect={onChange}
+      trigger={<NavButton iconEnd={ChevronDownGlyph}>{current?.label ?? "TERM"}</NavButton>}
+    />
+  );
+}
