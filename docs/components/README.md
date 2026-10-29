@@ -81,7 +81,7 @@ Components는 class-explorer 전용 컴포넌트입니다. 앱 셸(상단 바 ·
 | `onClick` | `() => void` | — | 눌렀을 때 부릅니다. |
 | `children` | `ReactNode` | — | 메뉴 이름입니다. |
 
-- [Pressable](../primitives/README.md#pressable)(몸짓)에 [Paint](../primitives/README.md#paint)(칠)를 얹은 버튼입니다. 지금 화면은 검정 `solid`가 4px 그림자 위에 떠 있고(`press` — hover 때 가라앉음), 나머지는 `ghostMuted`로 물러나 hover 때 글자만 진해집니다(`tap`). 골라짐(`selected`)이 아니라 variant를 바꾸는 것이라, 지금 화면 칸은 눌린 채가 아니라 떠 있습니다.
+- [Pressable](../primitives/README.md#pressable)(누름)에 [Paint](../primitives/README.md#paint)(칠)를 얹은 버튼입니다. 지금 화면은 검정 `solid`가 4px 그림자 위에 떠 있고(`press` — hover 때 가라앉음), 나머지는 `ghostMuted`로 물러나 hover 때 글자만 진해집니다(`tap`). 골라짐(`selected`)이 아니라 variant를 바꾸는 것이라, 지금 화면 칸은 눌린 채가 아니라 떠 있습니다.
 - 링크가 아니라 `<button>`입니다. 화면 이동은 `onClick`에서 합니다.
 
 ## BottomNav

@@ -1,6 +1,6 @@
 # Primitives
 
-Primitives는 모양이 없는 바탕입니다. 요소 · 글자 · 아이콘 · 접근성 도구 · 칠 · 몸짓 · 배치 열한 개가 여기 있고, 토큰과 스타일(`tokens/` · `styles/`)만 읽습니다. Atoms부터 Components까지 모든 층이 이 열한 개 위에 섭니다.
+Primitives는 모양이 없는 바탕입니다. 요소 · 글자 · 아이콘 · 접근성 도구 · 칠 · 누름 · 배치 열한 개가 여기 있고, 토큰과 스타일(`tokens/` · `styles/`)만 읽습니다. Atoms부터 Components까지 모든 층이 이 열한 개 위에 섭니다.
 
 열한 개는 두 단으로 나뉩니다.
 
@@ -9,11 +9,11 @@ Primitives는 모양이 없는 바탕입니다. 요소 · 글자 · 아이콘 ·
 | 1차 — 바탕 | element | Box | 태그 · ref · 여백 |
 | 1차 — 바탕 | content | Text · Icon | 글자 · 아이콘 |
 | 1차 — 바탕 | a11y | VisuallyHidden · Portal | 귀로 듣는 이름 · 그리는 자리 |
-| 2차 — Box + 능력 하나 | paint | Surface · Paint | 칠 — 박스는 흑백 면, 요소는 accent × variant |
-| 2차 — Box + 능력 하나 | interaction | Pressable | 몸짓 — 커서 · 꺼진 모양 · 움직임 · 버튼의 의미 |
+| 2차 — Box + 능력 하나 | paint | Surface · Paint | 칠 — 박스는 흑백 면, 요소는 accent × variant(hover 색까지) |
+| 2차 — Box + 능력 하나 | press | Pressable | 누름 — 버튼의 의미 · 커서 · 꺼진 모양 · 몸짓(색은 없음) |
 | 2차 — Box + 능력 하나 | layout | Stack · Inline · Grid | 배치 |
 
-1차는 서로 기대지 않습니다. 2차는 모두 [Box](#box)의 prop(태그 · 여백)을 그대로 받고 능력을 하나만 더하며, 2차끼리도 서로 기대지 않습니다. 둘 이상이 필요하면 위 층이 class로 묶습니다 — Button은 Pressable(몸짓)에 Paint(칠)를 얹은 것이고, 누르는 Card는 Pressable에 Surface(면)를 얹은 것입니다. 이렇게 묶으라고 2차 primitive는 prop을 class 문자열로 바꾸는 함수(`surfaceClass` · `paintClass` · `pressClass`)를 같이 내놓습니다.
+1차는 서로 기대지 않습니다. 2차는 모두 [Box](#box)의 prop(태그 · 여백)을 그대로 받고 능력을 하나만 더하며, 2차끼리도 서로 기대지 않습니다. 둘 이상이 필요하면 위 층이 class로 묶습니다 — Button은 Pressable(누름)에 Paint(칠)를 얹은 것이고, 누르는 Card는 Pressable에 Surface(면)를 얹은 것입니다. 이렇게 묶으라고 2차 primitive는 prop을 class 문자열로 바꾸는 함수(`surfaceClass` · `paintClass` · `pressClass`)를 같이 내놓습니다.
 
 **primitive 중 accent를 갖는 것은 Paint뿐입니다.** Paint에 준 accent는 그 요소를 칠하고, 안쪽 요소가 accent를 따로 주지 않으면 그 색으로 흐릅니다. Box · Surface · 배치 primitive는 색을 모르므로 이 흐름을 끊지도 바꾸지도 않습니다. 바깥에 Paint가 없으면 검정(시스템)입니다. 위 층에서도 accent는 그 색으로 칠해지는 컴포넌트(Button · Badge · Link · 토글 …)만 받고, Card처럼 칠하지 않는 박스는 받지 않습니다.
 
@@ -170,7 +170,7 @@ primitive가 받는 값은 모두 닫힌 집합입니다.
 
 ## Paint
 
-2차 primitive, 요소의 칠입니다(Box + 색). accent(색) × variant(칠하는 방식) 두 축으로 글자 · 면 · 테두리를 칠합니다. accent를 갖는 primitive는 Paint 하나라, 안쪽 요소는 accent를 따로 주지 않으면 가장 가까운 Paint의 색을 씁니다. Badge · Notice · 상단 바 · 머리 막대가 이 위에 서고, Button은 Pressable(몸짓)에 이 칠을 얹은 것입니다. 아래는 드랍한 과목 줄을 plain으로 칠한 예입니다. 안쪽 버튼은 accent를 받지 않아 줄의 분홍을 따릅니다.
+2차 primitive, 요소의 칠입니다(Box + 색). 색의 모든 상태를 맡습니다 — accent(색) × variant(칠하는 방식) 두 축으로 쉬는 글자 · 면 · 테두리를, `selected`로 골라진 색을, `hoverable`로 hover · 누르는 중의 색을 칠합니다. accent를 갖는 primitive는 Paint 하나라, 안쪽 요소는 accent를 따로 주지 않으면 가장 가까운 Paint의 색을 씁니다. Badge · Notice · 상단 바 · 머리 막대가 이 위에 서고, Button은 Pressable(누름)에 이 칠을 얹은 것입니다. 아래는 드랍한 과목 줄을 plain으로 칠한 예입니다. 안쪽 버튼은 accent를 받지 않아 줄의 분홍을 따릅니다.
 
 ```tsx
 <Paint accent="pink" variant="plain" padding="lg">
@@ -179,10 +179,10 @@ primitive가 받는 값은 모두 닫힌 집합입니다.
 </Paint>
 ```
 
-누르는 요소는 몸짓을 맡는 Pressable에 칠을 class로 얹습니다. 아래는 그림자 위에 떠 있다가 hover 때 가라앉는 버튼을 Button 없이 조립한 예입니다.
+hover 색은 Pressable 없이도 켜집니다. 누르는 물건으로 만들려면 Pressable에 이 칠을 class로 얹습니다 — 색은 그대로 Paint가, 의미 · 커서 · 몸짓은 Pressable이 맡습니다. 아래는 그림자 위에 떠 있다가 hover 때 가라앉는 버튼을 Button 없이 조립한 예입니다.
 
 ```tsx
-<Pressable motion="press" paddingX="md" paddingY="xs" className={paintClass({ accent: "cyan", variant: "tonal", interactive: true })}>
+<Pressable motion="press" paddingX="md" paddingY="xs" className={paintClass({ accent: "cyan", variant: "tonal", hoverable: true })}>
   Preview
 </Pressable>
 ```
@@ -193,7 +193,7 @@ primitive가 받는 값은 모두 닫힌 집합입니다.
 | `accent` | `Accent` | — | 색입니다. 이 요소를 칠하고 안쪽으로 흐릅니다. 주지 않으면 바깥 Paint의 색, 바깥에도 없으면 검정(시스템)입니다. |
 | `variant` | `Variant` | `"outline"` | 칠하는 방식입니다. 11가지 레시피는 [Color](../foundations/color.md#variant)에 있습니다. |
 | `selected` | `boolean` | `false` | 골라진 상태입니다. 같은 accent의 `solid`로 칠합니다. `aria-pressed` 같은 속성은 쓰는 쪽이 붙입니다. |
-| `interactive` | `boolean` | `false` | 누르는 요소입니다. variant 표의 Hover 칸대로 hover · press 때 **색**(층 · 글자 · 테두리)만 바뀝니다. 커서 · 꺼진 모양 · 움직임은 [Pressable](#pressable)의 몫입니다. |
+| `hoverable` | `boolean` | `false` | hover · 누르는 중에 색이 반응합니다. variant 표의 Hover 칸(층 · 글자 · 테두리)대로 바뀌고, 누르는 동안 한 단 더 짙어집니다. Pressable 없이 혼자 동작하므로 툴팁을 띄우는 배지처럼 누르지 않는 요소에도 씁니다. 꺼진 요소(`disabled` · `aria-disabled`)에는 걸지 않습니다. |
 | `padding` `paddingX` `paddingY` | [Box](#box)와 같음 | — | Box와 같은 prop입니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 
@@ -202,10 +202,11 @@ primitive가 받는 값은 모두 닫힌 집합입니다.
 - 크기 · 글자 · 아이콘은 Paint가 정하지 않습니다. 그건 Button · Badge처럼 Paint 위에 선 컴포넌트의 몫입니다.
 - `paintClass(props)`가 같은 prop을 class 문자열로 돌려줍니다. Pressable처럼 다른 2차 primitive에 칠을 얹을 때 씁니다.
 - 위 층 컴포넌트는 Paint의 칠을 쓰면서 형태만 자기 CSS로 덮습니다. 상단 바 · 모달 머리 막대는 solid를 쓰고 테두리를 한쪽만 남깁니다.
+- 상태마다 Paint와 Pressable이 무엇을 맡는지는 [아래 표](#paint와-pressable)에 있습니다.
 
 ## Pressable
 
-2차 primitive, 누르는 몸짓입니다(Box + 몸짓). 커서 · 꺼진 모양 · 움직임 · 버튼의 의미(`type` · `disabled` · `aria-disabled`)를 맡고, 칠은 하지 않습니다. 흑백 면은 `surfaceClass()`, 색은 `paintClass()`로 얹습니다 — Button이 Pressable + Paint, 누르는 Card가 Pressable + Surface입니다. 아래는 과목 카드를 `lift`로 눌러 상세로 가게 한 예입니다.
+2차 primitive, 누르는 물건입니다(Box + 누름). '눌린다'는 사실과 그 몸짓을 맡습니다 — 버튼의 의미(`type` · `disabled` · `aria-disabled`) · 커서 · 꺼진 모양 · 움직임. 색은 하나도 없습니다. hover 색까지 Paint의 `hoverable`이고, Pressable이 그걸 켜 주지 않습니다. 흑백 면은 `surfaceClass()`, 색은 `paintClass()`로 얹습니다 — Button이 Pressable + Paint, 누르는 Card가 Pressable + Surface입니다. 아래는 과목 카드를 `lift`로 눌러 상세로 가게 한 예입니다.
 
 ```tsx
 <Pressable motion="lift" padding="xl" className={surfaceClass({ border: "line" })} onClick={() => navigate("/courses/phys2")}>
@@ -232,6 +233,23 @@ primitive가 받는 값은 모두 닫힌 집합입니다.
 - display와 폭은 태그 그대로입니다(`<button>`은 inline-block). 카드처럼 폭을 채우는 것은 쓰는 쪽이 정합니다 — [Card](../molecules/README.md#card)의 `motion`이 블록 · 폭 100% · 글자 정렬을 줍니다.
 - 기본이 `<button type="button">`이라 안에는 글자 요소만 넣습니다(배치가 필요하면 `Stack as="span"`). 다른 button이나 링크를 넣지 않습니다.
 - `pressClass(props)`가 `disabled`를 뺀 같은 prop을 class 문자열로 돌려줍니다.
+
+## Paint와 Pressable
+
+Paint는 색, Pressable은 누름입니다. 둘은 같은 상태에 각자의 축으로 반응하고, 서로를 켜거나 끄지 않습니다.
+
+| 상태 | 색 — Paint | 누름 — Pressable |
+| --- | --- | --- |
+| 쉼 | variant의 FG · BG · Border | `press` · `lift`면 4px 그림자 위에 떠 있습니다 |
+| hover | `hoverable`이면 variant의 Hover 칸(층 · 글자 · 테두리) | `press`는 가라앉고 `lift`는 떠오릅니다. 손가락 커서 |
+| 누르는 중 | `hoverable`이면 press 층으로 한 단 더 짙어집니다 | 한 번 더 작아집니다(`--fk-press-scale`) |
+| 골라짐 | `selected` — 같은 accent의 solid | `pressed` — 눌린 채 머뭅니다 |
+| 꺼짐 | 상태 색을 걸지 않습니다 | 몸짓을 멈추고 0.4로 흐려지며 `not-allowed` 커서. `disabled` · `aria-disabled`를 붙입니다 |
+
+- hover 색은 브라우저의 `:hover` · `:active`가 켭니다. 그래서 Paint는 Pressable 없이도 hover 색을 내고(툴팁을 띄우는 배지), Pressable은 칠 없이도 가라앉습니다(흑백 면을 빌린 카드). 포커스 고리는 둘 다 아니고 전역 스타일시트가 겁니다.
+- 두 축에 걸치는 것은 꺼짐뿐입니다. Pressable이 `disabled` · `aria-disabled`를 붙이고, 두 primitive가 그 HTML 상태를 읽어 각자의 축에서 멈춥니다.
+- `transition-property`는 한 속성이라 둘이 자기 속성만 적으면 한 요소 위에서 서로를 덮습니다. 그래서 둘 다 색과 몸짓을 합친 한 목록(`STATE_TRANSITION`)을 씁니다.
+- Button이 둘을 묶는 자리입니다. `selected`를 Paint의 `selected`와 Pressable의 `pressed`로 나눠 주고, `shadow`로 몸짓(`press` · `tap`)을 고릅니다.
 
 ## Stack
 

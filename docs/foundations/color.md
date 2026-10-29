@@ -97,7 +97,7 @@ variant는 같은 accent를 어디에, 얼마나 진하게 칠하는지를 정�
 
 ### Paint — 레시피를 쓰는 primitive
 
-이 표는 [Paint](../primitives/README.md#paint) primitive가 그대로 씁니다. `<Paint accent variant>`가 레시피를 글자 · 면 · 테두리로 칠하고, `interactive`를 주면 표의 Hover 칸대로 hover · press 때 색이 바뀝니다. 그림자 속으로 가라앉는 몸짓은 칠이 아니라 [Pressable](../primitives/README.md#pressable)의 몫이라, Button은 Pressable에 이 칠을 얹은 것입니다. Badge · Notice · 바(상단 바 · 머리 막대)도 전부 Paint 위에 섭니다. 흑백 박스(카드 · 패널 · 모달 판)는 [Surface](../primitives/README.md#surface)가 칠하고, 거기에는 accent가 없습니다 — 박스는 흑백, 색은 요소입니다.
+이 표는 [Paint](../primitives/README.md#paint) primitive가 그대로 씁니다. `<Paint accent variant>`가 레시피를 글자 · 면 · 테두리로 칠하고, `hoverable`을 주면 표의 Hover 칸대로 hover · 누르는 중에 색이 바뀝니다 — Pressable 없이도 동작합니다. 그림자 속으로 가라앉는 몸짓은 색이 아니라 누름([Pressable](../primitives/README.md#pressable))의 몫이라, Button은 Pressable에 이 칠을 얹은 것입니다. Badge · Notice · 바(상단 바 · 머리 막대)도 전부 Paint 위에 섭니다. 흑백 박스(카드 · 패널 · 모달 판)는 [Surface](../primitives/README.md#surface)가 칠하고, 거기에는 accent가 없습니다 — 박스는 흑백, 색은 요소입니다.
 
 ### 선택
 
@@ -120,7 +120,7 @@ accent는 CSS 변수라 아래로 흐르고, 그 변수를 정하는 것은 그 
 
 ## Interaction
 
-hover와 press는 면을 바꾸지 않고 위에 층을 얹습니다. 밑이 크림이든 흰색이든 색면이든 같은 규칙으로 한 단 바뀝니다.
+hover와 press는 면을 바꾸지 않고 위에 층을 얹습니다(Paint의 `hoverable`). 밑이 크림이든 흰색이든 색면이든 같은 규칙으로 한 단 바뀝니다.
 
 | 층 | hover | press | 쓰는 variant |
 | --- | --- | --- | --- |

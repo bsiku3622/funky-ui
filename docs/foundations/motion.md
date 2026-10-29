@@ -12,7 +12,7 @@ funky-ui의 움직임 — 시간, 곡선, 누름의 거리 — 을 정리한 문
 
 선택된 컨트롤은 **눌린 채로** 있습니다(`pressed`). 그림자를 켠 버튼이 골리면 가라앉은 자리에 그대로 머물러, 무엇이 골라져 있는지를 모양으로도 말합니다.
 
-몸짓은 [Pressable](../primitives/README.md#pressable) 하나가 맡습니다 — `press`(가라앉음) · `lift`(떠오름) · `tap`(작아짐만) 셋과, `press`가 눌린 채 머무는 `pressed`입니다. hover 때 바뀌는 층(색)은 칠([Paint](../primitives/README.md#paint)의 `interactive`)이라 몸짓과 따로 섭니다. Button은 `shadow`로 몸짓을 고릅니다 — 켜면 `press`, 끄면 `tap`입니다.
+몸짓은 [Pressable](../primitives/README.md#pressable) 하나가 맡습니다 — `press`(가라앉음) · `lift`(떠오름) · `tap`(작아짐만) 셋과, `press`가 눌린 채 머무는 `pressed`입니다. hover 때 바뀌는 층(색)은 칠([Paint](../primitives/README.md#paint)의 `hoverable`)이라 몸짓과 따로 섭니다. Button은 `shadow`로 몸짓을 고릅니다 — 켜면 `press`, 끄면 `tap`입니다.
 
 ## 떠오름
 
