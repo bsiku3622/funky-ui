@@ -50,7 +50,7 @@ Primitives 안은 두 단입니다(`PRIMITIVE_TIERS`). 1차(Box · Text · Icon 
 - 패키지 CSS 는 전부 `fk` 레이어 안에 듭니다(`fk.reset < theme < base < primitives < components < utilities`). 층 구조를 그대로 옮긴 순서라 위 층 CSS 는 Surface · Paint 의 칠을 언제나 덮습니다 — 모달 머리 막대가 Paint 의 solid 를 쓰고 테두리만 아래 한 줄로 덮는 식입니다. 소비 앱은 CSS 맨 위에 `@layer fk, theme, base, components, utilities;` 를 둡니다.
 - vanilla-extract 의 `.css.ts` 는 함수를 export 할 수 없습니다. 규칙을 만드는 함수는 일반 모듈(`styles/slots.ts` · `tokens/typography-recipes.ts`)에 둡니다.
 - `style()` 의 selector 는 자기 자신(`&`)을 겨눠야 합니다. 형제 · 자식을 꾸미는 규칙은 대상 쪽 style 에 `${other}:checked + &` 로 겁니다.
-- 그림자는 `raised`(4px) · `floating`(8px, 모달 전용) 두 단뿐입니다. blur 는 0.
+- 그림자는 `raised`(4px) · `floating`(6px, 모달 전용) 두 단뿐입니다. blur 는 0.
 - 모서리는 0. `RADIUS.full` 은 스피너 · 점에만.
 - `transition: all` 을 쓰지 않습니다 — 움직이는 속성을 적습니다.
 - inline style 은 실행 중에 정해지는 값(Grid 칸 폭 · Meter 길이 · `--fk-tone` · 떠 있는 판의 좌표)에만 씁니다.

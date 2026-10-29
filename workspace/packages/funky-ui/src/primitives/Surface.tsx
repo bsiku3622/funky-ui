@@ -11,7 +11,7 @@ export interface SurfaceOwnProps extends BoxOwnProps {
   fill?: SurfaceFill;
   /** 2px 테두리의 색 (기본 없음) */
   border?: Border;
-  /** 깊이 — 떠 있는 물건은 `raised`(4px), 모달만 `floating`(8px) */
+  /** 깊이 — 떠 있는 물건은 `raised`(4px), 모달만 `floating`(6px) */
   shadow?: Shadow;
 }
 

@@ -50,7 +50,7 @@ Trade 화면은 색이 뜻을 짊어지는 대표 자리라 따로 적습니다.
 | `4px 4px` (투명도 .1 · .12 · .15 · .16 · .18 · .2 · .25) | `raised` |
 | `6px 6px` 카드 | `raised` (카드도 4px입니다) |
 | `2px` · `3px` 작은 칩 | 없앰 — 작은 칩은 그림자를 받지 않거나 `raised` |
-| `8px 8px` | `floating` — 모달 전용 |
+| `8px 8px` | `floating`(6px) — 모달 전용 |
 | `0 4px 0 0` 상단 바 · `0 -4px` 하단 바 | `AppBar` · `BottomNav`가 가짐 |
 | `0 0 15px` (blur) | 없앰 — blur는 쓰지 않습니다. 누르는 칸이면 `motion="press"` |
 | 색 그림자 `rgba(255,165,0,.4)` · `var(--color-retro-*)` | 없앰 |
@@ -95,7 +95,7 @@ Trade 화면은 색이 뜻을 짊어지는 대표 자리라 따로 적습니다.
 
 ## 모달
 
-손으로 짠 겹판 일곱(`fixed inset-0 z-[50~1100] bg-black/40~70`)은 `<Modal>` 하나로 갑니다. native `<dialog>`라 z-index를 고르지 않고, 막은 `rgba(0,0,0,.5)` 하나, 그림자는 8px입니다. 머리 막대는 기본 보라(`accent`)이고, Esc · 막 누름 · 닫기 버튼이 모두 `onClose`를 부릅니다. 입력 중인 폼이면 `dismissible={false}`로 막 누름을 끕니다.
+손으로 짠 겹판 일곱(`fixed inset-0 z-[50~1100] bg-black/40~70`)은 `<Modal>` 하나로 갑니다. native `<dialog>`라 z-index를 고르지 않고, 막은 `rgba(0,0,0,.5)` 하나, 그림자는 6px입니다. 머리 막대는 기본 보라(`accent`)이고, Esc · 막 누름 · 닫기 버튼이 모두 `onClose`를 부릅니다. 입력 중인 폼이면 `dismissible={false}`로 막 누름을 끕니다.
 
 ## class-explorer에 붙이는 순서
 

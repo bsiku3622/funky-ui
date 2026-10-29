@@ -31,7 +31,7 @@ primitive가 받는 값은 모두 닫힌 집합입니다.
 | `Variant` | `solid` `outline` `hairline` `frameline` `framelineMuted` `plain` `tonal` `tonalMuted` `muted` `ghost` `ghostMuted` — 레시피는 [Color](../foundations/color.md#variant) |
 | `SurfaceFill` | `canvas`(크림 바탕) · `raised`(흰 면) · `sunken`(크림 위 오목한 자리) · `well`(흰 면 안의 오목한 자리, 반투명) · `inverse`(검정) |
 | `Border` | `none` · `line`(검정) · `soft`(연한 회색) · `subtle`(카드 안 구분선 색) |
-| `Shadow` | `none` · `raised`(4px) · `floating`(8px) |
+| `Shadow` | `none` · `raised`(4px) · `floating`(6px) |
 | `PressMotion` | `press`(그림자 위에서 가라앉음) · `lift`(떠오름) · `tap`(그림자 없이 누르는 순간만 작아짐). 거리와 시간은 [Motion](../foundations/motion.md) |
 | `Space` | `0` `2xs` `xs` `sm` `md` `lg` `xl` `2xl` `3xl` `4xl` `5xl` `6xl` — 0 · 2 · 4 · 6 · 8 · 12 · 16 · 20 · 24 · 32 · 48 · 64px. 안쪽 여백과 형제 사이 간격이 같은 사다리를 씁니다. [Layout](../foundations/layout.md) |
 
@@ -160,7 +160,7 @@ primitive가 받는 값은 모두 닫힌 집합입니다.
 | `as` | `ElementType` | `"div"` | 렌더할 요소입니다. 모달은 `"dialog"`입니다. |
 | `fill` | `SurfaceFill` | `"raised"` | 흑백 면입니다. |
 | `border` | `Border` | `"none"` | 2px 테두리의 색입니다. |
-| `shadow` | `Shadow` | `"none"` | 깊이입니다. 떠 있는 물건은 `raised`(4px), 모달만 `floating`(8px)입니다. |
+| `shadow` | `Shadow` | `"none"` | 깊이입니다. 떠 있는 물건은 `raised`(4px), 모달만 `floating`(6px)입니다. |
 | `padding` `paddingX` `paddingY` | [Box](#box)와 같음 | — | Box와 같은 prop입니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 

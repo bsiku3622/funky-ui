@@ -20,13 +20,13 @@ export const SPACE = {
 } as const satisfies Record<Space, number>;
 
 /**
- * 그림자 — **두 단뿐입니다.** 떠 있는 물건은 4px, 모달만 8px. blur 는 언제나 0.
+ * 그림자 — **두 단뿐입니다.** 떠 있는 물건은 4px, 모달만 6px. blur 는 언제나 0.
  * 계측에서 서로 다른 그림자 값이 33개였습니다. 깊이가 33단계인 화면은 없습니다.
  */
 export const ELEVATION = {
   none: { offset: 0 },
   raised: { offset: 4 },
-  floating: { offset: 8 },
+  floating: { offset: 6 },
 } as const satisfies Record<Shadow, { offset: number }>;
 
 /** 쌓는 순서 — 모달은 native `<dialog>` 의 top layer 가 맡으므로 여기 없습니다 */

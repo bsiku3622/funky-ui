@@ -33,7 +33,7 @@ class-explorer `frontend/src`의 모든 컴포넌트를 세고, funky-ui의 층(
 
 - **accent × variant** — 버튼 102종이 "어떤 색(accent 9)을 어떻게 칠하는가(variant 11)" 두 축 안으로 들어옵니다. 규칙은 [Color](../foundations/color.md)의 레시피 표입니다.
 - **selected는 상태** — 41번 쓰인 `isSelected`는 variant가 아니라 "같은 accent의 solid로 바뀜"입니다.
-- **그림자 두 단** — 33개 값이 `raised`(4px)와 `floating`(8px, 모달 전용)으로 모입니다.
+- **그림자 두 단** — 33개 값이 `raised`(4px)와 `floating`(6px, 모달 전용)으로 모입니다.
 
 자세한 대응은 [이관표](migration.md)에 있습니다.
 

@@ -151,7 +151,7 @@ export function LayoutPage() {
       </Section>
       <Section
         title="깊이 — 그림자는 두 단뿐"
-        note="계측에서 서로 다른 그림자 값이 33개였습니다. 이제 떠 있는 물건은 4px, 모달만 8px 입니다. blur 는 언제나 0."
+        note="계측에서 서로 다른 그림자 값이 33개였습니다. 이제 떠 있는 물건은 4px, 모달만 6px 입니다. blur 는 언제나 0."
       >
         <Stage bg="canvas">
           {(["raised", "floating"] as const).map((e) => (

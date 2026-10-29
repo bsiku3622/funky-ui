@@ -853,7 +853,7 @@ const MOVE_NOTE = "일반물리학을 B반에서 A반으로 옮깁니다. 시간
 const modal: Spec = {
   name: "Modal",
   summary:
-    "native dialog 위에 서는 모달. 머리 막대는 accent 면이고, Esc · 바깥 누름 · 닫기 버튼이 모두 onClose 를 부릅니다. 그림자는 시스템에서 유일한 8px 입니다.",
+    "native dialog 위에 서는 모달. 머리 막대는 accent 면이고, Esc · 바깥 누름 · 닫기 버튼이 모두 onClose 를 부릅니다. 그림자는 시스템에서 유일한 6px 입니다.",
   controls: {
     title: { kind: "text" },
     accent: { kind: "select", options: ACCENT_OPTIONS },

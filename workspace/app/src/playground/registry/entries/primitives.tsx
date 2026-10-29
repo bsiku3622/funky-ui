@@ -247,7 +247,7 @@ const surface: Spec = {
     },
     {
       title: "Border · Shadow",
-      note: "테두리는 2px 한 굵기라 흑백 선의 색만 고릅니다. 그림자는 떠 있는 물건(raised, 4px)과 모달(floating, 8px) 두 단뿐입니다.",
+      note: "테두리는 2px 한 굵기라 흑백 선의 색만 고릅니다. 그림자는 떠 있는 물건(raised, 4px)과 모달(floating, 6px) 두 단뿐입니다.",
       render: () => (
         <>
           <Stage>
