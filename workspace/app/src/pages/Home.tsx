@@ -66,11 +66,11 @@ export function Home() {
           </Text>
           <Grid columns="repeat(auto-fill, minmax(190px, 1fr))" gap="xl">
             {LAYERS.map((layer, i) => (
-              <Card key={layer} as={Link} to="/playground" motion="lift" padding="xl" className={layerCard} accent={layer === "components" ? "purple" : undefined}>
+              <Card key={layer} as={Link} to="/playground" motion="lift" padding="xl" className={layerCard}>
                 <Stack gap="md">
                   <Inline justify="between">
                     <Text variant="overline">0{i + 1}</Text>
-                    <Badge size="sm" variant={layer === "components" ? "tonal" : "solid"}>
+                    <Badge size="sm" accent={layer === "components" ? "purple" : undefined} variant={layer === "components" ? "tonal" : "solid"}>
                       {LAYER_COUNT[layer]}
                     </Badge>
                   </Inline>

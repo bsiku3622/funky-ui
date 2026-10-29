@@ -38,4 +38,11 @@ export const LIFT = {
   rise: 4,
 } as const;
 
+/**
+ * 누르는 요소에서 움직이는 속성 — 색(Paint)과 몸짓(Pressable)이 한 요소에 같이 걸리므로 둘이 같은
+ * 목록을 씁니다. 서로 다른 목록을 쓰면 나중에 선언된 쪽이 앞의 전환을 지웁니다.
+ * `transition: all` 은 쓰지 않습니다 (폭이 바뀌는 컨트롤에서 글자가 상자 밖으로 비져 나옵니다).
+ */
+export const PRESS_TRANSITION = "color, background-color, border-color, box-shadow, transform, opacity";
+
 export const ms = (n: number) => `${n}ms`;

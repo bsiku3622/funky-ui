@@ -341,14 +341,14 @@ const spinner: Spec = {
     },
     {
       title: "색은 글자색을 따릅니다",
-      note: "Spinner 는 색을 받지 않고 currentColor 로 그립니다. 글자색을 정하는 쪽(여기서는 Text tone=accent)이 색을 바꿉니다.",
+      note: "Spinner 는 색을 받지 않고 currentColor 로 그립니다. 글자색을 정하는 쪽(여기서는 Paint 의 ghost 칠)이 색을 바꿉니다.",
       render: () => (
         <Stage bg="raised">
           {ACCENTS.map((a) => (
-            <Stack key={a} gap="xs" align="center" accent={a}>
-              <Text tone="accent">
+            <Stack key={a} gap="xs" align="center">
+              <Paint accent={a} variant="ghost">
                 <Spinner size="lg" />
-              </Text>
+              </Paint>
               <Text variant="micro" tone="muted">
                 {a}
               </Text>

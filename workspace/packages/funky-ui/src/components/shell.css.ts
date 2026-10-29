@@ -155,9 +155,6 @@ export const bottomItem = style(
     // 글자는 바(accent 의 ink)에서 물려받고, 안 골린 칸은 묽힙니다 — 어떤 accent 바 위에서도 읽힙니다
     color: "inherit",
     opacity: 0.6,
-    cursor: "pointer",
-    transitionProperty: "opacity, border-color",
-    transitionDuration: vars.duration.fast,
     selectors: { "&:hover": { opacity: 0.85 } },
   }),
 );

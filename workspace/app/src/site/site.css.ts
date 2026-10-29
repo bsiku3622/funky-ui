@@ -38,6 +38,15 @@ export const navLayerTitle = style({
   alignItems: "center",
   justifyContent: "space-between",
 });
+/** Primitive 의 단(1차 · 2차) — 그룹 이름보다 한 단 위의 이름표 */
+export const navTierTitle = style({
+  margin: `${vars.space.xl} 0 0`,
+  padding: `${vars.space.xs} ${vars.space.md}`,
+  backgroundColor: vars.surface.well,
+  fontSize: "0.6875rem",
+  fontWeight: 900,
+  color: vars.ink.primary,
+});
 export const navGroupTitle = style({
   margin: `${vars.space.lg} 0 ${vars.space.xs}`,
   fontSize: "0.625rem",

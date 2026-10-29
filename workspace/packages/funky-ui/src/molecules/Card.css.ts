@@ -3,11 +3,21 @@ import { style } from "@vanilla-extract/css";
 import { components } from "../tokens/layers.css";
 import { SPACE } from "../tokens/layout";
 import { px } from "../tokens/typography";
-import { vars } from "../tokens/variables";
+import { PRESS_SCALE_VAR, vars } from "../tokens/variables";
 
 const c = (rule: Record<string, unknown>) => ({ "@layer": { [components]: rule } });
 
 export const cardBase = style(c({ minWidth: 0 }));
+
+/** 누르는 카드 — 버튼 · 링크로 그려도 카드처럼 섭니다. 큰 면이라 누르는 순간 덜 작아집니다 */
+export const cardPressable = style(
+  c({
+    display: "block",
+    width: "100%",
+    textAlign: "inherit",
+    vars: { [PRESS_SCALE_VAR]: vars.press.surfaceScale },
+  }),
+);
 
 export const cardHeader = style(c({ minWidth: 0, paddingInline: px(SPACE["3xl"]), paddingBlock: px(SPACE.xl) }));
 export const cardHeaderTitle = style(c({ minWidth: 0, flex: 1 }));

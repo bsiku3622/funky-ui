@@ -70,7 +70,6 @@ export function Modal({
       fill="raised"
       border="line"
       shadow="floating"
-      accent={accent}
       className={cx(modal, modalSize[size], className)}
       onCancel={onCancel}
       onClick={onBackdrop}
@@ -79,7 +78,7 @@ export function Modal({
       {open && (
         <div className={modalContent}>
           {title !== undefined ? (
-            <PaintRoot variant="solid" className={modalHeader}>
+            <PaintRoot accent={accent} variant="solid" className={modalHeader}>
               <span id={titleId} className={modalTitle}>
                 {title}
               </span>

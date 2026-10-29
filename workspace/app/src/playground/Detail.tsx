@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Inline, SegmentedControl, Stack, Text } from "@studio-baeks/funky-ui";
 
+import { groupLabel } from "../site/nav";
 import { code as codeClass } from "../site/site.css";
 import { Controls } from "./Controls";
 import { LayerBadge, PageHead, Section, Stage } from "./kit";
@@ -33,7 +34,7 @@ function EntryView({ entry }: { entry: Entry }) {
   );
   return (
     <div>
-      <PageHead layer={`${entry.layer} · ${entry.group}`} title={entry.name} summary={entry.summary}>
+      <PageHead layer={`${entry.layer} · ${groupLabel(entry.layer, entry.group)}`} title={entry.name} summary={entry.summary}>
         <Inline gap="sm">
           <LayerBadge layer={entry.layer} />
         </Inline>

@@ -4,6 +4,7 @@ import { components } from "../tokens/layers.css";
 import { SPACE } from "../tokens/layout";
 import { TEXT_ROLES, WEIGHT, em, px } from "../tokens/typography";
 import { vars } from "../tokens/variables";
+import { PRESS_SCALE_VAR } from "../tokens/variables";
 import { TONE_VAR } from "./tone";
 
 const c = (rule: Record<string, unknown>) => ({ "@layer": { [components]: rule } });
@@ -66,6 +67,8 @@ export const personCard = style(
     overflow: "hidden",
     textAlign: "start",
     color: vars.ink.primary,
+    // 큰 면은 누르는 순간 덜 작아집니다 (Pressable 의 --fk-press-scale)
+    vars: { [PRESS_SCALE_VAR]: vars.press.surfaceScale },
   }),
 );
 

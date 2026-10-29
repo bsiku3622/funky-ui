@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { Card, LAYERS, Stack, Text } from "@studio-baeks/funky-ui";
 
-import { LAYER_LABEL, LAYER_NOTE, NAV } from "../site/nav";
+import { LAYER_LABEL, LAYER_NOTE, NAV, groupLabel } from "../site/nav";
 import { PageHead, Section } from "./kit";
 import * as k from "./kit.css";
 import { ENTRIES } from "./registry";
@@ -56,7 +56,7 @@ export function Overview() {
                     key={e.slug}
                     to={`/playground/${e.layer}/${e.slug}`}
                     name={e.name}
-                    group={e.group}
+                    group={groupLabel(e.layer, e.group)}
                     sample={e.render({ ...e.defaults, ...e.initial })}
                   />
                 ))}

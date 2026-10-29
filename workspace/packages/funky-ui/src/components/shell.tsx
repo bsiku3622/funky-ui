@@ -11,7 +11,9 @@ import { ChevronDownGlyph } from "../internal/glyphs";
 import { NavButton } from "../atoms/NavButton";
 import { Menu } from "../molecules/floating";
 import { Icon, type IconComponent } from "../primitives/Icon";
-import { Paint } from "../primitives/Paint";
+import { pressOf } from "../atoms/Button";
+import { Paint, paintClass } from "../primitives/Paint";
+import { Pressable } from "../primitives/Pressable";
 import { Surface } from "../primitives/Surface";
 import type { Accent } from "../tokens/vocabulary";
 import {
@@ -36,6 +38,7 @@ import {
 
 const PaintRoot = Paint as ElementType;
 const SurfaceRoot = Surface as ElementType;
+const PressableRoot = Pressable as ElementType;
 
 export interface AppBarProps {
   /** 로고 글자 — 기울어진 900 대문자로 그립니다 */
@@ -100,23 +103,21 @@ export interface SideNavItemProps {
   children?: ReactNode;
 }
 
-/** `Paint` 의 두 얼굴 — 지금 화면은 검정 solid 가 4px 위에 떠 있고(hover 때 가라앉음), 나머지는 ghostMuted 로 물러납니다 */
+/**
+ * Pressable + Paint — 지금 화면은 검정 solid 가 4px 위에 떠 있고(hover 때 가라앉음), 나머지는 ghostMuted 로
+ * 물러납니다. 골라짐(selected)이 아니라 variant 를 바꾸는 것이라 지금 화면 칸은 눌린 채가 아니라 떠 있습니다.
+ */
 function SideNavItem({ icon, active = false, onClick, children }: SideNavItemProps) {
   return (
-    <PaintRoot
-      as="button"
-      type="button"
+    <PressableRoot
+      {...pressOf(active ? "solid" : "ghostMuted", active, undefined)}
       aria-current={active ? "page" : undefined}
       onClick={onClick}
-      accent="black"
-      variant={active ? "solid" : "ghostMuted"}
-      shadow={active}
-      interactive
-      className={sideItem}
+      className={cx(paintClass({ accent: "black", variant: active ? "solid" : "ghostMuted", interactive: true }), sideItem)}
     >
       <Icon icon={icon} size="lg" />
       <span>{children}</span>
-    </PaintRoot>
+    </PressableRoot>
   );
 }
 
@@ -142,10 +143,10 @@ export function BottomNav({ accent = "purple", fixed = false, className, childre
 
 function BottomNavItem({ icon, active = false, onClick, children }: SideNavItemProps) {
   return (
-    <button type="button" aria-current={active ? "page" : undefined} onClick={onClick} className={cx(bottomItem, active && bottomItemActive)}>
+    <PressableRoot motion="tap" aria-current={active ? "page" : undefined} onClick={onClick} className={cx(bottomItem, active && bottomItemActive)}>
       <Icon icon={icon} size="lg" />
       <span className={bottomItemLabel}>{children}</span>
-    </button>
+    </PressableRoot>
   );
 }
 

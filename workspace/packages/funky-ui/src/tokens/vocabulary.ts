@@ -104,6 +104,9 @@ export type Justify = (typeof JUSTIFIES)[number];
 export const ICON_SIZES = ["xs", "sm", "md", "lg", "xl"] as const;
 export type IconSize = (typeof ICON_SIZES)[number];
 
-/** 누르는 면의 움직임 — 그림자 속으로 가라앉거나(press), 위로 떠오릅니다(lift) */
-export const MOTIONS = ["press", "lift"] as const;
+/**
+ * 누르는 몸짓 (Pressable) — 그림자 속으로 가라앉거나(press), 위로 떠오르거나(lift), 그림자 없이
+ * 누르는 순간만 작아집니다(tap). 그림자를 켠 버튼은 press, 끈 버튼은 tap 입니다.
+ */
+export const MOTIONS = ["press", "lift", "tap"] as const;
 export type PressMotion = (typeof MOTIONS)[number];

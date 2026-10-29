@@ -189,19 +189,16 @@ function ClassSummary() {
 const card: Spec = {
   name: "Card",
   summary:
-    "흰 면 · 2px 검정 · 4px 그림자. 화면의 영역은 카드로 나눕니다. accent 는 카드 안의 컨트롤이 따라가는 색이고, motion 을 주면 카드 전체가 누르는 물건이 됩니다.",
+    "흰 면 · 2px 검정 · 4px 그림자. 화면의 영역은 카드로 나눕니다. 카드는 흑백 박스라 accent 가 없습니다 — 안쪽 배지 · 버튼이 색을 각자 고릅니다. motion 을 주면 카드 전체가 누르는 물건이 됩니다.",
   controls: {
-    accent: { kind: "select", options: ACCENT_OR_NONE },
     fill: { kind: "select", options: SURFACE_FILLS },
     shadow: { kind: "select", options: CARD_SHADOWS },
     padding: { kind: "select", options: SPACES },
     motion: { kind: "select", options: ["none", ...MOTIONS] },
   },
-  initial: { accent: "cyan" },
-  defaults: { accent: "none", fill: "raised", shadow: "raised", padding: "3xl", motion: "none" },
+  defaults: { fill: "raised", shadow: "raised", padding: "3xl", motion: "none" },
   render: (v) => {
     const look = {
-      accent: opt<Accent>(v.accent),
       fill: v.fill as SurfaceFill,
       shadow: v.shadow as "raised" | "none",
       padding: v.padding as Space,
@@ -247,12 +244,12 @@ const card: Spec = {
     },
     {
       title: "Header bar",
-      note: "tone=\"bar\" 는 머리를 카드의 accent 면으로 칠합니다 (모달 머리와 같은 모양). 막대 위의 solid 배지는 accent 를 따로 줍니다 — 안 주면 막대와 같은 색이 됩니다.",
+      note: "tone=\"bar\" 는 머리를 Paint 의 solid 로 칠합니다 (모달 머리와 같은 모양). 막대 색은 Card.Header 의 accent 로 고르고, 카드 판은 흑백 그대로입니다. 막대 위의 solid 배지는 accent 를 따로 줍니다 — 안 주면 막대와 같은 색이 됩니다.",
       render: () => (
         <Stage>
           <Frame width={360}>
-            <Card accent="purple" padding="0">
-              <Card.Header tone="bar" title="Meal" icon={Utensils} actions={<Badge size="sm" accent="black" variant="solid">점심</Badge>} />
+            <Card padding="0">
+              <Card.Header tone="bar" accent="purple" title="Meal" icon={Utensils} actions={<Badge size="sm" accent="black" variant="solid">점심</Badge>} />
               <Card.Section>
                 <Text>{MEAL}</Text>
               </Card.Section>
@@ -270,7 +267,7 @@ const card: Spec = {
       render: () => (
         <Stage>
           {SURFACE_FILLS.map((s) => (
-            <Card key={s} accent="cyan" fill={s} padding="xl">
+            <Card key={s} fill={s} padding="xl">
               <Text variant="label">{s}</Text>
             </Card>
           ))}
@@ -490,11 +487,10 @@ const accordion: Spec = {
     title: { kind: "text" },
     icon: { kind: "icon" },
     trailing: { kind: "boolean" },
-    accent: { kind: "select", options: ACCENT_OR_NONE },
     defaultOpen: { kind: "boolean" },
   },
   initial: { title: "Enrolled Classes", icon: "GraduationCap", trailing: true },
-  defaults: { icon: "none", trailing: false, accent: "none", defaultOpen: false },
+  defaults: { icon: "none", trailing: false, defaultOpen: false },
   render: (v) => (
     <Frame width={320}>
       {/* defaultOpen 은 처음 한 번만 읽히므로, 바꾸면 key 로 다시 세웁니다 */}
@@ -509,7 +505,6 @@ const accordion: Spec = {
             </Badge>
           ) : undefined
         }
-        accent={opt<Accent>(v.accent)}
         defaultOpen={Boolean(v.defaultOpen)}
       >
         <EnrolledList />
@@ -520,20 +515,19 @@ const accordion: Spec = {
     jsx(
       "Accordion",
       [
-        ...printed(accordion, { title: v.title, icon: v.icon, accent: v.accent, defaultOpen: v.defaultOpen }),
+        ...printed(accordion, { title: v.title, icon: v.icon, defaultOpen: v.defaultOpen }),
         v.trailing ? `trailing={<Badge size="sm" variant="solid">${ENROLLED.length}</Badge>}` : undefined,
       ],
       [jsx("Stack", ['gap="md"'], ENROLLED.map((name) => `<Text>${name}</Text>`))],
     ),
   sections: [
     {
-      title: "펼친 상태 · accent",
-      note: "accent 는 카드 안의 컨트롤이 따라가는 색입니다. 아래는 accent 를 따로 주지 않은 solid · tonal 배지가 카드의 초록을 따라갑니다.",
+      title: "펼친 상태",
+      note: "defaultOpen 이면 펼친 채로 시작합니다. 아코디언은 흑백 카드라 accent 가 없습니다 — 안쪽 배지가 색을 각자 고릅니다.",
       render: () => (
         <Stage>
           <Frame width={360}>
             <Accordion
-              accent="green"
               defaultOpen
               title="Prerequisites"
               icon={BookOpen}
@@ -544,8 +538,8 @@ const accordion: Spec = {
               }
             >
               <Inline gap="md" wrap>
-                <Badge variant="tonal">미적분학1</Badge>
-                <Badge variant="tonal">일반물리학</Badge>
+                <Badge accent="green" variant="tonal">미적분학1</Badge>
+                <Badge accent="green" variant="tonal">일반물리학</Badge>
               </Inline>
             </Accordion>
           </Frame>

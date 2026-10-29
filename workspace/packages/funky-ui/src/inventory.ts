@@ -15,12 +15,15 @@ export const FOUNDATIONS = ["color", "typography", "shape", "layout", "motion"] 
 
 export const INVENTORY = {
   primitives: {
-    layout: ["Box", "Stack", "Inline", "Grid"],
-    /** 칠하는 둘 — 박스는 Surface(흑백 면), 요소는 Paint(accent × variant) */
-    paint: ["Surface", "Paint"],
+    // 1차 — 서로 기대지 않는 바탕
+    element: ["Box"],
     content: ["Text", "Icon"],
-    interaction: ["Pressable"],
     a11y: ["VisuallyHidden", "Portal"],
+    // 2차 — Box 위에 능력 하나
+    /** 칠하는 둘 — 박스는 Surface(흑백 면), 요소는 Paint(accent × variant). accent 는 Paint 만 갖습니다 */
+    paint: ["Surface", "Paint"],
+    interaction: ["Pressable"],
+    layout: ["Stack", "Inline", "Grid"],
   },
   atoms: {
     action: ["Button", "IconButton", "NavButton", "Link"],
@@ -41,3 +44,15 @@ export const INVENTORY = {
     schedule: ["ClassTile", "TimetableGrid"],
   },
 } as const;
+
+type PrimitiveGroup = keyof (typeof INVENTORY)["primitives"];
+
+/**
+ * Primitive 의 두 단. 1차는 서로 기대지 않는 바탕(요소 · 글자 · 아이콘 · 접근성)이고, 2차는 Box 위에
+ * 능력 하나를 얹은 것(칠 · 몸짓 · 배치)입니다. 2차끼리도 서로 기대지 않습니다 — 둘 이상이 필요하면
+ * 위 층(Atom 부터)이 class 로 묶습니다. Button = Pressable + Paint, 누르는 Card = Pressable + Surface.
+ */
+export const PRIMITIVE_TIERS = {
+  first: ["element", "content", "a11y"],
+  second: ["paint", "interaction", "layout"],
+} as const satisfies Record<"first" | "second", readonly PrimitiveGroup[]>;

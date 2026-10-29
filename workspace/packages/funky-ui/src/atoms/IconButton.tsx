@@ -3,10 +3,12 @@ import type { ElementType } from "react";
 import { cx } from "../internal/cx";
 import type { PolyProps } from "../internal/polymorphic";
 import { Icon, type IconComponent } from "../primitives/Icon";
-import { Paint } from "../primitives/Paint";
+import { paintClass } from "../primitives/Paint";
+import { Pressable } from "../primitives/Pressable";
 import { CONTROL } from "../tokens/shape";
 import type { Accent, ControlSize, Variant } from "../tokens/vocabulary";
 import { buttonBase, buttonSize, squareSize } from "./Button.css";
+import { pressOf } from "./Button";
 
 export interface IconButtonOwnProps {
   icon: IconComponent;
@@ -24,9 +26,9 @@ export interface IconButtonOwnProps {
 
 export type IconButtonProps<E extends ElementType = "button"> = PolyProps<E, IconButtonOwnProps>;
 
-const PaintRoot = Paint as ElementType;
+const PressableRoot = Pressable as ElementType;
 
-/** 아이콘 하나짜리 정사각 버튼 — Button 과 같이 `Paint` 위에 섭니다 */
+/** 아이콘 하나짜리 정사각 버튼 — Button 과 같이 Pressable + Paint 입니다 */
 export function IconButton<E extends ElementType = "button">({
   as,
   icon,
@@ -40,26 +42,18 @@ export function IconButton<E extends ElementType = "button">({
   className,
   ...rest
 }: IconButtonProps<E>) {
-  const Comp: ElementType = as ?? "button";
-  const isButton = Comp === "button";
   return (
-    <PaintRoot
-      as={Comp}
-      accent={accent}
-      variant={variant}
-      selected={selected}
-      shadow={shadow}
-      interactive
-      type={isButton ? "button" : undefined}
-      disabled={isButton ? disabled : undefined}
-      aria-disabled={!isButton && disabled ? true : undefined}
+    <PressableRoot
+      as={as}
+      {...pressOf(variant, shadow, selected)}
+      disabled={disabled}
       aria-label={label}
       title={label}
       aria-pressed={selected === undefined ? undefined : selected}
-      className={cx(buttonBase, buttonSize[size], squareSize[size], className)}
+      className={cx(paintClass({ accent, variant, selected, interactive: true }), buttonBase, buttonSize[size], squareSize[size], className)}
       {...rest}
     >
       <Icon icon={icon} size={CONTROL.icon[size]} />
-    </PaintRoot>
+    </PressableRoot>
   );
 }

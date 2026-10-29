@@ -62,6 +62,9 @@ export const vars = build(TREE, []);
 /** `:root` 에 쓸 변수 이름 → 값 */
 export const ROOT_VALUES: Readonly<Record<string, string>> = flat;
 
+/** 누르는 순간의 크기 변수 — 큰 면(카드)은 자기 class 에서 이 변수를 `PRESS.surfaceScale` 로 덮습니다 */
+export const PRESS_SCALE_VAR = "--fk-press-scale";
+
 /** accent 일곱 칸의 변수 이름 — accent class 가 이 이름들로 덮어씁니다 */
 export const ACCENT_VAR_NAMES = {
   ink: "--fk-accent-ink",

@@ -5,7 +5,7 @@ import { AppBar, Badge, LAYERS, NavButton } from "@studio-baeks/funky-ui";
 import { BookOpen, LayoutGrid } from "lucide-react";
 
 import { DOC_GROUPS } from "../pages/docs-content";
-import { LAYER_COUNT, LAYER_LABEL, NAV } from "./nav";
+import { LAYER_COUNT, LAYER_LABEL, NAV, TIER_LABEL } from "./nav";
 import * as s from "./site.css";
 
 const BY_LAYER = LAYERS.map((layer) => ({ layer, groups: NAV.filter((g) => g.layer === layer) }));
@@ -51,8 +51,9 @@ export function PlaygroundShell({ children }: { children: ReactNode }) {
                 {LAYER_COUNT[layer]}
               </Badge>
             </p>
-            {groups.map((g) => (
+            {groups.map((g, i) => (
               <div key={g.group}>
+                {g.tier && g.tier !== groups[i - 1]?.tier && <p className={s.navTierTitle}>{TIER_LABEL[g.tier].long}</p>}
                 {layer !== "foundations" && <p className={s.navGroupTitle}>{g.group}</p>}
                 {g.items.map((item) => (
                   <NavLink key={item.path} to={item.path} className={s.navLink}>

@@ -1,6 +1,6 @@
 /**
  * 늘어놓는 primitive 셋 — Stack(세로) · Inline(가로) · Grid(격자).
- * Box 의 prop(여백 · accent 문맥)을 받고, 자식 사이의 간격과 정렬을 더합니다. 칠은 하지 않습니다 —
+ * 2차 primitive (Box + 배치). Box 의 여백을 받고, 자식 사이의 간격과 정렬을 더합니다. 칠은 하지 않습니다 —
  * 칠한 판 위에 늘어놓으려면 `<Surface as={Stack} gap="md">` 처럼 Surface 의 `as` 로 넘깁니다.
  */
 import type { CSSProperties, ElementType } from "react";
@@ -21,7 +21,7 @@ interface FlexOwnProps extends BoxOwnProps {
 export type StackProps<E extends ElementType = "div"> = PolyProps<E, FlexOwnProps>;
 
 /** 세로로 쌓습니다 */
-export function Stack<E extends ElementType = "div">({ as, gap, align, justify, accent, padding, paddingX, paddingY, className, ...rest }: StackProps<E>) {
+export function Stack<E extends ElementType = "div">({ as, gap, align, justify, padding, paddingX, paddingY, className, ...rest }: StackProps<E>) {
   const Comp: ElementType = as ?? "div";
   return (
     <Comp
@@ -30,7 +30,7 @@ export function Stack<E extends ElementType = "div">({ as, gap, align, justify, 
         gap && gapClass[gap],
         align && alignClass[align],
         justify && justifyClass[justify],
-        boxClass({ accent, padding, paddingX, paddingY, className }),
+        boxClass({ padding, paddingX, paddingY, className }),
       )}
       {...rest}
     />
@@ -40,7 +40,7 @@ export function Stack<E extends ElementType = "div">({ as, gap, align, justify, 
 export type InlineProps<E extends ElementType = "div"> = PolyProps<E, FlexOwnProps & { wrap?: boolean }>;
 
 /** 가로로 늘어놓습니다 — 기본은 세로 가운데 정렬 */
-export function Inline<E extends ElementType = "div">({ as, gap, align, justify, wrap, accent, padding, paddingX, paddingY, className, ...rest }: InlineProps<E>) {
+export function Inline<E extends ElementType = "div">({ as, gap, align, justify, wrap, padding, paddingX, paddingY, className, ...rest }: InlineProps<E>) {
   const Comp: ElementType = as ?? "div";
   return (
     <Comp
@@ -50,7 +50,7 @@ export function Inline<E extends ElementType = "div">({ as, gap, align, justify,
         align && alignClass[align],
         justify && justifyClass[justify],
         wrap && wrapClass,
-        boxClass({ accent, padding, paddingX, paddingY, className }),
+        boxClass({ padding, paddingX, paddingY, className }),
       )}
       {...rest}
     />
@@ -80,7 +80,6 @@ export function Grid<E extends ElementType = "div">({
   align,
   justifyItems,
   style,
-  accent,
   padding,
   paddingX,
   paddingY,
@@ -98,7 +97,7 @@ export function Grid<E extends ElementType = "div">({
         columnGap && columnGapClass[columnGap],
         align && alignClass[align],
         justifyItems && justifyItemsClass[justifyItems],
-        boxClass({ accent, padding, paddingX, paddingY, className }),
+        boxClass({ padding, paddingX, paddingY, className }),
       )}
       style={template ? { gridTemplateColumns: template, ...style } : style}
       {...rest}

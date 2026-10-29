@@ -123,51 +123,88 @@ const TIMES = ["08:50", "11:11", "18:05"] as const;
 /** Box 는 칠하지 않아 보이지 않습니다 — 점선으로 자리만 그립니다 */
 const EXTENT = { outline: "2px dashed rgba(0, 0, 0, 0.25)", outlineOffset: 2 } as const;
 
+/** Box 가 그릴 수 있는 태그 몇 개 — 화면은 같고, 코드의 태그만 바뀝니다 */
+const BOX_TAGS = ["div", "section", "article"] as const;
+
 const box: Spec = {
   name: "Box",
   summary:
-    "배치의 바탕 — 태그(as) · 여백 · accent 문맥만 다룹니다. 칠하지 않습니다: 흑백 박스는 Surface, accent 로 칠한 요소는 Paint 입니다. 점선은 Box 의 자리를 보이려고 그린 것입니다.",
+    "요소 — 1차 primitive. 태그(as) · ref · 여백만 다루고, 칠하지 않으며 색도 모릅니다. 2차 primitive 는 모두 Box 위에 능력 하나를 얹습니다: 칠(Surface · Paint) · 몸짓(Pressable) · 배치(Stack · Inline · Grid). 점선은 Box 의 자리를 보이려고 그린 것입니다.",
   controls: {
-    accent: { kind: "select", options: ACCENT_OPTIONS },
+    as: { kind: "select", options: BOX_TAGS },
     padding: { kind: "select", options: SPACES },
+    paddingX: { kind: "select", options: withNone(SPACES) },
+    paddingY: { kind: "select", options: withNone(SPACES) },
     children: { kind: "text" },
   },
-  initial: { accent: "green", padding: "xl", children: "유지" },
-  defaults: { accent: "black", padding: "0" },
+  initial: { padding: "xl", children: "오늘 수업" },
+  defaults: { as: "div", padding: "0", paddingX: "none", paddingY: "none" },
   render: (v) => (
-    <Box accent={v.accent as Accent} padding={v.padding as Space} style={EXTENT}>
-      <Inline gap="md">
-        <Button size="sm" variant="tonal">
-          {String(v.children ?? "")}
-        </Button>
-        <Badge variant="solid">계획</Badge>
-      </Inline>
+    <Box
+      as={v.as as (typeof BOX_TAGS)[number]}
+      padding={v.padding as Space}
+      paddingX={given<Space>(v.paddingX)}
+      paddingY={given<Space>(v.paddingY)}
+      style={EXTENT}
+    >
+      <Text>{String(v.children ?? "")}</Text>
     </Box>
   ),
-  code: (v) =>
-    `<Box accent="${String(v.accent)}" padding="${String(v.padding)}">\n  <Button size="sm" variant="tonal">${String(v.children ?? "")}</Button>\n  <Badge variant="solid">계획</Badge>\n</Box>`,
   sections: [
     {
-      title: "Accent 는 안쪽으로 흐릅니다",
-      note: "Box 에 준 accent 는 칠하지 않고 문맥만 정합니다. 안쪽 버튼 · 배지 · 스위치가 accent 를 따로 주지 않으면 이 색을 씁니다 — 드랍한 과목 카드 안의 버튼이 카드 색을 따르는 식입니다.",
+      title: "padding · paddingX · paddingY",
+      note: "여백은 간격 사다리에서 고릅니다. paddingX · paddingY 는 한 방향만 덮어써서, padding 을 준 뒤 한쪽만 바꿀 수 있습니다.",
       render: () => (
         <Stage bg="raised">
-          {(["pink", "green", "orange", "purple"] as const).map((a) => (
-            <Box key={a} accent={a} padding="xl" style={EXTENT}>
-              <Stack gap="md" align="start">
-                <Text variant="overline" tone="accent">
-                  {a}
-                </Text>
-                <Inline gap="md">
-                  <Button size="sm" variant="tonal">
-                    유지
-                  </Button>
-                  <Badge variant="solid">계획</Badge>
-                  <Switch defaultChecked aria-label="알림" />
-                </Inline>
-              </Stack>
+          <Labeled name={`padding="xl"`}>
+            <Box padding="xl" style={EXTENT}>
+              <Text variant="label">오늘 수업</Text>
             </Box>
-          ))}
+          </Labeled>
+          <Labeled name={`padding="xl" paddingX="4xl"`}>
+            <Box padding="xl" paddingX="4xl" style={EXTENT}>
+              <Text variant="label">오늘 수업</Text>
+            </Box>
+          </Labeled>
+          <Labeled name={`paddingY="2xs" paddingX="md"`}>
+            <Box paddingY="2xs" paddingX="md" style={EXTENT}>
+              <Text variant="label">오늘 수업</Text>
+            </Box>
+          </Labeled>
+        </Stage>
+      ),
+    },
+    {
+      title: "2차 primitive 는 Box 위에 섭니다",
+      note: "다섯 모두 padding=\"lg\" 입니다. 2차 primitive 는 Box 의 prop(태그 · 여백)을 그대로 받고 능력 하나를 더합니다. Box 에는 accent 가 없습니다 — primitive 중에서는 Paint 만 색을 갖고, 안쪽 요소는 가장 가까운 Paint 의 색을 따릅니다.",
+      render: () => (
+        <Stage bg="raised">
+          <Labeled name="Box">
+            <Box padding="lg" style={EXTENT}>
+              <Text variant="label">여백만</Text>
+            </Box>
+          </Labeled>
+          <Labeled name="Surface">
+            <Surface border="line" padding="lg">
+              <Text variant="label">+ 흑백 면</Text>
+            </Surface>
+          </Labeled>
+          <Labeled name="Paint">
+            <Paint accent="green" variant="plain" padding="lg">
+              <Text variant="label">+ 색</Text>
+            </Paint>
+          </Labeled>
+          <Labeled name="Pressable">
+            <Pressable motion="press" padding="lg" className={surfaceClass({ border: "line" })}>
+              <Text variant="label">+ 몸짓</Text>
+            </Pressable>
+          </Labeled>
+          <Labeled name="Inline">
+            <Inline gap="sm" padding="lg" style={EXTENT}>
+              <Text variant="label">+</Text>
+              <Text variant="label">배치</Text>
+            </Inline>
+          </Labeled>
         </Stage>
       ),
     },
@@ -262,74 +299,104 @@ const surface: Spec = {
 const paint: Spec = {
   name: "Paint",
   summary:
-    "요소의 칠 — accent(색) × variant(칠하는 방식). Variant 시스템을 그대로 꺼낸 primitive 라, Button · IconButton · Badge · Notice · 상단 바 · 머리 막대가 이 위에 섭니다. interactive 를 주면 hover · press 층이, shadow 를 같이 주면 그림자 속으로 가라앉는 눌림이 붙습니다.",
+    "요소의 칠 — accent(색) × variant(칠하는 방식). accent 를 갖는 primitive 는 Paint 하나라, 안쪽 요소는 accent 를 따로 주지 않으면 가장 가까운 Paint 의 색을 따릅니다. Badge · Notice · 상단 바 · 머리 막대가 이 위에 서고, Button 은 Pressable(몸짓)에 이 칠을 얹은 것입니다. interactive 는 hover · press 때의 색만 바꿉니다 — 커서와 움직임은 Pressable 의 몫이라, 누르는 요소는 Pressable 에 paintClass() 로 칠을 얹습니다.",
   controls: {
     accent: { kind: "select", options: ACCENT_OPTIONS },
     variant: { kind: "select", options: VARIANTS },
     selected: { kind: "boolean" },
     interactive: { kind: "boolean" },
-    shadow: { kind: "boolean" },
     padding: { kind: "select", options: SPACES },
     children: { kind: "text" },
   },
   initial: { accent: "green", variant: "plain", interactive: true, padding: "lg", children: "세계사의이해 · 3분반" },
-  defaults: { accent: "black", variant: "outline", selected: false, interactive: false, shadow: false, padding: "0" },
-  render: (v) => (
-    <Paint
-      as={v.interactive ? "button" : "div"}
-      accent={v.accent as Accent}
-      variant={v.variant as Variant}
-      selected={Boolean(v.selected)}
-      interactive={Boolean(v.interactive)}
-      shadow={Boolean(v.shadow)}
-      padding={v.padding as Space}
-    >
-      <Text variant="label">{String(v.children ?? "")}</Text>
-    </Paint>
-  ),
+  defaults: { accent: "black", variant: "outline", selected: false, interactive: false, padding: "0" },
+  render: (v) => {
+    const look = { accent: v.accent as Accent, variant: v.variant as Variant, selected: Boolean(v.selected), padding: v.padding as Space };
+    const label = <Text variant="label">{String(v.children ?? "")}</Text>;
+    // 누르는 요소는 몸짓(Pressable)에 칠을 얹습니다 — Paint 혼자서는 커서도 움직임도 없습니다
+    return v.interactive ? (
+      <Pressable motion="tap" className={paintClass({ ...look, interactive: true })}>
+        {label}
+      </Pressable>
+    ) : (
+      <Paint {...look}>{label}</Paint>
+    );
+  },
   code: (v) => {
+    const text = String(v.children ?? "");
+    const padding = v.padding !== "0" ? `padding="${String(v.padding)}"` : "";
+    if (v.interactive) {
+      const look = [
+        v.accent !== "black" ? `accent: "${String(v.accent)}"` : "",
+        v.variant !== "outline" ? `variant: "${String(v.variant)}"` : "",
+        v.selected ? "selected: true" : "",
+        "interactive: true",
+      ].filter(Boolean);
+      return `<Pressable motion="tap" ${padding ? `${padding} ` : ""}className={paintClass({ ${look.join(", ")} })}>\n  ${text}\n</Pressable>`;
+    }
     const attrs = [
-      v.interactive ? 'as="button"' : "",
       v.accent !== "black" ? `accent="${String(v.accent)}"` : "",
       v.variant !== "outline" ? `variant="${String(v.variant)}"` : "",
       v.selected ? "selected" : "",
-      v.interactive ? "interactive" : "",
-      v.shadow ? "shadow" : "",
-      v.padding !== "0" ? `padding="${String(v.padding)}"` : "",
+      padding,
     ].filter(Boolean);
-    return `<Paint ${attrs.join(" ")}>\n  ${String(v.children ?? "")}\n</Paint>`;
+    return `<Paint${attrs.length ? ` ${attrs.join(" ")}` : ""}>\n  ${text}\n</Paint>`;
   },
   sections: [
     {
       title: "Accent × Variant",
-      note: "행 머리의 네 칸은 FG / BG / Border / Hover 입니다(재원님 스케치의 표기). Button · Badge 의 행렬과 같은 레시피입니다 — 그쪽은 이 Paint 위에 크기 · 아이콘만 얹은 것입니다. 칸에 마우스를 올려 hover 를 보세요.",
+      note: "행 머리의 네 칸은 FG / BG / Border / Hover 입니다(재원님 스케치의 표기). Button · Badge 의 행렬과 같은 레시피입니다 — 그쪽은 이 칠에 크기 · 아이콘을 얹은 것입니다. 칸은 hover 를 보이려고 Pressable(tap)에 칠을 얹었습니다. 마우스를 올려 보세요.",
       render: () => (
         <AccentVariantMatrix
           cell={(accent, variant) => (
-            <Paint as="button" accent={accent} variant={variant} interactive paddingX="md" paddingY="xs">
+            <Pressable motion="tap" paddingX="md" paddingY="xs" className={paintClass({ accent, variant, interactive: true })}>
               <Text variant="label">{accent}</Text>
-            </Paint>
+            </Pressable>
           )}
         />
       ),
     },
     {
-      title: "selected · interactive · shadow",
-      note: "selected 는 같은 accent 의 solid 입니다. interactive 만 주면 층만 바뀌고, shadow 를 같이 주면 hover 때 그림자 속으로 가라앉으며 골라진 것은 눌린 채로 있습니다. 누르지 않는 요소(interactive 없이)에 shadow 를 주면 그림자만 섭니다.",
+      title: "Accent 는 안쪽으로 흐릅니다",
+      note: "primitive 중 accent 를 갖는 것은 Paint 뿐입니다. 안쪽 버튼 · 배지 · 스위치 · tone=accent 글자가 accent 를 따로 주지 않으면 가장 가까운 Paint 의 색을 씁니다 — Trade 에서 드랍한 과목 줄 안의 버튼이 줄의 색을 따르는 식입니다. Box · Stack · Card 는 색을 모르므로 이 흐름을 끊지도 바꾸지도 않습니다.",
+      render: () => (
+        <Stage bg="raised">
+          {(["pink", "green", "orange", "purple"] as const).map((a) => (
+            <Paint key={a} accent={a} variant="plain" padding="xl">
+              <Stack gap="md" align="start">
+                <Text variant="overline" tone="accent">
+                  {a}
+                </Text>
+                <Inline gap="md">
+                  <Button size="sm" variant="tonal">
+                    유지
+                  </Button>
+                  <Badge variant="solid">계획</Badge>
+                  <Switch defaultChecked aria-label="알림" />
+                </Inline>
+              </Stack>
+            </Paint>
+          ))}
+        </Stage>
+      ),
+    },
+    {
+      title: "selected · interactive — 몸짓은 Pressable",
+      note: "selected 는 같은 accent 의 solid 입니다. interactive 는 hover · press 때의 색만 바꾸고, 커서와 움직임은 Pressable 이 맡습니다 — tap 은 누르는 순간만 작아지고, press 는 그림자 속으로 가라앉으며, pressed 는 눌린 채로 머뭅니다. Button 이 이 조립(Pressable + paintClass)입니다.",
       render: () => (
         <Stage bg="raised">
           <Paint accent="cyan" variant="muted" padding="md">
             <Text variant="label">읽는 요소</Text>
           </Paint>
-          <Paint as="button" accent="cyan" variant="muted" interactive padding="md">
-            <Text variant="label">interactive</Text>
-          </Paint>
-          <Paint as="button" accent="cyan" variant="tonal" interactive shadow padding="md">
-            <Text variant="label">interactive + shadow</Text>
-          </Paint>
-          <Paint as="button" accent="cyan" variant="muted" selected interactive shadow padding="md">
-            <Text variant="label">selected</Text>
-          </Paint>
+          <Pressable motion="tap" padding="md" className={paintClass({ accent: "cyan", variant: "muted", interactive: true })}>
+            <Text variant="label">tap</Text>
+          </Pressable>
+          <Pressable motion="press" padding="md" className={paintClass({ accent: "cyan", variant: "tonal", interactive: true })}>
+            <Text variant="label">press</Text>
+          </Pressable>
+          <Pressable motion="press" pressed padding="md" className={paintClass({ accent: "cyan", variant: "muted", selected: true, interactive: true })}>
+            <Text variant="label">selected · pressed</Text>
+          </Pressable>
         </Stage>
       ),
     },
@@ -370,7 +437,7 @@ const paint: Spec = {
 
 const stack: Spec = {
   name: "Stack",
-  summary: "자식을 세로로 쌓습니다. 간격(gap)과 가로 정렬(align)을 고르고, Box 의 prop(여백 · accent 문맥)을 받습니다. 칠은 하지 않아 표본은 sunken 판 위에 놓았습니다.",
+  summary: "자식을 세로로 쌓습니다. 간격(gap)과 가로 정렬(align)을 고르고, Box 의 prop(태그 · 여백)을 받습니다. 칠은 하지 않아 표본은 sunken 판 위에 놓았습니다.",
   controls: {
     gap: { kind: "select", options: SPACES },
     align: { kind: "select", options: ALIGNS },
@@ -621,18 +688,20 @@ const text: Spec = {
     },
     {
       title: "Tone",
-      note: "흑백 잉크 다섯, 지금 accent 의 진한 글자 · 연한 글자(accent · accentSoft, 여기서는 purple), 부모를 따르는 inherit 입니다. faint 는 장식 전용이라 필수 정보에 쓰지 않습니다.",
+      note: "흑백 잉크 다섯, 가장 가까운 Paint 의 진한 글자 · 연한 글자(accent · accentSoft — 여기서는 purple ghost Paint 로 감쌌습니다), 부모 글자색을 따르는 inherit 입니다. faint 는 장식 전용이라 필수 정보에 쓰지 않습니다.",
       render: () => (
         <Stage bg="raised">
-          <Inline gap="xl" wrap accent="purple">
-            {TONES.map((t) => (
-              <Surface key={t} fill={t === "inverse" ? "inverse" : "raised"} paddingX="md" paddingY="xs">
-                <Text variant="subheading" tone={t}>
-                  {t}
-                </Text>
-              </Surface>
-            ))}
-          </Inline>
+          <Paint accent="purple" variant="ghost">
+            <Inline gap="xl" wrap>
+              {TONES.map((t) => (
+                <Surface key={t} fill={t === "inverse" ? "inverse" : "raised"} paddingX="md" paddingY="xs">
+                  <Text variant="subheading" tone={t}>
+                    {t}
+                  </Text>
+                </Surface>
+              ))}
+            </Inline>
+          </Paint>
         </Stage>
       ),
     },
@@ -757,21 +826,23 @@ const iconSpec: Spec = {
     },
     {
       title: "Tone",
-      note: "accent · accentSoft 는 지금 accent(여기서는 pink)의 진한 글자 · 연한 글자색을 따라갑니다. inverse 는 어두운 면 위에서 씁니다.",
+      note: "accent · accentSoft 는 가장 가까운 Paint 의 accent(여기서는 pink ghost Paint)의 진한 글자 · 연한 글자색을 따라갑니다. inverse 는 어두운 면 위에서 씁니다.",
       render: () => (
         <Stage bg="raised">
-          <Inline gap="xl" wrap accent="pink">
-            {TONES.map((t) => (
-              <Stack key={t} gap="xs" align="center">
-                <Surface fill={t === "inverse" ? "inverse" : "raised"} border="line" padding="md">
-                  <Icon icon={Sparkles} size="lg" tone={t} />
-                </Surface>
-                <Text variant="micro" tone="muted">
-                  {t}
-                </Text>
-              </Stack>
-            ))}
-          </Inline>
+          <Paint accent="pink" variant="ghost">
+            <Inline gap="xl" wrap>
+              {TONES.map((t) => (
+                <Stack key={t} gap="xs" align="center">
+                  <Surface fill={t === "inverse" ? "inverse" : "raised"} border="line" padding="md">
+                    <Icon icon={Sparkles} size="lg" tone={t} />
+                  </Surface>
+                  <Text variant="micro" tone="muted">
+                    {t}
+                  </Text>
+                </Stack>
+              ))}
+            </Inline>
+          </Paint>
         </Stage>
       ),
     },
@@ -780,33 +851,51 @@ const iconSpec: Spec = {
 
 /* ── Pressable ───────────────────────────────────────────────────────── */
 
+const MOTION_NOTE: Record<PressMotion, string> = {
+  press: "사람 카드 — 그림자 자리로 가라앉습니다",
+  lift: "탐색 카드 — 위로 떠오릅니다",
+  tap: "그림자를 끈 버튼 — 누르는 순간만 작아집니다",
+};
+
 const pressable: Spec = {
   name: "Pressable",
   summary:
-    "큰 면(카드)에 눌림 · 떠오름 몸짓을 줍니다. press 는 4px 그림자 위에 떠 있다가 hover 때 가라앉고, lift 는 hover 때 위로 떠오릅니다. 칠은 하지 않습니다 — 면은 surfaceClass() 나 paintClass() 로 빌려 옵니다.",
+    "누르는 몸짓 — 커서 · 꺼진 모양 · 움직임 · 버튼의 의미(type · disabled)를 맡습니다. press 는 4px 그림자 위에 떠 있다가 hover 때 가라앉고, lift 는 떠오르고, tap 은 그림자 없이 누르는 순간만 작아집니다. 칠은 하지 않습니다 — 흑백 면은 surfaceClass(), 색은 paintClass() 로 얹습니다. Button 이 Pressable + Paint 입니다.",
   controls: {
     motion: { kind: "select", options: MOTIONS },
+    pressed: { kind: "boolean" },
     padding: { kind: "select", options: SPACES },
     disabled: { kind: "boolean" },
     children: { kind: "text" },
   },
   initial: { padding: "xl", children: "수강 변경 탐색" },
-  defaults: { motion: "press", padding: "0", disabled: false },
+  defaults: { motion: "press", pressed: false, padding: "0", disabled: false },
   render: (v) => (
     <Frame width={240}>
-      <Pressable motion={v.motion as PressMotion} padding={v.padding as Space} disabled={Boolean(v.disabled)} className={surfaceClass({ border: "line" })}>
+      <Pressable
+        motion={v.motion as PressMotion}
+        pressed={Boolean(v.pressed)}
+        padding={v.padding as Space}
+        disabled={Boolean(v.disabled)}
+        className={surfaceClass({ border: "line" })}
+      >
         {String(v.children ?? "")}
       </Pressable>
     </Frame>
   ),
   code: (v) => {
-    const attrs = [v.motion !== "press" ? `motion="${String(v.motion)}"` : "", v.padding !== "0" ? `padding="${String(v.padding)}"` : "", v.disabled ? "disabled" : ""].filter(Boolean);
+    const attrs = [
+      v.motion !== "press" ? `motion="${String(v.motion)}"` : "",
+      v.pressed ? "pressed" : "",
+      v.padding !== "0" ? `padding="${String(v.padding)}"` : "",
+      v.disabled ? "disabled" : "",
+    ].filter(Boolean);
     return `<Pressable ${attrs.join(" ")}${attrs.length ? " " : ""}className={surfaceClass({ border: "line" })}>\n  ${String(v.children ?? "")}\n</Pressable>`;
   },
   sections: [
     {
-      title: "press · lift",
-      note: "마우스를 올려 보세요. press 는 사람 카드처럼 그림자 자리로 가라앉고, lift 는 탐색 카드처럼 4px 떠오르며 그림자가 길어집니다.",
+      title: "press · lift · tap",
+      note: "마우스를 올려 보세요. press 는 사람 카드처럼 그림자 자리로 가라앉고, lift 는 탐색 카드처럼 4px 떠오르며 그림자가 길어지고, tap 은 그림자 없이 누르는 순간만 작아집니다. pressed 는 press 몸짓이 눌린 채로 머무는 것입니다(골라진 버튼).",
       render: () => (
         <Stage>
           {MOTIONS.map((m) => (
@@ -815,7 +904,7 @@ const pressable: Spec = {
                 <Stack as="span" gap="xs">
                   <Text variant="subheading">{m}</Text>
                   <Text variant="caption" tone="muted">
-                    {m === "press" ? "사람 카드 — 그림자 자리로 가라앉습니다" : "탐색 카드 — 위로 떠오릅니다"}
+                    {MOTION_NOTE[m]}
                   </Text>
                 </Stack>
               </Pressable>
@@ -840,7 +929,7 @@ const pressable: Spec = {
             </Pressable>
           </Frame>
           <Frame width={200}>
-            <Pressable padding="xl" className={paintClass({ accent: "green", variant: "plain" })}>
+            <Pressable padding="xl" className={paintClass({ accent: "green", variant: "plain", interactive: true })}>
               paintClass · plain
             </Pressable>
           </Frame>
