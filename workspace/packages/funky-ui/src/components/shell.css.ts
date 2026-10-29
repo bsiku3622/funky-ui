@@ -18,9 +18,8 @@ export const appBar = style(
     gap: px(SPACE.xl),
     height: px(CONTAINER.shell.bar),
     paddingInline: px(SPACE["3xl"]),
-    // 칠은 Paint(filled)가 하고, 테두리는 아래 한 줄만 남깁니다
-    borderWidth: `0 0 ${vars.stroke.base}`,
-    borderColor: vars.line.base,
+    // 면은 Surface(brand)가 칠하고, 테두리는 아래 한 줄 · 그림자는 아래로만 둡니다
+    borderBottom: `${vars.stroke.base} solid ${vars.line.base}`,
     boxShadow: `0 ${vars.press.sink} 0 0 ${vars.shadowColor}`,
   }),
 );
@@ -130,9 +129,8 @@ export const bottomNav = style(
     display: "flex",
     alignItems: "stretch",
     height: px(CONTAINER.shell.bottomBar),
-    // 칠은 Paint(filled)가 하고, 테두리는 위 한 줄만 남깁니다
-    borderWidth: `${vars.stroke.base} 0 0`,
-    borderColor: vars.line.base,
+    // 면은 Surface(brand)가 칠하고, 테두리는 위 한 줄 · 그림자는 위로만 둡니다
+    borderTop: `${vars.stroke.base} solid ${vars.line.base}`,
     boxShadow: `0 calc(-1 * ${vars.press.sink}) 0 0 ${vars.shadowColor}`,
   }),
 );
@@ -152,7 +150,7 @@ export const bottomItem = style(
     border: 0,
     borderTop: `${vars.stroke.base} solid transparent`,
     background: "none",
-    // 글자는 바(accent 의 ink)에서 물려받고, 안 골린 칸은 묽힙니다 — 어떤 accent 바 위에서도 읽힙니다
+    // 글자는 바(brand 면의 흰 글자)에서 물려받고, 안 골린 칸은 묽힙니다
     color: "inherit",
     opacity: 0.6,
     selectors: { "&:hover": { opacity: 0.85 } },

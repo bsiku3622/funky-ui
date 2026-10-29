@@ -18,6 +18,11 @@ export const SURFACE = {
   well: alpha(NEUTRALS.black, 0.05),
   /** 반전 면 — 선택 · 시간표 머리 */
   inverse: NEUTRALS.black,
+  /**
+   * 구조 면 — 상단 바 · 하단 바의 보라. 색을 고르는 요소(Paint)가 아니라 앱의 뼈대라서 accent 가 아닌 자리 이름입니다.
+   * 글자는 흰색(7.15:1)이고, 그 위의 버튼은 흰 유리(Glass)입니다
+   */
+  brand: NEONS.purple,
 } as const;
 
 /** 글자 */

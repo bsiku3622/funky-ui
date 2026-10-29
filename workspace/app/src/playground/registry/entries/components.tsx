@@ -4,7 +4,6 @@ import {
   AppBar,
   Badge,
   BottomNav,
-  Paint,
   ClassTile,
   Grid,
   Inline,
@@ -13,22 +12,21 @@ import {
   SideNav,
   Stack,
   StudentBadge,
+  Surface,
   TermSwitcher,
   Text,
   TimetableGrid,
-  type Accent,
   type ClassTileState,
   type IconComponent,
   type TermOption,
 } from "@studio-baeks/funky-ui";
-import { ACCENTS, ACCENT_ROLES, vars } from "@studio-baeks/funky-ui/tokens";
+import { vars } from "@studio-baeks/funky-ui/tokens";
 import { CalendarDays, GraduationCap, Home, LogOut, MapPin, RefreshCw, Search, Sparkles, User } from "lucide-react";
 
 import { Stage } from "../../kit";
 import { printJsx } from "../code";
 import type { Spec, Values } from "../schema";
 
-const ACCENT_OPTIONS = [...ACCENTS, ...Object.keys(ACCENT_ROLES)] as const;
 
 // 아래는 컴포넌트 자신의 prop 이 지역 union 이라 어휘 배열이 없는 선택지입니다
 const STUDENT_BADGE_SIZES = ["xs", "sm", "md"] as const;
@@ -150,38 +148,33 @@ const APP_BAR_ACTIONS_CODE = [
 const appBar: Spec = {
   name: "AppBar",
   summary:
-    "상단 바. accent 면 · 아래 2px 검정 · 아래로 4px 그림자이고 높이는 80px 입니다. 로고(brand)는 기울어진 900 대문자이고, 오른쪽 끝(actions)에 학기 선택 · 계정 · 로그아웃을 둡니다.",
+    "상단 바. Surface 의 brand 면(보라 · 흰 글자) · 아래 2px 검정 · 아래로 4px 그림자이고 높이는 80px 입니다. 바는 색을 고르는 요소가 아니라 앱의 뼈대라 accent 가 없습니다. 로고(brand)는 기울어진 900 대문자이고, 오른쪽 끝(actions)에 학기 선택 · 계정 · 로그아웃을 둡니다.",
   controls: {
     brand: { kind: "text" },
-    accent: { kind: "select", options: ACCENT_OPTIONS },
     actions: { kind: "boolean" },
   },
-  // actions 는 꺼 둡니다 — Overview 의 좁은 썸네일에서 오른쪽 끝 버튼이 brand 위로 겹쳐 올라옵니다 (켜면 아래 Accent 절과 같습니다)
+  // actions 는 꺼 둡니다 — Overview 의 좁은 썸네일에서 오른쪽 끝 버튼이 brand 위로 겹쳐 올라옵니다 (켜면 아래 '오른쪽 끝까지' 절과 같습니다)
   initial: { brand: "Class Explorer" },
-  defaults: { accent: "purple", actions: false },
+  defaults: { actions: false },
   render: (v) => (
     <Frame width={720}>
-      <AppBar brand={String(v.brand ?? "")} accent={v.accent as Accent} onBrandClick={noop} actions={v.actions ? <BarActions /> : undefined} />
+      <AppBar brand={String(v.brand ?? "")} onBrandClick={noop} actions={v.actions ? <BarActions /> : undefined} />
     </Frame>
   ),
   code: (v) =>
     jsx("AppBar", [
-      ...printed(appBar, { brand: v.brand, accent: v.accent }),
+      ...printed(appBar, { brand: v.brand }),
       'onBrandClick={() => navigate("/")}',
       v.actions ? APP_BAR_ACTIONS_CODE : undefined,
     ]),
   sections: [
     {
-      title: "Accent",
-      note: "brand 와 NavButton 의 글자는 바의 accent 가 정한 ink 를 따릅니다 — 보라 · 검정 바에서는 흰색, 밝은 cyan 바에서는 어두운 글자입니다.",
+      title: "오른쪽 끝까지",
+      note: "brand 면은 글자를 흰색으로 바꾸고, 그 위의 버튼은 흰 유리(NavButton)라 로고 · 학기 · 계정이 한 색으로 읽힙니다. 학기 선택은 Menu 를 엽니다.",
       render: () => (
         <Stage>
           <Frame width={720}>
-            <Stack gap="3xl">
-              <AppBar brand="Class Explorer" actions={<BarActions />} />
-              <AppBar brand="Class Explorer" accent="black" actions={<BarActions />} />
-              <AppBar brand="Class Explorer" accent="cyan" actions={<BarActions />} />
-            </Stack>
+            <AppBar brand="Class Explorer" actions={<BarActions />} />
           </Frame>
         </Stage>
       ),
@@ -313,11 +306,11 @@ const sideNav: Spec = {
 
 // ── BottomNav ───────────────────────────────────────────────────────
 
-function BottomNavDemo({ accent }: { accent?: Accent }) {
+function BottomNavDemo() {
   const [active, setActive] = useState("home");
   return (
     <Screen style={{ flexDirection: "column", justifyContent: "flex-end", width: "100%", maxWidth: 360, height: 104 }}>
-      <BottomNav accent={accent}>
+      <BottomNav>
         {BOTTOM_ITEMS.map((item) => (
           <BottomNav.Item key={item.key} icon={item.icon} active={active === item.key} onClick={() => setActive(item.key)}>
             {item.label}
@@ -330,12 +323,8 @@ function BottomNavDemo({ accent }: { accent?: Accent }) {
 
 const bottomNav: Spec = {
   name: "BottomNav",
-  summary: "모바일 하단 바. 높이 64px 에 다섯 칸까지입니다. fixed 로 쓰면 넓은 화면(md 이상)에서는 숨습니다. 메뉴 순서는 앱이 정하고 셸은 그리기만 합니다.",
-  controls: {
-    accent: { kind: "select", options: ACCENT_OPTIONS },
-  },
-  defaults: { accent: "purple" },
-  render: (v) => <BottomNavDemo accent={v.accent as Accent} />,
+  summary: "모바일 하단 바. 상단 바와 같은 brand 면이고 높이 64px 에 다섯 칸까지입니다. fixed 로 쓰면 넓은 화면(md 이상)에서는 숨습니다. 메뉴 순서는 앱이 정하고 셸은 그리기만 합니다. 지금 화면은 aria-current=\"page\" 로 알립니다.",
+  render: () => <BottomNavDemo />,
   code: (v) =>
     jsx("BottomNav", printed(bottomNav, v), [
       jsx("BottomNav.Item", ["icon={Home}", "active", 'onClick={() => navigate("/")}'], ["Home"]),
@@ -344,13 +333,11 @@ const bottomNav: Spec = {
     ]),
   sections: [
     {
-      title: "Accent",
-      note: "칸의 글자는 바의 accent 가 정한 ink 를 물려받습니다. 안 고른 칸은 묽게, 고른 칸은 진하게 나오고 윗선이 붙습니다.",
+      title: "지금 화면",
+      note: "칸의 글자는 바의 흰 글자를 물려받습니다. 안 고른 칸은 묽게, 지금 화면은 진하게 나오고 윗선이 붙습니다. 내비라 Tab 키로 칸마다 들릅니다 — 방향키 무리로 묶지 않습니다.",
       render: () => (
         <Stage>
           <BottomNavDemo />
-          <BottomNavDemo accent="black" />
-          <BottomNavDemo accent="cyan" />
         </Stage>
       ),
     },
@@ -368,11 +355,11 @@ function TermDemo({ terms = TERMS }: { terms?: TermOption[] }) {
 const termSwitcher: Spec = {
   name: "TermSwitcher",
   summary: "학기 선택. 상단 바 위의 유리 버튼이 Menu 를 엽니다. 학기가 둘 미만이면 아무것도 그리지 않습니다.",
-  stage: "dark",
+  stage: "brand",
   render: () => (
-    <Paint accent="purple" variant="filled" padding="lg">
+    <Surface fill="brand" padding="lg">
       <TermDemo />
-    </Paint>
+    </Surface>
   ),
   code: () =>
     [

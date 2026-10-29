@@ -1,18 +1,22 @@
-/** Primitives — 배치 · 칠(Surface · Paint · Glass) · 글자 · 아이콘 · 누름 · 접근성. 바탕이라 표본은 구조를 보여 줍니다 */
-import { useId, useState, type MouseEvent, type ReactNode } from "react";
+/** Primitives — 배치 · 칠(Surface · Paint · Glass) · 글자 · 아이콘 · 누름 · 골라짐 · 띄우기 · 접근성. 바탕이라 표본은 구조를 보여 줍니다 */
+import { useId, useRef, useState, type AriaRole, type MouseEvent, type ReactNode } from "react";
 import {
   Badge,
   Box,
   Button,
+  Floating,
   Glass,
   Grid,
   Icon,
   Inline,
   Input,
   Label,
+  Menu,
+  Modal,
   Paint,
   Portal,
   Pressable,
+  Selectable,
   Stack,
   Surface,
   Switch,
@@ -21,6 +25,7 @@ import {
   glassClass,
   paintClass,
   surfaceClass,
+  useSelectableGroup,
   type Accent,
   type Border,
   type Shadow,
@@ -36,6 +41,7 @@ import {
   ACCENT_ROLES,
   ALIGNS,
   BORDERS,
+  ENTER_MOTIONS,
   FAMILIES,
   ICON,
   ICON_SIZES,
@@ -51,6 +57,7 @@ import {
   WEIGHTS,
   Z,
   type Align,
+  type EnterMotion,
   type Family,
   type IconSize,
   type Justify,
@@ -133,7 +140,7 @@ const BOX_TAGS = ["div", "section", "article"] as const;
 const box: Spec = {
   name: "Box",
   summary:
-    "요소 — 1차 primitive. 태그(as) · ref · 여백만 다루고, 칠하지 않으며 색도 모릅니다. 2차 primitive 는 모두 Box 위에 능력 하나를 얹습니다: 칠(Surface · Paint · Glass) · 누름(Pressable) · 배치(Stack · Inline · Grid). 점선은 Box 의 자리를 보이려고 그린 것입니다.",
+    "요소 — 1차 primitive. 태그(as) · ref · 여백만 다루고, 칠하지 않으며 색도 모릅니다. 2차 primitive 는 모두 Box 위에 능력 하나를 얹습니다: 칠(Surface · Paint · Glass) · 누름(Pressable) · 골라짐(Selectable) · 띄우기(Floating) · 배치(Stack · Inline · Grid). 점선은 Box 의 자리를 보이려고 그린 것입니다.",
   controls: {
     as: { kind: "select", options: BOX_TAGS },
     padding: { kind: "select", options: SPACES },
@@ -220,7 +227,7 @@ const box: Spec = {
 const surface: Spec = {
   name: "Surface",
   summary:
-    "박스의 면 — 흑백 면(fill) · 테두리 · 그림자, 그리고 hoverable 이면 hover · 누르는 중의 흑백 상태 층. 카드 · 패널 · 모달 · 판처럼 무언가를 담는 박스와, 그 면 위의 목록 줄(fill=\"none\")을 칠합니다. accent 로 칠하지 않습니다 — 색이 있는 요소는 Paint 입니다.",
+    "박스의 면 — 면(fill: 흑백 다섯과 뼈대의 보라 brand) · 테두리 · 그림자, 그리고 hoverable 이면 hover · 누르는 중의 흑백 상태 층. 카드 · 패널 · 모달 · 판 · 바처럼 무언가를 담는 박스와, 그 면 위의 목록 줄(fill=\"none\")을 칠합니다. accent 로 칠하지 않습니다 — 색이 있는 요소는 Paint 입니다.",
   controls: {
     fill: { kind: "select", options: SURFACE_FILLS },
     border: { kind: "select", options: BORDERS },
@@ -244,8 +251,8 @@ const surface: Spec = {
   ),
   sections: [
     {
-      title: "Fill — 흑백 면 다섯 · 면 없음",
-      note: "회색이 아니라 자리의 이름입니다. inverse 는 글자색도 같이 바꿔서 검정 위에 검정 글자가 생기지 않습니다. well 은 반투명이라 어느 면 위에서도 한 단 내려앉습니다. none 은 면 없이 바깥 면을 그대로 보입니다 — 목록 줄처럼 면 위의 한 칸에 씁니다.",
+      title: "Fill — 흑백 면 다섯 · 뼈대의 보라 · 면 없음",
+      note: "회색이 아니라 자리의 이름입니다. inverse 는 글자색도 같이 바꿔서 검정 위에 검정 글자가 생기지 않습니다. well 은 반투명이라 어느 면 위에서도 한 단 내려앉습니다. brand 는 상단 바 · 하단 바의 보라로, inverse 처럼 글자를 흰색으로 바꿉니다 — 색을 고르는 요소가 아니라 앱의 뼈대라서 accent 가 아니라 자리 이름입니다. none 은 면 없이 바깥 면을 그대로 보입니다 — 목록 줄처럼 면 위의 한 칸에 씁니다.",
       render: () => (
         <Stage>
           {SURFACE_FILLS.map((f) => (
@@ -402,8 +409,8 @@ const paint: Spec = {
       ),
     },
     {
-      title: "색과 누름은 따로 섭니다",
-      note: "Paint 는 색, Pressable 은 누름이고 서로를 켜지 않습니다. hoverable 은 Pressable 없이 hover 색을 내고(둘째 — 커서는 화살표 그대로), Pressable 은 칠 없이 가라앉습니다(셋째). Button 은 둘을 묶은 것이고(넷째), 골라지면 Paint 의 selected 와 Pressable 의 pressed 를 같이 줍니다(다섯째).",
+      title: "색 · 누름 · 골라짐은 따로 섭니다",
+      note: "Paint 는 색, Pressable 은 누름, Selectable 은 골라짐이고 서로를 켜지 않습니다. hoverable 은 Pressable 없이 hover 색을 내고(둘째 — 커서는 화살표 그대로), Pressable 은 칠 없이 가라앉습니다(셋째). Button 은 셋을 묶은 것이고(넷째), 골라지면 Paint 의 selected(색)와 Selectable 의 grow(커지기)를 같이 줍니다(다섯째) — grow 가 그 자체로 몸짓이라 이때 Pressable 의 motion 은 none 입니다.",
       render: () => (
         <Stage bg="raised">
           <Paint accent="cyan" variant="muted" padding="md">
@@ -418,15 +425,15 @@ const paint: Spec = {
           <Pressable motion="sink" padding="md" className={paintClass({ accent: "cyan", variant: "solid", hoverable: true })}>
             <Text variant="label">둘 다 · Button</Text>
           </Pressable>
-          <Pressable motion="sink" pressed padding="md" className={paintClass({ accent: "cyan", variant: "muted", selected: true, hoverable: true })}>
-            <Text variant="label">selected · pressed</Text>
-          </Pressable>
+          <Selectable as={Pressable} selected grow padding="md" className={paintClass({ accent: "cyan", variant: "muted", selected: true, hoverable: true })}>
+            <Text variant="label">selected · grow</Text>
+          </Selectable>
         </Stage>
       ),
     },
     {
       title: "버튼이 아닌 요소를 칠하기",
-      note: "같은 레시피로 버튼 아닌 요소도 칠합니다 — Trade 의 과목 줄(plain), 시간표의 지금(plain pink), 상단 바(filled). 위 층 컴포넌트는 Paint 의 칠을 쓰면서 테두리 같은 형태만 자기 CSS 로 덮습니다.",
+      note: "같은 레시피로 버튼 아닌 요소도 칠합니다 — Trade 의 과목 줄(plain), 시간표의 지금(plain pink), 모달 머리 막대(filled). 위 층 컴포넌트는 Paint 의 칠을 쓰면서 테두리 같은 형태만 자기 CSS 로 덮습니다. 상단 바 · 하단 바는 고르는 색이 아니라 뼈대라 Paint 가 아니라 Surface 의 brand 입니다.",
       render: () => (
         <Stage bg="raised">
           <Stack gap="md" style={{ width: 300 }}>
@@ -447,7 +454,7 @@ const paint: Spec = {
             </Paint>
             <Paint accent="purple" variant="filled" padding="lg">
               <Text variant="caption" weight="black" tone="inherit">
-                CLASS EXPLORER — 상단 바의 칠
+                ADD EVENT — 모달 머리 막대의 칠
               </Text>
             </Paint>
           </Stack>
@@ -966,21 +973,19 @@ const MOTION_NOTE: Record<PressMotion, string> = {
 const pressable: Spec = {
   name: "Pressable",
   summary:
-    "누르는 물건 — 버튼의 의미(type · disabled) · 커서 · 꺼진 모양 · 몸짓을 맡습니다. 몸짓은 기본 none(움직이지 않음)이고, sink 는 4px 그림자 위에 떠 있다가 hover 때 가라앉고, raise 는 평평하다가 hover 때 그림자가 올라오고, lift 는 떠오르고, tap 은 그림자 없이 누르는 순간만 작아집니다. 색은 하나도 없습니다 — hover 색까지 Paint 의 hoverable 이고, Pressable 이 그걸 켜 주지 않습니다. 흑백 면은 surfaceClass(), 색은 paintClass() 로 얹습니다. Button 이 Pressable + Paint 입니다.",
+    "누르는 물건 — 버튼의 의미(type · disabled) · 커서 · 꺼진 모양 · 몸짓을 맡습니다. 몸짓은 기본 none(움직이지 않음)이고, sink 는 4px 그림자 위에 떠 있다가 hover 때 가라앉고, raise 는 평평하다가 hover 때 그림자가 올라오고, lift 는 떠오르고, tap 은 그림자 없이 누르는 순간만 작아집니다. 색은 하나도 없습니다 — hover 색까지 Paint 의 hoverable 이고, Pressable 이 그걸 켜 주지 않습니다. 흑백 면은 surfaceClass(), 색은 paintClass() 로 얹습니다. 골라진 상태는 Pressable 이 아니라 Selectable 입니다 — Button 이 Pressable + Selectable + Paint 입니다.",
   controls: {
     motion: { kind: "select", options: MOTIONS },
-    pressed: { kind: "boolean" },
     padding: { kind: "select", options: SPACES },
     disabled: { kind: "boolean" },
     children: { kind: "text" },
   },
   initial: { motion: "sink", padding: "xl", children: "수강 변경 탐색" },
-  defaults: { motion: "none", pressed: false, padding: "0", disabled: false },
+  defaults: { motion: "none", padding: "0", disabled: false },
   render: (v) => (
     <Frame width={240}>
       <Pressable
         motion={v.motion as PressMotion}
-        pressed={Boolean(v.pressed)}
         padding={v.padding as Space}
         disabled={Boolean(v.disabled)}
         className={surfaceClass({ border: "line" })}
@@ -992,7 +997,6 @@ const pressable: Spec = {
   code: (v) => {
     const attrs = [
       v.motion !== "none" ? `motion="${String(v.motion)}"` : "",
-      v.pressed ? "pressed" : "",
       v.padding !== "0" ? `padding="${String(v.padding)}"` : "",
       v.disabled ? "disabled" : "",
     ].filter(Boolean);
@@ -1001,7 +1005,7 @@ const pressable: Spec = {
   sections: [
     {
       title: "몸짓 다섯 — none · sink · raise · lift · tap",
-      note: "마우스를 올려 보세요. none 은 움직이지 않고(목록 줄), sink 는 사람 카드처럼 그림자 자리로 가라앉고, raise 는 평평하다가 제자리에서 그림자가 올라오고(sink 를 거꾸로 돌린 몸짓), lift 는 탐색 카드처럼 4px 떠오르며 그림자가 길어지고, tap 은 그림자 없이 누르는 순간만 작아집니다. pressed 는 sink 몸짓이 눌린 채로 머무는 것입니다(골라진 버튼).",
+      note: "마우스를 올려 보세요. none 은 움직이지 않고(목록 줄), sink 는 사람 카드처럼 그림자 자리로 가라앉고, raise 는 평평하다가 제자리에서 그림자가 올라오고(sink 를 거꾸로 돌린 몸짓), lift 는 탐색 카드처럼 4px 떠오르며 그림자가 길어지고, tap 은 그림자 없이 누르는 순간만 작아집니다. 골라진 칸의 모양(커지기)은 여기 없습니다 — 남아 있는 상태라 Selectable 의 grow 입니다.",
       render: () => (
         <Stage>
           {MOTIONS.map((m) => (
@@ -1039,6 +1043,307 @@ const pressable: Spec = {
               paintClass · plain
             </Pressable>
           </Frame>
+        </Stage>
+      ),
+    },
+  ],
+};
+
+/* ── Selectable ──────────────────────────────────────────────────────── */
+
+const SELECT_ROLES = ["button", "radio", "tab", "option", "current"] as const;
+type SelectRole = (typeof SELECT_ROLES)[number];
+
+/** role(또는 current)이 정하는 aria — 표본 이름표에 적습니다 */
+const ARIA_OF: Record<SelectRole, string> = {
+  button: "aria-pressed",
+  radio: "aria-checked",
+  tab: "aria-selected",
+  option: "aria-selected",
+  current: 'aria-current="page"',
+};
+
+const roleOf = (r: SelectRole): AriaRole | undefined => (r === "button" || r === "current" ? undefined : r);
+
+/** 그림자를 켠 버튼 무리 — 안 골린 칸은 sink, 골린 칸은 grow (Button 이 고르는 조합 그대로) */
+function GrowRow({ shadow }: { shadow: boolean }) {
+  const [on, setOn] = useState("전체");
+  return (
+    <Inline gap="md">
+      {["전체", "1학년", "2학년", "3학년"].map((label) => {
+        const picked = on === label;
+        return (
+          <Selectable
+            key={label}
+            as={Pressable}
+            motion={shadow ? (picked ? "none" : "sink") : "tap"}
+            selected={picked}
+            grow={shadow}
+            paddingX="lg"
+            paddingY="sm"
+            className={paintClass({ variant: shadow ? "outline" : "muted", selected: picked, hoverable: true })}
+            onClick={() => setOn(label)}
+          >
+            <Text variant="label" tone="inherit">
+              {label}
+            </Text>
+          </Selectable>
+        );
+      })}
+    </Inline>
+  );
+}
+
+/** primitive 만으로 세운 고르는 줄 — SegmentedControl 이 이 조립입니다 */
+function GroupDemo() {
+  const [value, setValue] = useState("week");
+  const { groupProps, itemProps } = useSelectableGroup({ value, onChange: setValue });
+  return (
+    <Inline role="radiogroup" aria-label="보기" gap="sm" {...groupProps}>
+      {(["day", "week", "term"] as const).map((v) => (
+        <Selectable
+          key={v}
+          as={Pressable}
+          role="radio"
+          {...itemProps(v)}
+          paddingX="lg"
+          paddingY="sm"
+          className={paintClass({ accent: "purple", variant: "muted", selected: value === v, hoverable: true })}
+        >
+          <Text variant="label" tone="inherit">
+            {v}
+          </Text>
+        </Selectable>
+      ))}
+    </Inline>
+  );
+}
+
+const selectable: Spec = {
+  name: "Selectable",
+  summary:
+    "골라지는 물건 — '골라져 있다' 는 남아 있는 상태를 맡습니다. 그 사실을 쓰임에 맞는 aria 하나로 알리고(role 이 정합니다 — 그냥 버튼은 aria-pressed, radio 는 aria-checked, tab · option 은 aria-selected, 내비의 지금 화면은 current 로 aria-current), grow 면 골라진 모양을 그립니다: 105% 로 커져 이웃 위에 서고 4px 그림자를 그대로 두며, hover 때 그림자만 숨고 누르면 100% 로 돌아옵니다. 색은 없습니다 — 골라진 색은 칠(Paint · Glass · Surface)의 selected 입니다. 누름(Pressable)은 순간의 반응이라 따로이고, 고르는 칸은 둘을 같이 씁니다. 무리의 값 · 방향키는 useSelectableGroup 입니다.",
+  controls: {
+    selected: { kind: "boolean" },
+    grow: { kind: "boolean" },
+    role: { kind: "select", options: SELECT_ROLES },
+    children: { kind: "text" },
+  },
+  initial: { selected: true, grow: true, children: "전체" },
+  defaults: { selected: false, grow: false, role: "button" },
+  render: (v) => {
+    const r = v.role as SelectRole;
+    return (
+      <Selectable
+        as={Pressable}
+        selected={Boolean(v.selected)}
+        grow={Boolean(v.grow)}
+        role={roleOf(r)}
+        current={r === "current" ? "page" : undefined}
+        paddingX="xl"
+        paddingY="md"
+        className={paintClass({ variant: "outline", selected: Boolean(v.selected), hoverable: true })}
+      >
+        <Text variant="label" tone="inherit">
+          {String(v.children ?? "")}
+        </Text>
+      </Selectable>
+    );
+  },
+  code: (v) => {
+    const r = v.role as SelectRole;
+    const attrs = [
+      v.selected ? "selected" : "selected={false}",
+      v.grow ? "grow" : "",
+      roleOf(r) ? `role="${r}"` : "",
+      r === "current" ? 'current="page"' : "",
+    ].filter(Boolean);
+    return `<Selectable as={Pressable} ${attrs.join(" ")} className={paintClass({ selected, hoverable: true })}>\n  ${String(v.children ?? "")}\n</Selectable>\n// → ${ARIA_OF[r]}`;
+  },
+  sections: [
+    {
+      title: "aria 하나 — role 이 정합니다",
+      note: "골라짐을 알리는 aria 는 하나뿐입니다. 예전에는 Button 이 aria-pressed 를 붙이면 SegmentedControl · Tabs 가 그걸 지우고 aria-checked · aria-selected 를 다시 붙였습니다. 지금은 칸이 자기 role 을 Selectable 에 넘기고, Selectable 이 맞는 것 하나만 붙입니다. 주지 않으면(selected 가 없으면) 고르는 물건이 아니라서 아무것도 붙지 않습니다.",
+      render: () => (
+        <Stage>
+          {SELECT_ROLES.map((r) => (
+            <Labeled key={r} name={r === "current" ? 'current="page"' : `role="${r}"`}>
+              <Selectable
+                as={Pressable}
+                selected
+                role={roleOf(r)}
+                current={r === "current" ? "page" : undefined}
+                paddingX="lg"
+                paddingY="sm"
+                className={paintClass({ variant: "outline", selected: true })}
+              >
+                <Text variant="micro" tone="inherit">
+                  {ARIA_OF[r]}
+                </Text>
+              </Selectable>
+            </Labeled>
+          ))}
+        </Stage>
+      ),
+    },
+    {
+      title: "grow — 골라진 칸이 커집니다",
+      note: "class-explorer 의 골라진 버튼입니다(RetroButton isSelected · 빈 강의실 · 분반 칩). 그림자를 켠 무리(위)에서 골린 칸은 105% 로 커져 이웃 위에 서고 그림자를 그대로 둡니다. hover 때 가라앉지 않고 제자리에서 그림자만 숨깁니다 — 이미 고른 칸이라 '눌러 들어가는' 몸짓을 하지 않습니다. 그림자를 켜지 않은 무리(아래, muted 칩)는 색만 바뀝니다.",
+      render: () => (
+        <Stage>
+          <Stack gap="3xl">
+            <GrowRow shadow />
+            <GrowRow shadow={false} />
+          </Stack>
+        </Stage>
+      ),
+    },
+    {
+      title: "고르는 무리 — useSelectableGroup",
+      note: "무리의 값 · 누르기 · 방향키(←→↑↓ · Home · End)와 roving tabindex 를 맡습니다. Tab 키로는 골린 칸 하나에만 들어오고, 무리 안은 방향키로 옮기며 바로 고릅니다(selectOnFocus). 메뉴처럼 포커스만 옮기려면 selectOnFocus: false 를 줍니다. SegmentedControl · Tabs · Menu 가 이 위에 서고, 이 표본은 primitive 만으로 같은 줄을 세운 것입니다. 내비(SideNav · BottomNav)는 Tab 키로 칸마다 들르는 것이 맞아서 무리로 묶지 않고 current 만 씁니다.",
+      render: () => (
+        <Stage>
+          <GroupDemo />
+        </Stage>
+      ),
+    },
+  ],
+};
+
+/* ── Floating ────────────────────────────────────────────────────────── */
+
+const PLACEMENTS = ["bottom", "top"] as const;
+const ALIGN_EDGES = ["start", "center", "end"] as const;
+const LAYERS = ["dropdown", "tooltip"] as const;
+
+/** 기준 요소 옆에 판을 여닫는 표본 */
+function FloatingDemo({
+  placement = "bottom",
+  align = "start",
+  layer = "dropdown",
+  enter = "rise",
+  dismissible = true,
+}: {
+  placement?: (typeof PLACEMENTS)[number];
+  align?: (typeof ALIGN_EDGES)[number];
+  layer?: (typeof LAYERS)[number];
+  enter?: EnterMotion;
+  dismissible?: boolean;
+}) {
+  const [open, setOpen] = useState(false);
+  const anchor = useRef<HTMLSpanElement>(null);
+  return (
+    <span ref={anchor} style={{ display: "inline-flex" }}>
+      <Button size="sm" variant="outline" shadow selected={open} onClick={() => setOpen((o) => !o)}>
+        {open ? "닫기" : "판 열기"}
+      </Button>
+      {open && (
+        <Floating
+          anchor={anchor}
+          placement={placement}
+          align={align}
+          layer={layer}
+          enter={enter}
+          onDismiss={dismissible ? () => setOpen(false) : undefined}
+          padding="xl"
+          className={surfaceClass({ border: "line", shadow: "raised" })}
+        >
+          <Text variant="label">기준 요소 옆에 붙었습니다</Text>
+        </Floating>
+      )}
+    </span>
+  );
+}
+
+const TERM_ITEMS = [
+  { value: "2026-1", label: "2026-1" },
+  { value: "2026-2", label: "2026-2" },
+] as const;
+
+/** 모달 안에서 여는 메뉴 — 판이 모달(<dialog>) 안에 그려져야 보이고 눌립니다 */
+function MenuInModal() {
+  const [open, setOpen] = useState(false);
+  const [term, setTerm] = useState<string>("2026-2");
+  return (
+    <>
+      <Button size="sm" variant="outline" shadow onClick={() => setOpen(true)}>
+        모달 열기
+      </Button>
+      <Modal open={open} onClose={() => setOpen(false)} title="학기 고르기" size="sm">
+        <Stack gap="lg">
+          <Text variant="caption" tone="muted">
+            버튼을 눌러 메뉴를 엽니다. 첫 Esc 는 메뉴만, 다음 Esc 가 모달을 닫습니다.
+          </Text>
+          <Menu
+            aria-label="학기"
+            value={term}
+            items={TERM_ITEMS}
+            onSelect={setTerm}
+            trigger={
+              <Button size="sm" variant="outline">
+                {term}
+              </Button>
+            }
+          />
+        </Stack>
+      </Modal>
+    </>
+  );
+}
+
+const floating: Spec = {
+  name: "Floating",
+  summary:
+    "떠 있는 판 — 판이 어디에 · 언제 있는지를 맡습니다. 문서 끝에 그려(Portal) 카드의 overflow 에 잘리지 않고, 기준 요소 옆에 붙어 화면 밖으로 나가면 뒤집히며, 쌓는 층(dropdown · tooltip)을 고르고, 바깥을 누르거나 Esc 를 누르면 onDismiss 로 닫자고 알리고, 열릴 때 포커스를 옮기고(initialFocus), 등장 몸짓(rise · pop · fade)으로 나타납니다. 그려져 있는 동안이 열려 있는 동안입니다 — {open && <Floating …>}. 면은 surfaceClass() 로 얹습니다. Tooltip · Menu 가 이 위에 섭니다.",
+  controls: {
+    placement: { kind: "select", options: PLACEMENTS },
+    align: { kind: "select", options: ALIGN_EDGES },
+    layer: { kind: "select", options: LAYERS },
+    enter: { kind: "select", options: ENTER_MOTIONS },
+    dismissible: { kind: "boolean" },
+  },
+  defaults: { placement: "bottom", align: "start", layer: "dropdown", enter: "rise", dismissible: true },
+  render: (v) => (
+    <FloatingDemo
+      placement={v.placement as (typeof PLACEMENTS)[number]}
+      align={v.align as (typeof ALIGN_EDGES)[number]}
+      layer={v.layer as (typeof LAYERS)[number]}
+      enter={v.enter as EnterMotion}
+      dismissible={Boolean(v.dismissible)}
+    />
+  ),
+  code: (v) => {
+    const attrs = [
+      "anchor={anchorRef}",
+      v.placement !== "bottom" ? `placement="${String(v.placement)}"` : "",
+      v.align !== "start" ? `align="${String(v.align)}"` : "",
+      v.layer !== "dropdown" ? `layer="${String(v.layer)}"` : "",
+      v.enter !== "rise" ? `enter="${String(v.enter)}"` : "",
+      v.dismissible ? "onDismiss={() => setOpen(false)}" : "",
+    ].filter(Boolean);
+    return `{open && (\n  <Floating ${attrs.join(" ")} padding="xl" className={surfaceClass({ border: "line", shadow: "raised" })}>\n    기준 요소 옆에 붙었습니다\n  </Floating>\n)}`;
+  },
+  sections: [
+    {
+      title: "모달 안에서",
+      note: "모달(<dialog>)은 브라우저의 가장 위 층에 뜨고, 열려 있는 동안 바깥 요소를 누를 수 없게 만듭니다. 그래서 판을 body 끝에 그리면 모달 뒤에 깔려 보이지도 눌리지도 않습니다 — z-index 로는 그 층을 못 넘습니다. Floating 은 기준 요소가 열린 모달 안에 있으면 그 안에 그립니다. Esc 도 판에서 멈춰서, 첫 Esc 는 판만 닫고 다음 Esc 가 모달을 닫습니다.",
+      render: () => (
+        <Stage>
+          <MenuInModal />
+        </Stage>
+      ),
+    },
+    {
+      title: "닫히는 판 · 닫히지 않는 판",
+      note: "onDismiss 를 주면 바깥 누름과 Esc 가 닫자고 알립니다(왼쪽). 기준 요소를 누르는 것은 바깥이 아니라서, 여는 버튼을 다시 누르면 버튼이 닫습니다. 주지 않으면 여는 쪽만 닫습니다(오른쪽) — 마우스가 떠나면 사라지는 툴팁처럼 스스로 닫히는 판이 아닐 때입니다.",
+      render: () => (
+        <Stage>
+          <Labeled name="onDismiss">
+            <FloatingDemo />
+          </Labeled>
+          <Labeled name="여는 쪽만">
+            <FloatingDemo dismissible={false} />
+          </Labeled>
         </Stage>
       ),
     },
@@ -1134,7 +1439,7 @@ function ClippedPopover() {
 const portal: Spec = {
   name: "Portal",
   summary:
-    "자식을 body 끝에 그립니다. Tooltip · Menu 가 카드의 overflow 에 잘리지 않게 하는 바탕입니다. 마운트 뒤 effect 를 거치지 않고 곧바로 그려서, 여는 순간에도 위치를 잴 수 있습니다.",
+    "자식을 body 끝(또는 container)에 그립니다. 떠 있는 판(Floating)이 카드의 overflow 에 잘리지 않게 하는 바탕입니다. 마운트 뒤 effect 를 거치지 않고 곧바로 그려서, 여는 순간에도 위치를 잴 수 있습니다.",
   controls: { children: { kind: "text" } },
   initial: { children: "body 끝에 그려졌습니다" },
   render: (v) => <PortalDemo message={String(v.children ?? "")} />,
@@ -1169,6 +1474,8 @@ export const PRIMITIVE_SPECS: Record<string, Spec> = {
   Text: text,
   Icon: iconSpec,
   Pressable: pressable,
+  Selectable: selectable,
+  Floating: floating,
   VisuallyHidden: visuallyHidden,
   Portal: portal,
 };

@@ -6,6 +6,7 @@ import { Icon, type IconComponent } from "../primitives/Icon";
 import { Pressable } from "../primitives/Pressable";
 import { surfaceClass } from "../primitives/Surface";
 import { Text } from "../primitives/Text";
+import { enterClass } from "../styles/enter.css";
 import { Card } from "./Card";
 import { accordionBody, accordionChevron, accordionChevronOpen, accordionHeader } from "./Accordion.css";
 
@@ -22,7 +23,10 @@ export interface AccordionProps {
   children?: ReactNode;
 }
 
-/** 접히는 카드 — 머리를 누르면 펼쳐지고, 내용은 카드 안 구분선 아래에 놓입니다. 머리는 움직이지 않는 Pressable 위의 hover 층(Surface)입니다 */
+/**
+ * 접히는 카드 — 머리를 누르면 펼쳐지고, 내용은 카드 안 구분선 아래에 제자리에서 나타납니다(fade). 머리는 움직이지 않는
+ * Pressable 위의 hover 층(Surface)입니다
+ */
 export function Accordion({ title, icon, trailing, open, defaultOpen = false, onOpenChange, className, children }: AccordionProps) {
   const [inner, setInner] = useState(defaultOpen);
   const isOpen = open ?? inner;
@@ -43,7 +47,7 @@ export function Accordion({ title, icon, trailing, open, defaultOpen = false, on
         <ChevronDownGlyph size={22} strokeWidth={3} className={cx(accordionChevron, isOpen && accordionChevronOpen)} />
       </Pressable>
       {isOpen && (
-        <div id={id} role="region" aria-labelledby={headerId} className={accordionBody}>
+        <div id={id} role="region" aria-labelledby={headerId} className={cx(accordionBody, enterClass.fade)}>
           {children}
         </div>
       )}

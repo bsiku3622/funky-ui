@@ -1,10 +1,11 @@
-import type { ElementType } from "react";
+import type { AriaRole, ElementType } from "react";
 
 import { cx } from "../internal/cx";
 import type { PolyProps } from "../internal/polymorphic";
 import { Icon, type IconComponent } from "../primitives/Icon";
 import { paintClass } from "../primitives/Paint";
-import { Pressable } from "../primitives/Pressable";
+import { usePressable } from "../primitives/Pressable";
+import { useSelectable } from "../primitives/Selectable";
 import { CONTROL } from "../tokens/shape";
 import type { Accent, ControlSize, Variant } from "../tokens/vocabulary";
 import { buttonBase, buttonSize, squareSize } from "./Button.css";
@@ -20,16 +21,16 @@ export interface IconButtonOwnProps {
   size?: ControlSize;
   /** Button 과 같습니다 — `true` 면 sink, `"hover"` 면 raise */
   shadow?: boolean | "hover";
+  /** Button 과 같습니다 — 골라진 색 · aria 하나 · 그림자를 켰으면 커지기 */
   selected?: boolean;
+  role?: AriaRole;
   disabled?: boolean;
   className?: string;
 }
 
 export type IconButtonProps<E extends ElementType = "button"> = PolyProps<E, IconButtonOwnProps>;
 
-const PressableRoot = Pressable as ElementType;
-
-/** 아이콘 하나짜리 정사각 버튼 — Button 과 같이 Pressable + Paint 입니다 */
+/** 아이콘 하나짜리 정사각 버튼 — Button 과 같이 Pressable + Selectable + Paint 입니다 */
 export function IconButton<E extends ElementType = "button">({
   as,
   icon,
@@ -39,22 +40,32 @@ export function IconButton<E extends ElementType = "button">({
   size = "md",
   shadow = false,
   selected,
+  role,
   disabled,
   className,
   ...rest
 }: IconButtonProps<E>) {
+  const { motion, grow } = pressOf(variant, shadow, selected);
+  const { Comp, pressProps } = usePressable({ as, motion, disabled });
+  const { selectProps } = useSelectable({ selected, role, grow });
   return (
-    <PressableRoot
-      as={as}
-      {...pressOf(variant, shadow, selected)}
-      disabled={disabled}
+    <Comp
+      {...pressProps}
+      {...selectProps}
       aria-label={label}
       title={label}
-      aria-pressed={selected === undefined ? undefined : selected}
-      className={cx(paintClass({ accent, variant, selected, hoverable: true }), buttonBase, buttonSize[size], squareSize[size], className)}
+      className={cx(
+        pressProps.className,
+        selectProps.className,
+        paintClass({ accent, variant, selected, hoverable: true }),
+        buttonBase,
+        buttonSize[size],
+        squareSize[size],
+        className,
+      )}
       {...rest}
     >
       <Icon icon={icon} size={CONTROL.icon[size]} />
-    </PressableRoot>
+    </Comp>
   );
 }

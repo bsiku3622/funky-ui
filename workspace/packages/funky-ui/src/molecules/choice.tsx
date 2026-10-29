@@ -4,29 +4,18 @@
  * 둘 다 버튼 무리이고 규칙도 같습니다: 안 골린 것은 `variant`, 골린 것은 같은 accent 의 filled.
  * 다른 건 뜻과 기본 생김새입니다 — 값이면 radiogroup(기본 muted · sm · 그림자 없음 · 간격 sm),
  * 화면이면 tablist(기본 outline · sm · 그림자 · 간격 md, class-explorer 의 화면 전환 버튼).
- * 방향키로 옮겨 다니고, Tab 키로는 골린 칸 하나에만 들어옵니다.
+ * 그림자를 켠 줄에서는 골린 칸이 105% 로 커집니다(Button 의 골라짐).
+ * 방향키 · Home · End 로 옮기면 바로 고르고, Tab 키로는 골린 칸 하나에만 들어옵니다 — 둘 다 `useSelectableGroup`.
  */
-import { createContext, useContext, useId, type KeyboardEvent, type ReactNode } from "react";
+import { createContext, useContext, useId, type ReactNode } from "react";
 
 import { cx } from "../internal/cx";
 import type { IconComponent } from "../primitives/Icon";
 import { Inline } from "../primitives/layout";
+import { useSelectableGroup } from "../primitives/Selectable";
 import { Button } from "../atoms/Button";
 import type { Accent, ControlSize, Space, Variant } from "../tokens/vocabulary";
 import { choiceFill, choiceItemFill, tabPanel } from "./choice.css";
-
-/** 방향키로 같은 줄의 다음 · 이전 버튼에 포커스를 옮깁니다 */
-function moveFocus(e: KeyboardEvent<HTMLElement>, role: string) {
-  const keys: Record<string, number> = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 };
-  const step = keys[e.key];
-  if (step === undefined && e.key !== "Home" && e.key !== "End") return;
-  const items = Array.from(e.currentTarget.querySelectorAll<HTMLElement>(`[role="${role}"]:not(:disabled)`));
-  const i = items.indexOf(document.activeElement as HTMLElement);
-  const next = e.key === "Home" ? 0 : e.key === "End" ? items.length - 1 : (i + (step ?? 0) + items.length) % items.length;
-  e.preventDefault();
-  items[next]?.focus();
-  items[next]?.click();
-}
 
 export interface ChoiceOption<V extends string> {
   value: V;
@@ -68,46 +57,35 @@ export function SegmentedControl<V extends string>({
   className,
   "aria-label": ariaLabel,
 }: SegmentedControlProps<V>) {
+  const { groupProps, itemProps } = useSelectableGroup({ value, onChange });
   return (
-    <Inline
-      role="radiogroup"
-      aria-label={ariaLabel}
-      gap={gap}
-      wrap={!fill}
-      className={cx(fill && choiceFill, className)}
-      onKeyDown={(e) => moveFocus(e, "radio")}
-    >
-      {options.map((o) => {
-        const on = o.value === value;
-        return (
-          <Button
-            key={o.value}
-            role="radio"
-            aria-checked={on}
-            aria-pressed={undefined}
-            tabIndex={on ? 0 : -1}
-            accent={accent}
-            variant={variant}
-            size={size}
-            shadow={shadow}
-            selected={on}
-            icon={o.icon}
-            disabled={o.disabled}
-            className={fill ? choiceItemFill : undefined}
-            onClick={() => onChange(o.value)}
-          >
-            {o.label}
-          </Button>
-        );
-      })}
+    <Inline role="radiogroup" aria-label={ariaLabel} gap={gap} wrap={!fill} className={cx(fill && choiceFill, className)} {...groupProps}>
+      {options.map((o) => (
+        <Button
+          key={o.value}
+          role="radio"
+          {...itemProps(o.value)}
+          accent={accent}
+          variant={variant}
+          size={size}
+          shadow={shadow}
+          icon={o.icon}
+          disabled={o.disabled}
+          className={fill ? choiceItemFill : undefined}
+        >
+          {o.label}
+        </Button>
+      ))}
     </Inline>
   );
 }
 
+type Group = ReturnType<typeof useSelectableGroup<string>>;
+
 interface TabsContextValue extends ChoiceLook {
   value: string;
-  onChange: (value: string) => void;
   id: string;
+  group: Group;
 }
 const TabsContext = createContext<TabsContextValue | null>(null);
 const useTabs = () => {
@@ -128,24 +106,14 @@ export interface TabsProps<V extends string> extends ChoiceLook {
  */
 export function Tabs<V extends string>({ value, onChange, variant = "outline", size = "sm", shadow = true, children, ...look }: TabsProps<V>) {
   const id = useId();
-  return (
-    <TabsContext.Provider value={{ value, onChange: onChange as (v: string) => void, id, variant, size, shadow, ...look }}>
-      {children}
-    </TabsContext.Provider>
-  );
+  const group = useSelectableGroup<string>({ value, onChange: onChange as (v: string) => void });
+  return <TabsContext.Provider value={{ value, id, group, variant, size, shadow, ...look }}>{children}</TabsContext.Provider>;
 }
 
 function TabsList({ children, className, "aria-label": ariaLabel }: { children?: ReactNode; className?: string; "aria-label": string }) {
-  const { gap = "md", fill } = useTabs();
+  const { gap = "md", fill, group } = useTabs();
   return (
-    <Inline
-      role="tablist"
-      aria-label={ariaLabel}
-      gap={gap}
-      wrap={!fill}
-      className={cx(fill && choiceFill, className)}
-      onKeyDown={(e) => moveFocus(e, "tab")}
-    >
+    <Inline role="tablist" aria-label={ariaLabel} gap={gap} wrap={!fill} className={cx(fill && choiceFill, className)} {...group.groupProps}>
       {children}
     </Inline>
   );
@@ -158,19 +126,15 @@ function Tab({ value, icon, disabled, children }: { value: string; icon?: IconCo
     <Button
       role="tab"
       id={`${t.id}-tab-${value}`}
-      aria-selected={on}
       aria-controls={on ? `${t.id}-panel-${value}` : undefined}
-      aria-pressed={undefined}
-      tabIndex={on ? 0 : -1}
+      {...t.group.itemProps(value)}
       accent={t.accent}
       variant={t.variant}
       size={t.size}
       shadow={t.shadow}
-      selected={on}
       icon={icon}
       disabled={disabled}
       className={t.fill ? choiceItemFill : undefined}
-      onClick={() => t.onChange(value)}
     >
       {children}
     </Button>

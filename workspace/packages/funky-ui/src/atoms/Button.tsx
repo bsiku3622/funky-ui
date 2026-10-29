@@ -1,10 +1,11 @@
-import type { ElementType, ReactNode, SyntheticEvent } from "react";
+import type { AriaRole, ElementType, ReactNode, SyntheticEvent } from "react";
 
 import { cx } from "../internal/cx";
 import type { PolyProps } from "../internal/polymorphic";
 import { Icon, type IconComponent } from "../primitives/Icon";
 import { paintClass } from "../primitives/Paint";
-import { Pressable } from "../primitives/Pressable";
+import { usePressable } from "../primitives/Pressable";
+import { useSelectable } from "../primitives/Selectable";
 import { BORDERLESS_VARIANTS, SELECTED_VARIANT } from "../tokens/color-recipes";
 import { CONTROL } from "../tokens/shape";
 import type { Accent, ControlSize, PressMotion, Variant } from "../tokens/vocabulary";
@@ -22,8 +23,14 @@ export interface ButtonOwnProps {
    * 그림자가 올라옵니다(raise). 테두리가 없는 variant(ghost)는 그림자를 받지 않습니다
    */
   shadow?: boolean | "hover";
-  /** 골라진 상태 — 같은 accent 의 filled 로 바뀌고 `aria-pressed` 가 붙습니다. 그림자를 켰으면 눌린 채로 있습니다 */
+  /**
+   * 골라진 상태 — 같은 accent 의 filled 로 칠하고, 그 사실을 aria 하나로 알립니다(그냥 버튼은 `aria-pressed`,
+   * `role="radio"` 는 `aria-checked`, `role="tab"` 은 `aria-selected`). 그림자를 켠 버튼은 105% 로 커져
+   * 그림자를 그대로 둡니다 — hover 때 그림자만 숨고, 누르면 100% 로 돌아옵니다
+   */
   selected?: boolean;
+  /** 요소의 role — 골라짐을 알리는 aria 가 이걸로 정해집니다. 고르는 무리의 칸이면 `radio` · `tab` */
+  role?: AriaRole;
   loading?: boolean;
   /** 앞 아이콘 — 크기와 굵기는 버튼 크기가 정합니다 */
   icon?: IconComponent;
@@ -42,22 +49,20 @@ const swallow = (e: SyntheticEvent) => {
   e.stopPropagation();
 };
 
-// Pressable 은 polymorphic 이라, 위에서 받은 `as` 를 그대로 흘려보내려고 한 번 넓힙니다
-const PressableRoot = Pressable as ElementType;
-
 /**
  * 그림자 · 골라짐에서 몸짓을 고릅니다 — 그림자를 켜면 sink(가라앉음), `"hover"` 면 raise(올라옴), 끄면 tap.
+ * 그림자를 켠 버튼이 골라지면 가라앉지 않고 커집니다(Selectable 의 grow — 그 자체가 몸짓이라 motion 은 none).
  * 테두리가 없는 variant(ghost)는 가라앉을 상자가 없어 그림자를 받지 않습니다. IconButton · SideNav.Item 이 같은 규칙을 씁니다.
  */
-export function pressOf(variant: Variant, shadow: boolean | "hover", selected: boolean | undefined): { motion: PressMotion; pressed: boolean } {
+export function pressOf(variant: Variant, shadow: boolean | "hover", selected: boolean | undefined): { motion: PressMotion; grow: boolean } {
   const painted: Variant = selected ? SELECTED_VARIANT : variant;
-  if (!shadow || BORDERLESS_VARIANTS.includes(painted)) return { motion: "tap", pressed: false };
-  if (shadow === "hover") return { motion: "raise", pressed: false };
-  return { motion: "sink", pressed: Boolean(selected) };
+  if (!shadow || BORDERLESS_VARIANTS.includes(painted)) return { motion: "tap", grow: false };
+  if (shadow === "hover") return { motion: "raise", grow: false };
+  return selected ? { motion: "none", grow: true } : { motion: "sink", grow: false };
 }
 
 /**
- * 버튼 — Pressable(누름) + Paint(칠)에 크기 · 아이콘 · 불러오기를 얹은 것입니다.
+ * 버튼 — Pressable(누름) + Selectable(골라짐) + Paint(칠)에 크기 · 아이콘 · 불러오기를 얹은 것입니다.
  *
  * ```tsx
  * <Button accent="green" variant="outline">유지</Button>
@@ -72,6 +77,7 @@ export function Button<E extends ElementType = "button">({
   size = "md",
   shadow = false,
   selected,
+  role,
   loading = false,
   icon,
   iconEnd,
@@ -81,19 +87,22 @@ export function Button<E extends ElementType = "button">({
   children,
   ...rest
 }: ButtonProps<E>) {
+  const { motion, grow } = pressOf(variant, shadow, selected);
+  const { Comp, pressProps } = usePressable({ as, motion, disabled });
+  const { selectProps } = useSelectable({ selected, role, grow });
   const iconSize = CONTROL.icon[size];
   return (
-    <PressableRoot
-      as={as}
-      {...pressOf(variant, shadow, selected)}
-      disabled={disabled}
-      aria-disabled={loading ? true : undefined}
-      aria-pressed={selected === undefined ? undefined : selected}
+    <Comp
+      {...pressProps}
+      {...selectProps}
+      aria-disabled={loading || pressProps["aria-disabled"] ? true : undefined}
       aria-busy={loading || undefined}
       // 불러오는 동안은 누름을 삼킵니다 — 포인터만 막으면 Enter · Space 가 onClick 에 닿습니다.
       // disabled 를 쓰지 않는 이유는 꺼진 모양(opacity)이 아니라 스피너를 보여야 해서입니다.
       onClickCapture={loading ? swallow : undefined}
       className={cx(
+        pressProps.className,
+        selectProps.className,
         paintClass({ accent, variant, selected, hoverable: true }),
         buttonBase,
         buttonSize[size],
@@ -111,6 +120,6 @@ export function Button<E extends ElementType = "button">({
           <Spinner size={size === "lg" ? "md" : "sm"} label="불러오는 중" />
         </span>
       )}
-    </PressableRoot>
+    </Comp>
   );
 }

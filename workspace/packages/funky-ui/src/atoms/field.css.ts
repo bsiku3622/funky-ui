@@ -1,9 +1,9 @@
 /**
- * 입력 칸 — Input · Textarea · Select 가 같은 면을 씁니다.
+ * 입력 칸 — Input · Textarea · Select 가 같은 면과 상태를 씁니다 (`useField`).
  *
- * 흰 면 · 2px 검정 · 700 글자. 값은 읽는 내용이라 버튼처럼 900 대문자가 아닙니다. Select 만 900 입니다 —
- * 고른 값이 곧 컨트롤의 이름이라 버튼처럼 읽힙니다.
- * 포커스는 전역 핑크 링이 맡고, 틀린 값은 빨간 테두리로 표시합니다.
+ * 면 · 테두리(흰 면 · 2px 검정)는 Surface 에서 빌리고, 여기서는 글자와 상태만 그립니다. 글자는 700 —
+ * 값은 읽는 내용이라 버튼처럼 900 대문자가 아닙니다. Select 만 900 입니다 — 고른 값이 곧 컨트롤의 이름이라
+ * 버튼처럼 읽힙니다. 포커스는 전역 핑크 링이 맡고, 틀린 값은 빨간 테두리로 표시합니다.
  */
 import { style, styleVariants } from "@vanilla-extract/css";
 
@@ -13,6 +13,7 @@ import { CONTROL } from "../tokens/shape";
 import { INPUT_TEXT, WEIGHT, px } from "../tokens/typography";
 import { vars } from "../tokens/variables";
 import type { ControlSize } from "../tokens/vocabulary";
+import { FLAT_SHADOW } from "../primitives/Pressable.css";
 
 const c = (rule: Record<string, unknown>) => ({ "@layer": { [components]: rule } });
 
@@ -22,9 +23,8 @@ export const field = style(
     width: "100%",
     minWidth: 0,
     margin: 0,
-    backgroundColor: vars.surface.raised,
+    // 면은 늘 흰색이라 글자도 늘 본문 잉크입니다 — 보라 바 · 검정 면 안에 놓여도 바깥 글자색을 물려받지 않습니다
     color: vars.ink.primary,
-    border: `${vars.stroke.base} solid ${vars.line.base}`,
     borderRadius: 0,
     fontFamily: vars.font.sans,
     fontWeight: WEIGHT.bold,
@@ -44,7 +44,12 @@ export const fieldSize = styleVariants(CONTROL.height, (h, size) =>
   c({ height: px(h), paddingInline: px(CONTROL.inset[size as ControlSize] - 2), fontSize: px(INPUT_TEXT[size as ControlSize]) }),
 );
 
-export const fieldShadow = style(c({ boxShadow: vars.shadow.raised }));
+/**
+ * 폼의 주인공 칸 — 4px 그림자 위에 떠 있다가 포커스를 받으면 그림자를 거둡니다(그 자리는 핑크 링이 맡습니다).
+ * ⚠️ 규칙은 이것 하나입니다. class-explorer 에는 반대 규칙(평평하다가 포커스 때 그림자)도 있었는데, 그 앱의
+ * InventoryPage 가 "focus 규칙이 서로 반대" 를 시스템의 빈칸으로 짚었고 이쪽이 다수(9 : 3)였습니다
+ */
+export const fieldShadow = style(c({ boxShadow: vars.shadow.raised, selectors: { "&:focus": { boxShadow: FLAT_SHADOW } } }));
 
 export const textarea = style(c({ height: "auto", resize: "vertical", lineHeight: px(20) }));
 export const textareaSize = styleVariants(CONTROL.height, (_, size) =>

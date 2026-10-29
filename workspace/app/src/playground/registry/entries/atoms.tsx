@@ -101,7 +101,7 @@ const button: Spec = {
       ),
     },
     {
-      title: "Shadow — 눌림",
+      title: "Shadow — 가라앉음",
       note: "그림자는 4px 한 단뿐입니다. hover 때 본체가 그림자 자리로 가라앉고(translate 4px · 그림자 0), 누르는 순간 한 번 더 작아집니다. 테두리가 없는 ghost 는 가라앉을 상자가 없어 그림자를 받지 않습니다.",
       render: () => (
         <Stage bg="raised">
@@ -134,8 +134,8 @@ const button: Spec = {
       ),
     },
     {
-      title: "Selected — 고르면 solid",
-      note: "선택은 따로 된 variant 가 아니라 상태입니다. 안 골린 칸은 고른 variant, 골린 칸은 같은 accent 의 filled. 그림자를 켠 버튼은 골리면 눌린 채로 있습니다.",
+      title: "Selected — 고르면 filled",
+      note: "선택은 따로 된 variant 가 아니라 상태입니다(Selectable). 안 골린 칸은 고른 variant, 골린 칸은 같은 accent 의 filled. 그림자를 켠 버튼은 골리면 105% 로 커져 그림자를 그대로 두고, hover 때 그림자만 숨깁니다 — 위 Shadow 절의 selected. 골라짐은 aria 하나로 알립니다: 그냥 버튼은 aria-pressed, 무리의 칸(role=radio · tab)은 aria-checked · aria-selected.",
       render: () => (
         <Stage bg="raised">
           <Stack gap="lg" align="center">

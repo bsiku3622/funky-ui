@@ -4,7 +4,7 @@ import { vars } from "@studio-baeks/funky-ui/tokens";
 
 export const pageHead = style({ marginBottom: vars.space["4xl"], display: "flex", flexDirection: "column", gap: vars.space.md });
 
-/** 표본을 올리는 판 — 바탕을 바꿔 크림 · 흰 면 · 어두운 바 위의 모습을 봅니다 */
+/** 표본을 올리는 판 — 바탕을 바꿔 크림 · 흰 면 위의 모습을 봅니다. 바 위에만 서는 것(NavButton · TermSwitcher)은 brand 판입니다 */
 export const stage = style({
   border: `${vars.stroke.base} solid ${vars.line.base}`,
   padding: vars.space["4xl"],
@@ -20,7 +20,7 @@ export const stage = style({
 export const stageBg = styleVariants({
   canvas: { backgroundColor: vars.surface.canvas },
   raised: { backgroundColor: vars.surface.raised },
-  dark: { backgroundColor: "#7828c8", color: "#ffffff" },
+  brand: { backgroundColor: vars.surface.brand, color: vars.ink.inverse },
 });
 
 export const detailGrid = style({

@@ -1,25 +1,16 @@
 /**
  * 떠 있는 판 둘 — Tooltip(설명) · Menu(고르는 목록).
- * body 끝(Portal)에 그려서 카드의 overflow 에 잘리지 않습니다.
+ * 둘 다 `Floating` 위에 섭니다 — 문서 끝에 그려 카드의 overflow 에 잘리지 않고, 바깥 누름 · Esc 로 닫힙니다.
  */
-import {
-  cloneElement,
-  isValidElement,
-  useEffect,
-  useId,
-  useRef,
-  useState,
-  type KeyboardEvent,
-  type ReactElement,
-  type ReactNode,
-} from "react";
+import { cloneElement, isValidElement, useEffect, useId, useRef, useState, type AriaRole, type ReactElement, type ReactNode } from "react";
 
 import { cx } from "../internal/cx";
 import { CheckGlyph } from "../internal/glyphs";
-import { useAnchor, type AnchorAlign, type Placement } from "../internal/useAnchor";
-import { Portal } from "../primitives/a11y";
+import type { AnchorAlign, Placement } from "../internal/useAnchor";
+import { Floating } from "../primitives/Floating";
 import { Icon, type IconComponent } from "../primitives/Icon";
-import { Pressable } from "../primitives/Pressable";
+import { usePressable } from "../primitives/Pressable";
+import { useSelectable, useSelectableGroup } from "../primitives/Selectable";
 import { surfaceClass } from "../primitives/Surface";
 import { anchorWrap, menu, menuItem, menuItemCheck, tooltip } from "./floating.css";
 
@@ -34,14 +25,12 @@ export interface TooltipProps {
   disabled?: boolean;
 }
 
-/** 설명 풍선 — 검정 면 · 흰 글자. 마우스를 올리거나 키보드로 포커스하면 뜹니다 */
+/** 설명 풍선 — 검정 면 · 흰 글자. 마우스를 올리거나 키보드로 포커스하면 뜨고, Esc 로 닫힙니다 */
 export function Tooltip({ content, children, placement = "top", delay = 300, disabled = false }: TooltipProps) {
   const [open, setOpen] = useState(false);
   const timer = useRef<number | undefined>(undefined);
   const anchor = useRef<HTMLSpanElement>(null);
-  const floating = useRef<HTMLDivElement>(null);
   const id = useId();
-  const style = useAnchor(open, anchor, floating, placement, "center");
 
   useEffect(() => () => window.clearTimeout(timer.current), []);
   useEffect(() => {
@@ -62,11 +51,18 @@ export function Tooltip({ content, children, placement = "top", delay = 300, dis
     <span ref={anchor} className={anchorWrap} onMouseEnter={show} onMouseLeave={hide} onFocus={show} onBlur={hide}>
       {isValidElement(children) ? cloneElement(children, { "aria-describedby": open ? id : undefined }) : children}
       {open && (
-        <Portal>
-          <div ref={floating} id={id} role="tooltip" className={cx(surfaceClass({ fill: "inverse", border: "line", shadow: "raised" }), tooltip)} style={style}>
-            {content}
-          </div>
-        </Portal>
+        <Floating
+          anchor={anchor}
+          placement={placement}
+          align="center"
+          layer="tooltip"
+          onDismiss={hide}
+          id={id}
+          role="tooltip"
+          className={cx(surfaceClass({ fill: "inverse", border: "line", shadow: "raised" }), tooltip)}
+        >
+          {content}
+        </Floating>
       )}
     </span>
   );
@@ -92,43 +88,27 @@ export interface MenuProps<V extends string> {
 }
 
 /**
- * 고르는 목록 — 흰 판 · 2px 검정 · 4px 그림자. 바깥을 누르거나 Esc 로 닫히고, 방향키로 옮깁니다.
+ * 고르는 목록 — 흰 판 · 2px 검정 · 4px 그림자. 바깥을 누르거나 Esc 로 닫히고, ↑↓ · Home · End 로 옮깁니다.
+ * 옮기기는 고르는 무리(`useSelectableGroup`)가 맡고, 메뉴라서 옮겨도 고르지 않습니다 — Enter 나 누름으로 고릅니다.
  */
 export function Menu<V extends string>({ trigger, items, value, onSelect, align = "start", "aria-label": ariaLabel }: MenuProps<V>) {
   const [open, setOpen] = useState(false);
   const anchor = useRef<HTMLSpanElement>(null);
-  const floating = useRef<HTMLDivElement>(null);
   const id = useId();
-  const style = useAnchor(open, anchor, floating, "bottom", align);
-
-  useEffect(() => {
-    if (!open) return;
-    const onDown = (e: PointerEvent) => {
-      const t = e.target as Node;
-      if (!anchor.current?.contains(t) && !floating.current?.contains(t)) setOpen(false);
-    };
-    document.addEventListener("pointerdown", onDown);
-    // 열리면 골라진 칸(없으면 첫 칸)으로 포커스를 옮깁니다
-    const first = floating.current?.querySelector<HTMLElement>('[aria-checked="true"]') ?? floating.current?.querySelector<HTMLElement>('[role^="menuitem"]');
-    first?.focus();
-    return () => document.removeEventListener("pointerdown", onDown);
-  }, [open]);
 
   const close = () => {
     setOpen(false);
     anchor.current?.querySelector<HTMLElement>("button, a, [tabindex]")?.focus();
   };
-
-  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Escape" || e.key === "Tab") return close();
-    const list = Array.from(e.currentTarget.querySelectorAll<HTMLElement>('[role^="menuitem"]:not(:disabled)'));
-    const i = list.indexOf(document.activeElement as HTMLElement);
-    const step = e.key === "ArrowDown" ? 1 : e.key === "ArrowUp" ? -1 : 0;
-    if (step) {
-      e.preventDefault();
-      list[(i + step + list.length) % list.length]?.focus();
-    }
-  };
+  const { groupProps, itemProps } = useSelectableGroup({
+    value,
+    onChange: (v: V) => {
+      onSelect(v);
+      close();
+    },
+    selectOnFocus: false,
+    orientation: "vertical",
+  });
 
   return (
     <span ref={anchor} className={anchorWrap}>
@@ -139,40 +119,52 @@ export function Menu<V extends string>({ trigger, items, value, onSelect, align 
         onClick: () => setOpen((v) => !v),
       })}
       {open && (
-        <Portal>
-          <div
-            ref={floating}
-            id={id}
-            role="menu"
-            aria-label={ariaLabel}
-            className={cx(surfaceClass({ border: "line", shadow: "raised" }), menu)}
-            style={style}
-            onKeyDown={onKeyDown}
-          >
-            {items.map((item) => {
-              const selected = value !== undefined && item.value === value;
-              return (
-                <Pressable
-                  key={item.value}
-                  role={value === undefined ? "menuitem" : "menuitemradio"}
-                  aria-checked={value === undefined ? undefined : selected}
-                  disabled={item.disabled}
-                  tabIndex={-1}
-                  className={cx(surfaceClass({ fill: selected ? "inverse" : "none", hoverable: true }), menuItem)}
-                  onClick={() => {
-                    onSelect(item.value);
-                    close();
-                  }}
-                >
-                  {item.icon && <Icon icon={item.icon} size="sm" />}
-                  {item.label}
-                  {selected && <CheckGlyph size={14} strokeWidth={3} className={menuItemCheck} />}
-                </Pressable>
-              );
-            })}
-          </div>
-        </Portal>
+        <Floating
+          anchor={anchor}
+          align={align}
+          // Esc 는 버튼으로 포커스를 돌려주고, 바깥 누름은 누른 자리에 포커스를 둡니다
+          onDismiss={(reason) => (reason === "escape" ? close() : setOpen(false))}
+          // 열리면 골라진 칸(없으면 첫 칸)으로 포커스를 옮깁니다
+          initialFocus={(panel) => panel.querySelector<HTMLElement>('[aria-checked="true"]') ?? panel.querySelector<HTMLElement>('[role^="menuitem"]')}
+          id={id}
+          role="menu"
+          aria-label={ariaLabel}
+          className={cx(surfaceClass({ border: "line", shadow: "raised" }), menu)}
+          onKeyDown={(e) => (e.key === "Tab" ? close() : groupProps.onKeyDown(e))}
+        >
+          {items.map((item) => (
+            <MenuEntry key={item.value} item={item} role={value === undefined ? "menuitem" : "menuitemradio"} {...itemProps(item.value)} />
+          ))}
+        </Floating>
       )}
     </span>
+  );
+}
+
+interface MenuEntryProps<V extends string> {
+  item: MenuItem<V>;
+  role: AriaRole;
+  selected?: boolean;
+  onClick: () => void;
+}
+
+/** 메뉴 칸 — 움직이지 않는 Pressable 에 골라짐(aria-checked)과 hover 층 · 골라진 검정 면(Surface)을 얹습니다 */
+function MenuEntry<V extends string>({ item, role, selected, onClick, ...rest }: MenuEntryProps<V>) {
+  const { Comp, pressProps } = usePressable({ disabled: item.disabled });
+  const { selectProps } = useSelectable({ selected, role });
+  return (
+    <Comp
+      {...pressProps}
+      {...selectProps}
+      {...rest}
+      // 메뉴 안은 방향키로만 옮깁니다 — Tab 은 메뉴를 닫고 다음 요소로 갑니다
+      tabIndex={-1}
+      onClick={onClick}
+      className={cx(pressProps.className, surfaceClass({ fill: selected ? "inverse" : "none", hoverable: true }), menuItem)}
+    >
+      {item.icon && <Icon icon={item.icon} size="sm" />}
+      {item.label}
+      {selected && <CheckGlyph size={14} strokeWidth={3} className={menuItemCheck} />}
+    </Comp>
   );
 }

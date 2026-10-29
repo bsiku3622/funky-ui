@@ -17,7 +17,7 @@ export interface PaintOwnProps extends BoxOwnProps {
   accent?: Accent;
   /** 칠하는 방식 (기본 `outline`) — 11 가지 레시피는 docs/foundations/color.md */
   variant?: Variant;
-  /** 골라진 상태 — 같은 accent 의 filled 로 칠합니다. aria 속성(pressed · checked · selected)은 쓰는 쪽이 붙입니다 */
+  /** 골라진 상태 — 같은 accent 의 filled 로 칠합니다. 알리는 aria 와 골라진 모양(커지기)은 `Selectable` 입니다 */
   selected?: boolean;
   /**
    * hover · 누르는 중에 색이 반응합니다 — variant 표의 Hover 칸대로. Pressable 없이 혼자 동작하므로 누르지 않는
@@ -28,10 +28,23 @@ export interface PaintOwnProps extends BoxOwnProps {
 
 export type PaintProps<E extends ElementType = "div"> = PolyProps<E, PaintOwnProps>;
 
+function accentOf(accent: Accent | undefined): string | undefined {
+  return accent ? accentClass[resolveAccent(accent)] : undefined;
+}
+
+/**
+ * accent 를 요소에 거는 유일한 길 — 그 색의 사다리 일곱 칸을 변수로 다시 씁니다(안쪽으로 흐릅니다).
+ * variant 없이 자기 색을 칠하는 위 층(Link · Stat · Meter)도 accentClass 를 직접 읽지 않고 이걸 씁니다.
+ * accent 를 주지 않으면 아무것도 걸지 않아 바깥 색을 그대로 따릅니다.
+ */
+export function useAccent(accent: Accent | undefined): string | undefined {
+  return accentOf(accent);
+}
+
 /** Paint 의 prop 을 class 로 — 다른 primitive(Pressable)에 색을 얹을 때 씁니다 */
 export function paintClass({ accent, variant = "outline", selected = false, hoverable = false, ...box }: PaintOwnProps): string {
   const painted: Variant = selected ? SELECTED_VARIANT : variant;
-  return cx(accent && accentClass[resolveAccent(accent)], variantClass[painted], paintBase, hoverable && hoverableClass, boxClass(box));
+  return cx(accentOf(accent), variantClass[painted], paintBase, hoverable && hoverableClass, boxClass(box));
 }
 
 /**

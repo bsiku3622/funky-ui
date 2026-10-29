@@ -39,6 +39,20 @@ export const LIFT = {
 } as const;
 
 /**
+ * 등장 — 새로 나타나는 판이 아래에서 떠오르는 거리(px)와 시간. 판의 크기가 클수록 멀리서, 오래 옵니다.
+ * **퇴장은 없습니다.** 닫는 모션을 보이려면 판을 그 시간만큼 더 들고 있어야 하는데, 그사이 한 번 더
+ * 누르면 판 뒤의 화면이 눌립니다 (class-explorer 의 Ask 창 규칙).
+ */
+export const ENTER = {
+  /** 기준 요소 옆에 붙는 작은 판 — 메뉴 · 툴팁 */
+  rise: { distance: 4, duration: "fast" },
+  /** 화면 가운데 큰 판 — 모달 */
+  pop: { distance: 8, duration: "base" },
+  /** 제자리에서 — 펼친 본문 (class-explorer 아코디언의 fade-in 300ms) */
+  fade: { distance: 0, duration: "slow" },
+} as const satisfies Record<string, { distance: number; duration: keyof typeof DURATION }>;
+
+/**
  * 상태(hover · 누르는 중 · 꺼짐)가 바뀔 때 움직이는 속성 — 색(Paint 의 hoverable)과 몸짓(Pressable)을 합친
  * 목록입니다. `transition-property` 는 한 속성이라 두 primitive 가 자기 것만 적으면 한 요소 위에서 나중에
  * 선언된 쪽이 앞의 전환을 지웁니다. 그래서 둘 다 이 목록을 씁니다.

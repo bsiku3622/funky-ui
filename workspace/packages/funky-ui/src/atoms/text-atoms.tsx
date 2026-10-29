@@ -3,9 +3,9 @@ import type { ComponentPropsWithRef, ElementType } from "react";
 
 import { cx } from "../internal/cx";
 import type { PolyProps } from "../internal/polymorphic";
-import { accentClass } from "../styles/accent.css";
+import { useAccent } from "../primitives/Paint";
 import { textRoleClass } from "../styles/typography.css";
-import { resolveAccent, type Accent } from "../tokens/vocabulary";
+import type { Accent } from "../tokens/vocabulary";
 import { divider, dividerTone, link, required } from "./text-atoms.css";
 
 export type LinkProps<E extends ElementType = "a"> = PolyProps<E, { accent?: Accent; className?: string }>;
@@ -16,7 +16,7 @@ export type LinkProps<E extends ElementType = "a"> = PolyProps<E, { accent?: Acc
  */
 export function Link<E extends ElementType = "a">({ as, accent, className, ...rest }: LinkProps<E>) {
   const Comp: ElementType = as ?? "a";
-  return <Comp className={cx(link, accent && accentClass[resolveAccent(accent)], className)} {...rest} />;
+  return <Comp className={cx(link, useAccent(accent), className)} {...rest} />;
 }
 
 export type LabelProps = ComponentPropsWithRef<"label"> & { required?: boolean };

@@ -68,8 +68,8 @@ import type { Spec, Values } from "../schema";
 
 const ACCENT_OPTIONS = [...ACCENTS, ...Object.keys(ACCENT_ROLES)] as const;
 /** 카드는 면이 있는 박스라 Surface 의 `none` 을 받지 않습니다 */
-type CardFill = Exclude<SurfaceFill, "none">;
-const CARD_FILLS = SURFACE_FILLS.filter((f): f is CardFill => f !== "none");
+type CardFill = Exclude<SurfaceFill, "none" | "brand">;
+const CARD_FILLS = SURFACE_FILLS.filter((f): f is CardFill => f !== "none" && f !== "brand");
 const CARD_MOTION_NOTE = { sink: "사람 카드", raise: "평평한 카드", lift: "탐색 카드" } as const;
 /** "none" 은 accent 를 주지 않은 상태입니다 — 바깥 accent 를 따르고, 바깥에도 없으면 검정 */
 const ACCENT_OR_NONE = ["none", ...ACCENT_OPTIONS] as const;

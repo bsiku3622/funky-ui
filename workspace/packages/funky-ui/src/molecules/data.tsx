@@ -5,8 +5,8 @@ import { cx } from "../internal/cx";
 import { Inline, Stack } from "../primitives/layout";
 import { surfaceClass } from "../primitives/Surface";
 import { Text } from "../primitives/Text";
-import { accentClass } from "../styles/accent.css";
-import { resolveAccent, type Accent } from "../tokens/vocabulary";
+import { useAccent } from "../primitives/Paint";
+import type { Accent } from "../tokens/vocabulary";
 import { meterFill, meterTrack, statUnit, statValue, statValueAccent } from "./data.css";
 
 export interface StatProps {
@@ -21,8 +21,9 @@ export interface StatProps {
 
 /** 지표 — 이름표(overline) 위, 큰 숫자 아래 */
 export function Stat({ label, value, unit, size = "lg", accent, className }: StatProps) {
+  const accentCls = useAccent(accent);
   return (
-    <Stack gap="xs" className={cx(accent && accentClass[resolveAccent(accent)], className)}>
+    <Stack gap="xs" className={cx(accentCls, className)}>
       <Text variant={size === "lg" ? "subtitle" : "overline"}>{label}</Text>
       <Inline gap="sm" align="baseline">
         <span className={cx(statValue[size], accent && statValueAccent)}>{value}</span>
@@ -47,8 +48,9 @@ export interface MeterProps {
 export function Meter({ label, value, max = 100, valueLabel, accent, className }: MeterProps) {
   const ratio = max > 0 ? Math.min(1, Math.max(0, value / max)) : 0;
   const labelId = useId();
+  const accentCls = useAccent(accent);
   return (
-    <Stack gap="xs" className={cx(accent && accentClass[resolveAccent(accent)], className)}>
+    <Stack gap="xs" className={cx(accentCls, className)}>
       <Inline justify="between" gap="md">
         <Text id={labelId} variant="caption" weight="black" truncate>
           {label}

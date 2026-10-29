@@ -3,19 +3,20 @@
  *
  * 자리(fixed · 높이)는 class-explorer 의 셸 치수(`CONTAINER.shell`)를 따르고, 화면에 고정할지는
  * `fixed` 로 고릅니다. 메뉴 순서는 앱(`lib/navigation.ts`)이 정합니다 — 셸은 그리기만 합니다.
+ * 바 둘은 구조 면이라 Surface 의 `brand`(보라)로 칠합니다 — 버튼처럼 색을 고르는 요소가 아닙니다.
  */
 import type { ElementType, ReactNode } from "react";
 
 import { cx } from "../internal/cx";
 import { ChevronDownGlyph } from "../internal/glyphs";
 import { NavButton } from "../atoms/NavButton";
+import { pressOf } from "../atoms/Button";
 import { Menu } from "../molecules/floating";
 import { Icon, type IconComponent } from "../primitives/Icon";
-import { pressOf } from "../atoms/Button";
-import { Paint, paintClass } from "../primitives/Paint";
-import { Pressable } from "../primitives/Pressable";
+import { paintClass } from "../primitives/Paint";
+import { usePressable } from "../primitives/Pressable";
+import { useSelectable } from "../primitives/Selectable";
 import { Surface } from "../primitives/Surface";
-import type { Accent } from "../tokens/vocabulary";
 import {
   appBar,
   appBarActions,
@@ -36,9 +37,7 @@ import {
   sideSectionLabel,
 } from "./shell.css";
 
-const PaintRoot = Paint as ElementType;
 const SurfaceRoot = Surface as ElementType;
-const PressableRoot = Pressable as ElementType;
 
 export interface AppBarProps {
   /** 로고 글자 — 기울어진 900 대문자로 그립니다 */
@@ -46,17 +45,15 @@ export interface AppBarProps {
   onBrandClick?: () => void;
   /** 오른쪽 끝 — 학기 선택 · 계정 · 로그아웃 */
   actions?: ReactNode;
-  /** 기본 보라 */
-  accent?: Accent;
   /** 화면 위에 고정 (기본 false) */
   fixed?: boolean;
   className?: string;
 }
 
-/** 상단 바 — `Paint` 의 filled(accent 면 · ink 글자) · 아래 2px 검정 · 아래로 4px 그림자 */
-export function AppBar({ brand: label, onBrandClick, actions, accent = "purple", fixed = false, className }: AppBarProps) {
+/** 상단 바 — `Surface` 의 brand(보라 면 · 흰 글자) · 아래 2px 검정 · 아래로 4px 그림자 */
+export function AppBar({ brand: label, onBrandClick, actions, fixed = false, className }: AppBarProps) {
   return (
-    <PaintRoot as="header" accent={accent} variant="filled" className={cx(appBar, fixed && appBarFixed, className)}>
+    <SurfaceRoot as="header" fill="brand" className={cx(appBar, fixed && appBarFixed, className)}>
       {onBrandClick ? (
         <button type="button" className={cx(brand, brandButton)} onClick={onBrandClick}>
           {label}
@@ -65,7 +62,7 @@ export function AppBar({ brand: label, onBrandClick, actions, accent = "purple",
         <span className={brand}>{label}</span>
       )}
       {actions && <div className={appBarActions}>{actions}</div>}
-    </PaintRoot>
+    </SurfaceRoot>
   );
 }
 
@@ -98,26 +95,31 @@ function SideNavSection({ label, children }: { label?: ReactNode; children?: Rea
 
 export interface SideNavItemProps {
   icon: IconComponent;
+  /** 지금 화면 — `aria-current="page"` 로 알립니다 */
   active?: boolean;
   onClick?: () => void;
   children?: ReactNode;
 }
 
 /**
- * Pressable + Paint — 지금 화면은 검정 filled 가 4px 위에 떠 있고(hover 때 가라앉음), 나머지는 ghostMuted 로
- * 물러납니다. 골라짐(selected)이 아니라 variant 를 바꾸는 것이라 지금 화면 칸은 눌린 채가 아니라 떠 있습니다.
+ * Pressable + Selectable + Paint — 지금 화면은 검정 filled 가 4px 위에 떠 있고(hover 때 가라앉음), 나머지는
+ * ghostMuted 로 물러납니다. 골라진 버튼처럼 커지지 않고 variant 를 바꿉니다 — class-explorer 사이드바가 그렇습니다.
+ * 내비는 Tab 키로 칸마다 들르는 것이 맞아 방향키 무리(useSelectableGroup)로 묶지 않습니다.
  */
 function SideNavItem({ icon, active = false, onClick, children }: SideNavItemProps) {
+  const variant = active ? "filled" : "ghostMuted";
+  const { Comp, pressProps } = usePressable({ motion: pressOf(variant, active, undefined).motion });
+  const { selectProps } = useSelectable({ selected: active, current: "page" });
   return (
-    <PressableRoot
-      {...pressOf(active ? "filled" : "ghostMuted", active, undefined)}
-      aria-current={active ? "page" : undefined}
+    <Comp
+      {...pressProps}
+      {...selectProps}
       onClick={onClick}
-      className={cx(paintClass({ accent: "black", variant: active ? "filled" : "ghostMuted", hoverable: true }), sideItem)}
+      className={cx(pressProps.className, paintClass({ accent: "black", variant, hoverable: true }), sideItem)}
     >
       <Icon icon={icon} size="lg" />
       <span>{children}</span>
-    </PressableRoot>
+    </Comp>
   );
 }
 
@@ -125,28 +127,32 @@ SideNav.Section = SideNavSection;
 SideNav.Item = SideNavItem;
 
 export interface BottomNavProps {
-  accent?: Accent;
   /** 화면 아래에 고정 (기본 false) — 넓은 화면(md 이상)에서는 숨습니다 */
   fixed?: boolean;
   className?: string;
   children?: ReactNode;
 }
 
-/** 모바일 하단 바 — 다섯 칸까지. 여덟 칸을 욱여넣으면 칸이 좁아져 이름이 잘리고 손가락이 옆 칸을 누릅니다 */
-export function BottomNav({ accent = "purple", fixed = false, className, children }: BottomNavProps) {
+/**
+ * 모바일 하단 바 — `Surface` 의 brand · 위 2px 검정 · 위로 4px 그림자. 다섯 칸까지 — 여덟 칸을 욱여넣으면 칸이
+ * 좁아져 이름이 잘리고 손가락이 옆 칸을 누릅니다
+ */
+export function BottomNav({ fixed = false, className, children }: BottomNavProps) {
   return (
-    <PaintRoot as="nav" accent={accent} variant="filled" className={cx(bottomNav, fixed && bottomNavFixed, className)}>
+    <SurfaceRoot as="nav" fill="brand" className={cx(bottomNav, fixed && bottomNavFixed, className)}>
       {children}
-    </PaintRoot>
+    </SurfaceRoot>
   );
 }
 
 function BottomNavItem({ icon, active = false, onClick, children }: SideNavItemProps) {
+  const { Comp, pressProps } = usePressable({ motion: "tap" });
+  const { selectProps } = useSelectable({ selected: active, current: "page" });
   return (
-    <PressableRoot motion="tap" aria-current={active ? "page" : undefined} onClick={onClick} className={cx(bottomItem, active && bottomItemActive)}>
+    <Comp {...pressProps} {...selectProps} onClick={onClick} className={cx(pressProps.className, bottomItem, active && bottomItemActive)}>
       <Icon icon={icon} size="lg" />
       <span className={bottomItemLabel}>{children}</span>
-    </PressableRoot>
+    </Comp>
   );
 }
 

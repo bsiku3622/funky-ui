@@ -14,10 +14,10 @@ export function VisuallyHidden<E extends ElementType = "span">({ as, className, 
 }
 
 /**
- * body 끝에 그립니다 — Tooltip · Menu 가 카드의 overflow 에 잘리지 않게.
+ * body 끝(또는 `container`)에 그립니다 — Tooltip · Menu 가 카드의 overflow 에 잘리지 않게.
  * ⚠️ 마운트 뒤 effect 에서 그리지 않습니다. 그러면 여는 순간의 layout effect 가 판을 못 찾아
  * 위치를 못 잽니다 (판이 화면 밖에 남습니다). 이 패키지는 브라우저 전용이라 곧바로 그립니다.
  */
-export function Portal({ children }: { children: ReactNode }) {
-  return typeof document === "undefined" ? null : createPortal(children, document.body);
+export function Portal({ children, container }: { children: ReactNode; container?: Element | null }) {
+  return typeof document === "undefined" ? null : createPortal(children, container ?? document.body);
 }

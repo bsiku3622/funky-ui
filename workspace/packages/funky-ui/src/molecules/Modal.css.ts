@@ -1,17 +1,12 @@
-import { globalStyle, keyframes, style, styleVariants } from "@vanilla-extract/css";
+import { globalStyle, style, styleVariants } from "@vanilla-extract/css";
 
+import { ENTER_ANIMATION, enterKeyframes } from "../styles/enter.css";
 import { components } from "../tokens/layers.css";
 import { CONTAINER, SPACE } from "../tokens/layout";
 import { CONTROL_TEXT, WEIGHT, em, px } from "../tokens/typography";
 import { vars } from "../tokens/variables";
 
 const c = (rule: Record<string, unknown>) => ({ "@layer": { [components]: rule } });
-
-const pop = keyframes({
-  from: { opacity: 0, transform: "translateY(8px)" },
-  to: { opacity: 1, transform: "none" },
-});
-const fade = keyframes({ from: { opacity: 0 }, to: { opacity: 1 } });
 
 export const modal = style(
   c({
@@ -22,8 +17,9 @@ export const modal = style(
     color: vars.ink.primary,
     borderRadius: 0,
     selectors: {
-      "&[open]": { animation: `${pop} ${vars.duration.base} ${vars.easing.out}` },
-      "&::backdrop": { backgroundColor: vars.overlay.scrim, animation: `${fade} ${vars.duration.base} ${vars.easing.out}` },
+      // 등장은 다른 판과 같은 몸짓(pop)이고, 뒤 막은 판과 같은 시간에 제자리에서 나타납니다
+      "&[open]": { animation: ENTER_ANIMATION.pop },
+      "&::backdrop": { backgroundColor: vars.overlay.scrim, animation: `${enterKeyframes.fade} ${vars.duration.base} ${vars.easing.out}` },
     },
   }),
 );

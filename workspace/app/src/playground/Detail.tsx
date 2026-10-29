@@ -12,10 +12,10 @@ import { printJsx } from "./registry/code";
 import { ENTRY_BY_PATH } from "./registry";
 import type { Entry, Values } from "./registry/schema";
 
+/** 바탕 고르기 — 크림과 흰 면 둘입니다. 바 위에만 서는 항목(stage: brand)은 고를 것이 없어 줄을 그리지 않습니다 */
 const STAGES = [
   { value: "canvas", label: "Canvas" },
   { value: "raised", label: "Surface" },
-  { value: "dark", label: "Dark bar" },
 ] as const;
 
 export function Detail() {
@@ -27,7 +27,8 @@ export function Detail() {
 
 function EntryView({ entry }: { entry: Entry }) {
   const [values, setValues] = useState<Values>({ ...entry.defaults, ...entry.initial });
-  const [bg, setBg] = useState<"canvas" | "raised" | "dark">(entry.stage ?? "canvas");
+  const [bg, setBg] = useState<"canvas" | "raised">(entry.stage === "raised" ? "raised" : "canvas");
+  const onBar = entry.stage === "brand";
   const code = useMemo(
     () => (entry.code ? entry.code(values) : printJsx(entry.name, values, entry.defaults, entry.controls)),
     [entry, values],
@@ -44,9 +45,9 @@ function EntryView({ entry }: { entry: Entry }) {
         <Stack gap="lg">
           <Inline justify="between" gap="md" wrap>
             <Text variant="overline">Preview</Text>
-            <SegmentedControl aria-label="판 바탕" size="xs" options={STAGES} value={bg} onChange={setBg} />
+            {!onBar && <SegmentedControl aria-label="판 바탕" size="xs" options={STAGES} value={bg} onChange={setBg} />}
           </Inline>
-          <Stage bg={bg}>{entry.render(values)}</Stage>
+          <Stage bg={onBar ? "brand" : bg}>{entry.render(values)}</Stage>
           <Text variant="overline">Code</Text>
           <pre className={codeClass}>{code}</pre>
         </Stack>

@@ -1,19 +1,17 @@
-import { keyframes, style } from "@vanilla-extract/css";
+import { style } from "@vanilla-extract/css";
 
 import { components } from "../tokens/layers.css";
-import { SPACE, Z } from "../tokens/layout";
+import { SPACE } from "../tokens/layout";
 import { CONTROL_TEXT, TEXT_ROLES, WEIGHT, em, px } from "../tokens/typography";
 import { vars } from "../tokens/variables";
 
 const c = (rule: Record<string, unknown>) => ({ "@layer": { [components]: rule } });
 
-const appear = keyframes({ from: { opacity: 0, transform: "translateY(4px)" }, to: { opacity: 1, transform: "none" } });
-
 export const anchorWrap = style(c({ display: "inline-flex", maxWidth: "100%" }));
 
+/** 설명 풍선의 글자 · 크기 — 층 · 위치 · 등장은 Floating, 검정 면은 Surface 입니다 */
 export const tooltip = style(
   c({
-    zIndex: Z.tooltip,
     maxWidth: px(260),
     paddingInline: px(SPACE.md),
     paddingBlock: px(SPACE.xs),
@@ -22,19 +20,10 @@ export const tooltip = style(
     lineHeight: px(TEXT_ROLES.label.leading),
     fontWeight: WEIGHT.black,
     pointerEvents: "none",
-    animation: `${appear} ${vars.duration.fast} ${vars.easing.out}`,
   }),
 );
 
-export const menu = style(
-  c({
-    zIndex: Z.dropdown,
-    display: "flex",
-    flexDirection: "column",
-    paddingBlock: 0,
-    animation: `${appear} ${vars.duration.fast} ${vars.easing.out}`,
-  }),
-);
+export const menu = style(c({ display: "flex", flexDirection: "column", paddingBlock: 0 }));
 
 export const menuItem = style(
   c({

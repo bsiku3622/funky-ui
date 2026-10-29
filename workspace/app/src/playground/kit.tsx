@@ -22,7 +22,7 @@ export function PageHead({ layer, title, summary, children }: { layer: string; t
   );
 }
 
-export function Stage({ bg = "canvas", children }: { bg?: "canvas" | "raised" | "dark"; children: ReactNode }) {
+export function Stage({ bg = "canvas", children }: { bg?: "canvas" | "raised" | "brand"; children: ReactNode }) {
   return <div className={`${k.stage} ${k.stageBg[bg]}`}>{children}</div>;
 }
 

@@ -66,7 +66,7 @@ function Labeled({ name, children }: { name: string; children: ReactNode }) {
 
 /* ── IconButton ──────────────────────────────────────────────────────── */
 
-/** 켜고 끄는 아이콘 버튼 — selected 는 눌린 채로 남습니다 */
+/** 켜고 끄는 아이콘 버튼 — 그림자를 켰으니 selected 는 커진 채로 남습니다 */
 function PinToggle() {
   const [on, setOn] = useState(false);
   return <IconButton icon={Pin} label={on ? "고정 해제" : "고정"} variant="outline" shadow selected={on} onClick={() => setOn((p) => !p)} />;
@@ -146,7 +146,7 @@ const iconButton: Spec = {
     },
     {
       title: "자리들",
-      note: "닫기 · 새로고침 · 삭제는 ghostMuted · muted · ghost 로 물러나 있고, 켜고 끄는 것(고정)은 selected 로 눌린 채 남습니다.",
+      note: "닫기 · 새로고침 · 삭제는 ghostMuted · muted · ghost 로 물러나 있고, 켜고 끄는 것(고정)은 selected 로 커진 채 남습니다(aria-pressed).",
       render: () => (
         <Stage bg="raised">
           <IconButton icon={X} label="닫기" size="sm" />
@@ -162,12 +162,12 @@ const iconButton: Spec = {
 
 /* ── NavButton ───────────────────────────────────────────────────────── */
 
-/** 상단 바(AppBar)와 같은 보라 filled — Overview 의 크림 바탕에서도 흰 글자가 읽히게 감쌉니다 */
+/** 상단 바(AppBar)와 같은 brand 면 — Overview 의 크림 바탕에서도 흰 글자가 읽히게 감쌉니다 */
 function Bar({ children }: { children: ReactNode }) {
   return (
-    <Paint accent="purple" variant="filled" padding="md">
+    <Surface fill="brand" padding="md">
       {children}
-    </Paint>
+    </Surface>
   );
 }
 
@@ -194,8 +194,8 @@ function NavBarDemo() {
 
 const navButton: Spec = {
   name: "NavButton",
-  summary: "어두운 바 위의 버튼입니다. Pressable(tap) 위에 Glass(유리 칠)를 얹은 것이라 반투명 유리 면에 흰 글자이고, hover 때 테두리가 진해집니다. 상단 바 · 하단 바 · 학기 선택에만 쓰고, 밝은 면 위에서는 Button 을 씁니다.",
-  stage: "dark",
+  summary: "보라 바(Surface brand) 위의 버튼입니다. Pressable(tap) 위에 Glass(유리 칠)를 얹은 것이라 반투명 유리 면에 흰 글자이고, hover 때 테두리가 진해집니다. 상단 바 · 하단 바 · 학기 선택에만 쓰고, 밝은 면 위에서는 Button 을 씁니다.",
+  stage: "brand",
   controls: {
     icon: { kind: "icon" },
     iconEnd: { kind: "icon" },
@@ -226,7 +226,7 @@ const navButton: Spec = {
       title: "상단 바에서",
       note: "지금 화면이 selected(더 밝은 유리 면 + 흰 테두리)이고, 학기 선택처럼 목록을 여는 버튼은 뒤 아이콘을 답니다.",
       render: () => (
-        <Stage bg="dark">
+        <Stage bg="brand">
           <NavBarDemo />
         </Stage>
       ),
@@ -235,7 +235,7 @@ const navButton: Spec = {
       title: "Sizes · States",
       note: "크기는 sm · md 둘이고, 글자 없이 아이콘만 있으면 정사각이 됩니다 (이때만 label 이 aria-label 로 붙습니다).",
       render: () => (
-        <Stage bg="dark">
+        <Stage bg="brand">
           <NavButton size="sm" icon={Home}>
             sm
           </NavButton>

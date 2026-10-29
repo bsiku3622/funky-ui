@@ -2,7 +2,7 @@
  * Surface 의 칠 — 흑백 면 · 테두리 · 그림자 · 상태 층 (fk.primitives).
  *
  * 면은 글자색도 정합니다: 흰 · 크림 면은 바깥 글자색을 그대로 물려받고(`<a>` 로 그려도 파란 링크색이
- * 남지 않습니다), 어두운 면(`inverse`)은 흰 글자로 바꿔 검정 위 검정 글자가 생기지 않습니다.
+ * 남지 않습니다), 어두운 면(`inverse` · 보라 `brand`)은 흰 글자로 바꿔 검정 위 검정 글자가 생기지 않습니다.
  * `hoverable` 의 상태 층은 그 글자색을 묽혀 만들어서, 어느 면 위에서도 한 단 바뀝니다.
  */
 import { style, styleVariants } from "@vanilla-extract/css";
@@ -23,6 +23,7 @@ export const fillClass = styleVariants({
   sunken: p({ backgroundColor: vars.surface.sunken, color: "inherit" }),
   well: p({ backgroundColor: vars.surface.well, color: "inherit" }),
   inverse: p({ backgroundColor: vars.surface.inverse, color: vars.ink.inverse }),
+  brand: p({ backgroundColor: vars.surface.brand, color: vars.ink.inverse }),
 } satisfies Record<SurfaceFill, object>);
 
 export const borderClass = styleVariants({

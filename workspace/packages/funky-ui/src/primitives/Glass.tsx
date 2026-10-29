@@ -6,7 +6,7 @@ import { boxClass, type BoxOwnProps } from "./Box";
 import { glassBase, glassHoverable, glassSelected } from "./Glass.css";
 
 export interface GlassOwnProps extends BoxOwnProps {
-  /** 골라진 상태 — 더 짙은 유리와 흰 테두리. aria 속성(pressed · current)은 쓰는 쪽이 붙입니다 */
+  /** 골라진 상태 — 더 짙은 유리와 흰 테두리. 알리는 aria 는 `Selectable`(useSelectable) 입니다 */
   selected?: boolean;
   /** hover 때 유리가 짙어지고 테두리가 흰색이 됩니다 — Pressable 없이 혼자 동작합니다 */
   hoverable?: boolean;

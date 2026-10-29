@@ -20,9 +20,13 @@ export const INVENTORY = {
     content: ["Text", "Icon"],
     a11y: ["VisuallyHidden", "Portal"],
     // 2차 — Box 위에 능력 하나
-    /** 칠하는 셋 — 박스는 Surface(흑백 면), 요소는 Paint(accent × variant), 색 바 위는 Glass(유리). accent 는 Paint 만 갖습니다 */
+    /** 칠하는 셋 — 박스는 Surface(자리의 면), 요소는 Paint(accent × variant), 색 바 위는 Glass(유리). accent 는 Paint 만 갖습니다 */
     paint: ["Surface", "Paint", "Glass"],
+    /** 누름은 순간의 반응(몸짓), 골라짐은 남아 있는 상태(aria · 커지기) — 고르는 칸은 둘을 같이 씁니다 */
     press: ["Pressable"],
+    select: ["Selectable"],
+    /** 떠 있는 판 — 어디에(기준 요소 옆 · 문서 끝) · 언제(닫자고 알리기 · 등장) */
+    float: ["Floating"],
     layout: ["Stack", "Inline", "Grid"],
   },
   atoms: {
@@ -49,10 +53,11 @@ type PrimitiveGroup = keyof (typeof INVENTORY)["primitives"];
 
 /**
  * Primitive 의 두 단. 1차는 서로 기대지 않는 바탕(요소 · 글자 · 아이콘 · 접근성)이고, 2차는 Box 위에
- * 능력 하나를 얹은 것(칠 · 누름 · 배치)입니다. 2차끼리도 서로 기대지 않습니다 — 둘 이상이 필요하면
- * 위 층(Atom 부터)이 class 로 묶습니다. Button = Pressable + Paint, 누르는 Card = Pressable + Surface.
+ * 능력 하나를 얹은 것(칠 · 누름 · 골라짐 · 띄우기 · 배치)입니다. 2차끼리도 서로 기대지 않습니다 — 둘 이상이
+ * 필요하면 위 층(Atom 부터)이 훅(`usePressable` · `useSelectable`)과 class 로 묶습니다.
+ * Button = Pressable + Selectable + Paint, 누르는 Card = Pressable + Surface, Menu = Floating + Surface + 고르는 무리.
  */
 export const PRIMITIVE_TIERS = {
   first: ["element", "content", "a11y"],
-  second: ["paint", "press", "layout"],
+  second: ["paint", "press", "select", "float", "layout"],
 } as const satisfies Record<"first" | "second", readonly PrimitiveGroup[]>;

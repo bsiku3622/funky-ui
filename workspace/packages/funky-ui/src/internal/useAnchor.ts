@@ -1,6 +1,7 @@
 /**
- * 떠 있는 판(Tooltip · Menu)을 기준 요소 옆에 붙입니다 — position: fixed 좌표를 계산해 돌려줍니다.
- * 스크롤 · 크기 변화 때 다시 잽니다. 화면 밖으로 나가면 반대쪽으로 뒤집고, 좌우는 화면 안에 묶습니다.
+ * 떠 있는 판(Floating)을 기준 요소 옆에 붙입니다 — position: fixed 좌표를 계산해 돌려줍니다.
+ * 판이 그려져 있는 동안(= 열려 있는 동안) 스크롤 · 크기 변화 때 다시 잽니다. 화면 밖으로 나가면 반대쪽으로
+ * 뒤집고, 좌우는 화면 안에 묶습니다.
  */
 import { useLayoutEffect, useState, type CSSProperties, type RefObject } from "react";
 
@@ -11,7 +12,6 @@ const GAP = 8;
 const EDGE = 8;
 
 export function useAnchor(
-  open: boolean,
   anchor: RefObject<HTMLElement | null>,
   floating: RefObject<HTMLElement | null>,
   placement: Placement = "bottom",
@@ -20,7 +20,6 @@ export function useAnchor(
   const [style, setStyle] = useState<CSSProperties>({ position: "fixed", top: -9999, left: -9999 });
 
   useLayoutEffect(() => {
-    if (!open) return;
     const measure = () => {
       const a = anchor.current?.getBoundingClientRect();
       const f = floating.current;
@@ -44,7 +43,7 @@ export function useAnchor(
       window.removeEventListener("resize", measure);
       window.removeEventListener("scroll", measure, true);
     };
-  }, [open, anchor, floating, placement, align]);
+  }, [anchor, floating, placement, align]);
 
   return style;
 }

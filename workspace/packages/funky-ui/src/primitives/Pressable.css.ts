@@ -8,8 +8,8 @@
  *   (평평한 칩 — sink 를 거꾸로 돌린 몸짓).
  * - `lift`  — hover 때 4px 떠오르고, 그림자는 화면에 그대로 남아 길어집니다 (탐색 카드).
  * - `tap`   — 그림자 없이 누르는 순간만 작아집니다 (그림자를 끈 버튼).
- * - `pressed` — sink 몸짓이 눌린 채로 머뭅니다 (골라진 버튼).
  *
+ * 골라진 칸의 모양(커지기)은 여기가 아니라 Selectable 입니다 — 누름은 순간의 반응, 골라짐은 남아 있는 상태입니다.
  * 누르는 순간의 크기는 `--fk-press-scale`(기본 0.96)입니다. 큰 면은 자기 class 에서 0.98 로 덮습니다.
  */
 import { style, styleVariants } from "@vanilla-extract/css";
@@ -23,8 +23,8 @@ const p = (rule: Record<string, unknown>) => ({ "@layer": { [primitives]: rule }
 const ENABLED = ":not(:disabled):not([aria-disabled='true'])";
 /** 그림자 자리로 내려앉은 위치 */
 const sunk = `translate(${vars.press.sink}, ${vars.press.sink})`;
-/** 그림자가 없는 상태 — `none` 이 아니라 0 거리라서 그림자가 자라고 줄어드는 사이가 이어집니다 */
-const flat = `0 0 0 0 ${vars.shadowColor}`;
+/** 그림자가 없는 상태 — `none` 이 아니라 0 거리라서 그림자가 자라고 줄어드는 사이가 이어집니다. Selectable 도 씁니다 */
+export const FLAT_SHADOW = `0 0 0 0 ${vars.shadowColor}`;
 
 export const pressBase = style(
   p({
@@ -46,15 +46,15 @@ export const motionClass = styleVariants({
   sink: p({
     boxShadow: vars.shadow.raised,
     selectors: {
-      [`&${ENABLED}:hover`]: { transform: sunk, boxShadow: flat },
-      [`&${ENABLED}:active`]: { transform: `${sunk} scale(${vars.press.scale})`, boxShadow: flat },
+      [`&${ENABLED}:hover`]: { transform: sunk, boxShadow: FLAT_SHADOW },
+      [`&${ENABLED}:active`]: { transform: `${sunk} scale(${vars.press.scale})`, boxShadow: FLAT_SHADOW },
     },
   }),
   raise: p({
-    boxShadow: flat,
+    boxShadow: FLAT_SHADOW,
     selectors: {
       [`&${ENABLED}:hover`]: { boxShadow: vars.shadow.raised },
-      [`&${ENABLED}:active`]: { transform: `scale(${vars.press.scale})`, boxShadow: flat },
+      [`&${ENABLED}:active`]: { transform: `scale(${vars.press.scale})`, boxShadow: FLAT_SHADOW },
     },
   }),
   lift: p({
@@ -71,12 +71,3 @@ export const motionClass = styleVariants({
     selectors: { [`&${ENABLED}:active`]: { transform: `scale(${vars.press.scale})` } },
   }),
 } satisfies Record<PressMotion, object>);
-
-/** sink 몸짓이 눌린 채로 — hover 해도 그 자리에 있습니다 */
-export const pressedClass = style(
-  p({
-    transform: sunk,
-    boxShadow: flat,
-    selectors: { [`&${ENABLED}:hover`]: { transform: sunk, boxShadow: flat } },
-  }),
-);

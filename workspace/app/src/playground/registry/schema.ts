@@ -38,8 +38,8 @@ export interface Spec {
   render: (values: Values) => ReactNode;
   /** 코드 — 없으면 `printJsx(name, values, defaults)` */
   code?: (values: Values) => string;
-  /** 미리보기 판의 바탕 (기본 canvas) */
-  stage?: "canvas" | "raised" | "dark";
+  /** 미리보기 판의 바탕 (기본 canvas). 바 위에만 서는 것은 brand — 그때는 바탕을 바꾸는 줄이 없습니다 */
+  stage?: "canvas" | "raised" | "brand";
   /** 아래에 붙는 표본 절 — 행렬 · 크기 · 상태 */
   sections?: Section[];
 }

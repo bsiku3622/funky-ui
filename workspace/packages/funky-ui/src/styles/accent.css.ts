@@ -3,8 +3,8 @@
  *
  * 변수라서 **아래로 흐릅니다** (contextual accent). `<Paint accent="green">` 안의 Button 은
  * accent 를 따로 주지 않아도 초록입니다 — "드랍한 카드 안에서는 버튼도 카드 색을 따릅니다".
- * 붙이는 쪽은 그 색으로 칠해지는 요소뿐입니다 — primitive 에서는 Paint 하나, 위 층에서는 Variant 없이 자기 색을
- * 칠하는 Link · Stat · Meter 입니다. 칠하지 않는 박스(Box · Surface · Card)는 accent 를 갖지 않습니다.
+ * 이 class 를 직접 읽는 곳은 Paint 모듈 하나입니다 — Paint 가 칠할 때, 그리고 Variant 없이 자기 색을 칠하는
+ * 위 층(Link · Stat · Meter)이 `useAccent()` 로 빌려 갈 때. 칠하지 않는 박스(Box · Surface · Card)는 accent 를 갖지 않습니다.
  */
 import { styleVariants } from "@vanilla-extract/css";
 

@@ -7,7 +7,10 @@ import { boxClass, type BoxOwnProps } from "./Box";
 import { borderClass, fillClass, hoverable as hoverableClass, shadowClass } from "./Surface.css";
 
 export interface SurfaceOwnProps extends BoxOwnProps {
-  /** 흑백 면 (기본 `raised` — 흰 면). `none` 은 면 없이 바깥 면을 그대로 보입니다 — 목록 줄처럼 면 위의 한 칸 */
+  /**
+   * 면 (기본 `raised` — 흰 면). `none` 은 면 없이 바깥 면을 그대로 보입니다 — 목록 줄처럼 면 위의 한 칸.
+   * `brand` 는 앱의 뼈대(상단 바 · 하단 바)에만 쓰는 보라 면입니다
+   */
   fill?: SurfaceFill;
   /** 2px 테두리의 색 (기본 없음) */
   border?: Border;
@@ -34,9 +37,9 @@ export function surfaceClass({ fill = "raised", border = "none", shadow = "none"
 }
 
 /**
- * 박스의 면 — 2차 primitive (Box + 칠). 흑백 면 · 테두리 · 그림자를 고르고, 카드 · 패널 · 모달 · 판처럼
+ * 박스의 면 — 2차 primitive (Box + 칠). 면 · 테두리 · 그림자를 고르고, 카드 · 패널 · 모달 · 판 · 바처럼
  * **무언가를 담는 박스**에 씁니다. `hoverable` 이면 hover · 누르는 중의 흑백 상태 층도 칠합니다(면 위의
- * 목록 줄은 `fill="none"`). 흑백만 칠하고 accent 를 모릅니다 — 색이 있는 것은 `Paint` 입니다.
+ * 목록 줄은 `fill="none"`). 면은 자리의 색(흑백과 뼈대의 보라)뿐이고 accent 를 모릅니다 — 색이 있는 요소는 `Paint` 입니다.
  *
  * ```tsx
  * <Surface border="line" shadow="raised" padding="3xl">…</Surface>
