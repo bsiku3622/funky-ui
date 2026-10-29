@@ -26,7 +26,7 @@ accent(색) × variant(칠하는 방식) × size × shadow로 만드는 기본 �
 | `accent` | `Accent` | — | 색입니다. 주지 않으면 바깥 Paint의 색을 따르고, 바깥에도 없으면 `black`(시스템)입니다. |
 | `variant` | `Variant` | `"outline"` | 칠하는 방식입니다. `solid` `outline` `hairline` `frameline` `framelineMuted` `plain` `tonal` `tonalMuted` `muted` `ghost` `ghostMuted` 열한 가지입니다. |
 | `size` | `ControlSize` | `"md"` | 높이 사다리입니다. `xs` 24 · `sm` 32 · `md` 40 · `lg` 48px. |
-| `shadow` | `boolean` | `false` | 4px 그림자 위에 띄웁니다. hover 때 그림자 속으로 가라앉습니다(몸짓 `press`). 끄면 누르는 순간만 작아집니다(`tap`). |
+| `shadow` | `boolean \| "hover"` | `false` | 4px 그림자입니다. `true`면 그림자 위에 떠 있다가 hover 때 가라앉고(`sink`), `"hover"`면 평평하다가 hover 때 제자리에서 그림자가 올라옵니다(`raise` — 복사 버튼 · 과목 추가 칩). 끄면 누르는 순간만 작아집니다(`tap`). |
 | `selected` | `boolean` | — | 골라진 상태입니다. 같은 accent의 `solid`로 바뀌고 `aria-pressed`가 붙습니다. |
 | `loading` | `boolean` | `false` | 글자 자리를 지킨 채 가운데에 스피너를 둡니다. `aria-busy` · `aria-disabled`가 붙고 누름을 삼킵니다. |
 | `icon` | `IconComponent` | — | 앞 아이콘입니다. 크기와 굵기는 버튼 크기가 정합니다. |
@@ -40,7 +40,7 @@ accent(색) × variant(칠하는 방식) × size × shadow로 만드는 기본 �
 - 선택은 variant가 아니라 상태입니다. `selected`를 주면 같은 accent의 `solid`로 칠하므로 `variant`에는 안 골랐을 때의 모양만 적습니다(`muted` 학기 버튼이 골라지면 검정 블록이 됩니다). 그림자를 켠 버튼은 골라지면 눌린 채로 있습니다. `selected`를 아예 주지 않으면 `aria-pressed`도 붙지 않고, `false`를 주면 `aria-pressed="false"`가 붙습니다.
 - `loading`은 글자를 투명하게 두고 스피너를 겹쳐서 폭이 흔들리지 않습니다. 불러오는 동안은 마우스 · Enter · Space 어느 누름도 `onClick`에 닿지 않습니다. `disabled`를 쓰지 않는 이유는 꺼진 모양(불투명도 0.4)이 아니라 스피너를 보여야 해서입니다.
 
-Button은 Pressable과 Paint를 이렇게 묶습니다 — `shadow`를 켜면 `press`, 끄면 `tap`이고, 그림자를 켠 버튼이 골라지면 눌린 채(`pressed`)로 둡니다. 크기 · 아이콘 없이 같은 칠과 몸짓만 필요한 자리(예: 줄 전체가 누르는 링크)는 이 조립을 직접 씁니다 — `<Pressable as="a" motion="press" className={paintClass({ accent: "cyan", variant: "tonal", hoverable: true })}>`. 누르지 않는 요소의 칠은 [Paint](../primitives/README.md#paint)입니다.
+Button은 Pressable과 Paint를 이렇게 묶습니다 — `shadow`를 켜면 `sink`, `"hover"`면 `raise`, 끄면 `tap`이고, 그림자를 켠 버튼이 골라지면 눌린 채(`pressed`)로 둡니다. 크기 · 아이콘 없이 같은 칠과 몸짓만 필요한 자리(예: 줄 전체가 누르는 링크)는 이 조립을 직접 씁니다 — `<Paint as={Pressable} motion="sink" accent="cyan" variant="tonal" hoverable>`(링크면 Paint의 `as`가 이미 Pressable이라 `as="a"`를 줄 수 없으므로, Pressable 쪽에 칠을 class로 얹습니다 — `<Pressable as="a" motion="sink" className={paintClass({ … hoverable: true })}>`). 누르지 않는 요소의 칠은 [Paint](../primitives/README.md#paint)입니다.
 
 ## IconButton
 
@@ -59,7 +59,7 @@ Button은 Pressable과 Paint를 이렇게 묶습니다 — `shadow`를 켜면 `p
 | `accent` | `Accent` | — | 색입니다. Button과 같습니다. |
 | `variant` | `Variant` | `"ghostMuted"` | 칠하는 방식입니다. |
 | `size` | `ControlSize` | `"md"` | 정사각형이고, 한 변은 같은 `size`인 Button의 높이와 같습니다. |
-| `shadow` | `boolean` | `false` | 4px 그림자 위에 띄웁니다. |
+| `shadow` | `boolean \| "hover"` | `false` | 4px 그림자입니다. Button과 같습니다 — `true`는 가라앉음, `"hover"`는 올라옴입니다. |
 | `selected` | `boolean` | — | 골라진 상태입니다. Button과 같습니다. |
 | `disabled` | `boolean` | `false` | hover와 눌림이 꺼지고 불투명도 0.4가 됩니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |

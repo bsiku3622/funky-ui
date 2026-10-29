@@ -52,8 +52,35 @@ Trade 화면은 색이 뜻을 짊어지는 대표 자리라 따로 적습니다.
 | `2px` · `3px` 작은 칩 | 없앰 — 작은 칩은 그림자를 받지 않거나 `raised` |
 | `8px 8px` | `floating`(6px) — 모달 전용 |
 | `0 4px 0 0` 상단 바 · `0 -4px` 하단 바 | `AppBar` · `BottomNav`가 가짐 |
-| `0 0 15px` (blur) | 없앰 — blur는 쓰지 않습니다. 누르는 칸이면 `motion="press"` |
+| `0 0 15px` (blur) | 없앰 — blur는 쓰지 않습니다. 누르는 칸이면 `motion="sink"` |
 | 색 그림자 `rgba(255,165,0,.4)` · `var(--color-retro-*)` | 없앰 |
+
+## 모션
+
+class-explorer의 모션 전부를 몸짓 · 상태 모션 · 입력칸으로 나눠 대응시켰습니다(2026-10-29 검사, 셈은 요소 수). "없음"은 funky-ui에 아직 대응물이 없는 것입니다.
+
+| 지금 | funky-ui | 자리 |
+| --- | --- | --- |
+| `hover:translate-x/y-[3~4px] hover:shadow-none` — 가라앉음 (29) | `sink` — Button `shadow` · Card `motion="sink"` | 그림자 있는 버튼 대부분 · 사람 카드 |
+| 골린 칸 `translate-x-1 translate-y-1 shadow-none` | `pressed` — Button `selected` + `shadow` | 학기 · 필터 |
+| `hover:shadow-[2px…]` — 평평하다가 그림자가 생김 (4) | `raise` — Button `shadow="hover"` (그림자는 4px로) | 복사 버튼 · Trade 과목 추가 칩 |
+| `hover:-translate-y-1(.5)` + 그림자 6px — 떠오름 (3) | `lift` — Card `motion="lift"` (4px로 통일) | EntityCard · Trade 카드 |
+| `active:scale-95` — 누르는 순간 작아짐 (15) | `tap` · sink의 누르는 순간 | 그림자 없는 버튼 |
+| `active:translate-0.5 active:shadow-none`, hover는 색만 (2) | `sink`로 통일 | Show More |
+| `hover:scale-95 active:scale-[0.92]` (2) | `sink`로 통일 (그림자가 있는 버튼) | Ask 플로팅 버튼 · Ask 판 아이콘 버튼 |
+| `hover:scale-105 active:scale-95` (2) | 로고는 AppBar가 가짐 · 칩은 `raise` | 로고 · Trade 칩 |
+| 목록 줄의 hover 회색 층 | Pressable `none` + Surface `fill="none" hoverable` | 검색 추천 · 메뉴 항목 · 아코디언 머리 |
+| `group-hover:rotate-[-45deg]` · `group-hover:translate-x-0.5` · `group-hover:scale-105` | 없음 | 초기화 아이콘 · 링크 화살표 · 카드 안 이름 |
+| 입력칸 `focus:shadow-[4px…]`(생김) · `focus:shadow-none`(꺼짐) | 없음 — Input은 포커스 링만 | Trade 검색칸 · 로그인 · 업로드 |
+| `rotate-180` · `rotate-90` 펼침 화살표 | Accordion에 있음 | Accordion · Trade · TermSwitcher · Agent |
+| `animate-in fade-in` 펼친 내용 | 없음 | AccordionSection |
+| `animate-pulse` 로딩 글자 · 상태 점 (7) | 없음 | Loading… · API 상태 점 |
+| `animate-spin` | Spinner | |
+| `badge-buzz` | StudentBadge `buzz` | |
+| `marquee-swing` | 없음 — MarqueeText 미결 | 넘치는 한 줄 |
+| `ask-pop` · `ask-rise` · view-transition · `slide-in-from-right` | 없음 — Window · Sheet 미결 | Ask 창 · Zamong 학기 판 |
+| DayRuler 캐럿 `transition-[left] duration-700` | `crawl` 토큰 (컴포넌트는 미이관) | 오늘 시간선 |
+| `duration-150` · `75` · `500` | `fast`(100) · `base`(200) · `slow`(300)로 통일 | |
 
 ## 글자
 

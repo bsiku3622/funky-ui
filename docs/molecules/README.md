@@ -34,7 +34,7 @@ Molecules는 Atoms와 Primitives를 묶은 범용 조합입니다. 카드 · 선
 | `fill` | `SurfaceFill`(`none` 제외) | `"raised"` | 흑백 면입니다. 기본은 흰 면이고, 카드는 면이 있는 박스라 `none`은 받지 않습니다. accent로 칠한 박스가 필요하면 Card가 아니라 [Paint](../primitives/README.md#paint)입니다. |
 | `shadow` | `"raised" \| "none"` | `"raised"` | 그림자입니다. 모달이 아니면 `floating`을 쓰지 않으므로 선택지가 둘뿐입니다. `motion`을 주면 무시됩니다. |
 | `padding` | `Space` | `"3xl"` | 안쪽 여백입니다(24px). 머리 막대를 붙이려면 `0`을 줍니다. |
-| `motion` | `PressMotion` | — | 카드 전체가 누르는 물건이면 `press`(가라앉음) 또는 `lift`(떠오름)를 줍니다. |
+| `motion` | `PressMotion` | — | 카드 전체가 누르는 물건이면 `sink`(가라앉음) · `lift`(떠오름) · `raise`(그림자가 올라옴)를 줍니다. `none`은 누르지만 움직이지 않습니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 | `children` | `ReactNode` | — | 카드 내용입니다. |
 

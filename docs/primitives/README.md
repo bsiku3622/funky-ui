@@ -32,7 +32,7 @@ primitive가 받는 값은 모두 닫힌 집합입니다.
 | `SurfaceFill` | `none`(면 없음 — 바깥 면이 그대로 보임) · `canvas`(크림 바탕) · `raised`(흰 면) · `sunken`(크림 위 오목한 자리) · `well`(흰 면 안의 오목한 자리, 반투명) · `inverse`(검정) |
 | `Border` | `none` · `line`(검정) · `soft`(연한 회색) · `subtle`(카드 안 구분선 색) |
 | `Shadow` | `none` · `raised`(4px) · `floating`(6px) |
-| `PressMotion` | `press`(그림자 위에서 가라앉음) · `lift`(떠오름) · `tap`(그림자 없이 누르는 순간만 작아짐). 거리와 시간은 [Motion](../foundations/motion.md) |
+| `PressMotion` | `none`(움직이지 않음, 기본) · `sink`(그림자 위에서 가라앉음) · `raise`(평평하다가 그림자가 올라옴) · `lift`(떠오름) · `tap`(그림자 없이 누르는 순간만 작아짐). 거리와 시간은 [Motion](../foundations/motion.md) |
 | `Space` | `0` `2xs` `xs` `sm` `md` `lg` `xl` `2xl` `3xl` `4xl` `5xl` `6xl` — 0 · 2 · 4 · 6 · 8 · 12 · 16 · 20 · 24 · 32 · 48 · 64px. 안쪽 여백과 형제 사이 간격이 같은 사다리를 씁니다. [Layout](../foundations/layout.md) |
 
 ## Box
@@ -196,10 +196,12 @@ primitive가 받는 값은 모두 닫힌 집합입니다.
 hover 색은 Pressable 없이도 켜집니다. 누르는 물건으로 만들려면 Pressable에 이 칠을 class로 얹습니다 — 색은 그대로 Paint가, 의미 · 커서 · 몸짓은 Pressable이 맡습니다. 아래는 그림자 위에 떠 있다가 hover 때 가라앉는 버튼을 Button 없이 조립한 예입니다.
 
 ```tsx
-<Pressable motion="press" paddingX="md" paddingY="xs" className={paintClass({ accent: "cyan", variant: "tonal", hoverable: true })}>
+<Pressable motion="sink" paddingX="md" paddingY="xs" className={paintClass({ accent: "cyan", variant: "tonal", hoverable: true })}>
   Preview
 </Pressable>
 ```
+
+칠에 `as={Pressable}`을 줘도 같습니다 — `<Paint as={Pressable} motion="sink" accent="cyan" variant="tonal" hoverable>`. Paint는 색만 칠하고, `motion` · `pressed` · `disabled`는 Pressable로 넘어갑니다.
 
 | prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
@@ -211,7 +213,7 @@ hover 색은 Pressable 없이도 켜집니다. 누르는 물건으로 만들려�
 | `padding` `paddingX` `paddingY` | [Box](#box)와 같음 | — | Box와 같은 prop입니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 
-- 그림자와 가라앉는 몸짓은 Paint가 하지 않습니다. 그림자 위에 떠 있다가 가라앉는 버튼은 `Pressable motion="press"` + `paintClass()`이고, Button의 `shadow`가 이 조립을 대신 고릅니다.
+- 그림자와 가라앉는 몸짓은 Paint가 하지 않습니다. 그림자 위에 떠 있다가 가라앉는 버튼은 `Pressable motion="sink"` + `paintClass()`이고, Button의 `shadow`가 이 조립을 대신 고릅니다.
 - 테두리가 없는 variant(`ghost` · `ghostMuted`)는 가라앉을 상자가 없어서 그림자를 받지 않습니다. Button은 이 둘에 `shadow`를 줘도 `tap`으로 그립니다.
 - 크기 · 글자 · 아이콘은 Paint가 정하지 않습니다. 그건 Button · Badge처럼 Paint 위에 선 컴포넌트의 몫입니다.
 - `paintClass(props)`가 같은 prop을 class 문자열로 돌려줍니다. Pressable처럼 다른 2차 primitive에 칠을 얹을 때 씁니다.
@@ -243,7 +245,7 @@ hover 색은 Pressable 없이도 켜집니다. 누르는 물건으로 만들려�
 
 ## Pressable
 
-2차 primitive, 누르는 물건입니다(Box + 누름). '눌린다'는 사실과 그 몸짓을 맡습니다 — 버튼의 의미(`type` · `disabled` · `aria-disabled`) · 커서 · 꺼진 모양 · 움직임. 색은 하나도 없습니다. hover 색까지 Paint의 `hoverable`이고, Pressable이 그걸 켜 주지 않습니다. 흑백 면은 `surfaceClass()`, 색은 `paintClass()`로 얹습니다 — Button이 Pressable + Paint, 누르는 Card가 Pressable + Surface입니다. 아래는 과목 카드를 `lift`로 눌러 상세로 가게 한 예입니다.
+2차 primitive, 누르는 물건입니다(Box + 누름). '눌린다'는 사실과 그 몸짓을 맡습니다 — 버튼의 의미(`type` · `disabled` · `aria-disabled`) · 커서 · 꺼진 모양 · 움직임. 색은 하나도 없습니다. hover 색까지 칠의 `hoverable`이고, Pressable이 그걸 켜 주지 않습니다. 칠은 `surfaceClass()` · `paintClass()` · `glassClass()`로 얹거나, 칠에 `as={Pressable}`을 줍니다 — Button이 Pressable + Paint, 누르는 Card가 Pressable + Surface입니다. 아래는 과목 카드를 `lift`로 눌러 상세로 가게 한 예입니다.
 
 ```tsx
 <Pressable motion="lift" padding="xl" className={surfaceClass({ border: "line" })} onClick={() => navigate("/courses/phys2")}>
@@ -254,19 +256,26 @@ hover 색은 Pressable 없이도 켜집니다. 누르는 물건으로 만들려�
 </Pressable>
 ```
 
+버튼 모양 없이 칠과 누름만 묶을 때는 칠에 `as={Pressable}`을 주면 한 줄입니다. 칠은 색만 칠하고 `motion` · `pressed` · `disabled`는 Pressable로 넘어갑니다.
+
+```tsx
+<Surface as={Pressable} motion="lift" border="line" padding="xl">탐색 카드</Surface>
+<Glass as={Pressable} motion="tap" hoverable paddingX="md" paddingY="xs">2026-2</Glass>
+```
+
 | prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `as` | `ElementType` | `"button"` | 렌더할 요소입니다. 링크면 `"a"`나 라우터 링크를 줍니다. |
-| `motion` | `PressMotion` | `"press"` | `press`는 4px 그림자 위에서 가라앉고, `lift`는 떠오르고, `tap`은 그림자 없이 누르는 순간만 작아집니다. |
-| `pressed` | `boolean` | `false` | `press` 몸짓이 눌린 채로 머뭅니다(골라진 버튼). 모양만 바꾸고, `aria-pressed` 같은 속성은 쓰는 쪽이 붙입니다. |
+| `motion` | `PressMotion` | `"none"` | 몸짓입니다. `none`은 움직이지 않고, `sink`는 4px 그림자 위에서 가라앉고, `raise`는 평평하다가 hover 때 제자리에서 그림자가 올라오고, `lift`는 떠오르고, `tap`은 그림자 없이 누르는 순간만 작아집니다. |
+| `pressed` | `boolean` | `false` | `sink` 몸짓이 눌린 채로 머뭅니다(골라진 버튼). 모양만 바꾸고, `aria-pressed` 같은 속성은 쓰는 쪽이 붙입니다. |
 | `disabled` | `boolean` | `false` | `button`이면 `disabled` 속성이, 그 밖의 요소면 `aria-disabled`가 붙습니다. 불투명도 0.4에 `not-allowed` 커서이고 몸짓이 멈춥니다. |
 | `padding` `paddingX` `paddingY` | [Box](#box)와 같음 | — | Box와 같은 prop입니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. 면은 여기로 얹습니다. |
 
-- `press`는 hover 때 그림자 자리로 가라앉고(사람 카드 · 그림자를 켠 버튼) 누르는 순간 한 번 더 작아집니다. `lift`는 hover 때 4px 떠오르고 그림자가 화면에 남아 길어집니다(탐색 카드). `tap`은 그림자가 없는 버튼의 몸짓입니다. 거리와 시간은 [Motion](../foundations/motion.md)에 있습니다.
-- 그림자는 몸짓의 일부라 `shadow` prop이 없습니다. `press` · `lift`가 그림자를 갖고, `tap`은 갖지 않습니다.
+- `none`은 누르는 물건의 의미 · 커서 · 꺼진 모양만 남기고 움직이지 않습니다(목록 줄 · 아코디언 머리 · 메뉴 항목). `sink`는 hover 때 그림자 자리로 가라앉고(사람 카드 · 그림자를 켠 버튼) 누르는 순간 한 번 더 작아집니다. `raise`는 그 반대로, 평평하다가 hover 때 제자리에서 4px 그림자가 올라오고 누르는 순간 다시 내려앉습니다(평평한 칩). `lift`는 hover 때 4px 떠오르고 그림자가 화면에 남아 길어집니다(탐색 카드). `tap`은 그림자가 없는 버튼의 몸짓입니다. 거리와 시간은 [Motion](../foundations/motion.md)에 있습니다.
+- 그림자는 몸짓의 일부라 `shadow` prop이 없습니다. `sink` · `raise` · `lift`가 그림자를 갖고, `none` · `tap`은 갖지 않습니다.
 - 누르는 순간의 크기는 `--fk-press-scale`(기본 0.96)입니다. 큰 면은 자기 class에서 0.98로 덮습니다 — 400px 카드가 0.96이면 16px나 줄어들기 때문입니다. Card · PersonCard가 그렇게 합니다.
-- 칠하지 않으므로 혼자 쓰면 브라우저 기본 버튼 모양(회색 면 · 테두리)이 남습니다. 면은 언제나 `surfaceClass()`나 `paintClass()`로 얹습니다.
+- 칠하지 않으므로 혼자 쓰면 브라우저 기본 버튼 모양(회색 면 · 테두리)이 남습니다. 면은 언제나 칠(`surfaceClass()` · `paintClass()` · `glassClass()` 또는 `as={Pressable}`)로 얹습니다.
 - display와 폭은 태그 그대로입니다(`<button>`은 inline-block). 카드처럼 폭을 채우는 것은 쓰는 쪽이 정합니다 — [Card](../molecules/README.md#card)의 `motion`이 블록 · 폭 100% · 글자 정렬을 줍니다.
 - 기본이 `<button type="button">`이라 안에는 글자 요소만 넣습니다(배치가 필요하면 `Stack as="span"`). 다른 button이나 링크를 넣지 않습니다.
 - `pressClass(props)`가 `disabled`를 뺀 같은 prop을 class 문자열로 돌려줍니다.
@@ -277,8 +286,8 @@ hover 색은 Pressable 없이도 켜집니다. 누르는 물건으로 만들려�
 
 | 상태 | 색 — Paint | 색 — Surface | 색 — Glass | 누름 — Pressable |
 | --- | --- | --- | --- | --- |
-| 쉼 | variant의 FG · BG · Border | 흑백 면 · 테두리 · 그림자 | 글자색 10% 면 · 30% 테두리 | `press` · `lift`면 4px 그림자 위에 떠 있습니다 |
-| hover | `hoverable`이면 variant의 Hover 칸(층 · 글자 · 테두리) | `hoverable`이면 글자색 7% 층 | `hoverable`이면 20% 면 · 글자색 테두리 | `press`는 가라앉고 `lift`는 떠오릅니다. 손가락 커서 |
+| 쉼 | variant의 FG · BG · Border | 흑백 면 · 테두리 · 그림자 | 글자색 10% 면 · 30% 테두리 | `sink` · `lift`면 4px 그림자 위에 떠 있습니다(`raise`는 평평) |
+| hover | `hoverable`이면 variant의 Hover 칸(층 · 글자 · 테두리) | `hoverable`이면 글자색 7% 층 | `hoverable`이면 20% 면 · 글자색 테두리 | `sink`는 가라앉고, `raise`는 그림자가 올라오고, `lift`는 떠오릅니다. 손가락 커서 |
 | 누르는 중 | `hoverable`이면 press 층으로 한 단 더 짙어집니다 | `hoverable`이면 글자색 12% 층 | — | 한 번 더 작아집니다(`--fk-press-scale`) |
 | 골라짐 | `selected` — 같은 accent의 solid | — | `selected` — 25% 면 · 글자색 테두리 | `pressed` — 눌린 채 머뭅니다 |
 | 꺼짐 | 상태 색을 걸지 않습니다 | 상태 층을 걸지 않습니다 | 상태 색을 걸지 않습니다 | 몸짓을 멈추고 0.4로 흐려지며 `not-allowed` 커서. `disabled` · `aria-disabled`를 붙입니다 |
@@ -286,7 +295,7 @@ hover 색은 Pressable 없이도 켜집니다. 누르는 물건으로 만들려�
 - hover 색은 브라우저의 `:hover` · `:active`가 켭니다. 그래서 칠은 Pressable 없이도 hover 색을 내고(툴팁을 띄우는 배지, 면 위의 목록 줄), Pressable은 칠 없이도 가라앉습니다(흑백 면을 빌린 카드). 포커스 고리는 어느 쪽도 아니고 전역 스타일시트가 겁니다.
 - 두 축에 걸치는 것은 꺼짐뿐입니다. Pressable이 `disabled` · `aria-disabled`를 붙이고, 두 primitive가 그 HTML 상태를 읽어 각자의 축에서 멈춥니다.
 - `transition-property`는 한 속성이라 둘이 자기 속성만 적으면 한 요소 위에서 서로를 덮습니다. 그래서 둘 다 색과 몸짓을 합친 한 목록(`STATE_TRANSITION`)을 씁니다.
-- Button이 둘을 묶는 자리입니다. `selected`를 Paint의 `selected`와 Pressable의 `pressed`로 나눠 주고, `shadow`로 몸짓(`press` · `tap`)을 고릅니다.
+- Button이 둘을 묶는 자리입니다. `selected`를 Paint의 `selected`와 Pressable의 `pressed`로 나눠 주고, `shadow`로 몸짓(`sink` · `raise` · `tap`)을 고릅니다.
 
 ## Stack
 

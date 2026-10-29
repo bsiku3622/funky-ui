@@ -81,7 +81,7 @@ Components는 class-explorer 전용 컴포넌트입니다. 앱 셸(상단 바 ·
 | `onClick` | `() => void` | — | 눌렀을 때 부릅니다. |
 | `children` | `ReactNode` | — | 메뉴 이름입니다. |
 
-- [Pressable](../primitives/README.md#pressable)(누름)에 [Paint](../primitives/README.md#paint)(칠)를 얹은 버튼입니다. 지금 화면은 검정 `solid`가 4px 그림자 위에 떠 있고(`press` — hover 때 가라앉음), 나머지는 `ghostMuted`로 물러나 hover 때 글자만 진해집니다(`tap`). 골라짐(`selected`)이 아니라 variant를 바꾸는 것이라, 지금 화면 칸은 눌린 채가 아니라 떠 있습니다.
+- [Pressable](../primitives/README.md#pressable)(누름)에 [Paint](../primitives/README.md#paint)(칠)를 얹은 버튼입니다. 지금 화면은 검정 `solid`가 4px 그림자 위에 떠 있고(`sink` — hover 때 가라앉음), 나머지는 `ghostMuted`로 물러나 hover 때 글자만 진해집니다(`tap`). 골라짐(`selected`)이 아니라 variant를 바꾸는 것이라, 지금 화면 칸은 눌린 채가 아니라 떠 있습니다.
 - 링크가 아니라 `<button>`입니다. 화면 이동은 `onClick`에서 합니다.
 
 ## BottomNav
@@ -193,7 +193,7 @@ SideNav.Item과 같은 prop입니다.
 | `onClick` | `() => void` | — | 주면 누르는 카드가 됩니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 
-- `onClick`이 있으면 `Pressable`(`motion="press"`)로 그려져, 4px 그림자 위에 떠 있다가 누르면 그림자 속으로 가라앉습니다. 큰 면이라 누르는 순간 0.98로만 작아집니다. 없으면 그림자 없는 정적 `<div>`입니다.
+- `onClick`이 있으면 `Pressable`(`motion="sink"`)로 그려져, 4px 그림자 위에 떠 있다가 누르면 그림자 속으로 가라앉습니다. 큰 면이라 누르는 순간 0.98로만 작아집니다. 없으면 그림자 없는 정적 `<div>`입니다.
 - 왼쪽 칸의 면은 `color` 15%이고 이름은 `color`이며, 목록 항목 왼쪽에 `color` 띠가 붙습니다. 높이는 최소 176px입니다.
 
 ## ClassTile

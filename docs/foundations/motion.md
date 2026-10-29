@@ -12,11 +12,17 @@ funky-ui의 움직임 — 시간, 곡선, 누름의 거리 — 을 정리한 문
 
 선택된 컨트롤은 **눌린 채로** 있습니다(`pressed`). 그림자를 켠 버튼이 골리면 가라앉은 자리에 그대로 머물러, 무엇이 골라져 있는지를 모양으로도 말합니다.
 
-몸짓은 [Pressable](../primitives/README.md#pressable) 하나가 맡습니다 — `press`(가라앉음) · `lift`(떠오름) · `tap`(작아짐만) 셋과, `press`가 눌린 채 머무는 `pressed`입니다. hover 때 바뀌는 층(색)은 칠([Paint](../primitives/README.md#paint)의 `hoverable`)이라 몸짓과 따로 섭니다. Button은 `shadow`로 몸짓을 고릅니다 — 켜면 `press`, 끄면 `tap`입니다.
+몸짓은 [Pressable](../primitives/README.md#pressable) 하나가 맡습니다 — `none`(움직이지 않음, 기본) · `sink`(가라앉음) · `raise`(그림자가 올라옴) · `lift`(떠오름) · `tap`(작아짐만) 다섯과, `sink`가 눌린 채 머무는 `pressed`입니다. hover 때 바뀌는 층(색)은 칠([Paint](../primitives/README.md#paint)의 `hoverable`)이라 몸짓과 따로 섭니다. Button은 `shadow`로 몸짓을 고릅니다 — 켜면 `sink`, `"hover"`면 `raise`, 끄면 `tap`입니다.
+
+목록 줄 · 아코디언 머리 · 메뉴 항목처럼 누르지만 움직이지 않는 것은 `none`입니다(Pressable의 기본값). 반응은 칠의 hover 층이 맡습니다.
+
+## 올라옴
+
+평평한 칩은 가라앉을 그림자가 없어서 반대로 움직입니다(`motion="raise"`, Button은 `shadow="hover"`). 쉴 때는 그림자가 없다가 hover 때 제자리에서 4px 그림자가 올라오고, 누르는 순간 다시 내려앉으며 작아집니다. 본체는 제자리에 있고 그림자만 올라옵니다 — class-explorer의 복사 버튼 · 과목 추가 칩이 그렇게 움직였습니다. 그쪽은 2px 그림자였지만, 그림자가 두 단뿐이라 4px로 모았습니다.
 
 ## 떠오름
 
-탐색 카드처럼 큰 면은 가라앉는 대신 떠오를 수 있습니다(`motion="lift"`). hover 때 4px 위로 뜨고, 그림자는 화면에 그대로 남아 길어집니다. 사람 카드처럼 눌러서 들어가는 면은 `press`, 훑어보다 고르는 면은 `lift`입니다.
+탐색 카드처럼 큰 면은 가라앉는 대신 떠오를 수 있습니다(`motion="lift"`). hover 때 4px 위로 뜨고, 그림자는 화면에 그대로 남아 길어집니다. 사람 카드처럼 눌러서 들어가는 면은 `sink`, 훑어보다 고르는 면은 `lift`입니다.
 
 ```tsx
 <Card motion="lift" as={Link} to="/trade">…</Card>
