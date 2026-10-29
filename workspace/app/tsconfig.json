@@ -1,0 +1,9 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "types": ["vite/client"],
+    "customConditions": ["funky-ui-source"]
+  },
+  "include": ["src/**/*", "vite.config.ts"]
+}
