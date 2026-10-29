@@ -3,6 +3,7 @@ import { useId, type ReactNode } from "react";
 
 import { cx } from "../internal/cx";
 import { Inline, Stack } from "../primitives/layout";
+import { surfaceClass } from "../primitives/Surface";
 import { Text } from "../primitives/Text";
 import { accentClass } from "../styles/accent.css";
 import { resolveAccent, type Accent } from "../tokens/vocabulary";
@@ -56,7 +57,7 @@ export function Meter({ label, value, max = 100, valueLabel, accent, className }
           {valueLabel ?? value}
         </Text>
       </Inline>
-      <div className={meterTrack} role="meter" aria-labelledby={labelId} aria-valuemin={0} aria-valuemax={max} aria-valuenow={Math.min(max, Math.max(0, value))}>
+      <div className={cx(surfaceClass({ fill: "well", border: "line" }), meterTrack)} role="meter" aria-labelledby={labelId} aria-valuemin={0} aria-valuemax={max} aria-valuenow={Math.min(max, Math.max(0, value))}>
         <div className={meterFill} style={{ width: `${ratio * 100}%` }} />
       </div>
     </Stack>

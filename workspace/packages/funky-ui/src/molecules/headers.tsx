@@ -2,7 +2,7 @@
 import type { ElementType, ReactNode } from "react";
 
 import { cx } from "../internal/cx";
-import { Box } from "../primitives/Box";
+import { Surface } from "../primitives/Surface";
 import { Icon, type IconComponent } from "../primitives/Icon";
 import { Inline, Stack } from "../primitives/layout";
 import { Text } from "../primitives/Text";
@@ -54,9 +54,9 @@ export function PageHeader({ title, subtitle, icon, action, children, className 
         <div className={pageHeaderRow}>
           <Inline gap="xl" align="center">
             {icon && (
-              <Box surface="inverse" className={pageHeaderIcon}>
+              <Surface fill="inverse" className={pageHeaderIcon}>
                 <Icon icon={icon} size="lg" />
-              </Box>
+              </Surface>
             )}
             <Stack gap="2xs">
               {subtitle && <Text variant="overline">{subtitle}</Text>}

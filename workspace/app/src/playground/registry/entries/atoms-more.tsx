@@ -2,7 +2,7 @@
 import { useId, useState, type MouseEvent, type ReactNode } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import {
-  Box,
+  Paint,
   Button,
   Checkbox,
   Divider,
@@ -17,6 +17,7 @@ import {
   Select,
   Spinner,
   Stack,
+  Surface,
   Switch,
   Text,
   Textarea,
@@ -164,9 +165,9 @@ const iconButton: Spec = {
 /** 상단 바(AppBar)와 같은 보라 solid — Overview 의 크림 바탕에서도 흰 글자가 읽히게 감쌉니다 */
 function Bar({ children }: { children: ReactNode }) {
   return (
-    <Box accent="purple" surface="solid" padding="md">
+    <Paint accent="purple" variant="solid" padding="md">
       {children}
-    </Box>
+    </Paint>
   );
 }
 
@@ -387,7 +388,7 @@ const divider: Spec = {
     const tone = v.tone as DividerProps["tone"];
     return (
       <Frame width={260}>
-        <Box surface="raised" border="line" padding="lg">
+        <Surface border="line" padding="lg">
           {v.orientation === "vertical" ? (
             <Inline gap="xl" justify="center">
               <Stack align="center">
@@ -415,7 +416,7 @@ const divider: Spec = {
               </Text>
             </Stack>
           )}
-        </Box>
+        </Surface>
       </Frame>
     );
   },

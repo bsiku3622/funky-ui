@@ -20,8 +20,6 @@ export const meterTrack = style(
   c({
     position: "relative",
     height: px(16),
-    backgroundColor: vars.surface.well,
-    border: `${vars.stroke.base} solid ${vars.line.base}`,
     overflow: "hidden",
   }),
 );

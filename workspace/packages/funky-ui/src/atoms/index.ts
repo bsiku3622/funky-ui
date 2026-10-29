@@ -1,4 +1,4 @@
-export { Button, controlClass, type ButtonProps, type ButtonOwnProps } from "./Button";
+export { Button, type ButtonProps, type ButtonOwnProps } from "./Button";
 export { IconButton, type IconButtonProps } from "./IconButton";
 export { NavButton, type NavButtonProps } from "./NavButton";
 export { Badge, type BadgeProps } from "./Badge";

@@ -66,8 +66,6 @@ export const personCard = style(
     overflow: "hidden",
     textAlign: "start",
     color: vars.ink.primary,
-    backgroundColor: vars.surface.raised,
-    border: `${vars.stroke.base} solid ${vars.line.base}`,
   }),
 );
 

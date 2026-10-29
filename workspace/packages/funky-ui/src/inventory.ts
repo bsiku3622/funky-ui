@@ -16,6 +16,8 @@ export const FOUNDATIONS = ["color", "typography", "shape", "layout", "motion"] 
 export const INVENTORY = {
   primitives: {
     layout: ["Box", "Stack", "Inline", "Grid"],
+    /** 칠하는 둘 — 박스는 Surface(흑백 면), 요소는 Paint(accent × variant) */
+    paint: ["Surface", "Paint"],
     content: ["Text", "Icon"],
     interaction: ["Pressable"],
     a11y: ["VisuallyHidden", "Portal"],

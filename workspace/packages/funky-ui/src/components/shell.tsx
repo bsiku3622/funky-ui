@@ -4,16 +4,16 @@
  * 자리(fixed · 높이)는 class-explorer 의 셸 치수(`CONTAINER.shell`)를 따르고, 화면에 고정할지는
  * `fixed` 로 고릅니다. 메뉴 순서는 앱(`lib/navigation.ts`)이 정합니다 — 셸은 그리기만 합니다.
  */
-import type { ReactNode } from "react";
+import type { ElementType, ReactNode } from "react";
 
 import { cx } from "../internal/cx";
 import { ChevronDownGlyph } from "../internal/glyphs";
 import { NavButton } from "../atoms/NavButton";
-import { controlClass } from "../atoms/Button";
 import { Menu } from "../molecules/floating";
 import { Icon, type IconComponent } from "../primitives/Icon";
-import { accentClass } from "../styles/accent.css";
-import { resolveAccent, type Accent } from "../tokens/vocabulary";
+import { Paint } from "../primitives/Paint";
+import { Surface } from "../primitives/Surface";
+import type { Accent } from "../tokens/vocabulary";
 import {
   appBar,
   appBarActions,
@@ -26,7 +26,6 @@ import {
   bottomNav,
   bottomNavFixed,
   sideItem,
-  sideItemIdle,
   sideNav,
   sideNavBody,
   sideNavFixed,
@@ -34,6 +33,9 @@ import {
   sideSection,
   sideSectionLabel,
 } from "./shell.css";
+
+const PaintRoot = Paint as ElementType;
+const SurfaceRoot = Surface as ElementType;
 
 export interface AppBarProps {
   /** 로고 글자 — 기울어진 900 대문자로 그립니다 */
@@ -48,10 +50,10 @@ export interface AppBarProps {
   className?: string;
 }
 
-/** 상단 바 — accent 면 · 아래 2px 검정 · 아래로 4px 그림자 */
+/** 상단 바 — `Paint` 의 solid(accent 면 · ink 글자) · 아래 2px 검정 · 아래로 4px 그림자 */
 export function AppBar({ brand: label, onBrandClick, actions, accent = "purple", fixed = false, className }: AppBarProps) {
   return (
-    <header className={cx(appBar, fixed && appBarFixed, accentClass[resolveAccent(accent)], className)}>
+    <PaintRoot as="header" accent={accent} variant="solid" className={cx(appBar, fixed && appBarFixed, className)}>
       {onBrandClick ? (
         <button type="button" className={cx(brand, brandButton)} onClick={onBrandClick}>
           {label}
@@ -60,7 +62,7 @@ export function AppBar({ brand: label, onBrandClick, actions, accent = "purple",
         <span className={brand}>{label}</span>
       )}
       {actions && <div className={appBarActions}>{actions}</div>}
-    </header>
+    </PaintRoot>
   );
 }
 
@@ -75,10 +77,10 @@ export interface SideNavProps {
 
 export function SideNav({ footer, fixed = false, className, children }: SideNavProps) {
   return (
-    <aside className={cx(sideNav, fixed && sideNavFixed, className)}>
+    <SurfaceRoot as="aside" fill="canvas" className={cx(sideNav, fixed && sideNavFixed, className)}>
       <nav className={sideNavBody}>{children}</nav>
       {footer && <div className={sideNavFooter}>{footer}</div>}
-    </aside>
+    </SurfaceRoot>
   );
 }
 
@@ -98,18 +100,23 @@ export interface SideNavItemProps {
   children?: ReactNode;
 }
 
-/** 지금 화면은 검정 solid 가 4px 위에 떠 있고, 나머지는 약한 잉크로 물러납니다 */
+/** `Paint` 의 두 얼굴 — 지금 화면은 검정 solid 가 4px 위에 떠 있고(hover 때 가라앉음), 나머지는 ghostMuted 로 물러납니다 */
 function SideNavItem({ icon, active = false, onClick, children }: SideNavItemProps) {
   return (
-    <button
+    <PaintRoot
+      as="button"
       type="button"
       aria-current={active ? "page" : undefined}
       onClick={onClick}
-      className={cx(sideItem, active ? controlClass({ accent: "black", variant: "solid", shadow: true }) : sideItemIdle)}
+      accent="black"
+      variant={active ? "solid" : "ghostMuted"}
+      shadow={active}
+      interactive
+      className={sideItem}
     >
       <Icon icon={icon} size="lg" />
       <span>{children}</span>
-    </button>
+    </PaintRoot>
   );
 }
 
@@ -126,7 +133,11 @@ export interface BottomNavProps {
 
 /** 모바일 하단 바 — 다섯 칸까지. 여덟 칸을 욱여넣으면 칸이 좁아져 이름이 잘리고 손가락이 옆 칸을 누릅니다 */
 export function BottomNav({ accent = "purple", fixed = false, className, children }: BottomNavProps) {
-  return <nav className={cx(bottomNav, fixed && bottomNavFixed, accentClass[resolveAccent(accent)], className)}>{children}</nav>;
+  return (
+    <PaintRoot as="nav" accent={accent} variant="solid" className={cx(bottomNav, fixed && bottomNavFixed, className)}>
+      {children}
+    </PaintRoot>
+  );
 }
 
 function BottomNavItem({ icon, active = false, onClick, children }: SideNavItemProps) {

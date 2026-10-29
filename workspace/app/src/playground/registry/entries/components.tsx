@@ -4,7 +4,7 @@ import {
   AppBar,
   Badge,
   BottomNav,
-  Box,
+  Paint,
   ClassTile,
   Grid,
   Inline,
@@ -370,9 +370,9 @@ const termSwitcher: Spec = {
   summary: "학기 선택. 상단 바 위의 유리 버튼이 Menu 를 엽니다. 학기가 둘 미만이면 아무것도 그리지 않습니다.",
   stage: "dark",
   render: () => (
-    <Box accent="purple" surface="solid" padding="lg">
+    <Paint accent="purple" variant="solid" padding="lg">
       <TermDemo />
-    </Box>
+    </Paint>
   ),
   code: () =>
     [

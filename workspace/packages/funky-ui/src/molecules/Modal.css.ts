@@ -20,10 +20,7 @@ export const modal = style(
     maxHeight: "90vh",
     overflowY: "auto",
     color: vars.ink.primary,
-    backgroundColor: vars.surface.raised,
-    border: `${vars.stroke.base} solid ${vars.line.base}`,
     borderRadius: 0,
-    boxShadow: vars.shadow.floating,
     selectors: {
       "&[open]": { animation: `${pop} ${vars.duration.base} ${vars.easing.out}` },
       "&::backdrop": { backgroundColor: vars.overlay.scrim, animation: `${fade} ${vars.duration.base} ${vars.easing.out}` },
@@ -47,9 +44,9 @@ export const modalHeader = style(
     gap: px(SPACE.lg),
     paddingInline: px(SPACE["2xl"]),
     paddingBlock: px(SPACE.lg),
-    backgroundColor: vars.accent.solid,
-    color: vars.accent.ink,
-    borderBottom: `${vars.stroke.base} solid ${vars.line.base}`,
+    // 칠은 Paint(solid)가 하고, 테두리는 아래 한 줄만 남깁니다
+    borderWidth: `0 0 ${vars.stroke.base}`,
+    borderColor: vars.line.base,
   }),
 );
 

@@ -6,6 +6,7 @@ import type { ReactNode } from "react";
 
 import { cx } from "../internal/cx";
 import { Pressable } from "../primitives/Pressable";
+import { surfaceClass } from "../primitives/Surface";
 import { badge, badgeBuzz, badgeClickable, badgeSize, personBody, personCard, personHead, personId, personItem, personItems, personName, personTitle } from "./people.css";
 import { toneStyle } from "./tone";
 
@@ -76,13 +77,13 @@ export function PersonCard({ id, name, color, title, items = [], onClick, classN
   );
   if (onClick) {
     return (
-      <Pressable motion="press" onClick={onClick} className={cx(personCard, className)} style={toneStyle(color)}>
+      <Pressable motion="press" onClick={onClick} className={cx(surfaceClass({ border: "line" }), personCard, className)} style={toneStyle(color)}>
         {inner}
       </Pressable>
     );
   }
   return (
-    <div className={cx(personCard, className)} style={toneStyle(color)}>
+    <div className={cx(surfaceClass({ border: "line" }), personCard, className)} style={toneStyle(color)}>
       {inner}
     </div>
   );

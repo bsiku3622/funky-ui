@@ -1,4 +1,4 @@
-/** Primitives — 면 · 배치 · 글자 · 아이콘 · 누름 · 접근성. 모양이 없는 바탕이라 표본은 구조를 보여 줍니다 */
+/** Primitives — 배치 · 칠(Surface · Paint) · 글자 · 아이콘 · 누름 · 접근성. 바탕이라 표본은 구조를 보여 줍니다 */
 import { useId, useState, type MouseEvent, type ReactNode } from "react";
 import {
   Badge,
@@ -9,18 +9,23 @@ import {
   Inline,
   Input,
   Label,
+  Paint,
   Portal,
   Pressable,
   Stack,
+  Surface,
   Switch,
   Text,
   VisuallyHidden,
+  paintClass,
+  surfaceClass,
   type Accent,
   type Border,
   type Shadow,
   type Space,
-  type Surface,
+  type SurfaceFill,
   type TextVariant,
+  type Variant,
   type Tone,
   type Weight,
 } from "@studio-baeks/funky-ui";
@@ -37,9 +42,10 @@ import {
   MOTIONS,
   SHADOWS,
   SPACES,
-  SURFACES,
+  SURFACE_FILLS,
   TEXT_VARIANTS,
   TONES,
+  VARIANTS,
   WEIGHTS,
   Z,
   type Align,
@@ -50,7 +56,7 @@ import {
 } from "@studio-baeks/funky-ui/tokens";
 import { Search, Sparkles } from "lucide-react";
 
-import { Stage } from "../../kit";
+import { AccentVariantMatrix, Stage } from "../../kit";
 import { icon } from "../icons";
 import type { Spec } from "../schema";
 
@@ -85,11 +91,11 @@ function Labeled({ name, children }: { name: string; children: ReactNode }) {
 /** 배치 표본의 자식 — 글자 크기를 달리하면 높이가 달라져서 align 이 보입니다 */
 function Tile({ variant = "label", children }: { variant?: TextVariant; children: ReactNode }) {
   return (
-    <Box surface="raised" border="line" paddingX="md" paddingY="2xs">
+    <Surface border="line" paddingX="md" paddingY="2xs">
       <Text as="div" variant={variant}>
         {children}
       </Text>
-    </Box>
+    </Surface>
   );
 }
 
@@ -114,47 +120,40 @@ const TIMES = ["08:50", "11:11", "18:05"] as const;
 
 /* ── Box ─────────────────────────────────────────────────────────────── */
 
+/** Box 는 칠하지 않아 보이지 않습니다 — 점선으로 자리만 그립니다 */
+const EXTENT = { outline: "2px dashed rgba(0, 0, 0, 0.25)", outlineOffset: 2 } as const;
+
 const box: Spec = {
   name: "Box",
-  summary: "면 · 테두리 · 그림자 · 여백 · accent 를 prop 으로 고르는 바탕 상자입니다. 값은 모두 시스템 사다리에서 고르고, as 로 태그를 바꿉니다.",
+  summary:
+    "배치의 바탕 — 태그(as) · 여백 · accent 문맥만 다룹니다. 칠하지 않습니다: 흑백 박스는 Surface, accent 로 칠한 요소는 Paint 입니다. 점선은 Box 의 자리를 보이려고 그린 것입니다.",
   controls: {
     accent: { kind: "select", options: ACCENT_OPTIONS },
-    surface: { kind: "select", options: SURFACES },
-    border: { kind: "select", options: BORDERS },
-    shadow: { kind: "select", options: SHADOWS },
     padding: { kind: "select", options: SPACES },
     children: { kind: "text" },
   },
-  // 면은 기본이 없어(투명) 고른 면으로 시작합니다. 나머지 기본값은 "안 준 것과 같은 값"이고,
-  // surface: undefined 는 코드에 찍히는 prop 순서를 잡는 자리입니다
-  initial: { surface: "raised", border: "line", shadow: "raised", padding: "xl", children: "Box" },
-  defaults: { accent: "black", surface: undefined, border: "none", shadow: "none", padding: "0" },
+  initial: { accent: "green", padding: "xl", children: "유지" },
+  defaults: { accent: "black", padding: "0" },
   render: (v) => (
-    <Box accent={v.accent as Accent} surface={v.surface as Surface} border={v.border as Border} shadow={v.shadow as Shadow} padding={v.padding as Space}>
-      {String(v.children ?? "")}
+    <Box accent={v.accent as Accent} padding={v.padding as Space} style={EXTENT}>
+      <Inline gap="md">
+        <Button size="sm" variant="tonal">
+          {String(v.children ?? "")}
+        </Button>
+        <Badge variant="solid">계획</Badge>
+      </Inline>
     </Box>
   ),
+  code: (v) =>
+    `<Box accent="${String(v.accent)}" padding="${String(v.padding)}">\n  <Button size="sm" variant="tonal">${String(v.children ?? "")}</Button>\n  <Badge variant="solid">계획</Badge>\n</Box>`,
   sections: [
     {
-      title: "Surface",
-      note: "흑백 면 다섯과, 지금 accent 로 칠하는 solid · soft 입니다 (여기서는 pink). inverse 와 solid 는 글자색도 같이 바뀌어서 어두운 면 위에 어두운 글자가 생기지 않습니다.",
-      render: () => (
-        <Stage>
-          {SURFACES.map((s) => (
-            <Box key={s} surface={s} accent={s === "solid" || s === "soft" ? "pink" : undefined} border="line" padding="lg">
-              {s}
-            </Box>
-          ))}
-        </Stage>
-      ),
-    },
-    {
       title: "Accent 는 안쪽으로 흐릅니다",
-      note: "Box 에 준 accent 는 안쪽 컨트롤이 따로 주지 않으면 그대로 쓰입니다. 카드 하나만 칠하면 안의 버튼 · 배지 · 스위치가 같이 따라옵니다.",
+      note: "Box 에 준 accent 는 칠하지 않고 문맥만 정합니다. 안쪽 버튼 · 배지 · 스위치가 accent 를 따로 주지 않으면 이 색을 씁니다 — 드랍한 과목 카드 안의 버튼이 카드 색을 따르는 식입니다.",
       render: () => (
         <Stage bg="raised">
           {(["pink", "green", "orange", "purple"] as const).map((a) => (
-            <Box key={a} accent={a} surface="soft" border="accent" padding="xl">
+            <Box key={a} accent={a} padding="xl" style={EXTENT}>
               <Stack gap="md" align="start">
                 <Text variant="overline" tone="accent">
                   {a}
@@ -172,26 +171,196 @@ const box: Spec = {
         </Stage>
       ),
     },
+  ],
+};
+
+/* ── Surface · Paint ─────────────────────────────────────────────────── */
+
+const surface: Spec = {
+  name: "Surface",
+  summary:
+    "박스의 면 — 흑백 면(fill) · 테두리 · 그림자. 카드 · 패널 · 모달 · 판처럼 무언가를 담는 박스를 칠합니다. accent 로 칠하지 않습니다 — 색이 있는 요소는 Paint 입니다.",
+  controls: {
+    fill: { kind: "select", options: SURFACE_FILLS },
+    border: { kind: "select", options: BORDERS },
+    shadow: { kind: "select", options: SHADOWS },
+    padding: { kind: "select", options: SPACES },
+    children: { kind: "text" },
+  },
+  initial: { border: "line", shadow: "raised", padding: "xl", children: "오늘 수업" },
+  defaults: { fill: "raised", border: "none", shadow: "none", padding: "0" },
+  render: (v) => (
+    <Surface fill={v.fill as SurfaceFill} border={v.border as Border} shadow={v.shadow as Shadow} padding={v.padding as Space}>
+      {String(v.children ?? "")}
+    </Surface>
+  ),
+  sections: [
+    {
+      title: "Fill — 흑백 면 다섯",
+      note: "회색이 아니라 자리의 이름입니다. inverse 는 글자색도 같이 바꿔서 검정 위에 검정 글자가 생기지 않습니다. well 은 반투명이라 어느 면 위에서도 한 단 내려앉습니다.",
+      render: () => (
+        <Stage>
+          {SURFACE_FILLS.map((f) => (
+            <Surface key={f} fill={f} border="line" padding="lg">
+              {f}
+            </Surface>
+          ))}
+        </Stage>
+      ),
+    },
     {
       title: "Border · Shadow",
-      note: "테두리는 2px 한 굵기라 색만 고릅니다(accent 는 지금 accent). 그림자는 떠 있는 물건(raised, 4px)과 모달(floating, 8px) 두 단뿐입니다. padding · paddingX · paddingY 는 Layout 의 간격 사다리를 씁니다.",
+      note: "테두리는 2px 한 굵기라 흑백 선의 색만 고릅니다. 그림자는 떠 있는 물건(raised, 4px)과 모달(floating, 8px) 두 단뿐입니다.",
       render: () => (
         <>
           <Stage>
             {BORDERS.map((b) => (
-              <Box key={b} surface="raised" border={b} accent="pink" padding="lg">
+              <Surface key={b} border={b} padding="lg">
                 {b}
-              </Box>
+              </Surface>
             ))}
           </Stage>
           <Stage>
-            {SHADOWS.map((s) => (
-              <Box key={s} surface="raised" border="line" shadow={s} padding="lg">
-                {s}
-              </Box>
+            {SHADOWS.map((sh) => (
+              <Surface key={sh} border="line" shadow={sh} padding="lg">
+                {sh}
+              </Surface>
             ))}
           </Stage>
         </>
+      ),
+    },
+    {
+      title: "다른 primitive 와 묶기",
+      note: "칠한 판 위에 늘어놓으려면 Surface 안에 Stack 을 넣습니다. 누르는 카드는 surfaceClass() 로 Pressable 에 면만 빌려 줍니다 — Card motion 이 그렇게 조립됩니다.",
+      render: () => (
+        <Stage>
+          <Surface border="line" shadow="raised" padding="xl" style={{ width: 240 }}>
+            <Stack gap="md">
+              <Text variant="subheading">오늘 수업</Text>
+              <Text variant="caption" tone="muted">
+                3교시 · 물리학 실험
+              </Text>
+            </Stack>
+          </Surface>
+          <Frame width={240}>
+            <Pressable motion="lift" className={surfaceClass({ border: "line" })} padding="xl">
+              <Stack as="span" gap="xs">
+                <Text variant="subheading">Pressable + surfaceClass</Text>
+                <Text variant="caption" tone="muted">
+                  면은 Surface, 몸짓은 Pressable
+                </Text>
+              </Stack>
+            </Pressable>
+          </Frame>
+        </Stage>
+      ),
+    },
+  ],
+};
+
+const paint: Spec = {
+  name: "Paint",
+  summary:
+    "요소의 칠 — accent(색) × variant(칠하는 방식). Variant 시스템을 그대로 꺼낸 primitive 라, Button · IconButton · Badge · Notice · 상단 바 · 머리 막대가 이 위에 섭니다. interactive 를 주면 hover · press 층이, shadow 를 같이 주면 그림자 속으로 가라앉는 눌림이 붙습니다.",
+  controls: {
+    accent: { kind: "select", options: ACCENT_OPTIONS },
+    variant: { kind: "select", options: VARIANTS },
+    selected: { kind: "boolean" },
+    interactive: { kind: "boolean" },
+    shadow: { kind: "boolean" },
+    padding: { kind: "select", options: SPACES },
+    children: { kind: "text" },
+  },
+  initial: { accent: "green", variant: "plain", interactive: true, padding: "lg", children: "세계사의이해 · 3분반" },
+  defaults: { accent: "black", variant: "outline", selected: false, interactive: false, shadow: false, padding: "0" },
+  render: (v) => (
+    <Paint
+      as={v.interactive ? "button" : "div"}
+      accent={v.accent as Accent}
+      variant={v.variant as Variant}
+      selected={Boolean(v.selected)}
+      interactive={Boolean(v.interactive)}
+      shadow={Boolean(v.shadow)}
+      padding={v.padding as Space}
+    >
+      <Text variant="label">{String(v.children ?? "")}</Text>
+    </Paint>
+  ),
+  code: (v) => {
+    const attrs = [
+      v.interactive ? 'as="button"' : "",
+      v.accent !== "black" ? `accent="${String(v.accent)}"` : "",
+      v.variant !== "outline" ? `variant="${String(v.variant)}"` : "",
+      v.selected ? "selected" : "",
+      v.interactive ? "interactive" : "",
+      v.shadow ? "shadow" : "",
+      v.padding !== "0" ? `padding="${String(v.padding)}"` : "",
+    ].filter(Boolean);
+    return `<Paint ${attrs.join(" ")}>\n  ${String(v.children ?? "")}\n</Paint>`;
+  },
+  sections: [
+    {
+      title: "Accent × Variant",
+      note: "행 머리의 네 칸은 FG / BG / Border / Hover 입니다(재원님 스케치의 표기). Button · Badge 의 행렬과 같은 레시피입니다 — 그쪽은 이 Paint 위에 크기 · 아이콘만 얹은 것입니다. 칸에 마우스를 올려 hover 를 보세요.",
+      render: () => (
+        <AccentVariantMatrix
+          cell={(accent, variant) => (
+            <Paint as="button" accent={accent} variant={variant} interactive paddingX="md" paddingY="xs">
+              <Text variant="label">{accent}</Text>
+            </Paint>
+          )}
+        />
+      ),
+    },
+    {
+      title: "selected · interactive · shadow",
+      note: "selected 는 같은 accent 의 solid 입니다. interactive 만 주면 층만 바뀌고, shadow 를 같이 주면 hover 때 그림자 속으로 가라앉으며 골라진 것은 눌린 채로 있습니다. 누르지 않는 요소(interactive 없이)에 shadow 를 주면 그림자만 섭니다.",
+      render: () => (
+        <Stage bg="raised">
+          <Paint accent="cyan" variant="muted" padding="md">
+            <Text variant="label">읽는 요소</Text>
+          </Paint>
+          <Paint as="button" accent="cyan" variant="muted" interactive padding="md">
+            <Text variant="label">interactive</Text>
+          </Paint>
+          <Paint as="button" accent="cyan" variant="tonal" interactive shadow padding="md">
+            <Text variant="label">interactive + shadow</Text>
+          </Paint>
+          <Paint as="button" accent="cyan" variant="muted" selected interactive shadow padding="md">
+            <Text variant="label">selected</Text>
+          </Paint>
+        </Stage>
+      ),
+    },
+    {
+      title: "버튼이 아닌 요소를 칠하기",
+      note: "같은 레시피로 버튼 아닌 요소도 칠합니다 — Trade 의 과목 줄(plain), 시간표의 지금(plain pink), 상단 바(solid). 위 층 컴포넌트는 Paint 의 칠을 쓰면서 테두리 같은 형태만 자기 CSS 로 덮습니다.",
+      render: () => (
+        <Stage bg="raised">
+          <Stack gap="md" style={{ width: 300 }}>
+            <Paint accent="pink" variant="plain" padding="lg">
+              <Stack gap="2xs">
+                <Text variant="caption" weight="black" tone="inherit">
+                  일반물리학 · 드랍
+                </Text>
+                <Text variant="micro" tone="inherit">
+                  2분반 · 김예시T · 월 3-4교시
+                </Text>
+              </Stack>
+            </Paint>
+            <Paint accent="green" variant="tonalMuted" padding="lg">
+              <Text variant="caption" weight="black">
+                세계사의이해 · 유지
+              </Text>
+            </Paint>
+            <Paint accent="purple" variant="solid" padding="lg">
+              <Text variant="caption" weight="black" tone="inherit">
+                CLASS EXPLORER — 상단 바의 칠
+              </Text>
+            </Paint>
+          </Stack>
+        </Stage>
       ),
     },
   ],
@@ -201,21 +370,23 @@ const box: Spec = {
 
 const stack: Spec = {
   name: "Stack",
-  summary: "자식을 세로로 쌓습니다. 간격(gap)과 가로 정렬(align)을 고르고, Box 의 prop 도 그대로 받습니다.",
+  summary: "자식을 세로로 쌓습니다. 간격(gap)과 가로 정렬(align)을 고르고, Box 의 prop(여백 · accent 문맥)을 받습니다. 칠은 하지 않아 표본은 sunken 판 위에 놓았습니다.",
   controls: {
     gap: { kind: "select", options: SPACES },
     align: { kind: "select", options: ALIGNS },
   },
   // children 은 코드 표기용입니다 (화면의 자식은 render 가 정합니다). 기본값은 "안 준 것과 같은 값"입니다
-  initial: { gap: "xs", surface: "sunken", padding: "xs", children: "…" },
-  defaults: { gap: "0", align: "stretch" },
+  initial: { gap: "xs", padding: "xs", children: "…" },
+  defaults: { gap: "0", align: "stretch", padding: "0" },
   render: (v) => (
     <Frame width={220}>
-      <Stack gap={v.gap as Space} align={v.align as Align} surface={v.surface as Surface} padding={v.padding as Space}>
-        {STACK_ITEMS.map((t) => (
-          <Tile key={t}>{t}</Tile>
-        ))}
-      </Stack>
+      <Surface fill="sunken">
+        <Stack gap={v.gap as Space} align={v.align as Align} padding={v.padding as Space}>
+          {STACK_ITEMS.map((t) => (
+            <Tile key={t}>{t}</Tile>
+          ))}
+        </Stack>
+      </Surface>
     </Frame>
   ),
   sections: [
@@ -226,26 +397,14 @@ const stack: Spec = {
         <Stage bg="raised">
           {JUSTIFIES.map((j) => (
             <Labeled key={j} name={`justify="${j}"`}>
-              <Stack justify={j} gap="xs" surface="sunken" padding="sm" style={{ height: 150, width: 112 }}>
-                <Tile>수학</Tile>
-                <Tile>공강</Tile>
-              </Stack>
+              <Surface fill="sunken" style={{ height: 150, width: 112 }}>
+                <Stack justify={j} gap="xs" padding="sm" style={{ height: "100%" }}>
+                  <Tile>수학</Tile>
+                  <Tile>공강</Tile>
+                </Stack>
+              </Surface>
             </Labeled>
           ))}
-        </Stage>
-      ),
-    },
-    {
-      title: "Box 이기도 합니다",
-      note: "면 · 테두리 · 그림자 · 여백을 그대로 받아서, 카드 안을 세로로 나눌 때 한 번에 씁니다.",
-      render: () => (
-        <Stage>
-          <Stack surface="raised" border="line" shadow="raised" padding="xl" gap="md" style={{ width: 240 }}>
-            <Text variant="subheading">오늘 수업</Text>
-            <Text variant="caption" tone="muted">
-              3교시 · 물리학 실험
-            </Text>
-          </Stack>
         </Stage>
       ),
     },
@@ -284,13 +443,15 @@ const inline: Spec = {
           <Stack gap="lg">
             {ALIGNS.map((a) => (
               <Labeled key={a} name={`align="${a}"`}>
-                <Inline align={a} gap="md" surface="sunken" padding="sm" style={{ width: 280 }}>
-                  {INLINE_ITEMS.slice(0, 3).map(([variant, text]) => (
-                    <Tile key={text} variant={variant}>
-                      {text}
-                    </Tile>
-                  ))}
-                </Inline>
+                <Surface fill="sunken" style={{ width: 280 }}>
+                  <Inline align={a} gap="md" padding="sm">
+                    {INLINE_ITEMS.slice(0, 3).map(([variant, text]) => (
+                      <Tile key={text} variant={variant}>
+                        {text}
+                      </Tile>
+                    ))}
+                  </Inline>
+                </Surface>
               </Labeled>
             ))}
           </Stack>
@@ -304,10 +465,12 @@ const inline: Spec = {
           <Stack gap="lg">
             {JUSTIFIES.map((j) => (
               <Labeled key={j} name={`justify="${j}"`}>
-                <Inline justify={j} gap="md" surface="sunken" padding="sm" style={{ width: 280 }}>
-                  <Tile>수학</Tile>
-                  <Tile>공강</Tile>
-                </Inline>
+                <Surface fill="sunken" style={{ width: 280 }}>
+                  <Inline justify={j} gap="md" padding="sm">
+                    <Tile>수학</Tile>
+                    <Tile>공강</Tile>
+                  </Inline>
+                </Surface>
               </Labeled>
             ))}
           </Stack>
@@ -463,11 +626,11 @@ const text: Spec = {
         <Stage bg="raised">
           <Inline gap="xl" wrap accent="purple">
             {TONES.map((t) => (
-              <Box key={t} surface={t === "inverse" ? "inverse" : undefined} paddingX="md" paddingY="xs">
+              <Surface key={t} fill={t === "inverse" ? "inverse" : "raised"} paddingX="md" paddingY="xs">
                 <Text variant="subheading" tone={t}>
                   {t}
                 </Text>
-              </Box>
+              </Surface>
             ))}
           </Inline>
         </Stage>
@@ -600,9 +763,9 @@ const iconSpec: Spec = {
           <Inline gap="xl" wrap accent="pink">
             {TONES.map((t) => (
               <Stack key={t} gap="xs" align="center">
-                <Box surface={t === "inverse" ? "inverse" : "raised"} border="line" padding="md">
+                <Surface fill={t === "inverse" ? "inverse" : "raised"} border="line" padding="md">
                   <Icon icon={Sparkles} size="lg" tone={t} />
-                </Box>
+                </Surface>
                 <Text variant="micro" tone="muted">
                   {t}
                 </Text>
@@ -620,33 +783,26 @@ const iconSpec: Spec = {
 const pressable: Spec = {
   name: "Pressable",
   summary:
-    "버튼이 아닌 큰 면(카드)에 같은 몸짓을 줍니다. press 는 4px 그림자 위에 떠 있다가 hover 때 가라앉고, lift 는 hover 때 위로 떠오릅니다. 그림자는 몸짓의 일부라 따로 고르지 않고, 면 · 테두리는 Box 처럼 직접 고릅니다.",
+    "큰 면(카드)에 눌림 · 떠오름 몸짓을 줍니다. press 는 4px 그림자 위에 떠 있다가 hover 때 가라앉고, lift 는 hover 때 위로 떠오릅니다. 칠은 하지 않습니다 — 면은 surfaceClass() 나 paintClass() 로 빌려 옵니다.",
   controls: {
     motion: { kind: "select", options: MOTIONS },
-    accent: { kind: "select", options: ACCENT_OPTIONS },
-    surface: { kind: "select", options: SURFACES },
-    border: { kind: "select", options: BORDERS },
     padding: { kind: "select", options: SPACES },
     disabled: { kind: "boolean" },
     children: { kind: "text" },
   },
-  // 면과 테두리는 기본이 없어서(native 버튼 모양이 그대로 나옵니다) 고른 값으로 시작합니다
-  initial: { surface: "raised", border: "line", padding: "xl", children: "수강 변경 탐색" },
-  defaults: { motion: "press", accent: "black", surface: undefined, border: "none", padding: "0", disabled: false },
+  initial: { padding: "xl", children: "수강 변경 탐색" },
+  defaults: { motion: "press", padding: "0", disabled: false },
   render: (v) => (
     <Frame width={240}>
-      <Pressable
-        motion={v.motion as PressMotion}
-        accent={v.accent as Accent}
-        surface={v.surface as Surface}
-        border={v.border as Border}
-        padding={v.padding as Space}
-        disabled={Boolean(v.disabled)}
-      >
+      <Pressable motion={v.motion as PressMotion} padding={v.padding as Space} disabled={Boolean(v.disabled)} className={surfaceClass({ border: "line" })}>
         {String(v.children ?? "")}
       </Pressable>
     </Frame>
   ),
+  code: (v) => {
+    const attrs = [v.motion !== "press" ? `motion="${String(v.motion)}"` : "", v.padding !== "0" ? `padding="${String(v.padding)}"` : "", v.disabled ? "disabled" : ""].filter(Boolean);
+    return `<Pressable ${attrs.join(" ")}${attrs.length ? " " : ""}className={surfaceClass({ border: "line" })}>\n  ${String(v.children ?? "")}\n</Pressable>`;
+  },
   sections: [
     {
       title: "press · lift",
@@ -655,7 +811,7 @@ const pressable: Spec = {
         <Stage>
           {MOTIONS.map((m) => (
             <Frame key={m} width={240}>
-              <Pressable motion={m} surface="raised" border="line" padding="xl">
+              <Pressable motion={m} padding="xl" className={surfaceClass({ border: "line" })}>
                 <Stack as="span" gap="xs">
                   <Text variant="subheading">{m}</Text>
                   <Text variant="caption" tone="muted">
@@ -669,23 +825,23 @@ const pressable: Spec = {
       ),
     },
     {
-      title: "링크 · disabled · accent",
-      note: "기본은 <button type=button> 이고, 링크면 as=a 를 줍니다. disabled 는 native 버튼에는 disabled 로, 링크에는 aria-disabled 로 붙고 몸짓이 멈춥니다.",
+      title: "링크 · disabled · Paint 면",
+      note: "기본은 <button type=button> 이고, 링크면 as=a 를 줍니다. disabled 는 native 버튼에는 disabled 로, 링크에는 aria-disabled 로 붙고 몸짓이 멈춥니다. 색이 있는 면은 paintClass() 로 빌려 옵니다.",
       render: () => (
         <Stage>
           <Frame width={200}>
-            <Pressable as="a" href="#" onClick={stay} surface="raised" border="line" padding="xl" style={{ color: "inherit", textDecoration: "none" }}>
+            <Pressable as="a" href="#" onClick={stay} padding="xl" className={surfaceClass({ border: "line" })}>
               as=&quot;a&quot; — 링크
             </Pressable>
           </Frame>
           <Frame width={200}>
-            <Pressable surface="raised" border="line" padding="xl" disabled>
+            <Pressable padding="xl" disabled className={surfaceClass({ border: "line" })}>
               disabled
             </Pressable>
           </Frame>
           <Frame width={200}>
-            <Pressable accent="green" surface="soft" border="accent" padding="xl">
-              accent · soft
+            <Pressable padding="xl" className={paintClass({ accent: "green", variant: "plain" })}>
+              paintClass · plain
             </Pressable>
           </Frame>
         </Stage>
@@ -759,9 +915,9 @@ function PortalDemo({ message }: { message: string }) {
       </Button>
       {open && (
         <Portal>
-          <Box surface="raised" border="line" shadow="raised" padding="xl" style={{ position: "fixed", right: 32, bottom: 32, zIndex: Z.overlay }}>
+          <Surface border="line" shadow="raised" padding="xl" style={{ position: "fixed", right: 32, bottom: 32, zIndex: Z.overlay }}>
             {message}
-          </Box>
+          </Surface>
         </Portal>
       )}
     </>
@@ -771,12 +927,12 @@ function PortalDemo({ message }: { message: string }) {
 /** Portal 없이 카드 안에서 그린 팝오버 — overflow 에 잘립니다 */
 function ClippedPopover() {
   return (
-    <Box border="line" padding="md" style={{ position: "relative", overflow: "hidden", width: 200, height: 44 }}>
+    <Surface border="line" padding="md" style={{ position: "relative", overflow: "hidden", width: 200, height: 44 }}>
       <Text variant="caption">overflow: hidden 카드</Text>
-      <Box surface="raised" border="line" shadow="raised" padding="md" style={{ position: "absolute", left: 12, top: 28, whiteSpace: "nowrap" }}>
+      <Surface border="line" shadow="raised" padding="md" style={{ position: "absolute", left: 12, top: 28, whiteSpace: "nowrap" }}>
         카드 안에서 그리면 잘립니다
-      </Box>
-    </Box>
+      </Surface>
+    </Surface>
   );
 }
 
@@ -788,7 +944,7 @@ const portal: Spec = {
   initial: { children: "body 끝에 그려졌습니다" },
   render: (v) => <PortalDemo message={String(v.children ?? "")} />,
   code: (v) =>
-    `<Portal>\n  <Box surface="raised" border="line" shadow="raised" padding="xl" style={{ position: "fixed", right: 32, bottom: 32 }}>\n    ${String(v.children ?? "")}\n  </Box>\n</Portal>`,
+    `<Portal>\n  <Surface border="line" shadow="raised" padding="xl" style={{ position: "fixed", right: 32, bottom: 32 }}>\n    ${String(v.children ?? "")}\n  </Surface>\n</Portal>`,
   sections: [
     {
       title: "overflow 에 잘리는 자리",
@@ -812,6 +968,8 @@ export const PRIMITIVE_SPECS: Record<string, Spec> = {
   Stack: stack,
   Inline: inline,
   Grid: grid,
+  Surface: surface,
+  Paint: paint,
   Text: text,
   Icon: iconSpec,
   Pressable: pressable,

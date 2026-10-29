@@ -36,12 +36,12 @@ import {
   type SearchFieldProps,
   type SegmentedControlProps,
   type Space,
-  type Surface,
+  type SurfaceFill,
   type TabsProps,
   type TooltipProps,
   type Variant,
 } from "@studio-baeks/funky-ui";
-import { ACCENTS, ACCENT_ROLES, CONTROL_SIZES, MOTIONS, SPACES, SURFACES, VARIANTS, type PressMotion } from "@studio-baeks/funky-ui/tokens";
+import { ACCENTS, ACCENT_ROLES, CONTROL_SIZES, MOTIONS, SPACES, SURFACE_FILLS, VARIANTS, type PressMotion } from "@studio-baeks/funky-ui/tokens";
 import {
   ArrowUpDown,
   BookOpen,
@@ -192,17 +192,17 @@ const card: Spec = {
     "흰 면 · 2px 검정 · 4px 그림자. 화면의 영역은 카드로 나눕니다. accent 는 카드 안의 컨트롤이 따라가는 색이고, motion 을 주면 카드 전체가 누르는 물건이 됩니다.",
   controls: {
     accent: { kind: "select", options: ACCENT_OR_NONE },
-    surface: { kind: "select", options: SURFACES },
+    fill: { kind: "select", options: SURFACE_FILLS },
     shadow: { kind: "select", options: CARD_SHADOWS },
     padding: { kind: "select", options: SPACES },
     motion: { kind: "select", options: ["none", ...MOTIONS] },
   },
   initial: { accent: "cyan" },
-  defaults: { accent: "none", surface: "raised", shadow: "raised", padding: "3xl", motion: "none" },
+  defaults: { accent: "none", fill: "raised", shadow: "raised", padding: "3xl", motion: "none" },
   render: (v) => {
     const look = {
       accent: opt<Accent>(v.accent),
-      surface: v.surface as Surface,
+      fill: v.fill as SurfaceFill,
       shadow: v.shadow as "raised" | "none",
       padding: v.padding as Space,
     };
@@ -265,12 +265,12 @@ const card: Spec = {
       ),
     },
     {
-      title: "Surface",
-      note: "solid · soft 는 accent 로 칠하고, 나머지는 흑백 면입니다. inverse 위에서는 글자색이 같이 바뀝니다.",
+      title: "Fill",
+      note: "카드의 면은 Surface 의 흑백 면 다섯입니다. inverse 위에서는 글자색이 같이 바뀝니다. accent 로 칠한 박스가 필요하면 Card 가 아니라 Paint 입니다.",
       render: () => (
         <Stage>
-          {SURFACES.map((s) => (
-            <Card key={s} accent="cyan" surface={s} padding="xl">
+          {SURFACE_FILLS.map((s) => (
+            <Card key={s} accent="cyan" fill={s} padding="xl">
               <Text variant="label">{s}</Text>
             </Card>
           ))}

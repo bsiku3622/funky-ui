@@ -1,14 +1,12 @@
 /** 알림 몰레큘 둘 — Notice(눈에 띄는 안내 상자) · EmptyState(비어 있는 자리) */
-import type { ReactNode } from "react";
+import type { ElementType, ReactNode } from "react";
 
 import { cx } from "../internal/cx";
 import { Icon, type IconComponent } from "../primitives/Icon";
 import { Inline, Stack } from "../primitives/layout";
+import { Paint } from "../primitives/Paint";
 import { Text } from "../primitives/Text";
-import { accentClass } from "../styles/accent.css";
-import { paint } from "../styles/control.css";
-import { variantClass } from "../styles/variant.css";
-import { resolveAccent, type Accent } from "../tokens/vocabulary";
+import type { Accent } from "../tokens/vocabulary";
 import { emptyState, emptyStateFramed, notice } from "./feedback.css";
 
 export interface NoticeProps {
@@ -24,10 +22,12 @@ export interface NoticeProps {
   children?: ReactNode;
 }
 
-/** 안내 상자 — Plain variant(연한 면 · 진한 테두리 · 진한 글자) */
+const PaintRoot = Paint as ElementType;
+
+/** 안내 상자 — `Paint` 의 plain(연한 면 · 진한 테두리 · 진한 글자) */
 export function Notice({ accent = "error", icon, title, action, role = "status", className, children }: NoticeProps) {
   return (
-    <div role={role} className={cx(notice, accentClass[resolveAccent(accent)], variantClass.plain, paint, className)}>
+    <PaintRoot role={role} accent={accent} variant="plain" className={cx(notice, className)}>
       <Inline gap="lg" align="start">
         {icon && <Icon icon={icon} size="md" />}
         <Stack gap="2xs">
@@ -42,7 +42,7 @@ export function Notice({ accent = "error", icon, title, action, role = "status",
         </Stack>
       </Inline>
       {action}
-    </div>
+    </PaintRoot>
   );
 }
 

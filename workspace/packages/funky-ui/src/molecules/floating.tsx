@@ -19,6 +19,7 @@ import { CheckGlyph } from "../internal/glyphs";
 import { useAnchor, type AnchorAlign, type Placement } from "../internal/useAnchor";
 import { Portal } from "../primitives/a11y";
 import { Icon, type IconComponent } from "../primitives/Icon";
+import { surfaceClass } from "../primitives/Surface";
 import { anchorWrap, menu, menuItem, menuItemCheck, menuItemSelected, tooltip } from "./floating.css";
 
 export interface TooltipProps {
@@ -61,7 +62,7 @@ export function Tooltip({ content, children, placement = "top", delay = 300, dis
       {isValidElement(children) ? cloneElement(children, { "aria-describedby": open ? id : undefined }) : children}
       {open && (
         <Portal>
-          <div ref={floating} id={id} role="tooltip" className={tooltip} style={style}>
+          <div ref={floating} id={id} role="tooltip" className={cx(surfaceClass({ fill: "inverse", border: "line", shadow: "raised" }), tooltip)} style={style}>
             {content}
           </div>
         </Portal>
@@ -138,7 +139,15 @@ export function Menu<V extends string>({ trigger, items, value, onSelect, align 
       })}
       {open && (
         <Portal>
-          <div ref={floating} id={id} role="menu" aria-label={ariaLabel} className={menu} style={style} onKeyDown={onKeyDown}>
+          <div
+            ref={floating}
+            id={id}
+            role="menu"
+            aria-label={ariaLabel}
+            className={cx(surfaceClass({ border: "line", shadow: "raised" }), menu)}
+            style={style}
+            onKeyDown={onKeyDown}
+          >
             {items.map((item) => {
               const selected = value !== undefined && item.value === value;
               return (

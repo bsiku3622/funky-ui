@@ -1,6 +1,7 @@
 /**
  * 늘어놓는 primitive 셋 — Stack(세로) · Inline(가로) · Grid(격자).
- * Box 의 prop 을 그대로 받고, 자식 사이의 간격과 정렬을 더합니다.
+ * Box 의 prop(여백 · accent 문맥)을 받고, 자식 사이의 간격과 정렬을 더합니다. 칠은 하지 않습니다 —
+ * 칠한 판 위에 늘어놓으려면 `<Surface as={Stack} gap="md">` 처럼 Surface 의 `as` 로 넘깁니다.
  */
 import type { CSSProperties, ElementType } from "react";
 
@@ -20,20 +21,18 @@ interface FlexOwnProps extends BoxOwnProps {
 export type StackProps<E extends ElementType = "div"> = PolyProps<E, FlexOwnProps>;
 
 /** 세로로 쌓습니다 */
-export function Stack<E extends ElementType = "div">({ as, gap, align, justify, className, ...rest }: StackProps<E>) {
+export function Stack<E extends ElementType = "div">({ as, gap, align, justify, accent, padding, paddingX, paddingY, className, ...rest }: StackProps<E>) {
   const Comp: ElementType = as ?? "div";
-  const { accent, surface, border, shadow, padding, paddingX, paddingY, ...props } = rest as BoxOwnProps & Record<string, unknown>;
   return (
     <Comp
       className={cx(
         stack,
-        boxClass({ accent, surface, border, shadow, padding, paddingX, paddingY }),
         gap && gapClass[gap],
         align && alignClass[align],
         justify && justifyClass[justify],
-        className,
+        boxClass({ accent, padding, paddingX, paddingY, className }),
       )}
-      {...props}
+      {...rest}
     />
   );
 }
@@ -41,21 +40,19 @@ export function Stack<E extends ElementType = "div">({ as, gap, align, justify, 
 export type InlineProps<E extends ElementType = "div"> = PolyProps<E, FlexOwnProps & { wrap?: boolean }>;
 
 /** 가로로 늘어놓습니다 — 기본은 세로 가운데 정렬 */
-export function Inline<E extends ElementType = "div">({ as, gap, align, justify, wrap, className, ...rest }: InlineProps<E>) {
+export function Inline<E extends ElementType = "div">({ as, gap, align, justify, wrap, accent, padding, paddingX, paddingY, className, ...rest }: InlineProps<E>) {
   const Comp: ElementType = as ?? "div";
-  const { accent, surface, border, shadow, padding, paddingX, paddingY, ...props } = rest as BoxOwnProps & Record<string, unknown>;
   return (
     <Comp
       className={cx(
         inline,
-        boxClass({ accent, surface, border, shadow, padding, paddingX, paddingY }),
         gap && gapClass[gap],
         align && alignClass[align],
         justify && justifyClass[justify],
         wrap && wrapClass,
-        className,
+        boxClass({ accent, padding, paddingX, paddingY, className }),
       )}
-      {...props}
+      {...rest}
     />
   );
 }
@@ -74,24 +71,37 @@ interface GridOwnProps extends BoxOwnProps {
 export type GridProps<E extends ElementType = "div"> = PolyProps<E, GridOwnProps>;
 
 /** 격자 — 칸 폭은 실행 중에 정해지는 값이라 inline style 로 넣습니다 */
-export function Grid<E extends ElementType = "div">({ as, columns, gap, rowGap, columnGap, align, justifyItems, style, className, ...rest }: GridProps<E>) {
+export function Grid<E extends ElementType = "div">({
+  as,
+  columns,
+  gap,
+  rowGap,
+  columnGap,
+  align,
+  justifyItems,
+  style,
+  accent,
+  padding,
+  paddingX,
+  paddingY,
+  className,
+  ...rest
+}: GridProps<E>) {
   const Comp: ElementType = as ?? "div";
-  const { accent, surface, border, shadow, padding, paddingX, paddingY, ...props } = rest as BoxOwnProps & Record<string, unknown>;
   const template = typeof columns === "number" ? `repeat(${columns}, minmax(0, 1fr))` : columns;
   return (
     <Comp
       className={cx(
         grid,
-        boxClass({ accent, surface, border, shadow, padding, paddingX, paddingY }),
         gap && gapClass[gap],
         rowGap && rowGapClass[rowGap],
         columnGap && columnGapClass[columnGap],
         align && alignClass[align],
         justifyItems && justifyItemsClass[justifyItems],
-        className,
+        boxClass({ accent, padding, paddingX, paddingY, className }),
       )}
       style={template ? { gridTemplateColumns: template, ...style } : style}
-      {...props}
+      {...rest}
     />
   );
 }

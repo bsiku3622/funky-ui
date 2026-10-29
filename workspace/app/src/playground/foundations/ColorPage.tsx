@@ -1,5 +1,5 @@
 /** Foundations › Color — 면 · 잉크 · 선 → accent 사다리 → variant 레시피 → 오버레이 · 포커스 */
-import { Badge, Box, Button, Grid, Inline, Stack, Text } from "@studio-baeks/funky-ui";
+import { Badge, Button, Grid, Inline, Stack, Surface, Text } from "@studio-baeks/funky-ui";
 import {
   ACCENTS,
   ACCENT_COLORS,
@@ -240,11 +240,11 @@ export function ColorPage() {
           <Button accent="green" variant="solid">
             solid
           </Button>
-          <Box padding="md" border="line" style={{ outline: `2px solid ${FOCUS}`, outlineOffset: 2 }}>
+          <Surface padding="md" border="line" style={{ outline: `2px solid ${FOCUS}`, outlineOffset: 2 }}>
             <Text variant="caption" weight="black">
               링 모양
             </Text>
-          </Box>
+          </Surface>
         </Stage>
       </Section>
     </div>

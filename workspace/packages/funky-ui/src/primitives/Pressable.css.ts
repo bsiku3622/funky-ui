@@ -6,7 +6,7 @@
  */
 import { style, styleVariants } from "@vanilla-extract/css";
 
-import { components } from "../tokens/layers.css";
+import { primitives } from "../tokens/layers.css";
 import { LIFT } from "../tokens/motion";
 import { vars } from "../tokens/variables";
 
@@ -15,7 +15,7 @@ const sink = `translate(${vars.press.sink}, ${vars.press.sink})`;
 
 export const pressableBase = style({
   "@layer": {
-    [components]: {
+    [primitives]: {
       display: "block",
       width: "100%",
       textAlign: "inherit",
@@ -37,7 +37,7 @@ export const pressableBase = style({
 export const motionClass = styleVariants({
   press: {
     "@layer": {
-      [components]: {
+      [primitives]: {
         selectors: {
           [`&${ENABLED}:hover`]: { transform: sink, boxShadow: `0 0 0 0 ${vars.shadowColor}` },
           [`&${ENABLED}:active`]: { transform: `${sink} scale(${vars.press.surfaceScale})`, boxShadow: `0 0 0 0 ${vars.shadowColor}` },
@@ -47,7 +47,7 @@ export const motionClass = styleVariants({
   },
   lift: {
     "@layer": {
-      [components]: {
+      [primitives]: {
         selectors: {
           [`&${ENABLED}:hover`]: {
             transform: `translateY(-${LIFT.rise}px)`,

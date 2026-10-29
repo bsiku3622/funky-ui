@@ -3,10 +3,10 @@ import type { ElementType } from "react";
 import { cx } from "../internal/cx";
 import type { PolyProps } from "../internal/polymorphic";
 import { Icon, type IconComponent } from "../primitives/Icon";
+import { Paint } from "../primitives/Paint";
 import { CONTROL } from "../tokens/shape";
 import type { Accent, ControlSize, Variant } from "../tokens/vocabulary";
 import { buttonBase, buttonSize, squareSize } from "./Button.css";
-import { controlClass } from "./Button";
 
 export interface IconButtonOwnProps {
   icon: IconComponent;
@@ -24,7 +24,9 @@ export interface IconButtonOwnProps {
 
 export type IconButtonProps<E extends ElementType = "button"> = PolyProps<E, IconButtonOwnProps>;
 
-/** 아이콘 하나짜리 정사각 버튼 */
+const PaintRoot = Paint as ElementType;
+
+/** 아이콘 하나짜리 정사각 버튼 — Button 과 같이 `Paint` 위에 섭니다 */
 export function IconButton<E extends ElementType = "button">({
   as,
   icon,
@@ -41,17 +43,23 @@ export function IconButton<E extends ElementType = "button">({
   const Comp: ElementType = as ?? "button";
   const isButton = Comp === "button";
   return (
-    <Comp
+    <PaintRoot
+      as={Comp}
+      accent={accent}
+      variant={variant}
+      selected={selected}
+      shadow={shadow}
+      interactive
       type={isButton ? "button" : undefined}
       disabled={isButton ? disabled : undefined}
       aria-disabled={!isButton && disabled ? true : undefined}
       aria-label={label}
       title={label}
       aria-pressed={selected === undefined ? undefined : selected}
-      className={cx(buttonBase, buttonSize[size], squareSize[size], controlClass({ accent, variant, shadow, selected }), className)}
+      className={cx(buttonBase, buttonSize[size], squareSize[size], className)}
       {...rest}
     >
       <Icon icon={icon} size={CONTROL.icon[size]} />
-    </Comp>
+    </PaintRoot>
   );
 }

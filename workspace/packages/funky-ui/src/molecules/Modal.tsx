@@ -1,9 +1,10 @@
-import { useEffect, useId, useRef, type MouseEvent, type ReactNode, type SyntheticEvent } from "react";
+import { useEffect, useId, useRef, type ElementType, type MouseEvent, type ReactNode, type SyntheticEvent } from "react";
 
 import { cx } from "../internal/cx";
 import { CloseGlyph } from "../internal/glyphs";
-import { accentClass } from "../styles/accent.css";
-import { resolveAccent, type Accent } from "../tokens/vocabulary";
+import { Paint } from "../primitives/Paint";
+import { Surface } from "../primitives/Surface";
+import type { Accent } from "../tokens/vocabulary";
 import { modal, modalBody, modalClose, modalCloseCorner, modalContent, modalFooter, modalHeader, modalSize, modalTitle } from "./Modal.css";
 
 export interface ModalProps {
@@ -23,9 +24,13 @@ export interface ModalProps {
   children?: ReactNode;
 }
 
+const SurfaceRoot = Surface as ElementType;
+const PaintRoot = Paint as ElementType;
+
 /**
  * 모달 — native `<dialog>` 의 `showModal()` 위에 섭니다. 포커스 가두기 · Esc · 뒤 화면 비활성 ·
- * 가장 위 층은 브라우저가 맡으므로 z-index 를 고르지 않습니다. 그림자는 시스템에서 유일한 8px 입니다.
+ * 가장 위 층은 브라우저가 맡으므로 z-index 를 고르지 않습니다. 판은 `Surface`(흰 면 · 2px · 시스템에서
+ * 유일한 8px 그림자), 머리 막대는 `Paint` 의 solid 입니다.
  */
 export function Modal({
   open,
@@ -59,9 +64,14 @@ export function Modal({
   };
 
   return (
-    <dialog
+    <SurfaceRoot
+      as="dialog"
       ref={ref}
-      className={cx(modal, modalSize[size], accentClass[resolveAccent(accent)], className)}
+      fill="raised"
+      border="line"
+      shadow="floating"
+      accent={accent}
+      className={cx(modal, modalSize[size], className)}
       onCancel={onCancel}
       onClick={onBackdrop}
       aria-labelledby={title !== undefined ? titleId : undefined}
@@ -69,14 +79,14 @@ export function Modal({
       {open && (
         <div className={modalContent}>
           {title !== undefined ? (
-            <div className={modalHeader}>
+            <PaintRoot variant="solid" className={modalHeader}>
               <span id={titleId} className={modalTitle}>
                 {title}
               </span>
               <button type="button" className={modalClose} onClick={onClose} aria-label={closeLabel}>
                 <CloseGlyph size={18} />
               </button>
-            </div>
+            </PaintRoot>
           ) : (
             // 머리 막대가 없어도 닫는 길은 눈에 보여야 합니다 — Esc 와 막 누름만으로는 모자랍니다
             <button type="button" className={cx(modalClose, modalCloseCorner)} onClick={onClose} aria-label={closeLabel}>
@@ -87,6 +97,6 @@ export function Modal({
           {footer && <div className={modalFooter}>{footer}</div>}
         </div>
       )}
-    </dialog>
+    </SurfaceRoot>
   );
 }

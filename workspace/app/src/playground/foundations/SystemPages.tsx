@@ -1,5 +1,5 @@
 /** Foundations › Typography · Shape · Layout · Motion — 원본 숫자 → 역할 → 실제 표본 */
-import { Badge, Box, Button, Card, Grid, Inline, Input, Stack, Text } from "@studio-baeks/funky-ui";
+import { Badge, Box, Button, Card, Grid, Inline, Input, Stack, Surface, Text } from "@studio-baeks/funky-ui";
 import {
   BADGE,
   BADGE_SIZES,
@@ -155,11 +155,11 @@ export function LayoutPage() {
       >
         <Stage bg="canvas">
           {(["raised", "floating"] as const).map((e) => (
-            <Box key={e} surface="raised" border="line" shadow={e} padding="3xl" style={{ width: 200 }}>
+            <Surface key={e} border="line" shadow={e} padding="3xl" style={{ width: 200 }}>
               <Text variant="caption" weight="black">
                 {e} · {ELEVATION[e].offset}px
               </Text>
-            </Box>
+            </Surface>
           ))}
         </Stage>
         <Table head={["layer", "z"]} rows={Object.entries(Z).map(([n, v]) => [n, v])} />

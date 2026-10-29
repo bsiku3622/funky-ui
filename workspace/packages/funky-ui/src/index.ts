@@ -8,4 +8,4 @@ export * from "./atoms";
 export * from "./molecules";
 export * from "./components";
 export { INVENTORY, LAYERS, FOUNDATIONS, type Layer } from "./inventory";
-export type { Accent, AccentName, AccentRole, Variant, ControlSize, BadgeSize, Surface, Border, Shadow, Space, TextVariant, Tone, Weight } from "./tokens/vocabulary";
+export type { Accent, AccentName, AccentRole, Variant, ControlSize, BadgeSize, SurfaceFill, Border, Shadow, Space, TextVariant, Tone, Weight } from "./tokens/vocabulary";

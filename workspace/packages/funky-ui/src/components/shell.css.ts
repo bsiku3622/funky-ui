@@ -18,9 +18,9 @@ export const appBar = style(
     gap: px(SPACE.xl),
     height: px(CONTAINER.shell.bar),
     paddingInline: px(SPACE["3xl"]),
-    backgroundColor: vars.accent.solid,
-    color: vars.accent.ink,
-    borderBottom: `${vars.stroke.base} solid ${vars.line.base}`,
+    // 칠은 Paint(solid)가 하고, 테두리는 아래 한 줄만 남깁니다
+    borderWidth: `0 0 ${vars.stroke.base}`,
+    borderColor: vars.line.base,
     boxShadow: `0 ${vars.press.sink} 0 0 ${vars.shadowColor}`,
   }),
 );
@@ -77,7 +77,6 @@ export const sideNav = style(
     display: "flex",
     flexDirection: "column",
     width: px(CONTAINER.shell.sidebar),
-    backgroundColor: vars.surface.canvas,
     borderRight: `${vars.stroke.base} solid ${vars.line.base}`,
   }),
 );
@@ -123,20 +122,6 @@ export const sideItem = style(
     textAlign: "start",
   }),
 );
-export const sideItemIdle = style(
-  c({
-    color: vars.ink.muted,
-    backgroundColor: "transparent",
-    border: `${vars.stroke.base} solid transparent`,
-    cursor: "pointer",
-    transitionProperty: "background-color, color",
-    transitionDuration: vars.duration.fast,
-    selectors: {
-      "&:hover": { backgroundColor: vars.overlay.hoverWhite, color: vars.ink.primary },
-      "&:active": { transform: `scale(${vars.press.scale})` },
-    },
-  }),
-);
 
 /* ── BottomNav ──────────────────────────────────────────────────────── */
 
@@ -145,9 +130,9 @@ export const bottomNav = style(
     display: "flex",
     alignItems: "stretch",
     height: px(CONTAINER.shell.bottomBar),
-    backgroundColor: vars.accent.solid,
-    color: vars.accent.ink,
-    borderTop: `${vars.stroke.base} solid ${vars.line.base}`,
+    // 칠은 Paint(solid)가 하고, 테두리는 위 한 줄만 남깁니다
+    borderWidth: `${vars.stroke.base} 0 0`,
+    borderColor: vars.line.base,
     boxShadow: `0 calc(-1 * ${vars.press.sink}) 0 0 ${vars.shadowColor}`,
   }),
 );

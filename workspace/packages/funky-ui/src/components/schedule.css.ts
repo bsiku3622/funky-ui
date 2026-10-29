@@ -74,8 +74,6 @@ export const grid = style(
   c({
     display: "grid",
     minWidth: 0,
-    backgroundColor: vars.surface.raised,
-    border: `${vars.stroke.base} solid ${vars.line.base}`,
   }),
 );
 export const gridCorner = style(c({ ...head, backgroundColor: vars.surface.inverse, color: vars.ink.inverseMuted }));

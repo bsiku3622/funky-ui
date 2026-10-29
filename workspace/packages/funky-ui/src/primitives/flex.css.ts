@@ -1,9 +1,9 @@
 import { style, styleVariants } from "@vanilla-extract/css";
 
-import { components, utilities } from "../tokens/layers.css";
+import { primitives, utilities } from "../tokens/layers.css";
 import type { Align, Justify } from "../tokens/vocabulary";
 
-const c = (rule: Record<string, unknown>) => ({ "@layer": { [components]: rule } });
+const c = (rule: Record<string, unknown>) => ({ "@layer": { [primitives]: rule } });
 const u = (rule: Record<string, unknown>) => ({ "@layer": { [utilities]: rule } });
 
 export const stack = style(c({ display: "flex", flexDirection: "column", minWidth: 0 }));

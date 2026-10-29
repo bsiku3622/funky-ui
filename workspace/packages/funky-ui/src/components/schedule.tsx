@@ -9,6 +9,7 @@
 import type { CSSProperties, ReactNode } from "react";
 
 import { cx } from "../internal/cx";
+import { surfaceClass } from "../primitives/Surface";
 import { NEONS } from "../tokens/palette";
 import { tile, tileMeta, tileState, tileTitle, grid, gridCorner, gridCell, gridDay, gridDayToday, gridPeriod } from "./schedule.css";
 import { toneStyle } from "./tone";
@@ -66,7 +67,7 @@ export interface TimetableGridProps {
 /** 한 주 격자 — 머리 줄은 검정, 교시 열은 well, 칸 사이는 카드 안 구분선입니다 */
 export function TimetableGrid({ days, periods, renderCell, corner = "Pd", className }: TimetableGridProps) {
   return (
-    <div role="table" className={cx(grid, className)} style={{ gridTemplateColumns: `2.5rem repeat(${days.length}, minmax(0, 1fr))` }}>
+    <div role="table" className={cx(surfaceClass({ border: "line" }), grid, className)} style={{ gridTemplateColumns: `2.5rem repeat(${days.length}, minmax(0, 1fr))` }}>
       <div role="row" style={{ display: "contents" }}>
         <div role="columnheader" className={gridCorner}>
           {corner}

@@ -7,12 +7,12 @@
 import { styleVariants } from "@vanilla-extract/css";
 
 import { ACCENT_COLORS } from "../tokens/color";
-import { components } from "../tokens/layers.css";
+import { primitives } from "../tokens/layers.css";
 import { ACCENT_VAR_NAMES } from "../tokens/variables";
 
 export const accentClass = styleVariants(ACCENT_COLORS, (c) => ({
   "@layer": {
-    [components]: {
+    [primitives]: {
       vars: {
         [ACCENT_VAR_NAMES.ink]: c.ink,
         [ACCENT_VAR_NAMES.solidInk]: c.solidInk,
