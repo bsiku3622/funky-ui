@@ -16,8 +16,8 @@ export const LAYER_LABEL: Record<Layer, string> = {
 /** 층 설명 — 홈과 Overview 가 같이 씁니다 */
 export const LAYER_NOTE: Record<Layer, string> = {
   foundations: "Color · Typography → Shape → Layout → Motion. 숫자와 hex 는 여기에만 삽니다.",
-  primitives: "두 단입니다. 1차는 서로 기대지 않는 바탕(Box · Text · Icon · 접근성), 2차는 Box 위에 능력 하나 — 칠(Surface · Paint) · 몸짓(Pressable) · 배치. accent 는 Paint 만 갖습니다.",
-  atoms: "한 가지 일을 하는 컨트롤. 버튼은 Pressable(몸짓)에 Paint(칠)를 얹고 크기 · 아이콘을 더한 것입니다.",
+  primitives: "두 단입니다. 1차는 서로 기대지 않는 바탕(Box · Text · Icon · 접근성), 2차는 Box 위에 능력 하나 — 칠(Surface · Paint) · 누름(Pressable) · 배치. accent 는 Paint 만 갖습니다.",
+  atoms: "한 가지 일을 하는 컨트롤. 버튼은 Pressable(누름)에 Paint(칠)를 얹고 크기 · 아이콘을 더한 것입니다.",
   molecules: "Atom 을 묶은 범용 조합. 어떤 앱에도 쓸 수 있습니다.",
   components: "class-explorer 전용 — 앱 셸 · 사람 · 시간표.",
 };

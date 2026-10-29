@@ -113,7 +113,7 @@ function SideNavItem({ icon, active = false, onClick, children }: SideNavItemPro
       {...pressOf(active ? "solid" : "ghostMuted", active, undefined)}
       aria-current={active ? "page" : undefined}
       onClick={onClick}
-      className={cx(paintClass({ accent: "black", variant: active ? "solid" : "ghostMuted", interactive: true }), sideItem)}
+      className={cx(paintClass({ accent: "black", variant: active ? "solid" : "ghostMuted", hoverable: true }), sideItem)}
     >
       <Icon icon={icon} size="lg" />
       <span>{children}</span>

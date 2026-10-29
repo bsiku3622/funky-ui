@@ -53,7 +53,7 @@ export function pressOf(variant: Variant, shadow: boolean, selected: boolean | u
 }
 
 /**
- * 버튼 — Pressable(몸짓) + Paint(칠)에 크기 · 아이콘 · 불러오기를 얹은 것입니다.
+ * 버튼 — Pressable(누름) + Paint(칠)에 크기 · 아이콘 · 불러오기를 얹은 것입니다.
  *
  * ```tsx
  * <Button accent="green" variant="outline">유지</Button>
@@ -90,7 +90,7 @@ export function Button<E extends ElementType = "button">({
       // disabled 를 쓰지 않는 이유는 꺼진 모양(opacity)이 아니라 스피너를 보여야 해서입니다.
       onClickCapture={loading ? swallow : undefined}
       className={cx(
-        paintClass({ accent, variant, selected, interactive: true }),
+        paintClass({ accent, variant, selected, hoverable: true }),
         buttonBase,
         buttonSize[size],
         fullWidth && fullWidthClass,

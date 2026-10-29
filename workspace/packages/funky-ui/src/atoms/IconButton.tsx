@@ -50,7 +50,7 @@ export function IconButton<E extends ElementType = "button">({
       aria-label={label}
       title={label}
       aria-pressed={selected === undefined ? undefined : selected}
-      className={cx(paintClass({ accent, variant, selected, interactive: true }), buttonBase, buttonSize[size], squareSize[size], className)}
+      className={cx(paintClass({ accent, variant, selected, hoverable: true }), buttonBase, buttonSize[size], squareSize[size], className)}
       {...rest}
     >
       <Icon icon={icon} size={CONTROL.icon[size]} />

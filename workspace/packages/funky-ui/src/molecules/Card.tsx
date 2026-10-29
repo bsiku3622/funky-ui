@@ -41,7 +41,7 @@ export function Card<E extends ElementType = "div">({
   ...rest
 }: CardProps<E>) {
   if (motion) {
-    // 누르는 카드 — 몸짓(Pressable)이 그림자를 갖고, 면과 테두리만 Surface 에서 빌려 옵니다
+    // 누르는 카드 — 누름(Pressable)이 그림자를 갖고, 면과 테두리만 Surface 에서 빌려 옵니다
     return (
       <PressableRoot as={as} motion={motion} padding={padding} className={cx(surfaceClass({ fill, border: "line" }), cardBase, cardPressable, className)} {...rest} />
     );

@@ -129,7 +129,7 @@ const BOX_TAGS = ["div", "section", "article"] as const;
 const box: Spec = {
   name: "Box",
   summary:
-    "요소 — 1차 primitive. 태그(as) · ref · 여백만 다루고, 칠하지 않으며 색도 모릅니다. 2차 primitive 는 모두 Box 위에 능력 하나를 얹습니다: 칠(Surface · Paint) · 몸짓(Pressable) · 배치(Stack · Inline · Grid). 점선은 Box 의 자리를 보이려고 그린 것입니다.",
+    "요소 — 1차 primitive. 태그(as) · ref · 여백만 다루고, 칠하지 않으며 색도 모릅니다. 2차 primitive 는 모두 Box 위에 능력 하나를 얹습니다: 칠(Surface · Paint) · 누름(Pressable) · 배치(Stack · Inline · Grid). 점선은 Box 의 자리를 보이려고 그린 것입니다.",
   controls: {
     as: { kind: "select", options: BOX_TAGS },
     padding: { kind: "select", options: SPACES },
@@ -196,7 +196,7 @@ const box: Spec = {
           </Labeled>
           <Labeled name="Pressable">
             <Pressable motion="press" padding="lg" className={surfaceClass({ border: "line" })}>
-              <Text variant="label">+ 몸짓</Text>
+              <Text variant="label">+ 누름</Text>
             </Pressable>
           </Labeled>
           <Labeled name="Inline">
@@ -285,7 +285,7 @@ const surface: Spec = {
               <Stack as="span" gap="xs">
                 <Text variant="subheading">Pressable + surfaceClass</Text>
                 <Text variant="caption" tone="muted">
-                  면은 Surface, 몸짓은 Pressable
+                  면은 Surface, 누름은 Pressable
                 </Text>
               </Stack>
             </Pressable>
@@ -299,59 +299,49 @@ const surface: Spec = {
 const paint: Spec = {
   name: "Paint",
   summary:
-    "요소의 칠 — accent(색) × variant(칠하는 방식). accent 를 갖는 primitive 는 Paint 하나라, 안쪽 요소는 accent 를 따로 주지 않으면 가장 가까운 Paint 의 색을 따릅니다. Badge · Notice · 상단 바 · 머리 막대가 이 위에 서고, Button 은 Pressable(몸짓)에 이 칠을 얹은 것입니다. interactive 는 hover · press 때의 색만 바꿉니다 — 커서와 움직임은 Pressable 의 몫이라, 누르는 요소는 Pressable 에 paintClass() 로 칠을 얹습니다.",
+    "요소의 칠 — 색의 모든 상태를 맡습니다. accent(색) × variant(칠하는 방식)가 쉬는 색을, selected 가 골라진 색을, hoverable 이 hover · 누르는 중의 색을 정합니다. hoverable 은 Pressable 없이 혼자 동작합니다 — 누르는 물건으로 만드는 것(의미 · 커서 · 몸짓)은 Pressable 이고, Pressable 은 색을 하나도 갖지 않습니다. primitive 중 accent 를 갖는 것은 Paint 하나라 안쪽 요소는 가장 가까운 Paint 의 색을 따릅니다. Badge · Notice · 바가 이 위에 서고, Button 은 Pressable 에 이 칠을 얹은 것입니다.",
   controls: {
     accent: { kind: "select", options: ACCENT_OPTIONS },
     variant: { kind: "select", options: VARIANTS },
     selected: { kind: "boolean" },
-    interactive: { kind: "boolean" },
+    hoverable: { kind: "boolean" },
     padding: { kind: "select", options: SPACES },
     children: { kind: "text" },
   },
-  initial: { accent: "green", variant: "plain", interactive: true, padding: "lg", children: "세계사의이해 · 3분반" },
-  defaults: { accent: "black", variant: "outline", selected: false, interactive: false, padding: "0" },
-  render: (v) => {
-    const look = { accent: v.accent as Accent, variant: v.variant as Variant, selected: Boolean(v.selected), padding: v.padding as Space };
-    const label = <Text variant="label">{String(v.children ?? "")}</Text>;
-    // 누르는 요소는 몸짓(Pressable)에 칠을 얹습니다 — Paint 혼자서는 커서도 움직임도 없습니다
-    return v.interactive ? (
-      <Pressable motion="tap" className={paintClass({ ...look, interactive: true })}>
-        {label}
-      </Pressable>
-    ) : (
-      <Paint {...look}>{label}</Paint>
-    );
-  },
+  initial: { accent: "green", variant: "plain", hoverable: true, padding: "lg", children: "세계사의이해 · 3분반" },
+  defaults: { accent: "black", variant: "outline", selected: false, hoverable: false, padding: "0" },
+  // hoverable 이어도 Paint 하나입니다 — hover 색은 Pressable 없이 켜지고, 커서는 화살표 그대로입니다
+  render: (v) => (
+    <Paint
+      accent={v.accent as Accent}
+      variant={v.variant as Variant}
+      selected={Boolean(v.selected)}
+      hoverable={Boolean(v.hoverable)}
+      padding={v.padding as Space}
+    >
+      <Text variant="label">{String(v.children ?? "")}</Text>
+    </Paint>
+  ),
   code: (v) => {
-    const text = String(v.children ?? "");
-    const padding = v.padding !== "0" ? `padding="${String(v.padding)}"` : "";
-    if (v.interactive) {
-      const look = [
-        v.accent !== "black" ? `accent: "${String(v.accent)}"` : "",
-        v.variant !== "outline" ? `variant: "${String(v.variant)}"` : "",
-        v.selected ? "selected: true" : "",
-        "interactive: true",
-      ].filter(Boolean);
-      return `<Pressable motion="tap" ${padding ? `${padding} ` : ""}className={paintClass({ ${look.join(", ")} })}>\n  ${text}\n</Pressable>`;
-    }
     const attrs = [
       v.accent !== "black" ? `accent="${String(v.accent)}"` : "",
       v.variant !== "outline" ? `variant="${String(v.variant)}"` : "",
       v.selected ? "selected" : "",
-      padding,
+      v.hoverable ? "hoverable" : "",
+      v.padding !== "0" ? `padding="${String(v.padding)}"` : "",
     ].filter(Boolean);
-    return `<Paint${attrs.length ? ` ${attrs.join(" ")}` : ""}>\n  ${text}\n</Paint>`;
+    return `<Paint${attrs.length ? ` ${attrs.join(" ")}` : ""}>\n  ${String(v.children ?? "")}\n</Paint>`;
   },
   sections: [
     {
       title: "Accent × Variant",
-      note: "행 머리의 네 칸은 FG / BG / Border / Hover 입니다(재원님 스케치의 표기). Button · Badge 의 행렬과 같은 레시피입니다 — 그쪽은 이 칠에 크기 · 아이콘을 얹은 것입니다. 칸은 hover 를 보이려고 Pressable(tap)에 칠을 얹었습니다. 마우스를 올려 보세요.",
+      note: "행 머리의 네 칸은 FG / BG / Border / Hover 입니다(재원님 스케치의 표기). Button · Badge 의 행렬과 같은 레시피입니다 — 그쪽은 이 칠에 크기 · 아이콘을 얹은 것입니다. 칸은 hoverable 이라 마우스를 올리면 Hover 칸대로 바뀝니다 — Pressable 없이 Paint 혼자입니다.",
       render: () => (
         <AccentVariantMatrix
           cell={(accent, variant) => (
-            <Pressable motion="tap" paddingX="md" paddingY="xs" className={paintClass({ accent, variant, interactive: true })}>
+            <Paint accent={accent} variant={variant} hoverable paddingX="md" paddingY="xs">
               <Text variant="label">{accent}</Text>
-            </Pressable>
+            </Paint>
           )}
         />
       ),
@@ -381,20 +371,23 @@ const paint: Spec = {
       ),
     },
     {
-      title: "selected · interactive — 몸짓은 Pressable",
-      note: "selected 는 같은 accent 의 solid 입니다. interactive 는 hover · press 때의 색만 바꾸고, 커서와 움직임은 Pressable 이 맡습니다 — tap 은 누르는 순간만 작아지고, press 는 그림자 속으로 가라앉으며, pressed 는 눌린 채로 머뭅니다. Button 이 이 조립(Pressable + paintClass)입니다.",
+      title: "색과 누름은 따로 섭니다",
+      note: "Paint 는 색, Pressable 은 누름이고 서로를 켜지 않습니다. hoverable 은 Pressable 없이 hover 색을 내고(둘째 — 커서는 화살표 그대로), Pressable 은 칠 없이 가라앉습니다(셋째). Button 은 둘을 묶은 것이고(넷째), 골라지면 Paint 의 selected 와 Pressable 의 pressed 를 같이 줍니다(다섯째).",
       render: () => (
         <Stage bg="raised">
           <Paint accent="cyan" variant="muted" padding="md">
-            <Text variant="label">읽는 요소</Text>
+            <Text variant="label">쉼</Text>
           </Paint>
-          <Pressable motion="tap" padding="md" className={paintClass({ accent: "cyan", variant: "muted", interactive: true })}>
-            <Text variant="label">tap</Text>
+          <Paint accent="cyan" variant="muted" hoverable padding="md">
+            <Text variant="label">색만 · hoverable</Text>
+          </Paint>
+          <Pressable motion="press" padding="md" className={surfaceClass({ border: "line" })}>
+            <Text variant="label">누름만 · Pressable</Text>
           </Pressable>
-          <Pressable motion="press" padding="md" className={paintClass({ accent: "cyan", variant: "tonal", interactive: true })}>
-            <Text variant="label">press</Text>
+          <Pressable motion="press" padding="md" className={paintClass({ accent: "cyan", variant: "tonal", hoverable: true })}>
+            <Text variant="label">둘 다 · Button</Text>
           </Pressable>
-          <Pressable motion="press" pressed padding="md" className={paintClass({ accent: "cyan", variant: "muted", selected: true, interactive: true })}>
+          <Pressable motion="press" pressed padding="md" className={paintClass({ accent: "cyan", variant: "muted", selected: true, hoverable: true })}>
             <Text variant="label">selected · pressed</Text>
           </Pressable>
         </Stage>
@@ -860,7 +853,7 @@ const MOTION_NOTE: Record<PressMotion, string> = {
 const pressable: Spec = {
   name: "Pressable",
   summary:
-    "누르는 몸짓 — 커서 · 꺼진 모양 · 움직임 · 버튼의 의미(type · disabled)를 맡습니다. press 는 4px 그림자 위에 떠 있다가 hover 때 가라앉고, lift 는 떠오르고, tap 은 그림자 없이 누르는 순간만 작아집니다. 칠은 하지 않습니다 — 흑백 면은 surfaceClass(), 색은 paintClass() 로 얹습니다. Button 이 Pressable + Paint 입니다.",
+    "누르는 물건 — 버튼의 의미(type · disabled) · 커서 · 꺼진 모양 · 몸짓을 맡습니다. press 는 4px 그림자 위에 떠 있다가 hover 때 가라앉고, lift 는 떠오르고, tap 은 그림자 없이 누르는 순간만 작아집니다. 색은 하나도 없습니다 — hover 색까지 Paint 의 hoverable 이고, Pressable 이 그걸 켜 주지 않습니다. 흑백 면은 surfaceClass(), 색은 paintClass() 로 얹습니다. Button 이 Pressable + Paint 입니다.",
   controls: {
     motion: { kind: "select", options: MOTIONS },
     pressed: { kind: "boolean" },
@@ -915,7 +908,7 @@ const pressable: Spec = {
     },
     {
       title: "링크 · disabled · Paint 면",
-      note: "기본은 <button type=button> 이고, 링크면 as=a 를 줍니다. disabled 는 native 버튼에는 disabled 로, 링크에는 aria-disabled 로 붙고 몸짓이 멈춥니다. 색이 있는 면은 paintClass() 로 빌려 옵니다.",
+      note: "기본은 <button type=button> 이고, 링크면 as=a 를 줍니다. disabled 는 native 버튼에는 disabled 로, 링크에는 aria-disabled 로 붙고 몸짓이 멈춥니다. 색이 있는 면은 paintClass() 로 빌려 오고, hover 색이 필요하면 hoverable 을 같이 줍니다 — hover 색은 Pressable 이 아니라 Paint 의 것입니다.",
       render: () => (
         <Stage>
           <Frame width={200}>
@@ -929,7 +922,7 @@ const pressable: Spec = {
             </Pressable>
           </Frame>
           <Frame width={200}>
-            <Pressable padding="xl" className={paintClass({ accent: "green", variant: "plain", interactive: true })}>
+            <Pressable padding="xl" className={paintClass({ accent: "green", variant: "plain", hoverable: true })}>
               paintClass · plain
             </Pressable>
           </Frame>

@@ -22,9 +22,10 @@ export function pressClass({ motion = "press", pressed = false, ...box }: Omit<P
 }
 
 /**
- * 누르는 몸짓 — 2차 primitive (Box + 몸짓). 커서 · 꺼진 모양 · 움직임 · 버튼의 의미(`type` · `disabled` ·
- * `aria-disabled`)를 맡고, 칠은 하지 않습니다. 색은 `paintClass()`, 흑백 면은 `surfaceClass()` 로 얹습니다 —
- * Button 은 Pressable + Paint, 누르는 카드는 Pressable + Surface 입니다.
+ * 누르는 물건 — 2차 primitive (Box + 누름). '눌린다' 는 사실과 그 몸짓을 맡습니다: 버튼의 의미(`type` ·
+ * `disabled` · `aria-disabled`) · 커서 · 꺼진 모양 · 움직임. 색은 하나도 없습니다 — hover 색까지 Paint 의
+ * `hoverable` 이고, Pressable 이 그걸 켜 주지 않습니다. 색은 `paintClass()`, 흑백 면은 `surfaceClass()` 로
+ * 얹습니다 — Button 은 Pressable + Paint, 누르는 카드는 Pressable + Surface 입니다.
  * 기본은 `<button type="button">`, 링크면 `as="a"` 나 라우터 링크.
  */
 export function Pressable<E extends ElementType = "button">({

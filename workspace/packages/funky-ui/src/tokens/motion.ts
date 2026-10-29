@@ -39,10 +39,11 @@ export const LIFT = {
 } as const;
 
 /**
- * 누르는 요소에서 움직이는 속성 — 색(Paint)과 몸짓(Pressable)이 한 요소에 같이 걸리므로 둘이 같은
- * 목록을 씁니다. 서로 다른 목록을 쓰면 나중에 선언된 쪽이 앞의 전환을 지웁니다.
+ * 상태(hover · 누르는 중 · 꺼짐)가 바뀔 때 움직이는 속성 — 색(Paint 의 hoverable)과 몸짓(Pressable)을 합친
+ * 목록입니다. `transition-property` 는 한 속성이라 두 primitive 가 자기 것만 적으면 한 요소 위에서 나중에
+ * 선언된 쪽이 앞의 전환을 지웁니다. 그래서 둘 다 이 목록을 씁니다.
  * `transition: all` 은 쓰지 않습니다 (폭이 바뀌는 컨트롤에서 글자가 상자 밖으로 비져 나옵니다).
  */
-export const PRESS_TRANSITION = "color, background-color, border-color, box-shadow, transform, opacity";
+export const STATE_TRANSITION = "color, background-color, border-color, box-shadow, transform, opacity";
 
 export const ms = (n: number) => `${n}ms`;

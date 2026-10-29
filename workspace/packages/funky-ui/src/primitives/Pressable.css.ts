@@ -1,5 +1,5 @@
 /**
- * 누르는 몸짓 (fk.primitives) — 색은 모릅니다(그건 Paint). 커서 · 꺼진 모양 · 움직임만 다룹니다.
+ * 누름 (fk.primitives) — 색은 하나도 없습니다(hover 색까지 Paint 의 hoverable). 커서 · 꺼진 모양 · 움직임만 다룹니다.
  *
  * - `press` — 4px 그림자 위에 떠 있다가 hover 때 그림자 자리로 가라앉고, 누르는 순간 한 번 더 작아집니다.
  *   가라앉는 거리 = 그림자 거리(`PRESS.sink`)라 그림자가 본체 뒤로 비져 나오지 않습니다.
@@ -12,7 +12,7 @@
 import { style, styleVariants } from "@vanilla-extract/css";
 
 import { primitives } from "../tokens/layers.css";
-import { LIFT, PRESS_TRANSITION } from "../tokens/motion";
+import { LIFT, STATE_TRANSITION } from "../tokens/motion";
 import { vars } from "../tokens/variables";
 import type { PressMotion } from "../tokens/vocabulary";
 
@@ -25,8 +25,9 @@ export const pressBase = style(
   p({
     cursor: "pointer",
     textDecoration: "none",
+    // 터치 브라우저가 누를 때 덮는 회색 번쩍임을 끕니다 — 누름의 반응은 몸짓(여기)과 press 층(Paint)이 맡습니다
     WebkitTapHighlightColor: "transparent",
-    transitionProperty: PRESS_TRANSITION,
+    transitionProperty: STATE_TRANSITION,
     transitionDuration: vars.duration.fast,
     transitionTimingFunction: vars.easing.standard,
     selectors: {

@@ -21,7 +21,7 @@ export function boxClass({ padding, paddingX, paddingY, className }: BoxOwnProps
 
 /**
  * 요소 — 1차 primitive. 태그(`as`) · ref · 여백만 다룹니다. 칠하지 않고 색도 모릅니다.
- * 2차 primitive 는 모두 이 위에 능력 하나를 얹습니다: 칠(Surface · Paint) · 몸짓(Pressable) · 배치(Stack · Inline · Grid).
+ * 2차 primitive 는 모두 이 위에 능력 하나를 얹습니다: 칠(Surface · Paint) · 누름(Pressable) · 배치(Stack · Inline · Grid).
  */
 export function Box<E extends ElementType = "div">({ as, padding, paddingX, paddingY, className, ...rest }: BoxProps<E>) {
   const Comp: ElementType = as ?? "div";
