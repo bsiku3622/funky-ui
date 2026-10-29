@@ -75,7 +75,8 @@ export const matrixCell = style({
 export const swatch = style({ width: "100%", height: 44, border: `${vars.stroke.base} solid ${vars.line.base}` });
 export const mono = style({ fontFamily: vars.font.mono, fontSize: "0.6875rem", fontWeight: 600, letterSpacing: 0 });
 
-export const table = style({ width: "100%", borderCollapse: "collapse", border: `${vars.stroke.base} solid ${vars.line.base}`, backgroundColor: vars.surface.raised });
+/** ⚠️ collapse 면 칸의 윗선이 바깥 검정 테두리와 같은 격자선을 나눠 써서 양 끝에 회색이 비집고 들어갑니다 — separate 로 칸 선을 안쪽에만 그립니다 */
+export const table = style({ width: "100%", borderCollapse: "separate", borderSpacing: 0, border: `${vars.stroke.base} solid ${vars.line.base}`, backgroundColor: vars.surface.raised });
 export const th = style({
   textAlign: "left",
   padding: `${vars.space.md} ${vars.space.lg}`,
