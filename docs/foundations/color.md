@@ -95,6 +95,10 @@ variant는 같은 accent를 어디에, 얼마나 진하게 칠하는지를 정�
 - **Solid의 테두리 `-`는 "면과 같은 색"** 으로 읽었습니다. class-explorer의 선택된 "유지" 버튼이 `bg-retro-green border-retro-green` 이었고, 그래서 Solid는 검정 테두리 없는 색 블록입니다.
 - **Tonal의 글자는 `ink`** 입니다. 표에는 Black이라 적혀 있는데, 밝은 accent에서는 ink가 곧 검정이라 결과가 같습니다. 보라처럼 ink가 흰색인 accent에서는 검정 글자가 2.2:1로 읽히지 않아 흰색으로 둡니다. 테두리의 Ink는 선이므로 `line`(#000)입니다. 결과적으로 Tonal = Solid 면 + 검정 테두리이고, class-explorer에서 가장 흔한 "네온 면 + 검정 테두리 + 검정 글자" 버튼이 여기에 들어옵니다.
 
+### Paint — 레시피를 쓰는 primitive
+
+이 표는 [Paint](../primitives/README.md#paint) primitive가 그대로 씁니다. `<Paint accent variant>`가 레시피를 글자 · 면 · 테두리로 칠하고, `interactive`를 주면 hover · press 층이, `shadow`를 같이 주면 그림자 속으로 가라앉는 눌림이 붙습니다. Button · Badge · Notice · 바(상단 바 · 머리 막대)는 전부 Paint 위에 섭니다. 흑백 박스(카드 · 패널 · 모달 판)는 [Surface](../primitives/README.md#surface)가 칠하고, 거기에는 accent가 없습니다 — 박스는 흑백, 색은 요소입니다.
+
 ### 선택
 
 선택은 따로 된 variant가 아니라 상태입니다. `selected`를 주면 같은 accent의 `solid`로 칠해지고 `aria-pressed`가 붙습니다. 그래서 안 골린 칸은 `muted`, 골린 칸은 검정 블록이 되는 class-explorer의 학기 고르기도, 초록 Outline이 초록 블록이 되는 Trade의 "유지"도 같은 규칙입니다. 그림자를 켠 버튼은 골리면 눌린 채로 있습니다 ([Motion](motion.md)).

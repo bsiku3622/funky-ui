@@ -40,7 +40,8 @@ Trade 화면은 색이 뜻을 짊어지는 대표 자리라 따로 적습니다.
 | 분반 · 골림 `bg-retro-green border-retro-green` | 같은 버튼 + `selected` |
 | 충돌 분반 `bg-retro-accent4/25 border-retro-accent4 text-retro-accent4` | `<Button size="xs" accent="orange" variant="plain">` |
 | 이동 중인 카드의 버튼 `bg-white/60 border-retro-accent5 text-black/50` | `<Button size="xs" accent="sky" variant="framelineMuted">` |
-| 드랍한 카드 안 버튼 (카드 색을 따름) | `<Card accent="pink">` 안의 `<Button variant="outline">` — accent가 아래로 흐릅니다 |
+| 드랍한 카드 (`bg-retro-primary/10 border-retro-primary`) | `<Paint accent="pink" variant="plain">` — 색이 있는 박스는 Paint입니다 |
+| 드랍한 카드 안 버튼 (카드 색을 따름) | 그 Paint 안의 `<Button variant="outline">` — accent가 아래로 흐릅니다 |
 
 ## 그림자
 

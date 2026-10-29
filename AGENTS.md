@@ -14,9 +14,9 @@ funky-ui/
     │       ├── inventory.ts    # 이름 · 층 · 순서의 정본 (import 없음)
     │       ├── tokens/         # 값의 유일한 정의 위치 — palette(hex) → color(역할) · color-recipes(11 variant)
     │       │                   #   · typography · shape · layout · motion · vocabulary(축) · variables(--fk-*) · layers
-    │       ├── styles/         # 공유 class — accent · variant · slots · control · surface · space · typography · global
+    │       ├── styles/         # 공유 class — accent · variant · slots(레시피 → 슬롯) · space · typography · global
     │       ├── internal/       # cx · polymorphic · glyphs · useAnchor
-    │       ├── primitives/     # Box · Stack · Inline · Grid · Text · Icon · Pressable · VisuallyHidden · Portal
+    │       ├── primitives/     # Box · Stack · Inline · Grid · Surface · Paint · Text · Icon · Pressable · VisuallyHidden · Portal
     │       ├── atoms/          # 범용 컨트롤
     │       ├── molecules/      # 범용 조합
     │       └── components/     # class-explorer 전용
@@ -37,14 +37,15 @@ Foundations (Color · Typography → Shape → Layout → Motion) → Primitives
 
 - hex 는 `tokens/palette.ts` 에만 씁니다. 다른 파일은 고르기만 합니다.
 - accent 사다리 다섯 칸(ink · solidInk · solid · soft · softInk)의 규칙은 docs/foundations/color.md 에 있습니다. 값을 바꾸면 Playground › Color 의 대비 배지가 목표(글자 칸 AA)를 지키는지 확인합니다.
-- variant 는 `tokens/color-recipes.ts` 의 칸 이름 표 하나가 정합니다. `styles/slots.ts` 가 그 이름을 변수로 옮기고, 컨트롤은 슬롯 일곱(`--fk-fg` · `--fk-bg` · `--fk-border` · hover 셋 · press 하나)만 읽습니다.
+- variant 는 `tokens/color-recipes.ts` 의 칸 이름 표 하나가 정합니다. `styles/slots.ts` 가 그 이름을 변수로 옮기고, `Paint` 는 슬롯 일곱(`--fk-fg` · `--fk-bg` · `--fk-border` · hover 셋 · press 하나)만 읽습니다.
+- **칠은 primitive 둘이 나눠 맡습니다.** 박스는 `Surface`(흑백 면 · 테두리 · 그림자), 요소는 `Paint`(accent × variant · selected · interactive · shadow). accent 로 칠한 면은 Surface 에 없습니다. 위 층은 이 둘을 렌더하거나 `surfaceClass()` · `paintClass()` 로 class 만 빌려 옵니다 — 칠을 다시 조립하지 않습니다. `Box` 는 칠하지 않는 배치 바탕(as · 여백 · accent 문맥)입니다.
 - ⚠️ variant 는 슬롯 일곱을 **전부** 씁니다. 변수는 상속되므로 하나라도 비우면 바깥 컨트롤의 값이 새어 들어옵니다.
 - accent 는 CSS 변수라 아래로 흐릅니다. `:root` 는 검정(시스템)입니다.
 - 런타임에 색을 계산하지 않습니다. 실행 중에 정해지는 색(학과 · 학번)은 Components 에서 `--fk-tone` 하나로 받습니다.
 
 ## 스타일
 
-- 패키지 CSS 는 전부 `fk` 레이어 안에 듭니다(`fk.reset < theme < base < components < utilities`). 소비 앱은 CSS 맨 위에 `@layer fk, theme, base, components, utilities;` 를 둡니다.
+- 패키지 CSS 는 전부 `fk` 레이어 안에 듭니다(`fk.reset < theme < base < primitives < components < utilities`). 층 구조를 그대로 옮긴 순서라 위 층 CSS 는 Surface · Paint 의 칠을 언제나 덮습니다 — 모달 머리 막대가 Paint 의 solid 를 쓰고 테두리만 아래 한 줄로 덮는 식입니다. 소비 앱은 CSS 맨 위에 `@layer fk, theme, base, components, utilities;` 를 둡니다.
 - vanilla-extract 의 `.css.ts` 는 함수를 export 할 수 없습니다. 규칙을 만드는 함수는 일반 모듈(`styles/slots.ts` · `tokens/typography-recipes.ts`)에 둡니다.
 - `style()` 의 selector 는 자기 자신(`&`)을 겨눠야 합니다. 형제 · 자식을 꾸미는 규칙은 대상 쪽 style 에 `${other}:checked + &` 로 겁니다.
 - 그림자는 `raised`(4px) · `floating`(8px, 모달 전용) 두 단뿐입니다. blur 는 0.

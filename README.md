@@ -9,12 +9,14 @@ The system stacks in one direction; every layer reads only the layers before it.
 | Layer | | |
 |---|---|---|
 | Foundations | 5 systems | `Color · Typography → Shape → Layout → Motion` |
-| Primitives | 9 | `Box · Stack · Inline · Grid · Text · Icon · Pressable · VisuallyHidden · Portal` |
+| Primitives | 11 | `Box · Stack · Inline · Grid · Surface · Paint · Text · Icon · Pressable · VisuallyHidden · Portal` |
 | Atoms | 14 | `Button · IconButton · NavButton · Link · Badge · Spinner · Divider · Input · Textarea · Select · Checkbox · Radio · Switch · Label` |
 | Molecules | 15 | `Card · SectionTitle · PageHeader · Accordion · SegmentedControl · Tabs · Menu · Modal · Tooltip · SearchField · FormField · Stat · Meter · Notice · EmptyState` |
 | Components | 8 | `AppBar · SideNav · BottomNav · TermSwitcher · StudentBadge · PersonCard · ClassTile · TimetableGrid` |
 
 Atoms and Molecules are generic. Components are specific to Class Explorer.
+
+Painting is split between two primitives: **Surface** paints boxes with the neutral fills (canvas, raised, sunken, well, inverse), and **Paint** paints elements with accent × variant — the variant system exposed as a primitive. Button, Badge, Notice and the bars are built on Paint; Card, Modal and Menu panels on Surface.
 
 Colour is two axes: **accent** (9 — black/system, pink/primary, purple/secondary, cyan, yellow, orange, sky, green/success, red/error) × **variant** (11 — solid, outline, hairline, frameline, framelineMuted, plain, tonal, tonalMuted, muted, ghost, ghostMuted). Every accent has a five-step ladder (ink · solidInk · solid · soft · softInk) whose text steps pass WCAG AA on the cream canvas. Shadows come in two depths only: 4px for raised objects, 8px for modals.
 

@@ -2,7 +2,7 @@
 
 Atoms는 한 가지 일을 하는 컨트롤과 표시입니다. Primitives와 토큰 · 스타일만 읽고, 어떤 앱에도 쓸 수 있는 범용 층이라 class-explorer를 모릅니다. 누르는 버튼, 읽는 라벨, 입력 칸, 켜고 끄는 표식이 여기 있습니다.
 
-Button · IconButton · Badge는 같은 축을 씁니다. `accent`는 색 이름(아홉 가지와 역할 별칭 다섯)이고, `variant`는 같은 accent를 어디에 얼마나 진하게 칠할지 정하는 열한 가지 규칙입니다. 색을 이 두 축으로만 고르는 이유는 [원칙](../get-started/principles.md), 값과 규칙은 [Color](../foundations/color.md), 크기 사다리는 [Shape](../foundations/shape.md)에 있습니다. 요소를 그리는 컴포넌트가 `as`와 나머지 props를 다루는 방식은 [Primitives](../primitives/README.md)와 같고, Input · Textarea · Select · Checkbox · Radio · Switch는 native 요소를 감싸므로 `ref`와 폼 속성이 그대로 갑니다. 예시는 import를 생략하며, `on`이나 `studentId`처럼 앱이 가진 상태와 핸들러는 이미 있다고 봅니다.
+Button · IconButton · Badge는 [Paint](../primitives/README.md#paint) 위에 섭니다 — 칠(accent × variant · selected · 눌림)은 Paint가 하고, 이 셋은 크기 · 글자 · 아이콘만 얹습니다. `accent`는 색 이름(아홉 가지와 역할 별칭 다섯)이고, `variant`는 같은 accent를 어디에 얼마나 진하게 칠할지 정하는 열한 가지 규칙입니다. 색을 이 두 축으로만 고르는 이유는 [원칙](../get-started/principles.md), 값과 규칙은 [Color](../foundations/color.md), 크기 사다리는 [Shape](../foundations/shape.md)에 있습니다. 요소를 그리는 컴포넌트가 `as`와 나머지 props를 다루는 방식은 [Primitives](../primitives/README.md)와 같고, Input · Textarea · Select · Checkbox · Radio · Switch는 native 요소를 감싸므로 `ref`와 폼 속성이 그대로 갑니다. 예시는 import를 생략하며, `on`이나 `studentId`처럼 앱이 가진 상태와 핸들러는 이미 있다고 봅니다.
 
 | 묶음 | 컴포넌트 |
 | --- | --- |
@@ -40,15 +40,7 @@ accent(색) × variant(칠하는 방식) × size × shadow로 만드는 기본 �
 - 선택은 variant가 아니라 상태입니다. `selected`를 주면 같은 accent의 `solid`로 칠하므로 `variant`에는 안 골랐을 때의 모양만 적습니다(`muted` 학기 버튼이 골라지면 검정 블록이 됩니다). 그림자를 켠 버튼은 골라지면 눌린 채로 있습니다. `selected`를 아예 주지 않으면 `aria-pressed`도 붙지 않고, `false`를 주면 `aria-pressed="false"`가 붙습니다.
 - `loading`은 글자를 투명하게 두고 스피너를 겹쳐서 폭이 흔들리지 않습니다. 불러오는 동안은 마우스 · Enter · Space 어느 누름도 `onClick`에 닿지 않습니다. `disabled`를 쓰지 않는 이유는 꺼진 모양(불투명도 0.4)이 아니라 스피너를 보여야 해서입니다.
 
-### controlClass
-
-Button의 색 · hover · 눌림 class를 한 번에 조립해 문자열로 돌려줍니다. 크기와 모양(높이 · 여백 · 글자)은 포함하지 않으므로, 버튼이 아닌 요소에 같은 칠을 입힐 때 자기 레이아웃 class와 함께 씁니다. IconButton과 `SideNav.Item`이 이 조립을 씁니다. 인자는 `accent` · `variant`(기본 `outline`) · `shadow`(기본 `false`) · `selected`이고 Button과 뜻이 같습니다. 아래는 직접 만든 링크 class에 cyan tonal 칠을 입히는 예입니다.
-
-```tsx
-<a href="/trade" className={`${tradeLink} ${controlClass({ accent: "cyan", variant: "tonal", shadow: true })}`}>
-  Trade
-</a>
-```
+같은 칠을 버튼이 아닌 요소에 입히려면 Button을 빌리지 말고 [Paint](../primitives/README.md#paint)를 직접 씁니다(`<Paint as="a" accent="cyan" variant="tonal" interactive shadow>`). class 문자열이 필요하면 `paintClass()`입니다.
 
 ## IconButton
 

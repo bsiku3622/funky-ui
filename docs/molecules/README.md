@@ -15,7 +15,7 @@ Molecules는 Atoms와 Primitives를 묶은 범용 조합입니다. 카드 · 선
 
 ## Card
 
-화면의 영역을 나누는 카드입니다. 흰 면 · 2px 검정 테두리 · 4px 그림자이고, 테두리는 항상 `line`이라 prop이 없습니다. 아래는 글자만 담은 카드와, 머리 막대와 구분선으로 나눈 카드입니다.
+화면의 영역을 나누는 카드입니다. [Surface](../primitives/README.md#surface)(흰 면 · 2px 검정 테두리 · 4px 그림자) 위에 서고, 테두리는 항상 `line`이라 prop이 없습니다. 아래는 글자만 담은 카드와, 머리 막대와 구분선으로 나눈 카드입니다.
 
 ```tsx
 <Card>
@@ -32,7 +32,7 @@ Molecules는 Atoms와 Primitives를 묶은 범용 조합입니다. 카드 · 선
 | --- | --- | --- | --- |
 | `as` | `ElementType` | `"div"` | 렌더할 요소입니다. `motion`을 주면 기본이 `"button"`입니다. |
 | `accent` | `Accent` | — | 카드 안으로 흐르는 accent입니다. 안쪽 컨트롤이 따로 받지 않으면 이 색을 씁니다. |
-| `surface` | `Surface` | `"raised"` | 면입니다. 기본은 흰 면입니다. |
+| `fill` | `SurfaceFill` | `"raised"` | 흑백 면입니다. 기본은 흰 면입니다. accent로 칠한 박스가 필요하면 Card가 아니라 [Paint](../primitives/README.md#paint)입니다. |
 | `shadow` | `"raised" \| "none"` | `"raised"` | 그림자입니다. 모달이 아니면 `floating`을 쓰지 않으므로 선택지가 둘뿐입니다. `motion`을 주면 무시됩니다. |
 | `padding` | `Space` | `"3xl"` | 안쪽 여백입니다(24px). 머리 막대를 붙이려면 `0`을 줍니다. |
 | `motion` | `PressMotion` | — | 카드 전체가 누르는 물건이면 `press`(가라앉음) 또는 `lift`(떠오름)를 줍니다. |
@@ -41,7 +41,7 @@ Molecules는 Atoms와 Primitives를 묶은 범용 조합입니다. 카드 · 선
 
 - 화면의 영역은 카드로 나눕니다. 카드 안을 나눌 때는 카드를 또 넣지 말고 `Card.Section`의 `divided`나 [Divider](../atoms/README.md#divider)를 씁니다.
 - 카드에 준 accent는 안쪽으로 흐릅니다. `<Card accent="green">` 안의 Button은 accent를 따로 주지 않아도 초록입니다.
-- `motion`을 주면 [Pressable](../primitives/README.md#pressable)로 그려져 기본 요소가 `<button>`이 되고(링크 카드는 `as="a"`) 그림자는 몸짓이 가집니다. 통째로 누르는 요소라 안에 다른 button이나 링크를 넣지 않습니다.
+- `motion`을 주면 [Pressable](../primitives/README.md#pressable)로 그려져 기본 요소가 `<button>`이 되고(링크 카드는 `as="a"`) 그림자는 몸짓이 가집니다. 면과 테두리는 `surfaceClass()`로 Surface에서 빌려 옵니다. 통째로 누르는 요소라 안에 다른 button이나 링크를 넣지 않습니다.
 
 ### Card.Header
 
@@ -55,7 +55,7 @@ Molecules는 Atoms와 Primitives를 묶은 범용 조합입니다. 카드 · 선
 | `tone` | `"plain" \| "bar"` | `"plain"` | `bar`는 accent 면으로 칠한 머리 막대입니다(모달 머리와 같은 모양). |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 
-- `bar`는 accent의 solid 면에 accent의 `ink` 글자이고 아래에 2px 검정 선이 붙습니다. 막대가 카드 가장자리까지 닿도록 `Card`에 `padding="0"`을 주고 나머지는 `Card.Section`으로 나눕니다.
+- `bar`는 [Paint](../primitives/README.md#paint)의 `solid`(accent 면 · `ink` 글자)이고, 테두리만 아래 2px 검정 한 줄로 덮습니다. 막대가 카드 가장자리까지 닿도록 `Card`에 `padding="0"`을 주고 나머지는 `Card.Section`으로 나눕니다.
 
 ### Card.Section
 
@@ -452,6 +452,7 @@ native `<dialog>` 위에 서는 모달입니다. 아래는 수강 변경을 확�
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 | `children` | `ReactNode` | — | 본문입니다. |
 
+- [Paint](../primitives/README.md#paint)의 `plain`(연한 면 · 진한 테두리 · 진한 글자)으로 칠합니다.
 - 기본 accent가 `error`(빨강)라서 오류가 아닌 안내에는 accent를 바꿔 줍니다. `role`은 기본이 `status`이고, 스크린 리더가 곧바로 읽어야 하는 오류만 `alert`으로 올립니다.
 
 ## EmptyState

@@ -33,7 +33,7 @@ Components는 class-explorer 전용 컴포넌트입니다. 앱 셸(상단 바 ·
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 
 - `fixed`면 문서 흐름에서 빠지므로(`position: fixed`, `z-index` 100) 본문 위쪽에 바 높이(80px)만큼 여백을 둡니다. `SideNav`의 `fixed`는 이 바 아래(80px)에서 시작합니다.
-- 바의 글자색은 accent의 `ink`이고, `actions`의 NavButton은 그 글자색에서 유리를 만듭니다. 그래서 보라(기본) · 검정 바에서는 흰 유리, 시안 · 노랑처럼 밝은 바에서는 검은 유리가 되어 어느 accent에서도 대비가 맞습니다.
+- 바는 [Paint](../primitives/README.md#paint)의 `solid`로 칠하고, 테두리만 아래 한 줄로 덮습니다. 바의 글자색은 accent의 `ink`이고, `actions`의 NavButton은 그 글자색에서 유리를 만듭니다. 그래서 보라(기본) · 검정 바에서는 흰 유리, 시안 · 노랑처럼 밝은 바에서는 검은 유리가 되어 어느 accent에서도 대비가 맞습니다.
 
 ## SideNav
 
@@ -58,7 +58,7 @@ Components는 class-explorer 전용 컴포넌트입니다. 앱 셸(상단 바 ·
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 | `children` | `ReactNode` | — | `SideNav.Section`들입니다. |
 
-- 폭은 256px입니다. `fixed`면 상단 바(80px) 아래 왼쪽에 붙고 md(768px) 미만에서는 숨습니다. BottomNav의 `fixed`는 반대로 md 이상에서 숨습니다.
+- 면은 [Surface](../primitives/README.md#surface)의 `canvas`(크림)이고 오른쪽에 2px 검정 선이 붙습니다. 폭은 256px입니다. `fixed`면 상단 바(80px) 아래 왼쪽에 붙고 md(768px) 미만에서는 숨습니다. BottomNav의 `fixed`는 반대로 md 이상에서 숨습니다.
 - 메뉴의 순서와 내용은 앱이 정합니다. 셸은 그리기만 합니다.
 
 ### SideNav.Section
@@ -81,7 +81,7 @@ Components는 class-explorer 전용 컴포넌트입니다. 앱 셸(상단 바 ·
 | `onClick` | `() => void` | — | 눌렀을 때 부릅니다. |
 | `children` | `ReactNode` | — | 메뉴 이름입니다. |
 
-- 지금 화면은 검정 solid가 4px 위에 떠 있고, 나머지는 약한 잉크로 물러납니다.
+- [Paint](../primitives/README.md#paint)의 두 얼굴입니다. 지금 화면은 검정 `solid`가 4px 위에 떠 있고(hover 때 가라앉음), 나머지는 `ghostMuted`로 물러나 hover 때 글자만 진해집니다.
 - 링크가 아니라 `<button>`입니다. 화면 이동은 `onClick`에서 합니다.
 
 ## BottomNav
@@ -103,6 +103,7 @@ Components는 class-explorer 전용 컴포넌트입니다. 앱 셸(상단 바 ·
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 | `children` | `ReactNode` | — | `BottomNav.Item`들입니다. |
 
+- 바는 AppBar와 같이 Paint의 `solid`이고 테두리만 위 한 줄입니다.
 - 다섯 칸까지만 넣습니다. 칸이 폭을 똑같이 나누므로 칸이 늘면 라벨과 누르는 자리가 함께 좁아집니다.
 - 칸 글자는 바의 글자색(accent의 `ink`)을 물려받아 어느 accent 바에서도 읽힙니다. 쉬는 칸은 60% 로 묽어집니다.
 

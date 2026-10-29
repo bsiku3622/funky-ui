@@ -1,70 +1,126 @@
 # Primitives
 
-Primitives는 모양이 없는 바탕입니다. 면 · 배치 · 글자 · 아이콘 · 누르는 면 · 접근성 도구 아홉 개가 여기 있고, 토큰과 스타일(`tokens/` · `styles/`)만 읽습니다. 다른 컴포넌트에 기대지 않으며, Atoms부터 Components까지 모든 층이 이 아홉 개 위에 섭니다.
+Primitives는 모양이 없는 바탕입니다. 배치 · 칠 · 글자 · 아이콘 · 누르는 면 · 접근성 도구 열한 개가 여기 있고, 토큰과 스타일(`tokens/` · `styles/`)만 읽습니다. 다른 컴포넌트에 기대지 않으며, Atoms부터 Components까지 모든 층이 이 열한 개 위에 섭니다.
 
-요소를 그리는 컴포넌트는 `as`로 렌더할 태그를 바꾸고, 나머지 props는 그 태그로 그대로 넘깁니다. 같은 이름의 HTML 속성이 있으면 컴포넌트의 prop이 우선하고, React 19라 `ref`도 일반 prop입니다. `accent` · `surface` · `border` · `shadow` · `Space` 같은 값 어휘는 닫힌 집합이며 [Box](#box)에 한 번에 정리했습니다. 예시는 import를 생략합니다. 컴포넌트는 `@studio-baeks/funky-ui`에서, 아이콘은 `lucide-react`에서 가져온 것이고, `navigate`나 `subjects`처럼 앱이 가진 값은 이미 있다고 봅니다.
+칠은 두 primitive가 나눠 맡습니다. **박스**(카드 · 패널 · 모달 · 판)는 [Surface](#surface)가 흑백 면으로, **요소**(버튼 · 배지 · 알림 · 바)는 [Paint](#paint)가 accent × variant로 칠합니다. Paint는 Variant 시스템을 그대로 꺼낸 API라, Button과 Badge는 Paint 위에 크기 · 아이콘만 얹은 것입니다. [Box](#box)는 칠하지 않는 배치 바탕이고, Pressable은 몸짓만 맡습니다.
+
+요소를 그리는 컴포넌트는 `as`로 렌더할 태그를 바꾸고, 나머지 props는 그 태그로 그대로 넘깁니다. 같은 이름의 HTML 속성이 있으면 컴포넌트의 prop이 우선하고, React 19라 `ref`도 일반 prop입니다. 예시는 import를 생략합니다. 컴포넌트는 `@studio-baeks/funky-ui`에서, 아이콘은 `lucide-react`에서 가져온 것이고, `navigate`나 `subjects`처럼 앱이 가진 값은 이미 있다고 봅니다.
 
 | 묶음 | 컴포넌트 |
 | --- | --- |
 | layout | Box · Stack · Inline · Grid |
+| paint | Surface · Paint |
 | content | Text · Icon |
 | interaction | Pressable |
 | a11y | VisuallyHidden · Portal |
 
+패키지 CSS의 레이어도 이 층을 따릅니다(`fk.base < fk.primitives < fk.components < fk.utilities`). 그래서 위 층 컴포넌트의 CSS는 Surface · Paint의 칠을 언제나 덮을 수 있습니다 — 모달 머리 막대가 Paint의 solid를 쓰면서 테두리는 아래 한 줄만 남기는 식입니다.
+
 ## Box
 
-면 · 테두리 · 그림자 · 여백 · accent를 prop으로 고르는 모든 면의 바탕입니다. 아래는 흰 카드 면과 accent로 칠한 연한 알림 면을 나란히 놓은 예입니다.
+배치의 바탕입니다. 태그(`as`) · 안쪽 여백 · accent 문맥만 다루고, 칠하지 않습니다. 아래는 칠하지 않은 Box에 accent를 주어 안쪽 버튼과 배지가 그 색을 따르게 한 예입니다.
 
 ```tsx
-<Box surface="raised" border="line" shadow="raised" padding="xl">
-  이번 학기 시간표를 불러왔습니다
-</Box>
-<Box accent="pink" surface="soft" border="accent" paddingX="lg" paddingY="md">
-  수강 변경 기간이 내일 끝납니다
+<Box accent="green" padding="xl">
+  <Button size="sm" variant="tonal">유지</Button>
+  <Badge variant="solid">계획</Badge>
 </Box>
 ```
 
 | prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `as` | `ElementType` | `"div"` | 렌더할 요소입니다. |
-| `accent` | `Accent` | — | 이 요소와 그 안으로 흐르는 accent입니다. 안쪽 컨트롤이 accent를 따로 받지 않으면 이 색을 씁니다. |
-| `surface` | `Surface` | — | 면입니다. `solid` · `soft`는 지금 accent로 칠합니다. |
-| `border` | `Border` | — | 2px 테두리의 색입니다. |
-| `shadow` | `Shadow` | — | 하드 그림자입니다. |
+| `accent` | `Accent` | — | 이 요소 안에 흐를 accent입니다. 칠하지 않고 문맥만 정합니다 — 안쪽 요소가 accent를 따로 받지 않으면 이 색을 씁니다. |
 | `padding` | `Space` | — | 사방 안쪽 여백입니다. |
 | `paddingX` | `Space` | — | 좌우 안쪽 여백입니다. |
 | `paddingY` | `Space` | — | 위아래 안쪽 여백입니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 
-prop이 받는 값은 모두 닫힌 집합입니다.
+primitive가 받는 값은 모두 닫힌 집합입니다.
 
 | 어휘 | 값 |
 | --- | --- |
 | `Accent` | `black` `pink` `purple` `cyan` `yellow` `orange` `sky` `green` `red`, 역할 별칭 `system`(black) · `primary`(pink) · `secondary`(purple) · `success`(green) · `error`(red). 색 규칙은 [Color](../foundations/color.md) |
-| `Surface` | `canvas`(크림 바탕) · `raised`(흰 면) · `sunken`(크림 위 오목한 자리) · `well`(흰 면 안의 오목한 자리, 반투명) · `inverse`(검정) · `solid`(accent의 진한 면) · `soft`(accent의 연한 면) |
-| `Border` | `none` · `line`(검정) · `soft`(연한 회색) · `subtle`(카드 안 구분선 색) · `accent`(accent의 진한 색) |
+| `SurfaceFill` | `canvas`(크림 바탕) · `raised`(흰 면) · `sunken`(크림 위 오목한 자리) · `well`(흰 면 안의 오목한 자리, 반투명) · `inverse`(검정) |
+| `Border` | `none` · `line`(검정) · `soft`(연한 회색) · `subtle`(카드 안 구분선 색) |
 | `Shadow` | `none` · `raised`(4px) · `floating`(8px) |
+| `Variant` | `solid` `outline` `hairline` `frameline` `framelineMuted` `plain` `tonal` `tonalMuted` `muted` `ghost` `ghostMuted` — 레시피는 [Color](../foundations/color.md#variant) |
 | `Space` | `0` `2xs` `xs` `sm` `md` `lg` `xl` `2xl` `3xl` `4xl` `5xl` `6xl` — 0 · 2 · 4 · 6 · 8 · 12 · 16 · 20 · 24 · 32 · 48 · 64px. 안쪽 여백과 형제 사이 간격이 같은 사다리를 씁니다. [Layout](../foundations/layout.md) |
 
-- `inverse`와 `solid`는 글자색도 함께 정합니다. `inverse`는 흰 글자, `solid`는 그 accent의 `ink`(검정 또는 흰색)라서 검정 면 위에 검정 글자가 생기지 않습니다.
-- 테두리는 2px 한 굵기라 굵기를 고르지 않고 색만 고릅니다. `floating`(8px)은 모달 전용이고, 떠 있는 나머지는 `raised`(4px)입니다.
-- `boxClass(props)`가 같은 prop을 class 문자열로 바꿔 돌려줍니다. Stack · Inline · Grid와 molecule이 같은 지도를 씁니다.
+- `boxClass(props)`가 같은 prop을 class 문자열로 돌려줍니다. Stack · Inline · Grid · Surface · Paint가 같은 지도를 씁니다.
+
+## Surface
+
+박스의 면입니다. 흑백 면(`fill`) · 테두리 · 그림자를 고르고, 카드 · 패널 · 모달 · 판처럼 무언가를 담는 박스를 칠합니다. accent로 칠하지 않습니다 — 색이 있는 요소는 [Paint](#paint)입니다. 아래는 흰 카드 면과, 흰 면 안의 오목한 자리를 나란히 놓은 예입니다.
+
+```tsx
+<Surface border="line" shadow="raised" padding="xl">
+  이번 학기 시간표를 불러왔습니다
+</Surface>
+<Surface fill="well" padding="lg">
+  7교시 이후 공강
+</Surface>
+```
+
+| prop | 타입 | 기본값 | 설명 |
+| --- | --- | --- | --- |
+| `as` | `ElementType` | `"div"` | 렌더할 요소입니다. 모달은 `"dialog"`입니다. |
+| `fill` | `SurfaceFill` | `"raised"` | 흑백 면입니다. |
+| `border` | `Border` | `"none"` | 2px 테두리의 색입니다. |
+| `shadow` | `Shadow` | `"none"` | 깊이입니다. 떠 있는 물건은 `raised`(4px), 모달만 `floating`(8px)입니다. |
+| `accent` `padding` `paddingX` `paddingY` | [Box](#box)와 같음 | — | Box와 같은 prop입니다. `accent`는 면을 칠하지 않고 안쪽 요소의 문맥만 정합니다. |
+| `className` | `string` | — | 마지막에 덧붙는 class입니다. |
+
+- `inverse`는 글자색도 함께 정합니다(흰 글자). 검정 면 위에 검정 글자가 생기지 않습니다.
+- 테두리는 2px 한 굵기라 굵기를 고르지 않고 색만 고릅니다.
+- `surfaceClass(props)`가 같은 prop을 class 문자열로 돌려줍니다. 누르는 카드는 [Pressable](#pressable)에 이 class로 면만 빌려 줍니다(`Card motion`이 그렇게 조립됩니다). 칠한 판 위에 늘어놓으려면 Surface 안에 Stack · Inline · Grid를 넣습니다.
+
+## Paint
+
+요소의 칠입니다. accent(색) × variant(칠하는 방식) 두 축으로 글자 · 면 · 테두리를 칠하고, 누를 수 있는 요소면 hover · press 층과 눌림을 더합니다. Variant 시스템을 그대로 꺼낸 primitive라, Button · IconButton · Badge · Notice · 상단 바 · 머리 막대가 이 위에 섭니다. 아래는 드랍한 과목 줄을 plain으로 칠한 요소와, 같은 레시피로 칠한 누르는 요소입니다.
+
+```tsx
+<Paint accent="pink" variant="plain" padding="lg">
+  일반물리학 · 드랍
+</Paint>
+<Paint as="button" accent="cyan" variant="tonal" interactive shadow paddingX="md" paddingY="xs">
+  Preview
+</Paint>
+```
+
+| prop | 타입 | 기본값 | 설명 |
+| --- | --- | --- | --- |
+| `as` | `ElementType` | `"div"` | 렌더할 요소입니다. 누르는 요소면 `"button"`이나 링크를 줍니다. |
+| `accent` | `Accent` | — | 색입니다. 주지 않으면 바깥 accent를 따르고, 바깥에도 없으면 검정(시스템)입니다. |
+| `variant` | `Variant` | `"outline"` | 칠하는 방식입니다. 11가지 레시피는 [Color](../foundations/color.md#variant)에 있습니다. |
+| `selected` | `boolean` | `false` | 골라진 상태입니다. 같은 accent의 `solid`로 칠합니다. `aria-pressed` 같은 속성은 쓰는 쪽이 붙입니다. |
+| `interactive` | `boolean` | `false` | 누를 수 있는 요소입니다. hover · press 층, disabled 모양(불투명도 0.4), 손가락 커서가 붙습니다. |
+| `shadow` | `boolean` | `false` | 4px 그림자입니다. `interactive`면 hover 때 그림자 속으로 가라앉고, 골라지면 눌린 채로 있습니다. |
+| `padding` `paddingX` `paddingY` | [Box](#box)와 같음 | — | Box와 같은 prop입니다. |
+| `className` | `string` | — | 마지막에 덧붙는 class입니다. |
+
+- 테두리가 없는 variant(`ghost` · `ghostMuted`)는 가라앉을 상자가 없어서 `shadow`를 받지 않습니다.
+- 크기 · 글자 · 아이콘은 Paint가 정하지 않습니다. 그건 Button · Badge처럼 Paint 위에 선 컴포넌트의 몫입니다.
+- `paintClass(props)`가 같은 prop을 class 문자열로 돌려줍니다. 다른 primitive(예: [Pressable](#pressable))에 색이 있는 면을 빌려 줄 때 씁니다.
+- 위 층 컴포넌트는 Paint의 칠을 쓰면서 형태만 자기 CSS로 덮습니다. 상단 바 · 모달 머리 막대는 solid를 쓰고 테두리를 한쪽만 남깁니다.
 
 ## Stack
 
-자식을 세로로 쌓는 flex 열입니다. Box의 prop을 그대로 받고 간격과 정렬을 더합니다. 아래는 카드 면 안에 제목과 보조 글자를 쌓은 예입니다.
+자식을 세로로 쌓는 flex 열입니다. Box의 prop을 받고 간격과 정렬을 더합니다. 칠은 하지 않으므로, 아래처럼 Surface 안에 넣어 카드 면 위에 제목과 보조 글자를 쌓습니다.
 
 ```tsx
-<Stack gap="lg" padding="xl" surface="raised" border="line">
-  <Text variant="heading">오늘의 수업</Text>
-  <Text tone="muted">3교시 · 일반물리학 II · B201</Text>
-</Stack>
+<Surface border="line" padding="xl">
+  <Stack gap="lg">
+    <Text variant="heading">오늘의 수업</Text>
+    <Text tone="muted">3교시 · 일반물리학 II · B201</Text>
+  </Stack>
+</Surface>
 ```
 
 | prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `as` | `ElementType` | `"div"` | 렌더할 요소입니다. |
-| `accent` `surface` `border` `shadow` `padding` `paddingX` `paddingY` | [Box](#box)와 같음 | — | Box와 같은 prop입니다. |
+| `accent` `padding` `paddingX` `paddingY` | [Box](#box)와 같음 | — | Box와 같은 prop입니다. 칠은 하지 않습니다. |
 | `gap` | `Space` | — | 자식 사이 간격입니다. |
 | `align` | `Align` | — | 가로 정렬(`align-items`)입니다. `start` `center` `end` `stretch` `baseline`. 주지 않으면 flex 기본값인 `stretch`입니다. |
 | `justify` | `Justify` | — | 세로 배분(`justify-content`)입니다. `start` `center` `end` `between` `around`. |
@@ -92,7 +148,7 @@ prop이 받는 값은 모두 닫힌 집합입니다.
 | prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `as` | `ElementType` | `"div"` | 렌더할 요소입니다. |
-| `accent` `surface` `border` `shadow` `padding` `paddingX` `paddingY` | [Box](#box)와 같음 | — | Box와 같은 prop입니다. |
+| `accent` `padding` `paddingX` `paddingY` | [Box](#box)와 같음 | — | Box와 같은 prop입니다. 칠은 하지 않습니다. |
 | `gap` | `Space` | — | 자식 사이 간격입니다. |
 | `align` | `Align` | `"center"` | 세로 정렬(`align-items`)입니다. |
 | `justify` | `Justify` | — | 가로 배분(`justify-content`)입니다. |
@@ -107,9 +163,9 @@ prop이 받는 값은 모두 닫힌 집합입니다.
 
 ```tsx
 <Grid columns={3} gap="md">
-  <Box surface="raised" border="line" padding="lg">월</Box>
-  <Box surface="raised" border="line" padding="lg">화</Box>
-  <Box surface="raised" border="line" padding="lg">수</Box>
+  <Surface border="line" padding="lg">월</Surface>
+  <Surface border="line" padding="lg">화</Surface>
+  <Surface border="line" padding="lg">수</Surface>
 </Grid>
 <Grid columns="4rem 1fr auto" columnGap="lg" rowGap="sm" align="center">
   <Text variant="label">3교시</Text>
@@ -121,7 +177,7 @@ prop이 받는 값은 모두 닫힌 집합입니다.
 | prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `as` | `ElementType` | `"div"` | 렌더할 요소입니다. |
-| `accent` `surface` `border` `shadow` `padding` `paddingX` `paddingY` | [Box](#box)와 같음 | — | Box와 같은 prop입니다. |
+| `accent` `padding` `paddingX` `paddingY` | [Box](#box)와 같음 | — | Box와 같은 prop입니다. 칠은 하지 않습니다. |
 | `columns` | `number \| string` | — | 숫자면 같은 폭 n 칸(`repeat(n, minmax(0, 1fr))`), 문자열이면 `grid-template-columns` 값 그대로입니다. |
 | `gap` | `Space` | — | 행과 열 사이 간격입니다. |
 | `rowGap` | `Space` | — | 행 사이 간격입니다. |
@@ -184,10 +240,10 @@ prop이 받는 값은 모두 닫힌 집합입니다.
 
 ## Pressable
 
-버튼이 아닌 큰 면에 눌림이나 떠오름을 주는 누르는 면입니다. 아래는 과목 카드를 `lift`로 눌러서 상세로 가게 한 예입니다.
+버튼이 아닌 큰 면에 눌림이나 떠오름을 주는 누르는 면입니다. 몸짓만 맡고 칠은 하지 않으므로, 면은 `surfaceClass()`(흑백) 나 `paintClass()`(색)로 빌려 옵니다. 아래는 과목 카드를 `lift`로 눌러서 상세로 가게 한 예입니다.
 
 ```tsx
-<Pressable motion="lift" surface="raised" border="line" padding="xl" onClick={() => navigate("/courses/phys2")}>
+<Pressable motion="lift" padding="xl" className={surfaceClass({ border: "line" })} onClick={() => navigate("/courses/phys2")}>
   <Text variant="heading">일반물리학 II</Text>
   <Text variant="caption" tone="muted">김예시 선생님 · B201</Text>
 </Pressable>
@@ -198,7 +254,7 @@ prop이 받는 값은 모두 닫힌 집합입니다.
 | `as` | `ElementType` | `"button"` | 렌더할 요소입니다. 링크면 `"a"`를 줍니다. |
 | `motion` | `PressMotion` | `"press"` | `press`는 가라앉고, `lift`는 떠오릅니다. |
 | `disabled` | `boolean` | `false` | `button`이면 `disabled` 속성이, 그 밖의 요소면 `aria-disabled`가 붙습니다. 불투명도 0.4에 `not-allowed` 커서입니다. |
-| `accent` `surface` `border` `padding` `paddingX` `paddingY` | [Box](#box)와 같음 | — | Box와 같은 prop입니다. `shadow`는 없습니다. |
+| `accent` `padding` `paddingX` `paddingY` | [Box](#box)와 같음 | — | Box와 같은 prop입니다. 면 · 테두리는 `className`으로 빌려 오고, `shadow`는 없습니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 
 - `press`는 4px 그림자 위에 떠 있다가 hover 때 그림자 자리로 가라앉습니다(사람 카드). `lift`는 hover 때 4px 떠오르고 그림자는 화면에 그대로 남아 길어집니다(탐색 카드). 거리와 시간은 [Motion](../foundations/motion.md)에 있습니다.

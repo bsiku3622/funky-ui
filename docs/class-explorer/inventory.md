@@ -59,7 +59,7 @@ class-explorer의 컴포넌트를 funky-ui의 층에 놓으면 이렇습니다. 
 
 | class-explorer | funky-ui |
 | --- | --- |
-| `atoms/RetroCard` | `Card` (+ `Card.Header` · `Card.Section`) |
+| `atoms/RetroCard` | `Card` (+ `Card.Header` · `Card.Section`) — Surface 위 |
 | `atoms/RetroSubTitle` | `SectionTitle` |
 | `molecules/PageHeader` | `PageHeader` |
 | `molecules/AccordionSection` | `Accordion` |
@@ -71,7 +71,7 @@ class-explorer의 컴포넌트를 funky-ui의 층에 놓으면 이렇습니다. 
 | 모달 겹판 7개 | `Modal` (native `<dialog>`) |
 | 화면 전환 버튼 줄 (Browse의 Students · Teachers …) | `Tabs` |
 | 값 고르는 버튼 줄 (급식 끼니 · 필터 · 학기) | `SegmentedControl` |
-| 오류 · 안내 상자 (`bg-retro-primary/10 border-retro-primary`) | `Notice` |
+| 오류 · 안내 상자 (`bg-retro-primary/10 border-retro-primary`) | `Notice` — Paint(plain) 위 |
 | 빈 카드 ("오늘은 정해진 일정이 없습니다") | `EmptyState` |
 | 폼의 이름표 + 칸 + 안내 | `FormField` |
 
