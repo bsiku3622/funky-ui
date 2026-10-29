@@ -42,7 +42,7 @@ function TermChips() {
 const button: Spec = {
   name: "Button",
   summary:
-    "accent(색) × variant(칠하는 방식) × size × shadow. 고르면 같은 accent 의 solid 로 바뀌고, 그림자를 켜면 hover 때 그림자 속으로 가라앉습니다.",
+    "accent(색) × variant(칠하는 방식) × size × shadow. 고르면 같은 accent 의 solid 로 바뀌고, 그림자를 켜면 hover 때 그림자 속으로 가라앉습니다. shadow=\"hover\" 면 평평하다가 hover 때 그림자가 올라옵니다.",
   controls: {
     accent: { kind: "select", options: ACCENT_OPTIONS },
     variant: { kind: "select", options: VARIANTS },
@@ -112,6 +112,23 @@ const button: Spec = {
           ))}
           <Button shadow selected>
             selected
+          </Button>
+        </Stage>
+      ),
+    },
+    {
+      title: "Shadow — 올라옴 (shadow=\"hover\")",
+      note: "평평한 칩은 shadow=\"hover\" 를 줍니다. 쉴 때는 그림자가 없다가 hover 때 제자리에서 4px 그림자가 올라오고, 누르는 순간 다시 내려앉습니다 — 가라앉음을 거꾸로 돌린 몸짓(raise)입니다. 복사 버튼 · 과목 추가 칩이 이렇게 움직입니다.",
+      render: () => (
+        <Stage bg="raised">
+          <Button size="xs" variant="outline" shadow="hover">
+            복사
+          </Button>
+          <Button size="xs" accent="green" variant="plain" shadow="hover">
+            + 세계사의이해
+          </Button>
+          <Button size="sm" accent="cyan" variant="tonal" shadow="hover">
+            Preview
           </Button>
         </Stage>
       ),

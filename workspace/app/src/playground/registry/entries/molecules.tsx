@@ -70,6 +70,7 @@ const ACCENT_OPTIONS = [...ACCENTS, ...Object.keys(ACCENT_ROLES)] as const;
 /** 카드는 면이 있는 박스라 Surface 의 `none` 을 받지 않습니다 */
 type CardFill = Exclude<SurfaceFill, "none">;
 const CARD_FILLS = SURFACE_FILLS.filter((f): f is CardFill => f !== "none");
+const CARD_MOTION_NOTE = { sink: "사람 카드", raise: "평평한 카드", lift: "탐색 카드" } as const;
 /** "none" 은 accent 를 주지 않은 상태입니다 — 바깥 accent 를 따르고, 바깥에도 없으면 검정 */
 const ACCENT_OR_NONE = ["none", ...ACCENT_OPTIONS] as const;
 
@@ -197,7 +198,7 @@ const card: Spec = {
     fill: { kind: "select", options: CARD_FILLS },
     shadow: { kind: "select", options: CARD_SHADOWS },
     padding: { kind: "select", options: SPACES },
-    motion: { kind: "select", options: ["none", ...MOTIONS] },
+    motion: { kind: "select", options: MOTIONS },
   },
   defaults: { fill: "raised", shadow: "raised", padding: "3xl", motion: "none" },
   render: (v) => {
@@ -279,16 +280,16 @@ const card: Spec = {
     },
     {
       title: "Motion — 누르는 카드",
-      note: "press 는 그림자 속으로 가라앉고(사람 카드), lift 는 떠오릅니다(탐색 카드). motion 을 주면 그림자가 몸짓의 일부가 되어 shadow 는 무시됩니다. 링크면 as 로 a 나 라우터 Link 를 넘기고, a 의 밑줄은 style 로 끕니다.",
+      note: "sink 는 그림자 속으로 가라앉고(사람 카드), raise 는 평평하다가 그림자가 올라오고, lift 는 떠오릅니다(탐색 카드). motion 을 주면 그림자가 몸짓의 일부가 되어 shadow 는 무시됩니다. 링크면 as 로 a 나 라우터 Link 를 넘기고, a 의 밑줄은 style 로 끕니다.",
       render: () => (
         <Stage>
-          {(["press", "lift"] as const).map((m) => (
+          {(["sink", "raise", "lift"] as const).map((m) => (
             <Frame key={m} width={200}>
               <Card as="a" href="#" style={LINK_STYLE} onClick={stop} motion={m} padding="xl">
                 <Stack gap="2xs">
                   <Text variant="label">{m}</Text>
                   <Text variant="caption" tone="muted">
-                    {m === "press" ? "사람 카드" : "탐색 카드"}
+                    {CARD_MOTION_NOTE[m]}
                   </Text>
                 </Stack>
               </Card>

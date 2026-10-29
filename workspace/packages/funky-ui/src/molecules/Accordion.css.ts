@@ -16,7 +16,6 @@ export const accordionHeader = style(
     padding: px(SPACE["2xl"]),
     border: 0,
     textAlign: "start",
-    cursor: "pointer",
   }),
 );
 

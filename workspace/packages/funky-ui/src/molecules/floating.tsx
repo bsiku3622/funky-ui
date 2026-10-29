@@ -19,6 +19,7 @@ import { CheckGlyph } from "../internal/glyphs";
 import { useAnchor, type AnchorAlign, type Placement } from "../internal/useAnchor";
 import { Portal } from "../primitives/a11y";
 import { Icon, type IconComponent } from "../primitives/Icon";
+import { Pressable } from "../primitives/Pressable";
 import { surfaceClass } from "../primitives/Surface";
 import { anchorWrap, menu, menuItem, menuItemCheck, tooltip } from "./floating.css";
 
@@ -151,9 +152,8 @@ export function Menu<V extends string>({ trigger, items, value, onSelect, align 
             {items.map((item) => {
               const selected = value !== undefined && item.value === value;
               return (
-                <button
+                <Pressable
                   key={item.value}
-                  type="button"
                   role={value === undefined ? "menuitem" : "menuitemradio"}
                   aria-checked={value === undefined ? undefined : selected}
                   disabled={item.disabled}
@@ -167,7 +167,7 @@ export function Menu<V extends string>({ trigger, items, value, onSelect, align 
                   {item.icon && <Icon icon={item.icon} size="sm" />}
                   {item.label}
                   {selected && <CheckGlyph size={14} strokeWidth={3} className={menuItemCheck} />}
-                </button>
+                </Pressable>
               );
             })}
           </div>

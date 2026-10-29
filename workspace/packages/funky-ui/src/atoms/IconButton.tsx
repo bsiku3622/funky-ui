@@ -18,7 +18,8 @@ export interface IconButtonOwnProps {
   /** 기본 `ghostMuted` — 닫기 · 새로고침처럼 옆 내용을 방해하지 않는 자리가 가장 많습니다 */
   variant?: Variant;
   size?: ControlSize;
-  shadow?: boolean;
+  /** Button 과 같습니다 — `true` 면 sink, `"hover"` 면 raise */
+  shadow?: boolean | "hover";
   selected?: boolean;
   disabled?: boolean;
   className?: string;

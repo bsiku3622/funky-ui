@@ -19,7 +19,7 @@ export interface CardOwnProps {
   shadow?: "raised" | "none";
   /** 기본 `3xl`(24px). 머리 막대를 붙이려면 `0` 을 주고 `Card.Header` · `Card.Section` 으로 나눕니다 */
   padding?: Space;
-  /** 카드 전체가 누르는 물건이면 — 가라앉거나(press) 떠오릅니다(lift) */
+  /** 카드 전체가 누르는 물건이면 — 가라앉거나(sink) · 떠오르거나(lift) · 그림자가 올라옵니다(raise). `none` 은 누르지만 움직이지 않습니다 */
   motion?: PressMotion;
   className?: string;
   children?: ReactNode;

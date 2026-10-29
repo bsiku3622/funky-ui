@@ -3,6 +3,7 @@ import { useId, useState, type ReactNode } from "react";
 import { cx } from "../internal/cx";
 import { ChevronDownGlyph } from "../internal/glyphs";
 import { Icon, type IconComponent } from "../primitives/Icon";
+import { Pressable } from "../primitives/Pressable";
 import { surfaceClass } from "../primitives/Surface";
 import { Text } from "../primitives/Text";
 import { Card } from "./Card";
@@ -21,7 +22,7 @@ export interface AccordionProps {
   children?: ReactNode;
 }
 
-/** 접히는 카드 — 머리를 누르면 펼쳐지고, 내용은 카드 안 구분선 아래에 놓입니다. 머리의 hover 층은 Surface(면 없음 · hoverable)입니다 */
+/** 접히는 카드 — 머리를 누르면 펼쳐지고, 내용은 카드 안 구분선 아래에 놓입니다. 머리는 움직이지 않는 Pressable 위의 hover 층(Surface)입니다 */
 export function Accordion({ title, icon, trailing, open, defaultOpen = false, onOpenChange, className, children }: AccordionProps) {
   const [inner, setInner] = useState(defaultOpen);
   const isOpen = open ?? inner;
@@ -33,14 +34,14 @@ export function Accordion({ title, icon, trailing, open, defaultOpen = false, on
   };
   return (
     <Card padding="0" className={className}>
-      <button type="button" id={headerId} className={cx(surfaceClass({ fill: "none", hoverable: true }), accordionHeader)} aria-expanded={isOpen} aria-controls={isOpen ? id : undefined} onClick={toggle}>
+      <Pressable id={headerId} className={cx(surfaceClass({ fill: "none", hoverable: true }), accordionHeader)} aria-expanded={isOpen} aria-controls={isOpen ? id : undefined} onClick={toggle}>
         {icon && <Icon icon={icon} size="lg" strokeWidth={3} />}
         <Text variant="heading" truncate>
           {title}
         </Text>
         {trailing}
         <ChevronDownGlyph size={22} strokeWidth={3} className={cx(accordionChevron, isOpen && accordionChevronOpen)} />
-      </button>
+      </Pressable>
       {isOpen && (
         <div id={id} role="region" aria-labelledby={headerId} className={accordionBody}>
           {children}

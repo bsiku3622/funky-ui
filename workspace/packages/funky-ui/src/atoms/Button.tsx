@@ -17,8 +17,11 @@ export interface ButtonOwnProps {
   /** 칠하는 방식 (기본 `outline`) — 11 가지 레시피는 docs/foundations/color.md */
   variant?: Variant;
   size?: ControlSize;
-  /** 4px 그림자 위에 띄웁니다. hover 때 그림자 속으로 가라앉습니다 */
-  shadow?: boolean;
+  /**
+   * 4px 그림자. `true` 면 그림자 위에 떠 있다가 hover 때 가라앉고(sink), `"hover"` 면 평평하다가 hover 때
+   * 그림자가 올라옵니다(raise). 테두리가 없는 variant(ghost)는 그림자를 받지 않습니다
+   */
+  shadow?: boolean | "hover";
   /** 골라진 상태 — 같은 accent 의 solid 로 바뀌고 `aria-pressed` 가 붙습니다. 그림자를 켰으면 눌린 채로 있습니다 */
   selected?: boolean;
   loading?: boolean;
@@ -43,13 +46,14 @@ const swallow = (e: SyntheticEvent) => {
 const PressableRoot = Pressable as ElementType;
 
 /**
- * 그림자 · 골라짐에서 몸짓을 고릅니다 — 그림자를 켜면 press(가라앉음), 끄면 tap. 테두리가 없는 variant
- * (ghost)는 가라앉을 상자가 없어 그림자를 받지 않습니다. IconButton · SideNav.Item 이 같은 규칙을 씁니다.
+ * 그림자 · 골라짐에서 몸짓을 고릅니다 — 그림자를 켜면 sink(가라앉음), `"hover"` 면 raise(올라옴), 끄면 tap.
+ * 테두리가 없는 variant(ghost)는 가라앉을 상자가 없어 그림자를 받지 않습니다. IconButton · SideNav.Item 이 같은 규칙을 씁니다.
  */
-export function pressOf(variant: Variant, shadow: boolean, selected: boolean | undefined): { motion: PressMotion; pressed: boolean } {
+export function pressOf(variant: Variant, shadow: boolean | "hover", selected: boolean | undefined): { motion: PressMotion; pressed: boolean } {
   const painted: Variant = selected ? SELECTED_VARIANT : variant;
-  const lifted = shadow && !BORDERLESS_VARIANTS.includes(painted);
-  return { motion: lifted ? "press" : "tap", pressed: lifted && Boolean(selected) };
+  if (!shadow || BORDERLESS_VARIANTS.includes(painted)) return { motion: "tap", pressed: false };
+  if (shadow === "hover") return { motion: "raise", pressed: false };
+  return { motion: "sink", pressed: Boolean(selected) };
 }
 
 /**

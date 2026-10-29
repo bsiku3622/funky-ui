@@ -77,7 +77,7 @@ export function PersonCard({ id, name, color, title, items = [], onClick, classN
   );
   if (onClick) {
     return (
-      <Pressable motion="press" onClick={onClick} className={cx(surfaceClass({ border: "line" }), personCard, className)} style={toneStyle(color)}>
+      <Pressable motion="sink" onClick={onClick} className={cx(surfaceClass({ border: "line" }), personCard, className)} style={toneStyle(color)}>
         {inner}
       </Pressable>
     );

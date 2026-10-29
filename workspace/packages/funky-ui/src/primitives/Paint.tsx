@@ -43,7 +43,7 @@ export function paintClass({ accent, variant = "outline", selected = false, hove
  *
  * ```tsx
  * <Paint accent="green" variant="plain" padding="md">유지 중인 과목</Paint>
- * <Pressable motion="press" className={paintClass({ accent: "cyan", variant: "tonal", hoverable: true })}>Preview</Pressable>
+ * <Pressable motion="sink" className={paintClass({ accent: "cyan", variant: "tonal", hoverable: true })}>Preview</Pressable>
  * ```
  */
 export function Paint<E extends ElementType = "div">({

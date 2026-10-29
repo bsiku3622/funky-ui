@@ -186,14 +186,21 @@ export function MotionPage() {
         title="Motion"
         summary="시그니처는 눌림입니다 — 떠 있는 물건이 hover 때 그림자 자리로 가라앉습니다. 가라앉는 거리는 그림자 거리와 같습니다(4px). 움직임을 줄인 사람에게는 이동을 멈추고 색과 포커스 링만 남깁니다."
       />
-      <Section title="눌림 · 떠오름" note="press — 버튼 · 사람 카드. lift — 탐색 카드(위로 4px, 그림자는 화면에 그대로 남아 길어집니다).">
+      <Section
+        title="몸짓 — sink · raise · lift · tap"
+        note="sink — 그림자를 켠 버튼 · 사람 카드. raise — 평평한 칩(hover 때 제자리에서 그림자가 올라옵니다). lift — 탐색 카드(위로 4px, 그림자는 화면에 그대로 남아 길어집니다). tap — 그림자를 끈 버튼. 몸짓이 없는 누르는 물건(목록 줄)은 none 입니다."
+      >
         <Stage bg="canvas">
           <Button shadow variant="tonal" accent="cyan">
-            press
+            sink
           </Button>
-          <Card motion="press" padding="xl" style={{ width: 180 }}>
+          <Button shadow="hover" variant="outline">
+            raise
+          </Button>
+          <Button variant="outline">tap</Button>
+          <Card motion="sink" padding="xl" style={{ width: 180 }}>
             <Text variant="caption" weight="black">
-              press card
+              sink card
             </Text>
           </Card>
           <Card motion="lift" padding="xl" style={{ width: 180 }}>

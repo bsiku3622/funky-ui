@@ -199,7 +199,7 @@ const box: Spec = {
             </Paint>
           </Labeled>
           <Labeled name="Pressable">
-            <Pressable motion="press" padding="lg" className={surfaceClass({ border: "line" })}>
+            <Pressable motion="sink" padding="lg" className={surfaceClass({ border: "line" })}>
               <Text variant="label">+ 누름</Text>
             </Pressable>
           </Labeled>
@@ -412,13 +412,13 @@ const paint: Spec = {
           <Paint accent="cyan" variant="muted" hoverable padding="md">
             <Text variant="label">색만 · hoverable</Text>
           </Paint>
-          <Pressable motion="press" padding="md" className={surfaceClass({ border: "line" })}>
+          <Pressable motion="sink" padding="md" className={surfaceClass({ border: "line" })}>
             <Text variant="label">누름만 · Pressable</Text>
           </Pressable>
-          <Pressable motion="press" padding="md" className={paintClass({ accent: "cyan", variant: "tonal", hoverable: true })}>
+          <Pressable motion="sink" padding="md" className={paintClass({ accent: "cyan", variant: "tonal", hoverable: true })}>
             <Text variant="label">둘 다 · Button</Text>
           </Pressable>
-          <Pressable motion="press" pressed padding="md" className={paintClass({ accent: "cyan", variant: "muted", selected: true, hoverable: true })}>
+          <Pressable motion="sink" pressed padding="md" className={paintClass({ accent: "cyan", variant: "muted", selected: true, hoverable: true })}>
             <Text variant="label">selected · pressed</Text>
           </Pressable>
         </Stage>
@@ -956,7 +956,9 @@ const iconSpec: Spec = {
 /* ── Pressable ───────────────────────────────────────────────────────── */
 
 const MOTION_NOTE: Record<PressMotion, string> = {
-  press: "사람 카드 — 그림자 자리로 가라앉습니다",
+  none: "목록 줄 — 누르지만 움직이지 않습니다",
+  sink: "사람 카드 — 그림자 자리로 가라앉습니다",
+  raise: "평평한 칩 — hover 때 그림자가 올라옵니다",
   lift: "탐색 카드 — 위로 떠오릅니다",
   tap: "그림자를 끈 버튼 — 누르는 순간만 작아집니다",
 };
@@ -964,7 +966,7 @@ const MOTION_NOTE: Record<PressMotion, string> = {
 const pressable: Spec = {
   name: "Pressable",
   summary:
-    "누르는 물건 — 버튼의 의미(type · disabled) · 커서 · 꺼진 모양 · 몸짓을 맡습니다. press 는 4px 그림자 위에 떠 있다가 hover 때 가라앉고, lift 는 떠오르고, tap 은 그림자 없이 누르는 순간만 작아집니다. 색은 하나도 없습니다 — hover 색까지 Paint 의 hoverable 이고, Pressable 이 그걸 켜 주지 않습니다. 흑백 면은 surfaceClass(), 색은 paintClass() 로 얹습니다. Button 이 Pressable + Paint 입니다.",
+    "누르는 물건 — 버튼의 의미(type · disabled) · 커서 · 꺼진 모양 · 몸짓을 맡습니다. 몸짓은 기본 none(움직이지 않음)이고, sink 는 4px 그림자 위에 떠 있다가 hover 때 가라앉고, raise 는 평평하다가 hover 때 그림자가 올라오고, lift 는 떠오르고, tap 은 그림자 없이 누르는 순간만 작아집니다. 색은 하나도 없습니다 — hover 색까지 Paint 의 hoverable 이고, Pressable 이 그걸 켜 주지 않습니다. 흑백 면은 surfaceClass(), 색은 paintClass() 로 얹습니다. Button 이 Pressable + Paint 입니다.",
   controls: {
     motion: { kind: "select", options: MOTIONS },
     pressed: { kind: "boolean" },
@@ -972,8 +974,8 @@ const pressable: Spec = {
     disabled: { kind: "boolean" },
     children: { kind: "text" },
   },
-  initial: { padding: "xl", children: "수강 변경 탐색" },
-  defaults: { motion: "press", pressed: false, padding: "0", disabled: false },
+  initial: { motion: "sink", padding: "xl", children: "수강 변경 탐색" },
+  defaults: { motion: "none", pressed: false, padding: "0", disabled: false },
   render: (v) => (
     <Frame width={240}>
       <Pressable
@@ -989,7 +991,7 @@ const pressable: Spec = {
   ),
   code: (v) => {
     const attrs = [
-      v.motion !== "press" ? `motion="${String(v.motion)}"` : "",
+      v.motion !== "none" ? `motion="${String(v.motion)}"` : "",
       v.pressed ? "pressed" : "",
       v.padding !== "0" ? `padding="${String(v.padding)}"` : "",
       v.disabled ? "disabled" : "",
@@ -998,8 +1000,8 @@ const pressable: Spec = {
   },
   sections: [
     {
-      title: "press · lift · tap",
-      note: "마우스를 올려 보세요. press 는 사람 카드처럼 그림자 자리로 가라앉고, lift 는 탐색 카드처럼 4px 떠오르며 그림자가 길어지고, tap 은 그림자 없이 누르는 순간만 작아집니다. pressed 는 press 몸짓이 눌린 채로 머무는 것입니다(골라진 버튼).",
+      title: "몸짓 다섯 — none · sink · raise · lift · tap",
+      note: "마우스를 올려 보세요. none 은 움직이지 않고(목록 줄), sink 는 사람 카드처럼 그림자 자리로 가라앉고, raise 는 평평하다가 제자리에서 그림자가 올라오고(sink 를 거꾸로 돌린 몸짓), lift 는 탐색 카드처럼 4px 떠오르며 그림자가 길어지고, tap 은 그림자 없이 누르는 순간만 작아집니다. pressed 는 sink 몸짓이 눌린 채로 머무는 것입니다(골라진 버튼).",
       render: () => (
         <Stage>
           {MOTIONS.map((m) => (
@@ -1023,17 +1025,17 @@ const pressable: Spec = {
       render: () => (
         <Stage>
           <Frame width={200}>
-            <Pressable as="a" href="#" onClick={stay} padding="xl" className={surfaceClass({ border: "line" })}>
+            <Pressable as="a" href="#" onClick={stay} motion="sink" padding="xl" className={surfaceClass({ border: "line" })}>
               as=&quot;a&quot; — 링크
             </Pressable>
           </Frame>
           <Frame width={200}>
-            <Pressable padding="xl" disabled className={surfaceClass({ border: "line" })}>
+            <Pressable motion="sink" padding="xl" disabled className={surfaceClass({ border: "line" })}>
               disabled
             </Pressable>
           </Frame>
           <Frame width={200}>
-            <Pressable padding="xl" className={paintClass({ accent: "green", variant: "plain", hoverable: true })}>
+            <Pressable motion="sink" padding="xl" className={paintClass({ accent: "green", variant: "plain", hoverable: true })}>
               paintClass · plain
             </Pressable>
           </Frame>

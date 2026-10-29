@@ -51,11 +51,9 @@ export const menuItem = style(
     letterSpacing: em(0.1),
     fontWeight: WEIGHT.black,
     textTransform: "uppercase",
-    cursor: "pointer",
     selectors: {
-      // hover 층 · 골라진 칸의 검정 면은 Surface 가 칠합니다. 방향키로 온 칸도 hover 와 같은 층으로 보입니다
+      // hover 층 · 골라진 칸의 검정 면은 Surface, 커서 · 꺼진 모양은 Pressable 이 맡습니다. 방향키로 온 칸도 hover 와 같은 층으로 보입니다
       "&:focus-visible": { backgroundImage: `linear-gradient(${vars.state.hover}, ${vars.state.hover})`, outlineOffset: "-4px" },
-      "&:disabled": { opacity: 0.4, cursor: "not-allowed" },
     },
   }),
 );

@@ -106,8 +106,9 @@ export const ICON_SIZES = ["xs", "sm", "md", "lg", "xl"] as const;
 export type IconSize = (typeof ICON_SIZES)[number];
 
 /**
- * 누르는 몸짓 (Pressable) — 그림자 속으로 가라앉거나(press), 위로 떠오르거나(lift), 그림자 없이
- * 누르는 순간만 작아집니다(tap). 그림자를 켠 버튼은 press, 끈 버튼은 tap 입니다.
+ * 누르는 몸짓 (Pressable) — 움직이지 않거나(none, 기본), 그림자 속으로 가라앉거나(sink), 평평하다가 그림자가
+ * 올라오거나(raise), 위로 떠오르거나(lift), 그림자 없이 누르는 순간만 작아집니다(tap).
+ * 버튼은 그림자를 켜면 sink, `shadow="hover"` 면 raise, 끄면 tap 입니다.
  */
-export const MOTIONS = ["press", "lift", "tap"] as const;
+export const MOTIONS = ["none", "sink", "raise", "lift", "tap"] as const;
 export type PressMotion = (typeof MOTIONS)[number];
