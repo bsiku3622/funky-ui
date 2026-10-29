@@ -2,7 +2,7 @@
 
 Atoms는 한 가지 일을 하는 컨트롤과 표시입니다. Primitives와 토큰 · 스타일만 읽고, 어떤 앱에도 쓸 수 있는 범용 층이라 class-explorer를 모릅니다. 누르는 버튼, 읽는 라벨, 입력 칸, 켜고 끄는 표식이 여기 있습니다.
 
-Button · IconButton · Badge는 [Paint](../primitives/README.md#paint) 위에 섭니다 — 칠(accent × variant · selected · 눌림)은 Paint가 하고, 이 셋은 크기 · 글자 · 아이콘만 얹습니다. `accent`는 색 이름(아홉 가지와 역할 별칭 다섯)이고, `variant`는 같은 accent를 어디에 얼마나 진하게 칠할지 정하는 열한 가지 규칙입니다. 색을 이 두 축으로만 고르는 이유는 [원칙](../get-started/principles.md), 값과 규칙은 [Color](../foundations/color.md), 크기 사다리는 [Shape](../foundations/shape.md)에 있습니다. 요소를 그리는 컴포넌트가 `as`와 나머지 props를 다루는 방식은 [Primitives](../primitives/README.md)와 같고, Input · Textarea · Select · Checkbox · Radio · Switch는 native 요소를 감싸므로 `ref`와 폼 속성이 그대로 갑니다. 예시는 import를 생략하며, `on`이나 `studentId`처럼 앱이 가진 상태와 핸들러는 이미 있다고 봅니다.
+Button · IconButton은 [Pressable](../primitives/README.md#pressable)(몸짓)에 [Paint](../primitives/README.md#paint)(칠)를 얹은 것이고, Badge는 Paint 위에 섭니다. 칠(accent × variant · selected)은 Paint가, 그림자와 눌림은 Pressable이 맡고, 이 셋은 크기 · 글자 · 아이콘만 얹습니다. `accent`는 색 이름(아홉 가지와 역할 별칭 다섯)이고, `variant`는 같은 accent를 어디에 얼마나 진하게 칠할지 정하는 열한 가지 규칙입니다. 색을 이 두 축으로만 고르는 이유는 [원칙](../get-started/principles.md), 값과 규칙은 [Color](../foundations/color.md), 크기 사다리는 [Shape](../foundations/shape.md)에 있습니다. 요소를 그리는 컴포넌트가 `as`와 나머지 props를 다루는 방식은 [Primitives](../primitives/README.md)와 같고, Input · Textarea · Select · Checkbox · Radio · Switch는 native 요소를 감싸므로 `ref`와 폼 속성이 그대로 갑니다. 예시는 import를 생략하며, `on`이나 `studentId`처럼 앱이 가진 상태와 핸들러는 이미 있다고 봅니다.
 
 | 묶음 | 컴포넌트 |
 | --- | --- |
@@ -23,10 +23,10 @@ accent(색) × variant(칠하는 방식) × size × shadow로 만드는 기본 �
 | prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `as` | `ElementType` | `"button"` | 렌더할 요소입니다. `<button>`이면 `type="button"`이 기본이라 폼 안에서도 제출하지 않고, 제출 버튼은 `type="submit"`을 줍니다. 그 밖의 요소면 `disabled` 대신 `aria-disabled`가 붙습니다. |
-| `accent` | `Accent` | — | 색입니다. 주지 않으면 바깥 accent를 따르고, 바깥에도 없으면 `black`(시스템)입니다. |
+| `accent` | `Accent` | — | 색입니다. 주지 않으면 바깥 Paint의 색을 따르고, 바깥에도 없으면 `black`(시스템)입니다. |
 | `variant` | `Variant` | `"outline"` | 칠하는 방식입니다. `solid` `outline` `hairline` `frameline` `framelineMuted` `plain` `tonal` `tonalMuted` `muted` `ghost` `ghostMuted` 열한 가지입니다. |
 | `size` | `ControlSize` | `"md"` | 높이 사다리입니다. `xs` 24 · `sm` 32 · `md` 40 · `lg` 48px. |
-| `shadow` | `boolean` | `false` | 4px 그림자 위에 띄웁니다. hover 때 그림자 속으로 가라앉습니다. |
+| `shadow` | `boolean` | `false` | 4px 그림자 위에 띄웁니다. hover 때 그림자 속으로 가라앉습니다(몸짓 `press`). 끄면 누르는 순간만 작아집니다(`tap`). |
 | `selected` | `boolean` | — | 골라진 상태입니다. 같은 accent의 `solid`로 바뀌고 `aria-pressed`가 붙습니다. |
 | `loading` | `boolean` | `false` | 글자 자리를 지킨 채 가운데에 스피너를 둡니다. `aria-busy` · `aria-disabled`가 붙고 누름을 삼킵니다. |
 | `icon` | `IconComponent` | — | 앞 아이콘입니다. 크기와 굵기는 버튼 크기가 정합니다. |
@@ -40,7 +40,7 @@ accent(색) × variant(칠하는 방식) × size × shadow로 만드는 기본 �
 - 선택은 variant가 아니라 상태입니다. `selected`를 주면 같은 accent의 `solid`로 칠하므로 `variant`에는 안 골랐을 때의 모양만 적습니다(`muted` 학기 버튼이 골라지면 검정 블록이 됩니다). 그림자를 켠 버튼은 골라지면 눌린 채로 있습니다. `selected`를 아예 주지 않으면 `aria-pressed`도 붙지 않고, `false`를 주면 `aria-pressed="false"`가 붙습니다.
 - `loading`은 글자를 투명하게 두고 스피너를 겹쳐서 폭이 흔들리지 않습니다. 불러오는 동안은 마우스 · Enter · Space 어느 누름도 `onClick`에 닿지 않습니다. `disabled`를 쓰지 않는 이유는 꺼진 모양(불투명도 0.4)이 아니라 스피너를 보여야 해서입니다.
 
-같은 칠을 버튼이 아닌 요소에 입히려면 Button을 빌리지 말고 [Paint](../primitives/README.md#paint)를 직접 씁니다(`<Paint as="a" accent="cyan" variant="tonal" interactive shadow>`). class 문자열이 필요하면 `paintClass()`입니다.
+Button은 Pressable과 Paint를 이렇게 묶습니다 — `shadow`를 켜면 `press`, 끄면 `tap`이고, 그림자를 켠 버튼이 골라지면 눌린 채(`pressed`)로 둡니다. 크기 · 아이콘 없이 같은 칠과 몸짓만 필요한 자리(예: 줄 전체가 누르는 링크)는 이 조립을 직접 씁니다 — `<Pressable as="a" motion="press" className={paintClass({ accent: "cyan", variant: "tonal", interactive: true })}>`. 누르지 않는 요소의 칠은 [Paint](../primitives/README.md#paint)입니다.
 
 ## IconButton
 
@@ -90,6 +90,7 @@ accent(색) × variant(칠하는 방식) × size × shadow로 만드는 기본 �
 
 - 반투명 유리 면 · 진한 글자 · 반투명 테두리이고, hover 때 테두리가 진해집니다. 글자와 유리는 바의 글자색(`currentColor`)에서 나오므로, 보라 바 위에서는 흰 유리, 시안 바 위에서는 검은 유리가 됩니다. 상단 바 · 하단 바 · 학기 선택에만 쓰고, 흰 면 · 크림 위에서는 Button을 씁니다.
 - `accent`와 `variant`가 없습니다. 색은 놓인 바가 정합니다.
+- 몸짓은 [Pressable](../primitives/README.md#pressable)의 `tap`입니다. 바 위에는 그림자를 두지 않으므로 누르는 순간만 작아집니다.
 - `children` 없이 `icon`만 주면 정사각 아이콘 버튼이 되고, 이때만 `label`이 `aria-label`로 붙습니다.
 
 ## Link
@@ -105,7 +106,7 @@ accent(색) × variant(칠하는 방식) × size × shadow로 만드는 기본 �
 | prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `as` | `ElementType` | `"a"` | 렌더할 요소입니다. 라우터 링크는 `as={RouterLink}`로 넘깁니다. |
-| `accent` | `Accent` | — | 색입니다. 주지 않으면 바깥 accent를 따르고, 바깥에도 없으면 `black`입니다. |
+| `accent` | `Accent` | — | 색입니다. 주지 않으면 바깥 Paint의 색을 따르고, 바깥에도 없으면 `black`입니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 
 - 글 속에 끼우는 링크입니다. 버튼처럼 보여야 하는 링크는 `Button`의 `as`로 렌더합니다.
@@ -122,7 +123,7 @@ accent(색) × variant(칠하는 방식) × size × shadow로 만드는 기본 �
 | prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `as` | `ElementType` | `"span"` | 렌더할 요소입니다. |
-| `accent` | `Accent` | — | 색입니다. 주지 않으면 바깥 accent를 따르고, 바깥에도 없으면 `black`입니다. |
+| `accent` | `Accent` | — | 색입니다. 주지 않으면 바깥 Paint의 색을 따르고, 바깥에도 없으면 `black`입니다. |
 | `variant` | `Variant` | `"outline"` | 칠하는 방식입니다. Button과 같은 열한 가지 규칙입니다. |
 | `size` | `BadgeSize` | `"md"` | `sm` 18 · `md` 22 · `lg` 26px입니다. |
 | `icon` | `IconComponent` | — | 앞 아이콘입니다. 크기는 배지 크기가 정합니다. |
@@ -248,7 +249,7 @@ native `<select>`를 감싼 선택 칸입니다. 목록은 운영체제가 그�
 
 | prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `accent` | `Accent` | — | 켜진 색입니다. 주지 않으면 바깥 accent를 따르고, 바깥에도 없으면 `black`입니다. |
+| `accent` | `Accent` | — | 켜진 색입니다. 주지 않으면 바깥 Paint의 색을 따르고, 바깥에도 없으면 `black`입니다. |
 | `children` | `ReactNode` | — | 옆에 붙는 글자입니다. 누르는 자리가 글자까지 넓어집니다. |
 | `className` | `string` | — | 바깥 `<label>`에 붙습니다. |
 | 그 밖 | `<input>`의 props (`type` 제외) | — | `checked` · `defaultChecked` · `onChange` · `disabled` · `name` · `value` · `ref` 같은 native 속성이 `<input>`으로 갑니다. |
@@ -267,7 +268,7 @@ native `<select>`를 감싼 선택 칸입니다. 목록은 운영체제가 그�
 
 | prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `accent` | `Accent` | — | 켜진 색입니다. 주지 않으면 바깥 accent를 따르고, 바깥에도 없으면 `black`입니다. |
+| `accent` | `Accent` | — | 켜진 색입니다. 주지 않으면 바깥 Paint의 색을 따르고, 바깥에도 없으면 `black`입니다. |
 | `children` | `ReactNode` | — | 옆에 붙는 글자입니다. 누르는 자리가 글자까지 넓어집니다. |
 | `className` | `string` | — | 바깥 `<label>`에 붙습니다. |
 | 그 밖 | `<input>`의 props (`type` 제외) | — | `name` · `value` · `checked` · `defaultChecked` · `onChange` · `ref` 같은 native 속성이 `<input>`으로 갑니다. |
@@ -287,7 +288,7 @@ native `<select>`를 감싼 선택 칸입니다. 목록은 운영체제가 그�
 
 | prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `accent` | `Accent` | — | 켜진 색입니다. 주지 않으면 바깥 accent를 따르고, 바깥에도 없으면 `black`입니다. |
+| `accent` | `Accent` | — | 켜진 색입니다. 주지 않으면 바깥 Paint의 색을 따르고, 바깥에도 없으면 `black`입니다. |
 | `children` | `ReactNode` | — | 옆에 붙는 글자입니다. 누르는 자리가 글자까지 넓어집니다. |
 | `className` | `string` | — | 바깥 `<label>`에 붙습니다. |
 | 그 밖 | `<input>`의 props (`type` 제외) | — | `checked` · `defaultChecked` · `onChange` · `disabled` · `ref` 같은 native 속성이 `<input>`으로 갑니다. |

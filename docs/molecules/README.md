@@ -21,8 +21,8 @@ Molecules는 Atoms와 Primitives를 묶은 범용 조합입니다. 카드 · 선
 <Card>
   <Text variant="heading">이번 주 시간표</Text>
 </Card>
-<Card padding="0" accent="purple">
-  <Card.Header title="Enrolled Classes" icon={BookOpen} tone="bar" actions={<Badge variant="tonal" size="sm">6</Badge>} />
+<Card padding="0">
+  <Card.Header title="Enrolled Classes" icon={BookOpen} tone="bar" accent="purple" actions={<Badge variant="tonal" size="sm">6</Badge>} />
   <Card.Section>일반물리학 II · 미적분학 II</Card.Section>
   <Card.Section divided>알고리즘 · 전공 연구</Card.Section>
 </Card>
@@ -31,7 +31,6 @@ Molecules는 Atoms와 Primitives를 묶은 범용 조합입니다. 카드 · 선
 | prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `as` | `ElementType` | `"div"` | 렌더할 요소입니다. `motion`을 주면 기본이 `"button"`입니다. |
-| `accent` | `Accent` | — | 카드 안으로 흐르는 accent입니다. 안쪽 컨트롤이 따로 받지 않으면 이 색을 씁니다. |
 | `fill` | `SurfaceFill` | `"raised"` | 흑백 면입니다. 기본은 흰 면입니다. accent로 칠한 박스가 필요하면 Card가 아니라 [Paint](../primitives/README.md#paint)입니다. |
 | `shadow` | `"raised" \| "none"` | `"raised"` | 그림자입니다. 모달이 아니면 `floating`을 쓰지 않으므로 선택지가 둘뿐입니다. `motion`을 주면 무시됩니다. |
 | `padding` | `Space` | `"3xl"` | 안쪽 여백입니다(24px). 머리 막대를 붙이려면 `0`을 줍니다. |
@@ -40,8 +39,8 @@ Molecules는 Atoms와 Primitives를 묶은 범용 조합입니다. 카드 · 선
 | `children` | `ReactNode` | — | 카드 내용입니다. |
 
 - 화면의 영역은 카드로 나눕니다. 카드 안을 나눌 때는 카드를 또 넣지 말고 `Card.Section`의 `divided`나 [Divider](../atoms/README.md#divider)를 씁니다.
-- 카드에 준 accent는 안쪽으로 흐릅니다. `<Card accent="green">` 안의 Button은 accent를 따로 주지 않아도 초록입니다.
-- `motion`을 주면 [Pressable](../primitives/README.md#pressable)로 그려져 기본 요소가 `<button>`이 되고(링크 카드는 `as="a"`) 그림자는 몸짓이 가집니다. 면과 테두리는 `surfaceClass()`로 Surface에서 빌려 옵니다. 통째로 누르는 요소라 안에 다른 button이나 링크를 넣지 않습니다.
+- Card에는 `accent`가 없습니다. 흑백 박스라 색을 모르고, 바깥 Paint의 색도 끊지 않고 그대로 흘려보냅니다. 안쪽 버튼 · 배지가 같은 색을 따라야 하면 컨트롤마다 `accent`를 주고, 색이 있는 박스가 맞는 자리라면 Card 대신 [Paint](../primitives/README.md#paint)로 칠합니다.
+- `motion`을 주면 [Pressable](../primitives/README.md#pressable)로 그려져 기본 요소가 `<button>`이 되고(링크 카드는 `as="a"`) 그림자는 몸짓이 가집니다. 면과 테두리는 `surfaceClass()`로 Surface에서 빌려 오고, 카드는 블록 · 폭 100%로 서며 큰 면이라 누르는 순간 0.98로만 작아집니다. 통째로 누르는 요소라 안에 다른 button이나 링크를 넣지 않습니다.
 
 ### Card.Header
 
@@ -52,10 +51,11 @@ Molecules는 Atoms와 Primitives를 묶은 범용 조합입니다. 카드 · 선
 | `title` | `ReactNode` | 필수 | 제목 글자입니다. |
 | `icon` | `IconComponent` | — | 제목 앞 아이콘입니다. |
 | `actions` | `ReactNode` | — | 오른쪽 끝입니다. 개수나 버튼을 둡니다. |
-| `tone` | `"plain" \| "bar"` | `"plain"` | `bar`는 accent 면으로 칠한 머리 막대입니다(모달 머리와 같은 모양). |
+| `tone` | `"plain" \| "bar"` | `"plain"` | `bar`는 Paint의 `solid`로 칠한 머리 막대입니다(모달 머리와 같은 모양). |
+| `accent` | `Accent` | — | 머리 막대의 색입니다(`tone="bar"`일 때). 주지 않으면 바깥 Paint의 색, 바깥에도 없으면 검정입니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 
-- `bar`는 [Paint](../primitives/README.md#paint)의 `solid`(accent 면 · `ink` 글자)이고, 테두리만 아래 2px 검정 한 줄로 덮습니다. 막대가 카드 가장자리까지 닿도록 `Card`에 `padding="0"`을 주고 나머지는 `Card.Section`으로 나눕니다.
+- `bar`는 [Paint](../primitives/README.md#paint)의 `solid`(accent 면 · `ink` 글자)이고, 테두리만 아래 2px 검정 한 줄로 덮습니다. 막대가 카드 가장자리까지 닿도록 `Card`에 `padding="0"`을 주고 나머지는 `Card.Section`으로 나눕니다. 막대 위의 solid 배지는 accent를 따로 줍니다 — 안 주면 막대와 같은 색이 됩니다.
 
 ### Card.Section
 
@@ -140,13 +140,13 @@ Molecules는 Atoms와 Primitives를 묶은 범용 조합입니다. 카드 · 선
 | `open` | `boolean` | — | 펼침 상태입니다. 주면 제어 모드가 됩니다. |
 | `defaultOpen` | `boolean` | `false` | 제어하지 않을 때 처음 펼침 상태입니다. |
 | `onOpenChange` | `(open: boolean) => void` | — | 머리를 눌렀을 때 새 상태와 함께 불립니다. |
-| `accent` | `Accent` | — | 카드 안으로 흐르는 accent입니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 | `children` | `ReactNode` | — | 펼쳤을 때 보이는 내용입니다. |
 
 - `open`을 주면 상태는 부르는 쪽이 쥡니다. `onOpenChange`로 받은 값을 `open`에 되돌려 줘야 접히고 펼쳐집니다. 주지 않으면 내부 상태가 관리하고, 어느 쪽이든 `onOpenChange`는 불립니다.
 - 접혀 있는 동안 `children`은 렌더되지 않습니다. 머리는 `aria-expanded`가 붙은 button이고 내용은 `role="region"`입니다.
 - 머리 전체가 하나의 button이므로 `trailing`에는 개수 배지처럼 누르지 않는 것만 둡니다.
+- 흑백 카드라 `accent`가 없습니다. 안쪽 배지 · 버튼이 색을 각자 고릅니다.
 
 ## SegmentedControl
 
@@ -170,7 +170,7 @@ Molecules는 Atoms와 Primitives를 묶은 범용 조합입니다. 카드 · 선
 | `value` | `V` | 필수 | 골라진 값입니다. |
 | `onChange` | `(value: V) => void` | 필수 | 다른 칸을 골랐을 때 새 값과 함께 불립니다. |
 | `aria-label` | `string` | 필수 | 줄의 이름입니다. |
-| `accent` | `Accent` | — | 색입니다. 주지 않으면 바깥 accent를 따르고, 바깥에도 없으면 `black`입니다. |
+| `accent` | `Accent` | — | 색입니다. 주지 않으면 바깥 Paint의 색을 따르고, 바깥에도 없으면 `black`입니다. |
 | `variant` | `Variant` | `"muted"` | 안 골린 칸의 칠입니다. 골린 칸은 같은 accent의 `solid`입니다. |
 | `size` | `ControlSize` | `"sm"` | 칸의 크기입니다. |
 | `shadow` | `boolean` | `false` | 칸을 4px 그림자 위에 띄웁니다. 골린 칸은 눌린 채로 있습니다. |
@@ -201,7 +201,7 @@ Molecules는 Atoms와 Primitives를 묶은 범용 조합입니다. 카드 · 선
 | --- | --- | --- | --- |
 | `value` | `V` | 필수 | 골라진 탭의 값입니다. `V`는 문자열 타입입니다. |
 | `onChange` | `(value: V) => void` | 필수 | 탭을 골랐을 때 새 값과 함께 불립니다. |
-| `accent` | `Accent` | — | 색입니다. 주지 않으면 바깥 accent를 따르고, 바깥에도 없으면 `black`입니다. |
+| `accent` | `Accent` | — | 색입니다. 주지 않으면 바깥 Paint의 색을 따르고, 바깥에도 없으면 `black`입니다. |
 | `variant` | `Variant` | `"outline"` | 안 골린 탭의 칠입니다. 골린 탭은 같은 accent의 `solid`입니다. |
 | `size` | `ControlSize` | `"sm"` | 탭의 크기입니다. |
 | `shadow` | `boolean` | `true` | 탭을 4px 그림자 위에 띄웁니다. |
@@ -300,7 +300,7 @@ native `<dialog>` 위에 서는 모달입니다. 아래는 수강 변경을 확�
 | `open` | `boolean` | 필수 | 열림 상태입니다. |
 | `onClose` | `() => void` | 필수 | Esc · 바깥 누름 · 닫기 버튼이 모두 이걸 부릅니다. `open`을 `false`로 바꾸는 일은 부르는 쪽이 합니다. |
 | `title` | `ReactNode` | — | 머리 막대의 제목입니다. |
-| `accent` | `Accent` | `"purple"` | 머리 막대의 색입니다. |
+| `accent` | `Accent` | `"purple"` | 머리 막대의 색입니다. 판 · 본문 · 푸터로는 흐르지 않으므로 푸터 버튼은 색을 각자 고릅니다. |
 | `size` | `"sm" \| "md" \| "lg" \| "xl"` | `"md"` | 최대 폭입니다. 400 · 512 · 768 · 1024px. |
 | `footer` | `ReactNode` | — | 아래 동작 줄입니다. 오른쪽 정렬입니다. |
 | `dismissible` | `boolean` | `true` | 바깥(막)을 눌러 닫을지 정합니다. 입력 중인 폼이면 `false`를 줍니다. |
@@ -420,7 +420,7 @@ native `<dialog>` 위에 서는 모달입니다. 아래는 수강 변경을 확�
 | `value` | `number` | 필수 | 지금 값입니다. |
 | `max` | `number` | `100` | 가득 찼을 때의 값입니다. |
 | `valueLabel` | `ReactNode` | — | 막대 위 오른쪽에 적을 글자입니다. 주지 않으면 `value`를 적습니다. |
-| `accent` | `Accent` | — | 채움 색입니다. 주지 않으면 바깥 accent를 따르고, 바깥에도 없으면 `black`입니다. |
+| `accent` | `Accent` | — | 채움 색입니다. 주지 않으면 바깥 Paint의 색을 따르고, 바깥에도 없으면 `black`입니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 
 - 막대 홈은 `well`이고 채움은 accent의 solid입니다. 채움 폭은 0~100%로 잘려서 `value`가 `max`를 넘어도 넘치지 않고, 값이 바뀌면 300ms 동안 움직입니다.

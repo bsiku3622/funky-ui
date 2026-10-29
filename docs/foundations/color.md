@@ -97,24 +97,26 @@ variant는 같은 accent를 어디에, 얼마나 진하게 칠하는지를 정�
 
 ### Paint — 레시피를 쓰는 primitive
 
-이 표는 [Paint](../primitives/README.md#paint) primitive가 그대로 씁니다. `<Paint accent variant>`가 레시피를 글자 · 면 · 테두리로 칠하고, `interactive`를 주면 hover · press 층이, `shadow`를 같이 주면 그림자 속으로 가라앉는 눌림이 붙습니다. Button · Badge · Notice · 바(상단 바 · 머리 막대)는 전부 Paint 위에 섭니다. 흑백 박스(카드 · 패널 · 모달 판)는 [Surface](../primitives/README.md#surface)가 칠하고, 거기에는 accent가 없습니다 — 박스는 흑백, 색은 요소입니다.
+이 표는 [Paint](../primitives/README.md#paint) primitive가 그대로 씁니다. `<Paint accent variant>`가 레시피를 글자 · 면 · 테두리로 칠하고, `interactive`를 주면 표의 Hover 칸대로 hover · press 때 색이 바뀝니다. 그림자 속으로 가라앉는 몸짓은 칠이 아니라 [Pressable](../primitives/README.md#pressable)의 몫이라, Button은 Pressable에 이 칠을 얹은 것입니다. Badge · Notice · 바(상단 바 · 머리 막대)도 전부 Paint 위에 섭니다. 흑백 박스(카드 · 패널 · 모달 판)는 [Surface](../primitives/README.md#surface)가 칠하고, 거기에는 accent가 없습니다 — 박스는 흑백, 색은 요소입니다.
 
 ### 선택
 
 선택은 따로 된 variant가 아니라 상태입니다. `selected`를 주면 같은 accent의 `solid`로 칠해지고 `aria-pressed`가 붙습니다. 그래서 안 골린 칸은 `muted`, 골린 칸은 검정 블록이 되는 class-explorer의 학기 고르기도, 초록 Outline이 초록 블록이 되는 Trade의 "유지"도 같은 규칙입니다. 그림자를 켠 버튼은 골리면 눌린 채로 있습니다 ([Motion](motion.md)).
 
-### 바깥 accent를 따릅니다
+### accent는 Paint에서 흐릅니다
 
-accent는 CSS 변수라 아래로 흐릅니다. 컨트롤에 accent를 주지 않으면 가장 가까운 바깥 요소의 accent를 쓰고, 바깥에도 없으면 검정입니다.
+accent는 CSS 변수라 아래로 흐르고, 그 변수를 정하는 것은 그 색으로 칠해지는 요소뿐입니다 — primitive에서는 Paint 하나, 위 층에서는 Paint를 쓰는 컴포넌트(Button · Badge · Notice · 바)와 Variant 없이 자기 색을 칠하는 컴포넌트(Link · 토글 · Stat · Meter)입니다. 컨트롤에 accent를 주지 않으면 가장 가까운 바깥 Paint의 accent를 쓰고, 바깥에도 없으면 검정입니다. Box · Surface · Card · Stack처럼 색을 모르는 박스는 이 흐름을 끊지도 바꾸지도 않습니다.
 
-드랍한 과목 카드 안의 버튼이 카드 색을 따르는 식입니다.
+드랍한 과목 줄 안의 버튼이 줄의 색을 따르는 식입니다.
 
 ```tsx
-<Card accent="pink">
+<Paint accent="pink" variant="plain" padding="lg">
   <Button variant="outline">유지</Button>
   <Button variant="outline">이동</Button>
-</Card>
+</Paint>
 ```
+
+흑백 카드 안의 컨트롤에 색을 주려면 컨트롤마다 `accent`를 줍니다. 카드 같은 칠하지 않는 박스가 accent를 갖지 않는 이유는, 보이지 않는 박스가 안쪽 색을 바꾸면 색이 어디서 왔는지 화면에서 찾을 수 없기 때문입니다. 색은 칠한 요소에서만 생깁니다.
 
 ## Interaction
 
