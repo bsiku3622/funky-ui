@@ -67,6 +67,9 @@ import { icon } from "../icons";
 import type { Spec, Values } from "../schema";
 
 const ACCENT_OPTIONS = [...ACCENTS, ...Object.keys(ACCENT_ROLES)] as const;
+/** 카드는 면이 있는 박스라 Surface 의 `none` 을 받지 않습니다 */
+type CardFill = Exclude<SurfaceFill, "none">;
+const CARD_FILLS = SURFACE_FILLS.filter((f): f is CardFill => f !== "none");
 /** "none" 은 accent 를 주지 않은 상태입니다 — 바깥 accent 를 따르고, 바깥에도 없으면 검정 */
 const ACCENT_OR_NONE = ["none", ...ACCENT_OPTIONS] as const;
 
@@ -191,7 +194,7 @@ const card: Spec = {
   summary:
     "흰 면 · 2px 검정 · 4px 그림자. 화면의 영역은 카드로 나눕니다. 카드는 흑백 박스라 accent 가 없습니다 — 안쪽 배지 · 버튼이 색을 각자 고릅니다. motion 을 주면 카드 전체가 누르는 물건이 됩니다.",
   controls: {
-    fill: { kind: "select", options: SURFACE_FILLS },
+    fill: { kind: "select", options: CARD_FILLS },
     shadow: { kind: "select", options: CARD_SHADOWS },
     padding: { kind: "select", options: SPACES },
     motion: { kind: "select", options: ["none", ...MOTIONS] },
@@ -199,7 +202,7 @@ const card: Spec = {
   defaults: { fill: "raised", shadow: "raised", padding: "3xl", motion: "none" },
   render: (v) => {
     const look = {
-      fill: v.fill as SurfaceFill,
+      fill: v.fill as CardFill,
       shadow: v.shadow as "raised" | "none",
       padding: v.padding as Space,
     };
@@ -266,7 +269,7 @@ const card: Spec = {
       note: "카드의 면은 Surface 의 흑백 면 다섯입니다. inverse 위에서는 글자색이 같이 바뀝니다. accent 로 칠한 박스가 필요하면 Card 가 아니라 Paint 입니다.",
       render: () => (
         <Stage>
-          {SURFACE_FILLS.map((s) => (
+          {CARD_FILLS.map((s) => (
             <Card key={s} fill={s} padding="xl">
               <Text variant="label">{s}</Text>
             </Card>

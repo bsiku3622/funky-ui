@@ -20,7 +20,7 @@ import { useAnchor, type AnchorAlign, type Placement } from "../internal/useAnch
 import { Portal } from "../primitives/a11y";
 import { Icon, type IconComponent } from "../primitives/Icon";
 import { surfaceClass } from "../primitives/Surface";
-import { anchorWrap, menu, menuItem, menuItemCheck, menuItemSelected, tooltip } from "./floating.css";
+import { anchorWrap, menu, menuItem, menuItemCheck, tooltip } from "./floating.css";
 
 export interface TooltipProps {
   content: ReactNode;
@@ -158,7 +158,7 @@ export function Menu<V extends string>({ trigger, items, value, onSelect, align 
                   aria-checked={value === undefined ? undefined : selected}
                   disabled={item.disabled}
                   tabIndex={-1}
-                  className={cx(menuItem, selected && menuItemSelected)}
+                  className={cx(surfaceClass({ fill: selected ? "inverse" : "none", hoverable: true }), menuItem)}
                   onClick={() => {
                     onSelect(item.value);
                     close();

@@ -51,9 +51,10 @@ export type BadgeSize = (typeof BADGE_SIZES)[number];
 
 /**
  * 면 — `Surface` 가 칠하는 흑백 면. accent 로 칠하는 면은 여기 없고 `Paint` 의 variant 입니다
- * (박스는 흑백, 색은 요소 — 두 primitive 가 나눠 맡습니다).
+ * (박스는 흑백, 색은 요소 — 두 primitive 가 나눠 맡습니다). `none` 은 면 없이 바깥 면을 그대로 보입니다 —
+ * 목록 줄 · 아코디언 머리처럼 면 위의 한 칸에 씁니다.
  */
-export const SURFACE_FILLS = ["canvas", "raised", "sunken", "well", "inverse"] as const;
+export const SURFACE_FILLS = ["none", "canvas", "raised", "sunken", "well", "inverse"] as const;
 export type SurfaceFill = (typeof SURFACE_FILLS)[number];
 
 /** 테두리 — 2px 한 굵기. 흑백 선의 색만 고릅니다 (accent 테두리는 Paint 의 variant) */

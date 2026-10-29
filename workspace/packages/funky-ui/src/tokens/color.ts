@@ -65,13 +65,22 @@ export const OVERLAY = {
  * Glass — 색 바(상단 · 하단 바) 위 버튼 전용 (`NavButton`). 바의 글자색(`currentColor`)을 묽혀
  * 만들므로, 보라 바 위에서는 흰 유리, 시안 바 위에서는 검은 유리가 됩니다.
  */
-const glassOf = (pct: number) => `color-mix(in srgb, currentColor ${pct}%, transparent)`;
+const currentOf = (pct: number) => `color-mix(in srgb, currentColor ${pct}%, transparent)`;
 export const GLASS = {
-  bg: glassOf(10),
-  bgHover: glassOf(20),
-  bgSelected: glassOf(25),
-  border: glassOf(30),
+  bg: currentOf(10),
+  bgHover: currentOf(20),
+  bgSelected: currentOf(25),
+  border: currentOf(30),
   borderHover: "currentColor",
+} as const;
+
+/**
+ * 흑백 면의 상태 층 — Surface 의 `hoverable`. 유리처럼 면의 글자색을 묽혀 만들므로 밝은 면에서는 회색 층
+ * (`OVERLAY.hoverGray` · `pressGray` 와 같은 세기), 검정 면(inverse) 위에서는 흰 층이 됩니다.
+ */
+export const STATE_LAYER = {
+  hover: currentOf(7),
+  press: currentOf(12),
 } as const;
 
 /** 포커스 링 — 2px 띄운 핑크 고리 하나. 기하는 Shape 의 `focus` 입니다 */

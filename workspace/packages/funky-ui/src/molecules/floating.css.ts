@@ -45,8 +45,6 @@ export const menuItem = style(
     paddingInline: px(SPACE.xl),
     paddingBlock: px(10),
     border: 0,
-    background: "transparent",
-    color: vars.ink.primary,
     textAlign: "start",
     whiteSpace: "nowrap",
     fontSize: px(CONTROL_TEXT.sm.size),
@@ -55,17 +53,10 @@ export const menuItem = style(
     textTransform: "uppercase",
     cursor: "pointer",
     selectors: {
-      "&:hover:not(:disabled), &:focus-visible": { backgroundColor: vars.overlay.hoverGray, outlineOffset: "-4px" },
+      // hover 층 · 골라진 칸의 검정 면은 Surface 가 칠합니다. 방향키로 온 칸도 hover 와 같은 층으로 보입니다
+      "&:focus-visible": { backgroundImage: `linear-gradient(${vars.state.hover}, ${vars.state.hover})`, outlineOffset: "-4px" },
       "&:disabled": { opacity: 0.4, cursor: "not-allowed" },
     },
-  }),
-);
-
-export const menuItemSelected = style(
-  c({
-    backgroundColor: vars.surface.inverse,
-    color: vars.ink.inverse,
-    selectors: { "&:hover:not(:disabled), &:focus-visible": { backgroundColor: vars.surface.inverse } },
   }),
 );
 

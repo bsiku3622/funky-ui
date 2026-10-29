@@ -13,8 +13,8 @@ import type { Accent, PressMotion, Space, SurfaceFill } from "../tokens/vocabula
 import { cardBase, cardHeader, cardHeaderBar, cardHeaderTitle, cardPressable, cardSection, cardSectionDivided } from "./Card.css";
 
 export interface CardOwnProps {
-  /** 흑백 면 (기본 `raised` — 흰 면). 카드는 흑백 박스라 accent 가 없습니다 — 색이 있는 박스는 Paint */
-  fill?: SurfaceFill;
+  /** 흑백 면 (기본 `raised` — 흰 면). 카드는 면이 있는 흑백 박스라 `none` 도 accent 도 없습니다 — 색이 있는 박스는 Paint */
+  fill?: Exclude<SurfaceFill, "none">;
   /** 기본 `raised`(4px). 모달이 아니면 `floating` 을 쓰지 않습니다. `motion` 을 주면 몸짓이 그림자를 가집니다 */
   shadow?: "raised" | "none";
   /** 기본 `3xl`(24px). 머리 막대를 붙이려면 `0` 을 주고 `Card.Header` · `Card.Section` 으로 나눕니다 */

@@ -116,6 +116,8 @@ const GRID_ITEMS: [TextVariant, string][] = [
   ["label", "자습"],
 ];
 const NUMBERS = ["1", "2", "3", "4", "5", "6"] as const;
+/** Surface hoverable 표본의 목록 줄 — 검색 추천 줄 모양 */
+const HOVER_ROWS = ["미적분학 II", "일반물리학 I", "세계사의이해"] as const;
 const TIMES = ["08:50", "11:11", "18:05"] as const;
 
 /* ── Box ─────────────────────────────────────────────────────────────── */
@@ -216,25 +218,32 @@ const box: Spec = {
 const surface: Spec = {
   name: "Surface",
   summary:
-    "박스의 면 — 흑백 면(fill) · 테두리 · 그림자. 카드 · 패널 · 모달 · 판처럼 무언가를 담는 박스를 칠합니다. accent 로 칠하지 않습니다 — 색이 있는 요소는 Paint 입니다.",
+    "박스의 면 — 흑백 면(fill) · 테두리 · 그림자, 그리고 hoverable 이면 hover · 누르는 중의 흑백 상태 층. 카드 · 패널 · 모달 · 판처럼 무언가를 담는 박스와, 그 면 위의 목록 줄(fill=\"none\")을 칠합니다. accent 로 칠하지 않습니다 — 색이 있는 요소는 Paint 입니다.",
   controls: {
     fill: { kind: "select", options: SURFACE_FILLS },
     border: { kind: "select", options: BORDERS },
     shadow: { kind: "select", options: SHADOWS },
+    hoverable: { kind: "boolean" },
     padding: { kind: "select", options: SPACES },
     children: { kind: "text" },
   },
   initial: { border: "line", shadow: "raised", padding: "xl", children: "오늘 수업" },
-  defaults: { fill: "raised", border: "none", shadow: "none", padding: "0" },
+  defaults: { fill: "raised", border: "none", shadow: "none", hoverable: false, padding: "0" },
   render: (v) => (
-    <Surface fill={v.fill as SurfaceFill} border={v.border as Border} shadow={v.shadow as Shadow} padding={v.padding as Space}>
+    <Surface
+      fill={v.fill as SurfaceFill}
+      border={v.border as Border}
+      shadow={v.shadow as Shadow}
+      hoverable={Boolean(v.hoverable)}
+      padding={v.padding as Space}
+    >
       {String(v.children ?? "")}
     </Surface>
   ),
   sections: [
     {
-      title: "Fill — 흑백 면 다섯",
-      note: "회색이 아니라 자리의 이름입니다. inverse 는 글자색도 같이 바꿔서 검정 위에 검정 글자가 생기지 않습니다. well 은 반투명이라 어느 면 위에서도 한 단 내려앉습니다.",
+      title: "Fill — 흑백 면 다섯 · 면 없음",
+      note: "회색이 아니라 자리의 이름입니다. inverse 는 글자색도 같이 바꿔서 검정 위에 검정 글자가 생기지 않습니다. well 은 반투명이라 어느 면 위에서도 한 단 내려앉습니다. none 은 면 없이 바깥 면을 그대로 보입니다 — 목록 줄처럼 면 위의 한 칸에 씁니다.",
       render: () => (
         <Stage>
           {SURFACE_FILLS.map((f) => (
@@ -242,6 +251,26 @@ const surface: Spec = {
               {f}
             </Surface>
           ))}
+        </Stage>
+      ),
+    },
+    {
+      title: "hoverable — 흑백 상태 층",
+      note: "hover 때 글자색 7% 층, 누르는 동안 12% 층을 면 위에 덮습니다. 면 · 글자 · 테두리는 그대로입니다. 층을 글자색에서 만들어서 흰 면 위의 줄은 회색, 검정 면 위의 줄은 흰 층이 됩니다. 목록 줄은 fill=\"none\" 이라 바깥 면이 그대로 보입니다. 색 요소의 hover 는 Paint 의 hoverable 이고, 누르는 물건(커서 · 몸짓)은 Pressable 입니다.",
+      render: () => (
+        <Stage>
+          {(["raised", "inverse"] as const).map((f) => (
+            <Surface key={f} fill={f} border="line" style={{ width: 220 }}>
+              {HOVER_ROWS.map((row) => (
+                <Surface key={row} fill="none" hoverable paddingX="xl" paddingY="md">
+                  <Text variant="label">{row}</Text>
+                </Surface>
+              ))}
+            </Surface>
+          ))}
+          <Surface border="line" shadow="raised" hoverable padding="xl">
+            <Text variant="label">면 전체 · hoverable</Text>
+          </Surface>
         </Stage>
       ),
     },

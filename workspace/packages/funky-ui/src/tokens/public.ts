@@ -6,7 +6,7 @@
  */
 export * from "./vocabulary";
 export { NEUTRALS, NEONS, LADDER } from "./palette";
-export { SURFACE, INK, LINE, OVERLAY, GLASS, FOCUS, SHADOW_COLOR, SELECTION, ACCENT_COLORS, type AccentColors } from "./color";
+export { SURFACE, INK, LINE, OVERLAY, GLASS, STATE_LAYER, FOCUS, SHADOW_COLOR, SELECTION, ACCENT_COLORS, type AccentColors } from "./color";
 export { VARIANT_RECIPES, SELECTED_VARIANT, BORDERLESS_VARIANTS, type Rung, type Layer as OverlayLayer, type VariantRecipe } from "./color-recipes";
 export { FONT_FAMILY, FONT_STYLESHEET, WEIGHT, TEXT_ROLES, CONTROL_TEXT, INPUT_TEXT, NUMERAL, type TextRole } from "./typography";
 export { textRule, TONE_VALUE } from "./typography-recipes";

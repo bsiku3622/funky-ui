@@ -15,13 +15,8 @@ export const accordionHeader = style(
     width: "100%",
     padding: px(SPACE["2xl"]),
     border: 0,
-    background: "transparent",
-    color: "inherit",
     textAlign: "start",
     cursor: "pointer",
-    transitionProperty: "background-color",
-    transitionDuration: vars.duration.fast,
-    selectors: { "&:hover": { backgroundColor: vars.overlay.hoverGray } },
   }),
 );
 

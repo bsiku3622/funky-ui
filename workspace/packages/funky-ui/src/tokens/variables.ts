@@ -5,7 +5,7 @@
  * 이름이 해시가 아니라 고정이라, 소비 앱의 CSS(예: Tailwind 의 `bg-[var(--fk-surface-canvas)]`)도
  * 같은 변수를 읽을 수 있습니다.
  */
-import { ACCENT_COLORS, FOCUS, GLASS, INK, LINE, OVERLAY, SELECTION, SHADOW_COLOR, SURFACE } from "./color";
+import { ACCENT_COLORS, FOCUS, GLASS, INK, LINE, OVERLAY, SELECTION, SHADOW_COLOR, STATE_LAYER, SURFACE } from "./color";
 import { ELEVATION, SPACE } from "./layout";
 import { DURATION, EASING, PRESS, ms } from "./motion";
 import { FOCUS_RING, STROKE } from "./shape";
@@ -22,6 +22,7 @@ const TREE = {
   line: LINE,
   overlay: OVERLAY,
   glass: GLASS,
+  state: STATE_LAYER,
   focus: FOCUS,
   selection: SELECTION,
   shadowColor: SHADOW_COLOR,
