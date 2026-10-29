@@ -33,7 +33,7 @@ Components는 class-explorer 전용 컴포넌트입니다. 앱 셸(상단 바 ·
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 
 - `fixed`면 문서 흐름에서 빠지므로(`position: fixed`, `z-index` 100) 본문 위쪽에 바 높이(80px)만큼 여백을 둡니다. `SideNav`의 `fixed`는 이 바 아래(80px)에서 시작합니다.
-- 바는 [Paint](../primitives/README.md#paint)의 `solid`로 칠하고, 테두리만 아래 한 줄로 덮습니다. 바의 글자색은 accent의 `ink`이고, `actions`의 NavButton은 그 글자색에서 유리를 만듭니다. 그래서 보라(기본) · 검정 바에서는 흰 유리, 시안 · 노랑처럼 밝은 바에서는 검은 유리가 되어 어느 accent에서도 대비가 맞습니다.
+- 바는 [Paint](../primitives/README.md#paint)의 `filled`로 칠하고, 테두리만 아래 한 줄로 덮습니다. 바의 글자색은 accent의 `ink`이고, `actions`의 NavButton은 흰 유리 위에 그 글자색을 물려받습니다. 그래서 밝은 바(시안 · 노랑)에서는 흰 유리 위 검정 글자가 되어, 어느 accent에서도 글자 대비가 맞습니다.
 
 ## SideNav
 
@@ -81,7 +81,7 @@ Components는 class-explorer 전용 컴포넌트입니다. 앱 셸(상단 바 ·
 | `onClick` | `() => void` | — | 눌렀을 때 부릅니다. |
 | `children` | `ReactNode` | — | 메뉴 이름입니다. |
 
-- [Pressable](../primitives/README.md#pressable)(누름)에 [Paint](../primitives/README.md#paint)(칠)를 얹은 버튼입니다. 지금 화면은 검정 `solid`가 4px 그림자 위에 떠 있고(`sink` — hover 때 가라앉음), 나머지는 `ghostMuted`로 물러나 hover 때 글자만 진해집니다(`tap`). 골라짐(`selected`)이 아니라 variant를 바꾸는 것이라, 지금 화면 칸은 눌린 채가 아니라 떠 있습니다.
+- [Pressable](../primitives/README.md#pressable)(누름)에 [Paint](../primitives/README.md#paint)(칠)를 얹은 버튼입니다. 지금 화면은 검정 `filled`가 4px 그림자 위에 떠 있고(`sink` — hover 때 가라앉음), 나머지는 `ghostMuted`로 물러나 hover 때 글자만 진해집니다(`tap`). 골라짐(`selected`)이 아니라 variant를 바꾸는 것이라, 지금 화면 칸은 눌린 채가 아니라 떠 있습니다.
 - 링크가 아니라 `<button>`입니다. 화면 이동은 `onClick`에서 합니다.
 
 ## BottomNav
@@ -103,7 +103,7 @@ Components는 class-explorer 전용 컴포넌트입니다. 앱 셸(상단 바 ·
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 | `children` | `ReactNode` | — | `BottomNav.Item`들입니다. |
 
-- 바는 AppBar와 같이 Paint의 `solid`이고 테두리만 위 한 줄입니다.
+- 바는 AppBar와 같이 Paint의 `filled`이고 테두리만 위 한 줄입니다.
 - 다섯 칸까지만 넣습니다. 칸이 폭을 똑같이 나누므로 칸이 늘면 라벨과 누르는 자리가 함께 좁아집니다.
 - 칸 글자는 바의 글자색(accent의 `ink`)을 물려받아 어느 accent 바에서도 읽힙니다. 쉬는 칸은 60% 로 묽어집니다.
 

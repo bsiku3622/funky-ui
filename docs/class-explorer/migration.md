@@ -9,23 +9,23 @@ class-explorer의 지금 클래스 문자열을 funky-ui의 무엇으로 바꾸�
 | 지금 | funky-ui | 예 |
 | --- | --- | --- |
 | `RetroButton` (기본 흰색) | `<Button shadow>` | 대부분의 RetroButton |
-| `RetroButton variant="black"` | `<Button variant="solid" shadow>` | 로그인 · 저장 |
-| `RetroButton variant="primary"` | `<Button accent="pink" variant="tonal" shadow>` | |
+| `RetroButton variant="black"` | `<Button variant="filled" shadow>` | 로그인 · 저장 |
+| `RetroButton variant="primary"` | `<Button accent="pink" variant="solid" shadow>` | |
 | `RetroButton isSelected` | `<Button selected>` | 학과 · 화면 전환 |
 | `bg-white border-2 border-black` (12) | `<Button>` · 아이콘만이면 `<IconButton variant="outline">` | MealCard 날짜 화살표 · 업로드 동작 |
-| `bg-black text-white border-black` (8) | `<Button variant="solid">` | RequestSidebar "허용" · Admin "확인" |
+| `bg-black text-white border-black` (8) | `<Button variant="filled">` | RequestSidebar "허용" · Admin "확인" |
 | 안 골림 `border-black/30 text-black/40` → 골림 `bg-black text-white` (11 + 7) | `<Button variant="muted" selected={…}>` · 줄이면 `SegmentedControl` | EventFormModal 칩 · Admin 학기 |
-| `bg-retro-accent1 border-black shadow-3px` (4) | `<Button accent="cyan" variant="tonal" shadow>` | SyllabusPanel · MaterialsPage "Preview" |
+| `bg-retro-accent1 border-black shadow-3px` (4) | `<Button accent="cyan" variant="solid" shadow>` | SyllabusPanel · MaterialsPage "Preview" |
 | `bg-white border-black shadow-3px` (6) | `<Button variant="outline" shadow>` | "Download" · "다시 시도" |
 | `bg-white border-black/30 text-black/50` "Refetch" (8) | `<Button size="xs" variant="muted" icon={RefreshCw}>` | Admin · FactsPanel |
 | `text-black/40 hover:text-black` 아이콘 (4 + 4) | `<IconButton variant="ghostMuted">` | 닫기 · 새로고침 |
 | `text-red-500 hover:text-red-700` 휴지통 (2) | `<IconButton accent="red" variant="ghost">` | Admin |
 | `text-xs font-black hover:text-retro-primary` 글자 버튼 | `<Button size="xs" variant="ghost">` | FilterSection "Refresh" · "Reset" |
 | `bg-white/10 border-white/30 text-white` (3) | `<NavButton>` | 로그아웃 · 학기 선택 |
-| `bg-retro-green border-black` "Approve" | `<Button accent="green" variant="tonal" shadow>` | MaterialReviewPanel |
-| `bg-retro-primary border-black` "Reject" · "Withdraw" | `<Button accent="pink" variant="tonal">` | MaterialReviewPanel · UploadPage |
+| `bg-retro-green border-black` "Approve" | `<Button accent="green" variant="solid" shadow>` | MaterialReviewPanel |
+| `bg-retro-primary border-black` "Reject" · "Withdraw" | `<Button accent="pink" variant="solid">` | MaterialReviewPanel · UploadPage |
 | `border-retro-primary text-retro-primary` "거절" | `<Button accent="pink" variant="outline">` | RequestSidebar |
-| `bg-retro-accent2 border-black shadow-4px` 링크 | `<Button as={Link} accent="yellow" variant="tonal" shadow>` | 홈 배너 |
+| `bg-retro-accent2 border-black shadow-4px` 링크 | `<Button as={Link} accent="yellow" variant="solid" shadow>` | 홈 배너 |
 
 ### Trade의 줄
 

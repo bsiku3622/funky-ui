@@ -17,17 +17,17 @@ accent(색) × variant(칠하는 방식) × size × shadow로 만드는 기본 �
 ```tsx
 <Button accent="green" variant="outline">유지</Button>
 <Button variant="muted" selected={on}>전체</Button>
-<Button as="a" href="/trade" accent="cyan" variant="tonal" shadow iconEnd={ArrowRight}>Trade</Button>
+<Button as="a" href="/trade" accent="cyan" variant="solid" shadow iconEnd={ArrowRight}>Trade</Button>
 ```
 
 | prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `as` | `ElementType` | `"button"` | 렌더할 요소입니다. `<button>`이면 `type="button"`이 기본이라 폼 안에서도 제출하지 않고, 제출 버튼은 `type="submit"`을 줍니다. 그 밖의 요소면 `disabled` 대신 `aria-disabled`가 붙습니다. |
 | `accent` | `Accent` | — | 색입니다. 주지 않으면 바깥 Paint의 색을 따르고, 바깥에도 없으면 `black`(시스템)입니다. |
-| `variant` | `Variant` | `"outline"` | 칠하는 방식입니다. `solid` `outline` `hairline` `frameline` `framelineMuted` `plain` `tonal` `tonalMuted` `muted` `ghost` `ghostMuted` 열한 가지입니다. |
+| `variant` | `Variant` | `"outline"` | 칠하는 방식입니다. `filled` `outline` `hairline` `frameline` `framelineMuted` `plain` `solid` `solidMuted` `muted` `ghost` `ghostMuted` 열한 가지입니다. |
 | `size` | `ControlSize` | `"md"` | 높이 사다리입니다. `xs` 24 · `sm` 32 · `md` 40 · `lg` 48px. |
 | `shadow` | `boolean \| "hover"` | `false` | 4px 그림자입니다. `true`면 그림자 위에 떠 있다가 hover 때 가라앉고(`sink`), `"hover"`면 평평하다가 hover 때 제자리에서 그림자가 올라옵니다(`raise` — 복사 버튼 · 과목 추가 칩). 끄면 누르는 순간만 작아집니다(`tap`). |
-| `selected` | `boolean` | — | 골라진 상태입니다. 같은 accent의 `solid`로 바뀌고 `aria-pressed`가 붙습니다. |
+| `selected` | `boolean` | — | 골라진 상태입니다. 같은 accent의 `filled`로 바뀌고 `aria-pressed`가 붙습니다. |
 | `loading` | `boolean` | `false` | 글자 자리를 지킨 채 가운데에 스피너를 둡니다. `aria-busy` · `aria-disabled`가 붙고 누름을 삼킵니다. |
 | `icon` | `IconComponent` | — | 앞 아이콘입니다. 크기와 굵기는 버튼 크기가 정합니다. |
 | `iconEnd` | `IconComponent` | — | 뒤 아이콘입니다. |
@@ -36,11 +36,11 @@ accent(색) × variant(칠하는 방식) × size × shadow로 만드는 기본 �
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 | `children` | `ReactNode` | — | 버튼 글자입니다. |
 
-- 테두리가 없는 `ghost`와 `ghostMuted`는 가라앉을 상자가 없어 `shadow`를 줘도 그림자가 붙지 않습니다. `selected`로 `solid`가 되면 받습니다.
-- 선택은 variant가 아니라 상태입니다. `selected`를 주면 같은 accent의 `solid`로 칠하므로 `variant`에는 안 골랐을 때의 모양만 적습니다(`muted` 학기 버튼이 골라지면 검정 블록이 됩니다). 그림자를 켠 버튼은 골라지면 눌린 채로 있습니다. `selected`를 아예 주지 않으면 `aria-pressed`도 붙지 않고, `false`를 주면 `aria-pressed="false"`가 붙습니다.
+- 테두리가 없는 `ghost`와 `ghostMuted`는 가라앉을 상자가 없어 `shadow`를 줘도 그림자가 붙지 않습니다. `selected`로 `filled`가 되면 받습니다.
+- 선택은 variant가 아니라 상태입니다. `selected`를 주면 같은 accent의 `filled`로 칠하므로 `variant`에는 안 골랐을 때의 모양만 적습니다(`muted` 학기 버튼이 골라지면 검정 블록이 됩니다). 그림자를 켠 버튼은 골라지면 눌린 채로 있습니다. `selected`를 아예 주지 않으면 `aria-pressed`도 붙지 않고, `false`를 주면 `aria-pressed="false"`가 붙습니다.
 - `loading`은 글자를 투명하게 두고 스피너를 겹쳐서 폭이 흔들리지 않습니다. 불러오는 동안은 마우스 · Enter · Space 어느 누름도 `onClick`에 닿지 않습니다. `disabled`를 쓰지 않는 이유는 꺼진 모양(불투명도 0.4)이 아니라 스피너를 보여야 해서입니다.
 
-Button은 Pressable과 Paint를 이렇게 묶습니다 — `shadow`를 켜면 `sink`, `"hover"`면 `raise`, 끄면 `tap`이고, 그림자를 켠 버튼이 골라지면 눌린 채(`pressed`)로 둡니다. 크기 · 아이콘 없이 같은 칠과 몸짓만 필요한 자리(예: 줄 전체가 누르는 링크)는 이 조립을 직접 씁니다 — `<Paint as={Pressable} motion="sink" accent="cyan" variant="tonal" hoverable>`(링크면 Paint의 `as`가 이미 Pressable이라 `as="a"`를 줄 수 없으므로, Pressable 쪽에 칠을 class로 얹습니다 — `<Pressable as="a" motion="sink" className={paintClass({ … hoverable: true })}>`). 누르지 않는 요소의 칠은 [Paint](../primitives/README.md#paint)입니다.
+Button은 Pressable과 Paint를 이렇게 묶습니다 — `shadow`를 켜면 `sink`, `"hover"`면 `raise`, 끄면 `tap`이고, 그림자를 켠 버튼이 골라지면 눌린 채(`pressed`)로 둡니다. 크기 · 아이콘 없이 같은 칠과 몸짓만 필요한 자리(예: 줄 전체가 누르는 링크)는 이 조립을 직접 씁니다 — `<Paint as={Pressable} motion="sink" accent="cyan" variant="solid" hoverable>`(링크면 Paint의 `as`가 이미 Pressable이라 `as="a"`를 줄 수 없으므로, Pressable 쪽에 칠을 class로 얹습니다 — `<Pressable as="a" motion="sink" className={paintClass({ … hoverable: true })}>`). 누르지 않는 요소의 칠은 [Paint](../primitives/README.md#paint)입니다.
 
 ## IconButton
 
@@ -88,7 +88,7 @@ Button은 Pressable과 Paint를 이렇게 묶습니다 — `shadow`를 켜면 `s
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 | `children` | `ReactNode` | — | 버튼 글자입니다. |
 
-- 반투명 유리 면 · 진한 글자 · 반투명 테두리이고, hover 때 테두리가 진해집니다. 글자와 유리는 바의 글자색(`currentColor`)에서 나오므로, 보라 바 위에서는 흰 유리, 시안 바 위에서는 검은 유리가 됩니다. 상단 바 · 하단 바 · 학기 선택에만 쓰고, 흰 면 · 크림 위에서는 Button을 씁니다.
+- 반투명 흰 유리 면 · 진한 글자 · 반투명 흰 테두리이고, hover 때 테두리가 흰색으로 진해집니다. 유리는 어느 바 위에서도 흰색이고, 글자는 바의 글자색을 물려받습니다(보라 바 위 흰 글자 · 노랑 바 위 검정 글자). 상단 바 · 하단 바 · 학기 선택에만 쓰고, 흰 면 · 크림 위에서는 Button을 씁니다.
 - `accent`와 `variant`가 없습니다. 색은 놓인 바가 정합니다.
 - [Pressable](../primitives/README.md#pressable)의 `tap`에 [Glass](../primitives/README.md#glass)의 유리 칠(`hoverable`)을 얹은 버튼입니다. 바 위에는 그림자를 두지 않으므로 누르는 순간만 작아집니다. 버튼이 아닌 자리에 같은 유리가 필요하면 Glass를 직접 씁니다.
 - `children` 없이 `icon`만 주면 정사각 아이콘 버튼이 되고, 이때만 `label`이 `aria-label`로 붙습니다.
@@ -116,7 +116,7 @@ Button은 Pressable과 Paint를 이렇게 묶습니다 — `shadow`를 켜면 `s
 상태 · 개수 · 분류를 적는 작은 라벨입니다. 아래는 아이콘이 있는 상태 배지와 작은 분류 배지입니다.
 
 ```tsx
-<Badge accent="green" variant="tonal" icon={Check}>수강 중</Badge>
+<Badge accent="green" variant="solid" icon={Check}>수강 중</Badge>
 <Badge variant="muted" size="sm">영어 강의</Badge>
 ```
 
@@ -239,23 +239,22 @@ native `<select>`를 감싼 선택 칸입니다. 목록은 운영체제가 그�
 
 ## Checkbox
 
-켜고 끄는 상자입니다. 아래는 동의 문구가 붙은 초록 체크박스입니다.
+켜고 끄는 상자입니다. 아래는 동의 문구가 붙은 체크박스입니다.
 
 ```tsx
-<Checkbox accent="green" checked={agreed} onChange={(e) => setAgreed(e.target.checked)}>
+<Checkbox checked={agreed} onChange={(e) => setAgreed(e.target.checked)}>
   개인정보 수집에 동의합니다
 </Checkbox>
 ```
 
 | prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `accent` | `Accent` | — | 켜진 색입니다. 주지 않으면 바깥 Paint의 색을 따르고, 바깥에도 없으면 `black`입니다. |
 | `children` | `ReactNode` | — | 옆에 붙는 글자입니다. 누르는 자리가 글자까지 넓어집니다. |
 | `className` | `string` | — | 바깥 `<label>`에 붙습니다. |
 | 그 밖 | `<input>`의 props (`type` 제외) | — | `checked` · `defaultChecked` · `onChange` · `disabled` · `name` · `value` · `ref` 같은 native 속성이 `<input>`으로 갑니다. |
 
 - native input을 투명하게 표식 위에 겹쳐 두고, 보이는 상자는 형제 `<span>`이 그립니다. 폼 · 키보드 · 스크린 리더는 native가 맡고 생김새만 funky입니다.
-- 켜지면 accent의 solid로 꽉 차고, 그 위 체크는 accent의 ink입니다. `disabled`면 라벨 전체가 불투명도 0.4가 됩니다.
+- accent를 고르지 않습니다. 켜지면 검정으로 꽉 차고 그 위 체크는 흰색이며, 색이 있는 Paint 안에서는 다른 요소처럼 그 색을 따릅니다. `disabled`면 라벨 전체가 불투명도 0.4가 됩니다.
 
 ## Radio
 
@@ -263,37 +262,35 @@ native `<select>`를 감싼 선택 칸입니다. 목록은 운영체제가 그�
 
 ```tsx
 <Radio name="action" value="keep" defaultChecked>유지</Radio>
-<Radio name="action" value="drop" accent="pink">드랍</Radio>
+<Radio name="action" value="drop">드랍</Radio>
 ```
 
 | prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `accent` | `Accent` | — | 켜진 색입니다. 주지 않으면 바깥 Paint의 색을 따르고, 바깥에도 없으면 `black`입니다. |
 | `children` | `ReactNode` | — | 옆에 붙는 글자입니다. 누르는 자리가 글자까지 넓어집니다. |
 | `className` | `string` | — | 바깥 `<label>`에 붙습니다. |
 | 그 밖 | `<input>`의 props (`type` 제외) | — | `name` · `value` · `checked` · `defaultChecked` · `onChange` · `ref` 같은 native 속성이 `<input>`으로 갑니다. |
 
-- 둥근 라디오 단추를 쓰지 않습니다. 상자는 각진 채로 두고 켜지면 안에 accent 정사각형이 찍혀서, 상자 전체가 차고 체크가 서는 Checkbox와 모양으로 갈립니다.
+- 둥근 라디오 단추를 쓰지 않습니다. 상자는 각진 채로 두고 켜지면 안에 정사각형이 찍혀서, 상자 전체가 차고 체크가 서는 Checkbox와 모양으로 갈립니다.
 - 묶음은 native 규칙대로 같은 `name`이 정합니다.
 
 ## Switch
 
-켜고 끄는 스위치입니다. 아래는 알림을 켜고 끄는 분홍 스위치입니다.
+켜고 끄는 스위치입니다. 아래는 알림을 켜고 끄는 스위치입니다.
 
 ```tsx
-<Switch accent="pink" checked={notify} onChange={(e) => setNotify(e.target.checked)}>
+<Switch checked={notify} onChange={(e) => setNotify(e.target.checked)}>
   알림 받기
 </Switch>
 ```
 
 | prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `accent` | `Accent` | — | 켜진 색입니다. 주지 않으면 바깥 Paint의 색을 따르고, 바깥에도 없으면 `black`입니다. |
 | `children` | `ReactNode` | — | 옆에 붙는 글자입니다. 누르는 자리가 글자까지 넓어집니다. |
 | `className` | `string` | — | 바깥 `<label>`에 붙습니다. |
 | 그 밖 | `<input>`의 props (`type` 제외) | — | `checked` · `defaultChecked` · `onChange` · `disabled` · `ref` 같은 native 속성이 `<input>`으로 갑니다. |
 
-- native checkbox에 `role="switch"`를 붙인 것입니다. 각진 트랙 위를 각진 손잡이가 건너가고, 켜지면 트랙이 accent의 solid로 바뀝니다.
+- native checkbox에 `role="switch"`를 붙인 것입니다. 각진 트랙 위를 각진 손잡이가 건너가고, 켜지면 트랙이 검정(색이 있는 Paint 안에서는 그 색)으로 바뀝니다.
 
 ## Label
 

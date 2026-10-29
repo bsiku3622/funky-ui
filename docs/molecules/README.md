@@ -22,7 +22,7 @@ Molecules는 Atoms와 Primitives를 묶은 범용 조합입니다. 카드 · 선
   <Text variant="heading">이번 주 시간표</Text>
 </Card>
 <Card padding="0">
-  <Card.Header title="Enrolled Classes" icon={BookOpen} tone="bar" accent="purple" actions={<Badge variant="tonal" size="sm">6</Badge>} />
+  <Card.Header title="Enrolled Classes" icon={BookOpen} tone="bar" accent="purple" actions={<Badge variant="solid" size="sm">6</Badge>} />
   <Card.Section>일반물리학 II · 미적분학 II</Card.Section>
   <Card.Section divided>알고리즘 · 전공 연구</Card.Section>
 </Card>
@@ -51,11 +51,11 @@ Molecules는 Atoms와 Primitives를 묶은 범용 조합입니다. 카드 · 선
 | `title` | `ReactNode` | 필수 | 제목 글자입니다. |
 | `icon` | `IconComponent` | — | 제목 앞 아이콘입니다. |
 | `actions` | `ReactNode` | — | 오른쪽 끝입니다. 개수나 버튼을 둡니다. |
-| `tone` | `"plain" \| "bar"` | `"plain"` | `bar`는 Paint의 `solid`로 칠한 머리 막대입니다(모달 머리와 같은 모양). |
+| `tone` | `"plain" \| "bar"` | `"plain"` | `bar`는 Paint의 `filled`로 칠한 머리 막대입니다(모달 머리와 같은 모양). |
 | `accent` | `Accent` | — | 머리 막대의 색입니다(`tone="bar"`일 때). 주지 않으면 바깥 Paint의 색, 바깥에도 없으면 검정입니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 
-- `bar`는 [Paint](../primitives/README.md#paint)의 `solid`(accent 면 · `ink` 글자)이고, 테두리만 아래 2px 검정 한 줄로 덮습니다. 막대가 카드 가장자리까지 닿도록 `Card`에 `padding="0"`을 주고 나머지는 `Card.Section`으로 나눕니다. 막대 위의 solid 배지는 accent를 따로 줍니다 — 안 주면 막대와 같은 색이 됩니다.
+- `bar`는 [Paint](../primitives/README.md#paint)의 `filled`(accent 면 · `ink` 글자)이고, 테두리만 아래 2px 검정 한 줄로 덮습니다. 막대가 카드 가장자리까지 닿도록 `Card`에 `padding="0"`을 주고 나머지는 `Card.Section`으로 나눕니다. 막대 위의 filled 배지는 accent를 따로 줍니다 — 안 주면 막대와 같은 색이 됩니다.
 
 ### Card.Section
 
@@ -171,7 +171,7 @@ Molecules는 Atoms와 Primitives를 묶은 범용 조합입니다. 카드 · 선
 | `onChange` | `(value: V) => void` | 필수 | 다른 칸을 골랐을 때 새 값과 함께 불립니다. |
 | `aria-label` | `string` | 필수 | 줄의 이름입니다. |
 | `accent` | `Accent` | — | 색입니다. 주지 않으면 바깥 Paint의 색을 따르고, 바깥에도 없으면 `black`입니다. |
-| `variant` | `Variant` | `"muted"` | 안 골린 칸의 칠입니다. 골린 칸은 같은 accent의 `solid`입니다. |
+| `variant` | `Variant` | `"muted"` | 안 골린 칸의 칠입니다. 골린 칸은 같은 accent의 `filled`입니다. |
 | `size` | `ControlSize` | `"sm"` | 칸의 크기입니다. |
 | `shadow` | `boolean` | `false` | 칸을 4px 그림자 위에 띄웁니다. 골린 칸은 눌린 채로 있습니다. |
 | `gap` | `Space` | `"sm"` | 칸 사이 간격입니다(6px). |
@@ -180,7 +180,7 @@ Molecules는 Atoms와 Primitives를 묶은 범용 조합입니다. 카드 · 선
 
 - 값을 고르는 줄입니다. 화면을 바꾸는 줄은 [Tabs](#tabs)입니다. 둘의 생김새는 같고 뜻만 다릅니다(`radiogroup`과 `tablist`).
 - 방향키(← → ↑ ↓)와 Home · End로 칸을 옮기고, 옮기면 값도 바로 바뀝니다. Tab 키로는 골린 칸 하나에만 들어옵니다.
-- 골린 칸은 solid 로 바뀌므로 안 골린 칸의 `variant`로 `solid`를 주면 둘이 같아져 고른 것이 보이지 않습니다. 안 골린 칸은 `muted` · `outline` · `hairline` 처럼 면이 비는 variant 로 둡니다.
+- 골린 칸은 filled로 바뀌므로 안 골린 칸의 `variant`로 `filled`를 주면 둘이 같아져 고른 것이 보이지 않습니다. 안 골린 칸은 `muted` · `outline` · `hairline` 처럼 면이 비는 variant 로 둡니다.
 
 ## Tabs
 
@@ -202,7 +202,7 @@ Molecules는 Atoms와 Primitives를 묶은 범용 조합입니다. 카드 · 선
 | `value` | `V` | 필수 | 골라진 탭의 값입니다. `V`는 문자열 타입입니다. |
 | `onChange` | `(value: V) => void` | 필수 | 탭을 골랐을 때 새 값과 함께 불립니다. |
 | `accent` | `Accent` | — | 색입니다. 주지 않으면 바깥 Paint의 색을 따르고, 바깥에도 없으면 `black`입니다. |
-| `variant` | `Variant` | `"outline"` | 안 골린 탭의 칠입니다. 골린 탭은 같은 accent의 `solid`입니다. |
+| `variant` | `Variant` | `"outline"` | 안 골린 탭의 칠입니다. 골린 탭은 같은 accent의 `filled`입니다. |
 | `size` | `ControlSize` | `"sm"` | 탭의 크기입니다. |
 | `shadow` | `boolean` | `true` | 탭을 4px 그림자 위에 띄웁니다. |
 | `gap` | `Space` | `"md"` | 탭 사이 간격입니다(8px). `Tabs.List`가 읽습니다. |
@@ -287,7 +287,7 @@ native `<dialog>` 위에 서는 모달입니다. 아래는 수강 변경을 확�
   footer={
     <>
       <Button variant="outline" onClick={() => setOpen(false)}>취소</Button>
-      <Button accent="green" variant="tonal" shadow onClick={save}>확인</Button>
+      <Button accent="green" variant="solid" shadow onClick={save}>확인</Button>
     </>
   }
 >

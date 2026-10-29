@@ -76,24 +76,26 @@ variant는 같은 accent를 어디에, 얼마나 진하게 칠하는지를 정�
 
 | # | variant | FG | BG | Border | Hover |
 | --- | --- | --- | --- | --- | --- |
-| 1 | `solid` | ink | solid | solid | 흰 층 |
+| 1 | `filled` | ink | solid | solid | 흰 층 |
 | 2 | `outline` | solidInk | — | solid | accent 층 |
 | 3 | `hairline` | solidInk | — | soft | 테두리 → solid |
 | 4 | `frameline` | black | — | solid | accent 층 |
 | 5 | `framelineMuted` | gray | — | solid | accent 층 |
 | 6 | `plain` | solidInk | soft | solid | 회색 층 |
-| 7 | `tonal` | ink | solid | line | 흰 층 |
-| 8 | `tonalMuted` | black | soft | line | 회색 층 |
+| 7 | `solid` | ink | solid | line | 흰 층 |
+| 8 | `solidMuted` | black | soft | line | 회색 층 |
 | 9 | `muted` | softInk | — | soft | 테두리 → solid, 글자 → solidInk |
 | 10 | `ghost` | solidInk | — | — | 글자 → softInk |
 | 11 | `ghostMuted` | softInk | — | — | 글자 → solidInk |
 
 `black` · `gray` · `line`은 accent와 무관한 시스템 값입니다(본문 잉크 #222, 약한 글자 #6f6f6f, 2px 검정 선). `—`는 투명입니다. 면이 투명한 variant는 바탕이 비치므로, 흰 카드 위에서는 흰색으로, 크림 페이지 위에서는 크림으로 보입니다.
 
-표의 출처는 재원님의 Accent × Variant 스케치이고, 두 군데에 해석을 더했습니다.
+표의 출처는 재원님의 Accent × Variant 스케치이고, 이름 둘을 바꾸고 두 군데에 해석을 더했습니다.
 
-- **Solid의 테두리 `-`는 "면과 같은 색"** 으로 읽었습니다. class-explorer의 선택된 "유지" 버튼이 `bg-retro-green border-retro-green` 이었고, 그래서 Solid는 검정 테두리 없는 색 블록입니다.
-- **Tonal의 글자는 `ink`** 입니다. 표에는 Black이라 적혀 있는데, 밝은 accent에서는 ink가 곧 검정이라 결과가 같습니다. 보라처럼 ink가 흰색인 accent에서는 검정 글자가 2.2:1로 읽히지 않아 흰색으로 둡니다. 테두리의 Ink는 선이므로 `line`(#000)입니다. 결과적으로 Tonal = Solid 면 + 검정 테두리이고, class-explorer에서 가장 흔한 "네온 면 + 검정 테두리 + 검정 글자" 버튼이 여기에 들어옵니다.
+- **이름** — 스케치의 Solid(면과 같은 색 테두리)는 `filled`, Tonal(면 + 검정 테두리)은 `solid`, TonalMuted는 `solidMuted`라 부릅니다. 면을 채우기만 한 것이 filled이고, 거기에 검정 테두리를 두른 것이 이 시스템의 기본 solid 버튼입니다.
+
+- **filled의 테두리 `-`는 "면과 같은 색"** 으로 읽었습니다. class-explorer의 선택된 "유지" 버튼이 `bg-retro-green border-retro-green` 이었고, 그래서 filled는 검정 테두리 없는 색 블록입니다.
+- **solid의 글자는 `ink`** 입니다. 표에는 Black이라 적혀 있는데, 밝은 accent에서는 ink가 곧 검정이라 결과가 같습니다. 보라처럼 ink가 흰색인 accent에서는 검정 글자가 2.2:1로 읽히지 않아 흰색으로 둡니다. 테두리의 Ink는 선이므로 `line`(#000)입니다. 결과적으로 solid = filled 면 + 검정 테두리이고, class-explorer에서 가장 흔한 "네온 면 + 검정 테두리 + 검정 글자" 버튼이 여기에 들어옵니다.
 
 ### Paint — 레시피를 쓰는 primitive
 
@@ -101,11 +103,11 @@ variant는 같은 accent를 어디에, 얼마나 진하게 칠하는지를 정�
 
 ### 선택
 
-선택은 따로 된 variant가 아니라 상태입니다. `selected`를 주면 같은 accent의 `solid`로 칠해지고 `aria-pressed`가 붙습니다. 그래서 안 골린 칸은 `muted`, 골린 칸은 검정 블록이 되는 class-explorer의 학기 고르기도, 초록 Outline이 초록 블록이 되는 Trade의 "유지"도 같은 규칙입니다. 그림자를 켠 버튼은 골리면 눌린 채로 있습니다 ([Motion](motion.md)).
+선택은 따로 된 variant가 아니라 상태입니다. `selected`를 주면 같은 accent의 `filled`로 칠해지고 `aria-pressed`가 붙습니다. 그래서 안 골린 칸은 `muted`, 골린 칸은 검정 블록이 되는 class-explorer의 학기 고르기도, 초록 Outline이 초록 블록이 되는 Trade의 "유지"도 같은 규칙입니다. 그림자를 켠 버튼은 골리면 눌린 채로 있습니다 ([Motion](motion.md)).
 
 ### accent는 Paint에서 흐릅니다
 
-accent는 CSS 변수라 아래로 흐르고, 그 변수를 정하는 것은 그 색으로 칠해지는 요소뿐입니다 — primitive에서는 Paint 하나, 위 층에서는 Paint를 쓰는 컴포넌트(Button · Badge · Notice · 바)와 Variant 없이 자기 색을 칠하는 컴포넌트(Link · 토글 · Stat · Meter)입니다. 컨트롤에 accent를 주지 않으면 가장 가까운 바깥 Paint의 accent를 쓰고, 바깥에도 없으면 검정입니다. Box · Surface · Card · Stack처럼 색을 모르는 박스는 이 흐름을 끊지도 바꾸지도 않습니다.
+accent는 CSS 변수라 아래로 흐르고, 그 변수를 정하는 것은 그 색으로 칠해지는 요소뿐입니다 — primitive에서는 Paint 하나, 위 층에서는 Paint를 쓰는 컴포넌트(Button · Badge · Notice · 바)와 Variant 없이 자기 색을 칠하는 컴포넌트(Link · Stat · Meter)입니다. 컨트롤에 accent를 주지 않으면 가장 가까운 바깥 Paint의 accent를 쓰고, 바깥에도 없으면 검정입니다. Box · Surface · Card · Stack처럼 색을 모르는 박스는 이 흐름을 끊지도 바꾸지도 않습니다.
 
 드랍한 과목 줄 안의 버튼이 줄의 색을 따르는 식입니다.
 
@@ -124,8 +126,8 @@ hover와 press는 면을 바꾸지 않고 위에 층을 얹습니다(Paint의 `h
 
 | 층 | hover | press | 쓰는 variant |
 | --- | --- | --- | --- |
-| 흰 층 | `rgba(255,255,255,.3)` | `.45` | Solid · Tonal |
-| 회색 층 | `rgba(0,0,0,.07)` | `.12` | Plain · TonalMuted |
+| 흰 층 | `rgba(255,255,255,.3)` | `.45` | Filled · Solid |
+| 회색 층 | `rgba(0,0,0,.07)` | `.12` | Plain · SolidMuted |
 | accent 층 | solid의 15% | 26% | Outline · Frameline · FramelineMuted |
 
 검정 accent의 accent 층은 회색 층과 같은 값입니다(검정 15%는 지나치게 어둡습니다). hover 층이 없는 Hairline · Muted도 누르는 순간에는 accent 층을 얹어 눌렸다는 것을 보입니다.
@@ -138,4 +140,4 @@ hover와 press는 면을 바꾸지 않고 위에 층을 얹습니다(Paint의 `h
 
 ## 밝은 네온의 약한 칸
 
-노랑과 시안은 원색 자체가 밝아서 Hairline · Muted처럼 연한 테두리를 쓰는 variant가 약하게 보입니다. 규칙을 고르게 적용한 결과이고, 그 색을 굳이 약하게 써야 하는 자리가 아니면 노랑 · 시안은 Solid · Tonal · TonalMuted로 씁니다.
+노랑과 시안은 원색 자체가 밝아서 Hairline · Muted처럼 연한 테두리를 쓰는 variant가 약하게 보입니다. 규칙을 고르게 적용한 결과이고, 그 색을 굳이 약하게 써야 하는 자리가 아니면 노랑 · 시안은 Filled · Solid · SolidMuted로 씁니다.
