@@ -62,7 +62,7 @@ class-explorer의 모션 전부를 몸짓 · 상태 모션 · 입력칸으로 �
 | 지금 | funky-ui | 자리 |
 | --- | --- | --- |
 | `hover:translate-x/y-[3~4px] hover:shadow-none` — 가라앉음 (29) | `sink` — Button `shadow` · Card `motion="sink"` | 그림자 있는 버튼 대부분 · 사람 카드 |
-| 골린 칸 `translate-x-1 translate-y-1 shadow-none` | `pressed` — Button `selected` + `shadow` | 학기 · 필터 |
+| 골린 버튼 `scale-105 z-10` — 그림자는 그대로, hover 때 그림자만 숨김(제자리) · 누르면 100%. 색 버튼은 커지지 않음 (RetroButton `isSelected` · Rooms · SectionCard · EntityCard `isActive`) | **다름** — funky는 지금 `pressed`(눌린 채)로 그립니다. 바로잡을 방향 결정 대기 | Browse 보기 탭 · 학과 · Admin 필터 · 강의실 · 급식 끼니(색) |
 | `hover:shadow-[2px…]` — 평평하다가 그림자가 생김 (4) | `raise` — Button `shadow="hover"` (그림자는 4px로) | 복사 버튼 · Trade 과목 추가 칩 |
 | `hover:-translate-y-1(.5)` + 그림자 6px — 떠오름 (3) | `lift` — Card `motion="lift"` (4px로 통일) | EntityCard · Trade 카드 |
 | `active:scale-95` — 누르는 순간 작아짐 (15) | `tap` · sink의 누르는 순간 | 그림자 없는 버튼 |
