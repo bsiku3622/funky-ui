@@ -40,7 +40,7 @@ export interface TextRole {
  * 반복한 **구조 라벨**입니다.
  *
  * - `overline` — 10px · 900 · 대문자 · 넓은 자간 · 약한 잉크. 카드 머리의 작은 이름표 (계측 35회)
- * - `subtitle` — 14px · 700 · 대문자 · 넓은 자간 · 약한 잉크. 섹션 소제목 (`RetroSubTitle`, 41회)
+ * - `subtitle` — 14px · 900 · 대문자 · 넓은 자간 · 약한 잉크. 섹션 소제목 (`RetroSubTitle`, 41회)
  */
 export const TEXT_ROLES = {
   display: { size: 36, leading: 40, weight: "black", tracking: -0.05, uppercase: true },
@@ -52,7 +52,7 @@ export const TEXT_ROLES = {
   label: { size: 11, leading: 16, weight: "black", tracking: 0 },
   micro: { size: 10, leading: 14, weight: "black", tracking: 0 },
   overline: { size: 10, leading: 14, weight: "black", tracking: 0.1, uppercase: true, tone: "muted" },
-  subtitle: { size: 14, leading: 20, weight: "bold", tracking: 0.1, uppercase: true, tone: "muted" },
+  subtitle: { size: 14, leading: 20, weight: "black", tracking: 0.1, uppercase: true, tone: "muted" },
 } as const satisfies Record<TextVariant, TextRole>;
 
 /**
