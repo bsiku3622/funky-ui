@@ -20,8 +20,8 @@ export const INVENTORY = {
     content: ["Text", "Icon"],
     a11y: ["VisuallyHidden", "Portal"],
     // 2차 — Box 위에 능력 하나
-    /** 칠하는 둘 — 박스는 Surface(흑백 면), 요소는 Paint(accent × variant). accent 는 Paint 만 갖습니다 */
-    paint: ["Surface", "Paint"],
+    /** 칠하는 셋 — 박스는 Surface(흑백 면), 요소는 Paint(accent × variant), 색 바 위는 Glass(유리). accent 는 Paint 만 갖습니다 */
+    paint: ["Surface", "Paint", "Glass"],
     press: ["Pressable"],
     layout: ["Stack", "Inline", "Grid"],
   },

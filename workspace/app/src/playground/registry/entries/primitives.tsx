@@ -1,9 +1,10 @@
-/** Primitives — 배치 · 칠(Surface · Paint) · 글자 · 아이콘 · 누름 · 접근성. 바탕이라 표본은 구조를 보여 줍니다 */
+/** Primitives — 배치 · 칠(Surface · Paint · Glass) · 글자 · 아이콘 · 누름 · 접근성. 바탕이라 표본은 구조를 보여 줍니다 */
 import { useId, useState, type MouseEvent, type ReactNode } from "react";
 import {
   Badge,
   Box,
   Button,
+  Glass,
   Grid,
   Icon,
   Inline,
@@ -17,6 +18,7 @@ import {
   Switch,
   Text,
   VisuallyHidden,
+  glassClass,
   paintClass,
   surfaceClass,
   type Accent,
@@ -131,7 +133,7 @@ const BOX_TAGS = ["div", "section", "article"] as const;
 const box: Spec = {
   name: "Box",
   summary:
-    "요소 — 1차 primitive. 태그(as) · ref · 여백만 다루고, 칠하지 않으며 색도 모릅니다. 2차 primitive 는 모두 Box 위에 능력 하나를 얹습니다: 칠(Surface · Paint) · 누름(Pressable) · 배치(Stack · Inline · Grid). 점선은 Box 의 자리를 보이려고 그린 것입니다.",
+    "요소 — 1차 primitive. 태그(as) · ref · 여백만 다루고, 칠하지 않으며 색도 모릅니다. 2차 primitive 는 모두 Box 위에 능력 하나를 얹습니다: 칠(Surface · Paint · Glass) · 누름(Pressable) · 배치(Stack · Inline · Grid). 점선은 Box 의 자리를 보이려고 그린 것입니다.",
   controls: {
     as: { kind: "select", options: BOX_TAGS },
     padding: { kind: "select", options: SPACES },
@@ -449,6 +451,86 @@ const paint: Spec = {
               </Text>
             </Paint>
           </Stack>
+        </Stage>
+      ),
+    },
+  ],
+};
+
+/* ── Glass ───────────────────────────────────────────────────────────── */
+
+/** 유리가 놓일 바 — accent solid 바의 글자색(ink)에서 유리가 나옵니다 */
+const GLASS_BARS = ["purple", "black", "pink", "cyan", "yellow", "green"] as const;
+
+function GlassBar({ accent, children }: { accent: Accent; children: ReactNode }) {
+  return (
+    <Paint accent={accent} variant="solid" padding="md">
+      <Inline gap="sm">{children}</Inline>
+    </Paint>
+  );
+}
+
+const glass: Spec = {
+  name: "Glass",
+  summary:
+    "바 위의 유리 — 색 바(상단 · 하단 바) 위에 놓이는 반투명 면입니다. 바의 글자색을 묽혀 만들어서 어느 accent 바 위에서도 읽히고, accent 를 받지 않습니다 — 색은 놓인 바가 정합니다. hoverable 이면 hover 때 유리가 짙어지고 테두리가 글자색이 되며, selected 는 더 짙은 유리입니다. NavButton 이 Pressable(tap) 위에 이 유리를 얹은 것입니다.",
+  controls: {
+    bar: { kind: "select", options: GLASS_BARS },
+    selected: { kind: "boolean" },
+    hoverable: { kind: "boolean" },
+    padding: { kind: "select", options: SPACES },
+    children: { kind: "text" },
+  },
+  initial: { hoverable: true, padding: "md", children: "2026-2" },
+  defaults: { bar: "purple", selected: false, hoverable: false, padding: "0" },
+  render: (v) => (
+    <GlassBar accent={v.bar as Accent}>
+      <Glass selected={Boolean(v.selected)} hoverable={Boolean(v.hoverable)} padding={v.padding as Space}>
+        <Text variant="label">{String(v.children ?? "")}</Text>
+      </Glass>
+    </GlassBar>
+  ),
+  code: (v) => {
+    const attrs = [v.selected ? "selected" : "", v.hoverable ? "hoverable" : "", v.padding !== "0" ? `padding="${String(v.padding)}"` : ""].filter(Boolean);
+    return `<Paint accent="${String(v.bar)}" variant="solid" padding="md">\n  <Glass${attrs.length ? ` ${attrs.join(" ")}` : ""}>${String(v.children ?? "")}</Glass>\n</Paint>`;
+  },
+  sections: [
+    {
+      title: "바 색을 따라갑니다",
+      note: "Glass 는 accent 를 받지 않습니다. 바의 글자색(accent 의 ink)을 묽혀 만들어서 보라 · 검정 · 분홍 바 위에서는 흰 유리, 시안 · 노랑 · 초록 바 위에서는 검은 유리가 됩니다. 흰 면 · 크림 위에서는 쓰지 않습니다 — 그 자리는 Paint 입니다.",
+      render: () => (
+        <Stage bg="raised">
+          <Stack gap="md">
+            {GLASS_BARS.map((a) => (
+              <GlassBar key={a} accent={a}>
+                <Glass hoverable paddingX="md" paddingY="xs">
+                  <Text variant="label">{a}</Text>
+                </Glass>
+                <Glass hoverable selected paddingX="md" paddingY="xs">
+                  <Text variant="label">selected</Text>
+                </Glass>
+              </GlassBar>
+            ))}
+          </Stack>
+        </Stage>
+      ),
+    },
+    {
+      title: "색과 누름 — NavButton 의 조립",
+      note: "Glass 도 칠이라 hover 색은 hoverable 이 혼자 냅니다(둘째 — 커서는 화살표 그대로). 누르는 물건으로 만드는 것은 Pressable 이고, NavButton 이 Pressable(tap) 위에 glassClass() 를 얹은 것입니다(셋째).",
+      render: () => (
+        <Stage bg="raised">
+          <GlassBar accent="purple">
+            <Glass paddingX="md" paddingY="xs">
+              <Text variant="label">쉼</Text>
+            </Glass>
+            <Glass hoverable paddingX="md" paddingY="xs">
+              <Text variant="label">색만 · hoverable</Text>
+            </Glass>
+            <Pressable motion="tap" paddingX="md" paddingY="xs" className={glassClass({ hoverable: true })}>
+              <Text variant="label">둘 다 · NavButton</Text>
+            </Pressable>
+          </GlassBar>
         </Stage>
       ),
     },
@@ -1081,6 +1163,7 @@ export const PRIMITIVE_SPECS: Record<string, Spec> = {
   Grid: grid,
   Surface: surface,
   Paint: paint,
+  Glass: glass,
   Text: text,
   Icon: iconSpec,
   Pressable: pressable,

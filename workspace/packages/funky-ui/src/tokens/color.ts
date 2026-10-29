@@ -62,7 +62,7 @@ export const OVERLAY = {
 } as const;
 
 /**
- * Glass — 색 바(상단 · 하단 바) 위 버튼 전용 (`NavButton`). 바의 글자색(`currentColor`)을 묽혀
+ * Glass — 색 바(상단 · 하단 바) 위의 유리 (`Glass` primitive · NavButton). 바의 글자색(`currentColor`)을 묽혀
  * 만들므로, 보라 바 위에서는 흰 유리, 시안 바 위에서는 검은 유리가 됩니다.
  */
 const currentOf = (pct: number) => `color-mix(in srgb, currentColor ${pct}%, transparent)`;

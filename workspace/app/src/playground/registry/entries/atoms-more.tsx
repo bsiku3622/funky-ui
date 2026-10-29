@@ -194,7 +194,7 @@ function NavBarDemo() {
 
 const navButton: Spec = {
   name: "NavButton",
-  summary: "어두운 바 위의 버튼입니다. 반투명 유리 면에 흰 글자이고, hover 때 테두리가 진해집니다. 상단 바 · 하단 바 · 학기 선택에만 쓰고, 밝은 면 위에서는 Button 을 씁니다.",
+  summary: "어두운 바 위의 버튼입니다. Pressable(tap) 위에 Glass(유리 칠)를 얹은 것이라 반투명 유리 면에 흰 글자이고, hover 때 테두리가 진해집니다. 상단 바 · 하단 바 · 학기 선택에만 쓰고, 밝은 면 위에서는 Button 을 씁니다.",
   stage: "dark",
   controls: {
     icon: { kind: "icon" },
