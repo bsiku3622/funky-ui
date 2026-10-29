@@ -1,0 +1,65 @@
+# AGENTS.md
+
+## 이 레포지토리
+
+funky-ui — class-explorer 를 위한 neo-brutalist React 디자인 시스템. 크림 위 네온 · 2px 검정 선 · 하드 그림자 · 그림자 속으로 가라앉는 눌림. 정체성의 근거는 [docs/get-started/principles.md](docs/get-started/principles.md) 입니다.
+
+```
+funky-ui/
+├── docs/                       # get-started · foundations · primitives · atoms · molecules · components · class-explorer
+└── workspace/                  # pnpm workspace
+    ├── packages/funky-ui/      # @studio-baeks/funky-ui
+    │   └── src/
+    │       ├── index.ts        # entry `.` — 컴포넌트 ("use client")
+    │       ├── inventory.ts    # 이름 · 층 · 순서의 정본 (import 없음)
+    │       ├── tokens/         # 값의 유일한 정의 위치 — palette(hex) → color(역할) · color-recipes(11 variant)
+    │       │                   #   · typography · shape · layout · motion · vocabulary(축) · variables(--fk-*) · layers
+    │       ├── styles/         # 공유 class — accent · variant · slots · control · surface · space · typography · global
+    │       ├── internal/       # cx · polymorphic · glyphs · useAnchor
+    │       ├── primitives/     # Box · Stack · Inline · Grid · Text · Icon · Pressable · VisuallyHidden · Portal
+    │       ├── atoms/          # 범용 컨트롤
+    │       ├── molecules/      # 범용 조합
+    │       └── components/     # class-explorer 전용
+    └── app/                    # 사이트 — Home · Playground · Docs (docs/ 를 "@docs" 로 곧바로 읽음)
+```
+
+pnpm 명령은 `workspace/` 에서 실행합니다. 작업 로그(`logs.md`)는 이 기계에만 둡니다 — `.gitignore` 에 있습니다.
+
+## 층
+
+```
+Foundations (Color · Typography → Shape → Layout → Motion) → Primitives → Atoms → Molecules → Components
+```
+
+각 층은 자기보다 앞의 층만 import 합니다. Atoms · Molecules 는 범용이고 class-explorer 의 데이터나 뜻(학번 · 학과 · 교시)을 모릅니다. 그런 것은 Components 에만 둡니다. 인벤토리(`inventory.ts`)를 바꾸면 Playground 사이드바 · README 의 표 · docs 를 같이 고칩니다.
+
+## 색
+
+- hex 는 `tokens/palette.ts` 에만 씁니다. 다른 파일은 고르기만 합니다.
+- accent 사다리 다섯 칸(ink · solidInk · solid · soft · softInk)의 규칙은 docs/foundations/color.md 에 있습니다. 값을 바꾸면 Playground › Color 의 대비 배지가 목표(글자 칸 AA)를 지키는지 확인합니다.
+- variant 는 `tokens/color-recipes.ts` 의 칸 이름 표 하나가 정합니다. `styles/slots.ts` 가 그 이름을 변수로 옮기고, 컨트롤은 슬롯 일곱(`--fk-fg` · `--fk-bg` · `--fk-border` · hover 셋 · press 하나)만 읽습니다.
+- ⚠️ variant 는 슬롯 일곱을 **전부** 씁니다. 변수는 상속되므로 하나라도 비우면 바깥 컨트롤의 값이 새어 들어옵니다.
+- accent 는 CSS 변수라 아래로 흐릅니다. `:root` 는 검정(시스템)입니다.
+- 런타임에 색을 계산하지 않습니다. 실행 중에 정해지는 색(학과 · 학번)은 Components 에서 `--fk-tone` 하나로 받습니다.
+
+## 스타일
+
+- 패키지 CSS 는 전부 `fk` 레이어 안에 듭니다(`fk.reset < theme < base < components < utilities`). 소비 앱은 CSS 맨 위에 `@layer fk, theme, base, components, utilities;` 를 둡니다.
+- vanilla-extract 의 `.css.ts` 는 함수를 export 할 수 없습니다. 규칙을 만드는 함수는 일반 모듈(`styles/slots.ts` · `tokens/typography-recipes.ts`)에 둡니다.
+- `style()` 의 selector 는 자기 자신(`&`)을 겨눠야 합니다. 형제 · 자식을 꾸미는 규칙은 대상 쪽 style 에 `${other}:checked + &` 로 겁니다.
+- 그림자는 `raised`(4px) · `floating`(8px, 모달 전용) 두 단뿐입니다. blur 는 0.
+- 모서리는 0. `RADIUS.full` 은 스피너 · 점에만.
+- `transition: all` 을 쓰지 않습니다 — 움직이는 속성을 적습니다.
+- inline style 은 실행 중에 정해지는 값(Grid 칸 폭 · Meter 길이 · `--fk-tone` · 떠 있는 판의 좌표)에만 씁니다.
+
+## Playground
+
+항목마다 `app/src/playground/registry/entries/<layer>.tsx` 의 `Spec` 하나가 컨트롤 · 처음 값 · 기본값 · 미리보기를 맡습니다. 코드 패널은 같은 값을 `printJsx` 로 찍은 것이라 미리보기와 어긋나지 않습니다. 선택지는 `/tokens` 의 어휘 배열에서 가져옵니다. `defaults` 는 컴포넌트의 실제 기본값과 같아야 합니다. 처음 값은 Overview 썸네일로도 그려지므로 떠 있는 판을 열어 두지 않습니다.
+
+## 작업 완료 전 체크
+
+- [ ] `pnpm typecheck` 와 `pnpm build` 가 통과했는가
+- [ ] 화면을 직접 봤는가 (Playground 에서 바꾼 컴포넌트 · Foundations 페이지)
+- [ ] 컴포넌트를 더하거나 API 를 바꿨다면 — inventory · Playground 항목 · docs 를 같이 고쳤는가
+- [ ] 새 축(닫힌 값 집합)은 `tokens/vocabulary.ts` 에 상수 · 타입 짝으로 두었는가
+- [ ] hex · 숫자를 컴포넌트에 직접 적지 않았는가
