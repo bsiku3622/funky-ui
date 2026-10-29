@@ -1,0 +1,106 @@
+/**
+ * 어휘 — prop 이 받는 닫힌 값의 집합입니다. 축마다 상수 하나와 타입 하나가 짝입니다.
+ *
+ * 컴포넌트 · 스타일시트 · Playground 의 선택지가 모두 이 배열에서 나옵니다. 축에 값을
+ * 더하면 여기 한 곳만 고치면 되고, 빠진 자리는 타입이 막습니다.
+ */
+
+/** Accent — 색 이름. `black` 이 시스템 기본입니다 */
+export const ACCENTS = ["black", "pink", "purple", "cyan", "yellow", "orange", "sky", "green", "red"] as const;
+export type AccentName = (typeof ACCENTS)[number];
+
+/** Accent 역할 별칭 — 색에 뜻을 붙여 부를 때. 별칭은 색으로 풀립니다 */
+export const ACCENT_ROLES = {
+  system: "black",
+  primary: "pink",
+  secondary: "purple",
+  success: "green",
+  error: "red",
+} as const satisfies Record<string, AccentName>;
+export type AccentRole = keyof typeof ACCENT_ROLES;
+
+export type Accent = AccentName | AccentRole;
+
+export function resolveAccent(accent: Accent): AccentName {
+  return accent in ACCENT_ROLES ? ACCENT_ROLES[accent as AccentRole] : (accent as AccentName);
+}
+
+/** Variant — 같은 accent 를 얼마나 진하게, 어디에 칠하는가 (규칙은 `color-recipes.ts`) */
+export const VARIANTS = [
+  "solid",
+  "outline",
+  "hairline",
+  "frameline",
+  "framelineMuted",
+  "plain",
+  "tonal",
+  "tonalMuted",
+  "muted",
+  "ghost",
+  "ghostMuted",
+] as const;
+export type Variant = (typeof VARIANTS)[number];
+
+/** 누르는 컨트롤의 크기 — Button · IconButton · Input · Select · SegmentedControl */
+export const CONTROL_SIZES = ["xs", "sm", "md", "lg"] as const;
+export type ControlSize = (typeof CONTROL_SIZES)[number];
+
+/** 읽는 라벨의 크기 — Badge */
+export const BADGE_SIZES = ["sm", "md", "lg"] as const;
+export type BadgeSize = (typeof BADGE_SIZES)[number];
+
+/** 면 — 흑백 면과, accent 를 칠하는 두 면 */
+export const SURFACES = ["canvas", "raised", "sunken", "well", "inverse", "solid", "soft"] as const;
+export type Surface = (typeof SURFACES)[number];
+
+/** 테두리 — 2px 한 굵기. 색만 고릅니다 */
+export const BORDERS = ["none", "line", "soft", "subtle", "accent"] as const;
+export type Border = (typeof BORDERS)[number];
+
+/** 그림자 — 떠 있는 물건(raised)과 모달(floating) 두 단뿐입니다 */
+export const SHADOWS = ["none", "raised", "floating"] as const;
+export type Shadow = (typeof SHADOWS)[number];
+
+/** 간격 — 안쪽 여백과 형제 사이가 같은 사다리를 씁니다 */
+export const SPACES = ["0", "2xs", "xs", "sm", "md", "lg", "xl", "2xl", "3xl", "4xl", "5xl", "6xl"] as const;
+export type Space = (typeof SPACES)[number];
+
+/** 글자 역할 */
+export const TEXT_VARIANTS = [
+  "display",
+  "title",
+  "heading",
+  "subheading",
+  "body",
+  "caption",
+  "label",
+  "micro",
+  "overline",
+  "subtitle",
+] as const;
+export type TextVariant = (typeof TEXT_VARIANTS)[number];
+
+/** 글자 굵기 — 역할의 기본값을 바꿀 때만 */
+export const WEIGHTS = ["regular", "medium", "bold", "black"] as const;
+export type Weight = (typeof WEIGHTS)[number];
+
+/** 글자 색 — 흑백 잉크와, 지금 accent 의 두 글자 칸 */
+export const TONES = ["primary", "secondary", "muted", "faint", "inverse", "accent", "accentSoft", "inherit"] as const;
+export type Tone = (typeof TONES)[number];
+
+export const FAMILIES = ["sans", "mono"] as const;
+export type Family = (typeof FAMILIES)[number];
+
+/** 정렬 — Stack · Inline · Grid 가 같이 씁니다 */
+export const ALIGNS = ["start", "center", "end", "stretch", "baseline"] as const;
+export type Align = (typeof ALIGNS)[number];
+export const JUSTIFIES = ["start", "center", "end", "between", "around"] as const;
+export type Justify = (typeof JUSTIFIES)[number];
+
+/** 아이콘 크기 */
+export const ICON_SIZES = ["xs", "sm", "md", "lg", "xl"] as const;
+export type IconSize = (typeof ICON_SIZES)[number];
+
+/** 누르는 면의 움직임 — 그림자 속으로 가라앉거나(press), 위로 떠오릅니다(lift) */
+export const MOTIONS = ["press", "lift"] as const;
+export type PressMotion = (typeof MOTIONS)[number];
