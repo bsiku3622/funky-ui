@@ -22,7 +22,7 @@ funky-ui를 React 앱에 붙이는 방법입니다. 패키지는 vanilla-extract
        "./tokens": "./src/tokens/public.ts",
        "./styles.css": "./src/styles/global.css.ts"
      },
-     "sideEffects": ["**/*.css.ts"]
+     "sideEffects": ["**/*.css.ts", "**/src/index.ts", "**/focusModality.ts"]
    }
    ```
 

@@ -77,7 +77,7 @@ class-explorer의 모션 전부를 몸짓 · 상태 모션 · 입력칸으로 �
 | 목록 줄의 hover 회색 층 | Pressable `none` + Surface `fill="none" hoverable` | 검색 추천 · 메뉴 항목 · 아코디언 머리 |
 | `group-hover:rotate-[-45deg]` · `group-hover:translate-x-0.5` | `iconMotion="turn"` · `iconMotion="nudge"` — Button의 prop이고, 버튼 밖에서는 `Icon`의 `motion`입니다. 바깥 버튼 · 링크에 마우스를 올릴 때 아이콘만 움직입니다 | 초기화 아이콘 · 링크 화살표 |
 | `group-hover:scale-105` | 없음 — 카드 안 이름 하나만 커지는 모양이라 옮기지 않았습니다 | 카드 안 이름 |
-| 입력칸 `shadow-[4px…] focus:shadow-none` — 평소 있고 포커스에 거둠 | Input · Textarea · Select `shadow` — 쉴 때 4px, 포커스에 거두고 그 자리를 핑크 링이 채웁니다 | 로그인 · 업로드 · Admin · Materials |
+| 입력칸 `shadow-[4px…] focus:shadow-none` — 평소 있고 포커스에 거둠 | Input · Textarea · Select `shadow` — 쉴 때 4px, 포커스에 거두고 Tab으로 왔으면 그 자리를 핑크 링이 채웁니다 | 로그인 · 업로드 · Admin · Materials |
 | 입력칸 평소 평평하고 `focus:shadow-[4px…]` — 포커스에 생김 | 없앰 — 위 규칙 하나로 모읍니다. 평평하게 두면 포커스는 링만 받고, 폼의 주인공 칸이면 `shadow`를 줍니다 | Trade 검색칸 둘 (Select Student · Add Subjects) |
 | `rotate-180` · `rotate-90` 펼침 화살표 | Accordion, 그리고 Button · NavButton의 `iconEnd`(판이 열려 `aria-expanded`가 true인 동안 180° 뒤집힘 — TermSwitcher의 ▾). Agent의 단계 줄은 Accordion으로 못 옮깁니다 | Accordion · Trade · TermSwitcher · Agent |
 | `animate-in fade-in duration-300` 펼친 내용 | Accordion 본문의 `fade` (300ms, 제자리) | AccordionSection |

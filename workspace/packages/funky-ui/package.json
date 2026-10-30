@@ -32,7 +32,7 @@
       "default": "./dist/funky-ui.css"
     }
   },
-  "sideEffects": ["**/*.css", "**/*.css.ts"],
+  "sideEffects": ["**/*.css", "**/*.css.ts", "**/src/index.ts", "**/focusModality.ts"],
   "files": ["dist", "src"],
   "scripts": {
     "build": "tsc --noEmit && vite build && tsc -p tsconfig.build.json",
