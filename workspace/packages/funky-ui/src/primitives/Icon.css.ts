@@ -18,7 +18,7 @@ const onHover = (transform: string) =>
   p({
     transitionProperty: "transform",
     transitionDuration: vars.duration.fast,
-    selectors: { ':is(a, button, label, [role="button"]):hover &': { transform } },
+    selectors: { ':is(a, button, [role="button"]):hover &': { transform } },
   });
 
 export const iconMotion = styleVariants({

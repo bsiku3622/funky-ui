@@ -33,9 +33,9 @@ export const field = style(
     "::placeholder": { color: vars.ink.faint, opacity: 1 },
     selectors: {
       "&:disabled": { opacity: 0.4, cursor: "not-allowed" },
-      "&[aria-invalid='true']": { borderColor: ACCENT_COLORS.red.solid },
-      // 막지 않는 경고 — 값은 받되 한 번 더 보라는 뜻입니다
+      // 막지 않는 경고 — 값은 받되 한 번 더 보라는 뜻입니다. 틀림이 뒤에 와서 둘이 겹치면 빨강이 이깁니다
       "&[data-warning]": { borderColor: ACCENT_COLORS.orange.solid },
+      "&[aria-invalid='true']": { borderColor: ACCENT_COLORS.red.solid },
       // 비어 있거나 해당 없는 칸 — 옅게 물러나 있다가 hover 때 테두리가 진해집니다
       "&[data-quiet]": { borderColor: vars.line.soft, color: vars.ink.muted },
       "&[data-quiet]:hover:not(:disabled)": { borderColor: vars.ink.muted },

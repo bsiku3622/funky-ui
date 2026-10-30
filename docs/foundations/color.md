@@ -75,7 +75,7 @@ accent 하나는 다섯 칸을 갖습니다. 칸마다 하는 일과 값을 고�
 
 ## Variant
 
-variant는 같은 accent를 어디에, 얼마나 진하게 칠하는지를 정합니다. 열두 개이고, 규칙은 `tokens/color-recipes.ts`에 사다리 칸 이름으로만 적혀 있습니다. 숫자도 hex도 없어서 accent를 바꾸면 규칙은 그대로 둔 채 색만 바뀝니다.
+variant는 같은 accent를 어디에, 얼마나 진하게 칠하는지를 정합니다. 열다섯 개이고, 규칙은 `tokens/color-recipes.ts`에 사다리 칸 이름으로만 적혀 있습니다. 숫자도 hex도 없어서 accent를 바꾸면 규칙은 그대로 둔 채 색만 바뀝니다.
 
 | # | variant | FG | BG | Border | Hover |
 | --- | --- | --- | --- | --- | --- |
@@ -91,10 +91,21 @@ variant는 같은 accent를 어디에, 얼마나 진하게 칠하는지를 정�
 | 10 | `ghost` | solidInk | — | — | 글자 → softInk |
 | 11 | `ghostMuted` | softInk | — | — | 글자 → solidInk |
 | 12 | `paper` | solidInk | white | line | accent 층 |
+| 13 | `tinted` | black | soft | solid | 회색 층 |
+| 14 | `wash` | solidInk | soft | — | 회색 층 |
+| 15 | `ghostTint` | solidInk | — | — | accent 층 |
 
 `black` · `gray` · `line` · `white`는 accent와 무관한 시스템 값입니다(본문 잉크 #222, 약한 글자 #6f6f6f, 2px 검정 선, 떠 있는 흰 면). `—`는 투명입니다. 면이 투명한 variant는 바탕이 비치므로, 흰 카드 위에서는 흰색으로, 크림 페이지 위에서는 크림으로 보입니다. 크림 위에서도 흰 면을 지켜야 하면 `paper`를 씁니다.
 
-표의 1~11번은 재원님의 Accent × Variant 스케치에서 왔고, 이름 둘을 바꾸고 두 군데에 해석을 더했습니다. 12번 `paper`는 스케치 밖에서 더했습니다. class-explorer에서 가장 많이 쓰는 버튼이 흰 면인데, 스케치의 `outline`은 면이 투명해서 크림 페이지 위에서 그릴 수 없기 때문입니다. 검정 accent의 solidInk가 본문 잉크이므로 accent를 주지 않으면 검정 글자이고, accent를 주면 그 색의 글자가 됩니다(Ask 플로팅 버튼의 흰 면 + 보라 아이콘).
+표의 1~11번은 재원님의 Accent × Variant 스케치에서 왔고, 이름 둘을 바꾸고 두 군데에 해석을 더했습니다. 12~15번은 스케치 밖에서 더했습니다. 12번 `paper`는 이런 이유입니다. class-explorer에서 가장 많이 쓰는 버튼이 흰 면인데, 스케치의 `outline`은 면이 투명해서 크림 페이지 위에서 그릴 수 없기 때문입니다. 검정 accent의 solidInk가 본문 잉크이므로 accent를 주지 않으면 검정 글자이고, accent를 주면 그 색의 글자가 됩니다(Ask 플로팅 버튼의 흰 면 + 보라 아이콘).
+
+13~15번은 class-explorer를 다시 대조하며(2026-10-31) 더한 셋입니다. 모두 연한 면(`soft`)이나 투명한 면에 쓰는 자리가 따로 있습니다.
+
+- **`tinted`** — 연한 면 + accent 색 테두리 + 검정 글자입니다. 교육과정 노드와 분반 칸처럼 색으로 분류하되 글자는 늘 검정으로 읽혀야 하는 자리입니다. `plain`과 다른 점은 글자(검정)이고, `solidMuted`와 다른 점은 테두리(accent 색)입니다. FileDrop이 파일을 끄는 동안 이 칠로 바뀝니다.
+- **`wash`** — 테두리 없는 연한 면입니다. 달력 칩과 하이라이트처럼 면 하나로 구획만 알리는 자리입니다. 테두리가 없어서 가라앉을 상자가 없으므로 그림자를 받지 않습니다.
+- **`ghostTint`** — 쉴 때 투명하다가 hover 때 accent 층이 깔리는 무테 칸입니다. 목록 줄처럼 평소에는 면 위에 녹아 있다가 짚었을 때만 색이 올라오는 자리입니다. 역시 그림자를 받지 않습니다.
+
+테두리가 없는 variant는 `ghost` `ghostMuted` `wash` `ghostTint` 넷이고, Button은 이 넷에 `shadow`를 줘도 `tap`으로 그립니다.
 
 - **이름** — 스케치의 Solid(면과 같은 색 테두리)는 `filled`, Tonal(면 + 검정 테두리)은 `solid`, TonalMuted는 `solidMuted`라 부릅니다. 면을 채우기만 한 것이 filled이고, 거기에 검정 테두리를 두른 것이 이 시스템의 기본 solid 버튼입니다.
 
@@ -131,8 +142,8 @@ hover와 press는 면을 바꾸지 않고 위에 층을 얹습니다(Paint의 `h
 | 층 | hover | press | 쓰는 variant |
 | --- | --- | --- | --- |
 | 흰 층 | `rgba(255,255,255,.3)` | `.45` | Filled · Solid |
-| 회색 층 | `rgba(0,0,0,.07)` | `.12` | Plain · SolidMuted |
-| accent 층 | solid의 15% | 26% | Outline · Frameline · FramelineMuted |
+| 회색 층 | `rgba(0,0,0,.07)` | `.12` | Plain · SolidMuted · Tinted · Wash |
+| accent 층 | solid의 15% | 26% | Outline · Frameline · FramelineMuted · Paper · GhostTint |
 
 검정 accent의 accent 층은 회색 층과 같은 값입니다(검정 15%는 지나치게 어둡습니다). hover 층이 없는 Hairline · Muted도 누르는 순간에는 accent 층을 얹어 눌렸다는 것을 보입니다.
 

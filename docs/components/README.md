@@ -1,15 +1,15 @@
 # Components
 
-Components는 class-explorer 전용 컴포넌트입니다. 앱 셸(상단 바 · 사이드바 · 하단 바 · 학기 선택), 사람(학번 배지 · 학생 카드), 시간표(수업 칸 · 한 주 격자), 실행 중의 색(버튼 · 칩 · 상자 · 범례 칸)이 여기 있고, 아래 층(Primitives · Atoms · Molecules)을 모두 쓸 수 있습니다. 범용이 아니므로 다른 앱은 이 층을 쓰지 않고 Atoms와 Molecules로 직접 짭니다. 기존 class-explorer 컴포넌트에서 옮기는 방법은 [이관표](../class-explorer/migration.md)에 있습니다.
+Components는 class-explorer 전용 컴포넌트입니다. 앱 셸(상단 바 · 사이드바 · 하단 바 · 학기 선택), 사람(학번 배지 · 학생 카드), 시간표(수업 칸 · 한 주 격자 · 쉬는 띠 · 지금 캐럿 · 상태 면 칸), 실행 중의 색(버튼 · 칩 · 상자 · 범례 칸 · 글자)이 여기 있고, 아래 층(Primitives · Atoms · Molecules)을 모두 쓸 수 있습니다. 범용이 아니므로 다른 앱은 이 층을 쓰지 않고 Atoms와 Molecules로 직접 짭니다. 기존 class-explorer 컴포넌트에서 옮기는 방법은 [이관표](../class-explorer/migration.md)에 있습니다.
 
-색은 앱이 학번이나 학과로 정해 hex로 넘기고(사람 · 시간표 부품은 `color`, Tone 부품은 `tone`), 이 층이 `toneStyle`로 `--fk-tone` 변수에 실어 칠합니다. Button과 Paint는 hex를 받지 않으므로 실행 중의 색은 이 층에만 있습니다. 셸의 치수는 class-explorer의 셸에 맞춘 `CONTAINER.shell`(상단 바 80 · 사이드바 256 · 하단 바 64px)을 따르고, 화면에 고정할지는 `fixed`로 고릅니다. 메뉴의 순서와 내용은 앱이 정하며 셸은 그리기만 합니다. 이 층은 컴포넌트 열두 개와 함수 `toneStyle` · `toneInk` 둘을 내보냅니다. 예시는 import를 생략하며, `navigate`나 `terms`처럼 앱이 가진 값은 이미 있다고 봅니다.
+색은 앱이 학번이나 학과로 정해 hex로 넘기고(사람 · 시간표 부품은 `color`, Tone 부품은 `tone`), 이 층이 `toneStyle`로 `--fk-tone` 변수에 실어 칠합니다. Button과 Paint는 hex를 받지 않으므로 실행 중의 색은 이 층에만 있습니다. 셸의 치수는 class-explorer의 셸에 맞춘 `CONTAINER.shell`(상단 바 80 · 사이드바 256 · 하단 바 64px)을 따르고, 화면에 고정할지는 `fixed`로 고릅니다. 메뉴의 순서와 내용은 앱이 정하며 셸은 그리기만 합니다. 이 층은 컴포넌트 열여섯 개와 함수 `toneStyle` · `toneInk` 둘을 내보냅니다. 예시는 import를 생략하며, `navigate`나 `terms`처럼 앱이 가진 값은 이미 있다고 봅니다.
 
 | 묶음 | 컴포넌트 |
 | --- | --- |
 | shell | AppBar · SideNav · BottomNav · TermSwitcher |
 | people | StudentBadge · PersonCard |
-| schedule | ClassTile · TimetableGrid |
-| tone | ToneButton · ToneChip · ToneBox · ToneSwatch |
+| schedule | ClassTile · TimetableGrid · BreakBand · TimeCaret · SlotCell |
+| tone | ToneButton · ToneChip · ToneBox · ToneSwatch · ToneText |
 
 ## AppBar
 
@@ -120,8 +120,10 @@ SideNav.Item과 같은 prop입니다.
 | `active` | `boolean` | `false` | 지금 화면입니다. `aria-current="page"`가 붙고, 글자와 윗선이 바의 글자색으로 또렷해집니다. 쉬는 칸은 60% 로 묽습니다. |
 | `onClick` | `() => void` | — | 눌렀을 때 부릅니다. |
 | `children` | `ReactNode` | — | 칸 이름입니다. 9px 대문자로 그립니다. |
+| 그 밖 | `<button>`의 props | — | `ref` · `aria-expanded` 같은 native 속성이 `<button>`으로 갑니다. More 칸이 판을 붙일 기준(`ref`)과 열림 표시를 달 때 씁니다. |
 
 - 몸짓은 [Pressable](../primitives/README.md#pressable)의 `tap`입니다. 바 위라 그림자 없이 누르는 순간만 작아집니다.
+- 판을 여는 More 칸은 `ref`와 `aria-expanded`를 달고, 판은 [Floating](../primitives/README.md#floating)의 `scrim`으로 뒤 화면을 막습니다. 바깥을 눌러 닫을 때 뒤 바의 칸이 같이 눌리지 않습니다.
 - 키보드와 aria 규칙은 SideNav.Item과 같습니다. Tab으로 칸마다 들르고, 지금 화면은 `aria-current="page"` 하나로 알립니다. 방향키 무리로 묶지 않는 이유도 [SideNav.Item](#sidenavitem)에 있습니다.
 
 ## TermSwitcher
@@ -170,7 +172,7 @@ SideNav.Item과 같은 prop입니다.
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 
 - hover 효과를 두지 않습니다. 배지는 늘어놓고 읽는 물건이라 마우스가 지나가는 자리마다 반응하면, 정작 움직여야 할 것(찾는 사람의 진동)이 묻힙니다. `onClick`이 있어도 반응은 누르는 순간 `PRESS.activeScale`(0.96)로 작아지는 것뿐입니다.
-- `buzz`는 검색어와 맞는 사람만 잠깐 떨게 하는 표시입니다. 나머지를 흐리게 지우지 않습니다. 1.8초 주기에서 앞 20%만 떨고 쉽니다.
+- `buzz`는 검색어와 맞는 사람만 잠깐 떨게 하는 표시입니다. 나머지를 흐리게 지우지 않습니다. 1.8초 주기에서 앞 20%만 떨고 쉽니다. 떠는 동안 면이 22%로 진해지고 4px 그림자 위에 섭니다. 움직임을 줄인 사람에게는 진동이 꺼지므로, 면과 그림자가 정지 상태의 일치 표시로 남습니다.
 - 칠은 면 = `color` 8% · 테두리 = `color` · 글자 = `color`이고([toneStyle](#tonestyle)), 글자는 900 이탤릭입니다.
 
 ## PersonCard
@@ -190,16 +192,21 @@ SideNav.Item과 같은 prop입니다.
 
 | prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `id` | `ReactNode` | 필수 | 학번 또는 교번입니다. |
+| `id` | `ReactNode` | — | 학번 또는 교번입니다. 교사 카드처럼 번호가 없으면 뺍니다. |
 | `name` | `ReactNode` | 필수 | 이름입니다. 사람의 색으로 칠합니다. |
 | `color` | `string` | 필수 | 사람의 색(hex)입니다. 왼쪽 칸의 면과 이름, 목록의 띠에 씁니다. |
 | `title` | `ReactNode` | — | 오른쪽 칸 머리(overline)입니다. 예: Enrolled Classes. |
-| `items` | `readonly ReactNode[]` | `[]` | 오른쪽 칸의 목록(과목명)입니다. 두 열로 놓고, 긴 이름은 말줄임합니다. |
+| `items` | `readonly ReactNode[]` | `[]` | 오른쪽 칸의 목록(과목명)입니다. 긴 이름은 말줄임합니다. |
+| `columns` | `1 \| 2` | `2` | 목록의 열 수입니다. 교사 카드는 1입니다. |
+| `size` | `"sm" \| "md"` | `"md"` | `sm`은 112px 높이의 작은 카드로, 교사 카드와 풍선 안에 씁니다. `md`는 176px입니다. |
+| `framed` | `boolean` | `true` | 테두리를 그립니다. 풍선 안처럼 이미 틀이 있으면 끄고, 이때 그림자도 없습니다. |
+| `motion` | `"sink" \| "lift"` | `"sink"` | 누르는 카드의 몸짓입니다. 훑어보다 고르는 목록이면 `lift`입니다. `onClick`이 있을 때만 쓰입니다. |
+| `footer` | `ReactNode` | — | 목록 아래 한 줄입니다. 목록을 다 보여 주지 않을 때 `+ 3 MORE CLASSES`처럼 적습니다. |
 | `onClick` | `() => void` | — | 주면 누르는 카드가 됩니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 
-- `onClick`이 있으면 `Pressable`(`motion="sink"`)로 그려져, 4px 그림자 위에 떠 있다가 누르면 그림자 속으로 가라앉습니다. 큰 면이라 누르는 순간 0.98로만 작아집니다. 없으면 그림자 없는 정적 `<div>`입니다.
-- 왼쪽 칸의 면은 `color` 15%이고 이름은 `color`이며, 목록 항목 왼쪽에 `color` 띠가 붙습니다. 높이는 최소 176px입니다.
+- `onClick`이 있으면 `Pressable`(`motion`, 기본 `sink`)로 그려져, 4px 그림자 위에 떠 있다가 누르면 그림자 속으로 가라앉습니다. 큰 면이라 누르는 순간 0.98로만 작아집니다. 없으면 그림자 없는 정적 `<div>`입니다.
+- 왼쪽 칸의 면은 `color` 15%이고 이름은 `color`이며, 목록 항목 왼쪽에 `color` 띠가 붙습니다. 높이는 최소 176px이고, `size="sm"`이면 112px입니다. `footer`는 10px 대문자의 약한 잉크로 그립니다.
 
 ## ClassTile
 
@@ -213,10 +220,13 @@ SideNav.Item과 같은 prop입니다.
 
 | prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `title` | `ReactNode` | — | 과목명입니다. 한 줄에서 말줄임합니다. |
-| `meta` | `ReactNode` | — | 아래 줄입니다. 교실 · 교사 · 시각을 적고, 한 줄에서 말줄임합니다. |
+| `title` | `ReactNode` | — | 과목명입니다. 기본은 한 줄에서 말줄임합니다. |
+| `meta` | `ReactNode` | — | 아래 줄입니다. 교실 · 교사 · 시각을 적고, 기본은 한 줄에서 말줄임합니다. |
 | `color` | `string` | — | 학과색(hex)입니다. `now`는 이 색을 무시하고 핑크를 씁니다. |
-| `state` | `ClassTileState` | `"upcoming"` | `upcoming` 학과색 · `now` 핑크(지금) · `past` 같은 색을 40%로 · `free` 공강(점선, 면 없음)입니다. |
+| `state` | `ClassTileState` | `"upcoming"` | `upcoming` 학과색 · `now` 핑크(지금) · `past` 같은 색을 40%로 · `free` 공강(점선, 면 없음) · `focus` 밖에서 지목한 칸(면을 35%로 진하게 하고 테두리를 안쪽으로 한 겹 더) · `dim` 지목한 칸 말고 나머지(20%)입니다. |
+| `titleLines` | `1 \| 2` | `1` | 과목명을 몇 줄까지 보일지 정합니다. 1이면 한 줄에서 자르고, 2면 두 줄까지 보이고 넘치면 자릅니다. |
+| `metaWrap` | `boolean` | `false` | 아래 줄 정보를 줄바꿈합니다. 교사 · 교실이 여러 줄인 칸에 씁니다. |
+| `onClick` | `() => void` | — | 주면 `<button>`이 되어 누르는 칸이 됩니다. 쉴 때는 칸 그대로이고 hover 때 테두리가 안쪽으로 번집니다. 주지 않으면 `<div>`입니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 | `style` | `CSSProperties` | — | 칸에 붙는 style입니다. `color`로 만든 변수 뒤에 합쳐집니다. |
 | `children` | `ReactNode` | — | 아래 줄 뒤에 붙는 내용입니다. |
@@ -224,6 +234,7 @@ SideNav.Item과 같은 prop입니다.
 - "지금"(`now`)을 핑크로 꽉 채우지 않습니다. 연한 핑크 면(`soft`)에 핑크 테두리를 두르고 글자만 진한 핑크(`solidInk`)로 내립니다. 그 칸 하나가 화면에서 제일 센 물건이 되면 옆을 읽는 걸 방해하기 때문입니다.
 - 학과색 문법은 면 = `color` 12% · 테두리 = `color` · 글자 = `color`입니다. `color`를 주지 않으면 본문 잉크색 계열로 그립니다.
 - 칸은 셀을 채웁니다(`height: 100%`).
+- `focus`와 `dim`은 짝입니다. 한 과목을 짚으면 그 과목의 칸에 `focus`를, 나머지 칸에 `dim`을 줍니다. 어느 칸이 지목됐는지는 앱이 정하고, 칸은 모양만 그립니다.
 
 ## TimetableGrid
 
@@ -252,14 +263,82 @@ SideNav.Item과 같은 prop입니다.
 | prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `days` | `readonly TimetableDay[]` | 필수 | 열 목록입니다. 항목은 `key` · `label`(`ReactNode`) · `today`(`boolean`)를 가집니다. |
-| `periods` | `readonly TimetablePeriod[]` | 필수 | 행 목록입니다. 항목은 `key` · `label`(`ReactNode`)을 가집니다. |
+| `periods` | `readonly TimetablePeriod[]` | 필수 | 행 목록입니다. 항목은 `key` · `label`(`ReactNode`) · `band`(`ReactNode`)를 가집니다. `band`를 주면 그 행은 칸 대신 요일 열 전체를 잇는 [BreakBand](#breakband) 하나가 되고, 그 행에서는 `renderCell`이 불리지 않습니다. 점심 · 저녁에 씁니다. |
 | `renderCell` | `(day: string, period: string) => ReactNode` | 필수 | 칸 하나를 그립니다. 요일의 `key`와 교시의 `key`를 받습니다. |
 | `corner` | `ReactNode` | `"Pd"` | 왼쪽 위 칸의 글자입니다. |
+| `flush` | `boolean` | `false` | 칸의 안쪽 여백을 빼서 안의 내용이 가장자리까지 차게 합니다. 상태 면으로 칠하는 격자([SlotCell](#slotcell))에 씁니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 
 - `today`인 요일은 검은 머리 줄에서 그 칸만 흰 칸으로 뒤집힙니다.
 - 첫 열(교시)은 2.5rem 고정이고 요일 열은 같은 폭입니다. 칸은 최소 높이 48px에 안쪽 여백 4px이라 `ClassTile`을 그대로 넣으면 칸을 채웁니다.
 - `role="table"`에 행 · 열 머리 · 칸의 역할이 붙어 표로 읽힙니다.
+
+## BreakBand
+
+수업이 없는 시간입니다. 빗금 면에 이름 라벨을 얹습니다. 아래는 시간선의 점심 구간입니다.
+
+```tsx
+<BreakBand label="점심" style={{ height: 40 }} />
+```
+
+| prop | 타입 | 기본값 | 설명 |
+| --- | --- | --- | --- |
+| `label` | `ReactNode` | — | 띠의 이름입니다. 점심 · 저녁을 10px 대문자로 그립니다. |
+| `style` | `CSSProperties` | — | 높이처럼 실행 중에 정해지는 값입니다. 쉬는 구간의 분에 비례하는 높이를 줍니다. |
+| `className` | `string` | — | 마지막에 덧붙는 class입니다. |
+
+- 부모의 높이를 채우고(`height: 100%`) 최소 높이는 16px입니다. 시간선에서는 길이에 비례한 높이를, 격자에서는 행의 높이를 따릅니다.
+- [TimetableGrid](#timetablegrid)는 `periods`의 `band`를 이 부품으로 그립니다. 시간선처럼 격자 밖에서도 쓸 수 있습니다.
+
+## TimeCaret
+
+지금을 짚는 선과 마름모입니다. 시간 · 날짜 축 위에 얹습니다. 아래는 시간선의 40% 자리와, 날짜 축의 꼬리표입니다.
+
+```tsx
+<div style={{ position: "relative", height: 40 }}>
+  <TimeCaret position={40} />
+</div>
+<div style={{ position: "relative", height: 40 }}>
+  <TimeCaret position={70} label="D-3" />
+</div>
+```
+
+| prop | 타입 | 기본값 | 설명 |
+| --- | --- | --- | --- |
+| `position` | `number` | 필수 | 축 위의 자리입니다(0~100, %). 범위 밖의 값은 0과 100으로 잘립니다. |
+| `label` | `ReactNode` | — | 주면 마름모 대신 이 꼬리표를 답니다. `D-3`처럼 남은 날수를 적습니다. |
+| `className` | `string` | — | 마지막에 덧붙는 class입니다. |
+
+- 부모가 `position: relative`이고 높이가 있어야 합니다. 선은 부모의 위아래를 채웁니다.
+- 시간이 흘러 `position`이 바뀌면 700ms 동안 천천히 옮겨 갑니다(`DURATION.crawl`). 선은 누름을 받지 않고(`pointer-events: none`), `aria-hidden`이라 스크린 리더에게 읽히지 않습니다. 지금이라는 사실은 옆 글자나 축의 이름이 말해야 합니다.
+
+## SlotCell
+
+칸 전체를 상태 면으로 칠하는 격자 칸입니다. 시간을 고르는 격자(빈 강의실 · 분석 비교)에 씁니다. 아래는 `flush` 격자 안에서 눌러서 시간을 고르는 예입니다.
+
+```tsx
+<TimetableGrid
+  flush
+  days={days}
+  periods={periods}
+  renderCell={(day, period) => (
+    <SlotCell state={stateOf(day, period)} label={`${day} ${period}교시`} onToggle={() => toggle(day, period)} />
+  )}
+/>
+```
+
+| prop | 타입 | 기본값 | 설명 |
+| --- | --- | --- | --- |
+| `state` | `SlotState` | 필수 | 칸의 상태입니다. `free` 비어 있음(초록) · `busy` 점유(회색) · `selected` 고름(검정) · `conflict` 충돌(주황) · `common` 공통(핑크) · `empty` 면 없음입니다. |
+| `onToggle` | `() => void` | — | 주면 `<button>`이 되어 누르는 칸이 됩니다. 주지 않으면 `<div>`입니다. |
+| `label` | `string` | — | 스크린 리더가 읽을 칸의 이름입니다. 글자가 없는 칸이라 줍니다. |
+| `disabled` | `boolean` | `false` | 누를 수 없게 합니다. `onToggle`이 있을 때만 쓰입니다. |
+| `className` | `string` | — | 마지막에 덧붙는 class입니다. |
+| `children` | `ReactNode` | — | 칸 안의 글자입니다. 10px 900으로 그립니다. |
+
+- 면은 accent 사다리의 `soft`(초록 · 주황 · 핑크)와 글자 칸(`solidInk`)이라 면 위의 글자도 읽힙니다. `selected`는 검정 면 · 흰 글자입니다.
+- `onToggle`이 있으면 `aria-pressed`가 `state === "selected"`로 붙습니다. 눌러서 고르는 상태는 `state`가 정하므로 `selected`로 바꾸는 일은 부르는 쪽이 합니다.
+- 자체 간격이 없어서 [TimetableGrid](#timetablegrid)의 `flush` 안에 둡니다. 칸의 높이는 최소 48px이고, 칸을 가득 채웁니다.
 
 ## ToneButton
 
@@ -329,12 +408,16 @@ SideNav.Item과 같은 prop입니다.
 
 ## ToneSwatch
 
-범례 칸입니다. 16px 네모에 검정 테두리입니다. 아래는 학과색 범례 한 칸입니다.
+범례 칸 또는 왼쪽 띠입니다. 기본은 16px 네모에 검정 테두리이고, `shape="rail"`이면 줄 높이를 채우는 4px 띠입니다. 아래는 학과색 범례 한 칸과, 수업 줄의 왼쪽 띠입니다.
 
 ```tsx
 <Inline gap="sm">
   <ToneSwatch tone={dept.color} />
   <Text variant="caption" weight="black">{dept.name}</Text>
+</Inline>
+<Inline gap="md" align="stretch">
+  <ToneSwatch shape="rail" tone={lesson?.color} />
+  <Text weight="black">{lesson?.title ?? "공강"}</Text>
 </Inline>
 ```
 
@@ -342,8 +425,30 @@ SideNav.Item과 같은 prop입니다.
 
 | prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `tone` | `string` | 필수 | 칠할 색(hex)입니다. |
+| `tone` | `string` | — | 칠할 색(hex)입니다. 주지 않으면 자리만 지키고 색은 투명입니다. |
+| `shape` | `"box" \| "rail"` | `"box"` | `box`는 16px 범례 칸, `rail`은 줄 높이를 채우는 4px 왼쪽 띠입니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
+
+- `rail`은 flex 줄 안에서 줄의 높이를 채웁니다(`align-self: stretch`). 수업이 없는 줄에도 `tone` 없이 `rail`을 두면, 두 줄의 글자 시작점이 어긋나지 않습니다.
+- `box`에 `tone`이 없으면 색 없는 빈 칸(테두리만)이 남습니다.
+
+## ToneText
+
+실행 중에 정해지는 색으로 칠하는 글자입니다. 아래는 학과 이름을 학과색으로 쓴 예입니다.
+
+```tsx
+<ToneText tone={dept.color} variant="subheading">{dept.name}</ToneText>
+```
+
+[Text](../primitives/README.md#text)의 prop(`variant` · `weight` · `leading` · `truncate` · `decoration` …)을 `tone`만 빼고 그대로 받습니다.
+
+| prop | 타입 | 기본값 | 설명 |
+| --- | --- | --- | --- |
+| `tone` | `string` | 필수 | 글자색(hex)입니다. |
+| `style` | `CSSProperties` | — | 글자색 뒤에 합쳐집니다. 같은 `color`를 주면 이쪽이 이깁니다. |
+
+- ⚠️ 면이 아니라 글자를 칠하므로 [`toneInk`](#toneink)처럼 검정 · 흰색을 고르지 않습니다. 흰 면 위에서 대비는 그 색에 달려 있어서, 노랑 같은 밝은 학과색은 읽히지 않을 수 있습니다. 이름 같은 큰 글자에만 쓰고, 작은 정보 글자는 색 면 위에 얹습니다.
+- Text의 `tone`은 글자색 이름의 닫힌 집합이라 hex를 받지 않습니다. 실행 중의 색이 글자색일 때만 이 부품을 씁니다.
 
 ## toneInk
 

@@ -1,28 +1,33 @@
-/** Components — class-explorer 전용 열둘. 앱 셸 · 사람 · 시간표 · 실행 중의 색. 셸 부품은 fixed 를 끄고 테두리 상자 안에 둡니다 */
+/** Components — class-explorer 전용 열여섯. 앱 셸 · 사람 · 시간표 · 실행 중의 색. 셸 부품은 fixed 를 끄고 테두리 상자 안에 둡니다 */
 import { useState, type CSSProperties, type ReactNode } from "react";
 import {
   AppBar,
   Badge,
   BottomNav,
+  BreakBand,
   ClassTile,
   Grid,
   Inline,
   NavButton,
   PersonCard,
   SideNav,
+  SlotCell,
   Stack,
   StudentBadge,
   Surface,
   TermSwitcher,
   Text,
+  TimeCaret,
   TimetableGrid,
   ToneBox,
   ToneButton,
   ToneChip,
   ToneSwatch,
+  ToneText,
   type ClassTileState,
   type ControlSize,
   type IconComponent,
+  type SlotState,
   type TermOption,
 } from "@studio-baeks/funky-ui";
 import { CONTROL_SIZES, vars } from "@studio-baeks/funky-ui/tokens";
@@ -35,7 +40,12 @@ import type { Spec, Values } from "../schema";
 
 // 아래는 컴포넌트 자신의 prop 이 지역 union 이라 어휘 배열이 없는 선택지입니다
 const STUDENT_BADGE_SIZES = ["xs", "sm", "md"] as const;
-const TILE_STATES: ClassTileState[] = ["upcoming", "now", "past", "free"];
+const TILE_STATES: ClassTileState[] = ["upcoming", "now", "past", "free", "focus", "dim"];
+const SLOT_STATES: SlotState[] = ["free", "busy", "selected", "conflict", "common", "empty"];
+const PERSON_COLUMNS = [1, 2] as const;
+const PERSON_SIZES = ["md", "sm"] as const;
+const PERSON_MOTIONS = ["sink", "lift"] as const;
+const TONE_SWATCH_SHAPES = ["box", "rail"] as const;
 
 /** text 컨트롤의 빈 칸은 prop 을 주지 않은 것입니다 */
 const txt = (x: unknown) => (typeof x === "string" && x !== "" ? x : undefined);
@@ -481,10 +491,15 @@ const personCard: Spec = {
     id: { kind: "text" },
     name: { kind: "text" },
     title: { kind: "text" },
+    columns: { kind: "select", options: PERSON_COLUMNS.map(String) },
+    size: { kind: "select", options: PERSON_SIZES },
+    framed: { kind: "boolean" },
+    motion: { kind: "select", options: PERSON_MOTIONS },
+    footer: { kind: "text" },
     onClick: { kind: "boolean" },
   },
   initial: { id: "25-001", name: "김예시", title: "Enrolled Classes", onClick: true },
-  defaults: { onClick: false },
+  defaults: { columns: "2", size: "md", framed: true, motion: "sink", footer: "", onClick: false },
   render: (v) => (
     <Frame width={480} top>
       <PersonCard
@@ -493,6 +508,11 @@ const personCard: Spec = {
         color={personColor(v.id)}
         title={txt(v.title)}
         items={ENROLLED}
+        columns={Number(v.columns) === 1 ? 1 : 2}
+        size={v.size as "sm" | "md"}
+        framed={Boolean(v.framed)}
+        motion={v.motion as "sink" | "lift"}
+        footer={txt(v.footer)}
         onClick={v.onClick ? noop : undefined}
       />
     </Frame>
@@ -501,6 +521,8 @@ const personCard: Spec = {
     jsx("PersonCard", [
       ...printed(personCard, { id: v.id, name: v.name, color: personColor(v.id), title: v.title }),
       `items={[${ENROLLED.map((n) => `"${n}"`).join(", ")}]}`,
+      Number(v.columns) === 1 ? "columns={1}" : undefined,
+      ...printed(personCard, { size: v.size, framed: v.framed, motion: v.onClick ? v.motion : undefined, footer: v.footer }),
       v.onClick ? `onClick={() => openStudent("${v.id}")}` : undefined,
     ]),
   sections: [
@@ -527,6 +549,25 @@ const personCard: Spec = {
         <Stage>
           <Frame width={480}>
             <PersonCard id="T-012" name="정샘플" color={DEPT_COLORS.화학} title="Classes" items={["일반화학", "화학실험"]} onClick={noop} />
+          </Frame>
+        </Stage>
+      ),
+    },
+    {
+      title: "columns · size · framed · footer",
+      note: "columns 는 목록의 열 수(기본 2)이고 교사 카드는 1 입니다. size=sm 은 112px 높이의 작은 카드로, 교사 카드나 풍선 안에 씁니다(기본 md 는 176px). framed=false 는 테두리를 빼서 이미 틀이 있는 풍선 안에서 씁니다. footer 는 목록 아래 한 줄이고, 목록을 다 보여 주지 않을 때의 \"+ 3 MORE CLASSES\" 같은 글입니다. motion=lift 는 훑어보다 고르는 목록에서 카드를 떠오르게 합니다(기본 sink).",
+      render: () => (
+        <Stage>
+          <Frame width={360}>
+            <PersonCard id="T-012" name="정샘플" color={DEPT_COLORS.화학} title="Classes" items={["일반화학", "화학실험"]} columns={1} size="sm" onClick={noop} />
+          </Frame>
+          <Frame width={360}>
+            <PersonCard id="25-001" name="김예시" color={cohortColor("25")} title="Enrolled Classes" items={ENROLLED.slice(0, 2)} footer="+ 2 MORE CLASSES" motion="lift" onClick={noop} />
+          </Frame>
+          <Frame width={360}>
+            <Surface border="line" shadow="raised" padding="md">
+              <PersonCard id="25-001" name="김예시" color={cohortColor("25")} items={["미적분학1", "일반물리학"]} size="sm" framed={false} />
+            </Surface>
           </Frame>
         </Stage>
       ),
@@ -572,25 +613,42 @@ const SUBJECT_OF: Record<Dept, string> = {
 const classTile: Spec = {
   name: "ClassTile",
   summary:
-    "수업 한 칸. 학과색 문법(면 12% · 테두리 · 글자)을 따르고, 지금(now)은 학과색 대신 핑크를 씁니다. past 는 40% 로 흐려지고 free 는 점선 공강입니다. color 는 hex 이고, 여기서는 학과 이름으로 고릅니다.",
+    "수업 한 칸. 학과색 문법(면 12% · 테두리 · 글자)을 따르고, 지금(now)은 학과색 대신 핑크를 씁니다. past 는 40% 로 흐려지고 free 는 점선 공강입니다. focus 와 dim 은 밖에서 한 칸을 지목할 때 쓰는 짝입니다. onClick 을 주면 누르는 칸이 됩니다. color 는 hex 이고, 여기서는 학과 이름으로 고릅니다.",
   controls: {
     title: { kind: "text" },
     meta: { kind: "text" },
     dept: { kind: "select", options: Object.keys(DEPT_COLORS) },
     state: { kind: "select", options: TILE_STATES },
+    titleLines: { kind: "select", options: ["1", "2"] },
+    metaWrap: { kind: "boolean" },
+    onClick: { kind: "boolean" },
   },
   initial: { title: "미적분학1", meta: "형설202", dept: "수학" },
-  defaults: { state: "upcoming" },
+  defaults: { state: "upcoming", titleLines: "1", metaWrap: false, onClick: false },
   render: (v) => (
     <Cell>
-      <ClassTile title={txt(v.title)} meta={txt(v.meta)} color={deptColor(v.dept)} state={v.state as ClassTileState} />
+      <ClassTile
+        title={txt(v.title)}
+        meta={txt(v.meta)}
+        color={deptColor(v.dept)}
+        state={v.state as ClassTileState}
+        titleLines={Number(v.titleLines) === 2 ? 2 : 1}
+        metaWrap={Boolean(v.metaWrap)}
+        onClick={v.onClick ? noop : undefined}
+      />
     </Cell>
   ),
-  code: (v) => jsx("ClassTile", printed(classTile, { title: v.title, meta: v.meta, color: deptColor(v.dept), state: v.state })),
+  code: (v) =>
+    jsx("ClassTile", [
+      ...printed(classTile, { title: v.title, meta: v.meta, color: deptColor(v.dept), state: v.state }),
+      Number(v.titleLines) === 2 ? "titleLines={2}" : undefined,
+      v.metaWrap ? "metaWrap" : undefined,
+      v.onClick ? "onClick={() => openClass(id)}" : undefined,
+    ]),
   sections: [
     {
       title: "States",
-      note: "now 는 color 를 무시하고 핑크 문법을 씁니다 — 글자만 핑크의 진한 글자로 내려 대비를 지킵니다. 핑크로 꽉 채우지 않는 건 이 칸 하나가 화면에서 제일 센 물건이 되어 옆을 읽는 걸 방해하기 때문입니다.",
+      note: "now 는 color 를 무시하고 핑크 문법을 씁니다 — 글자만 핑크의 진한 글자로 내려 대비를 지킵니다. 핑크로 꽉 채우지 않는 건 이 칸 하나가 화면에서 제일 센 물건이 되어 옆을 읽는 걸 방해하기 때문입니다. focus 는 밖에서 지목한 칸이라 면이 진해지고, dim 은 지목한 칸 말고 나머지라 20% 로 물러납니다 — 한 과목을 짚으면 같은 과목만 남기는 식입니다.",
       render: () => (
         <Stage bg="raised">
           {(
@@ -599,6 +657,8 @@ const classTile: Spec = {
               { state: "now", title: "일반물리학", meta: "형설305", dept: "물리학" },
               { state: "past", title: "세계사의이해", meta: "형설103", dept: "사회" },
               { state: "free", title: "공강", meta: undefined, dept: "융합" },
+              { state: "focus", title: "자료구조", meta: "형설103", dept: "정보과학" },
+              { state: "dim", title: "화학실험", meta: "형설401", dept: "화학" },
             ] as const
           ).map((s) => (
             <Stack key={s.state} gap="xs" align="center">
@@ -608,6 +668,23 @@ const classTile: Spec = {
               <Text variant="overline">{s.state}</Text>
             </Stack>
           ))}
+        </Stage>
+      ),
+    },
+    {
+      title: "titleLines · metaWrap · onClick",
+      note: "과목명은 기본 한 줄에서 자르고 titleLines={2} 면 두 줄까지 보입니다. 아래 줄 정보도 기본은 한 줄이고 metaWrap 이면 줄바꿈됩니다. onClick 을 주면 button 이 되어 누를 수 있고, 주지 않으면 div 입니다.",
+      render: () => (
+        <Stage bg="raised">
+          <Cell height={84}>
+            <ClassTile title="미적분학 II 영어강의 전체 분반" meta="형설202 · 김예시" color={DEPT_COLORS.수학} />
+          </Cell>
+          <Cell height={84}>
+            <ClassTile title="미적분학 II 영어강의 전체 분반" meta="형설202 · 김예시" color={DEPT_COLORS.수학} titleLines={2} metaWrap />
+          </Cell>
+          <Cell>
+            <ClassTile title="자료구조" meta="형설103" color={DEPT_COLORS.정보과학} onClick={noop} />
+          </Cell>
         </Stage>
       ),
     },
@@ -672,12 +749,13 @@ function lessonCell(day: string, period: string, today?: string): ReactNode {
   return <ClassTile title={lesson.title} meta={lesson.room} color={DEPT_COLORS[lesson.dept]} state={state} />;
 }
 
-function Week({ corner, today, count = 6 }: { corner?: ReactNode; today?: string; count?: number }) {
+function Week({ corner, today, count = 6, flush, bands }: { corner?: ReactNode; today?: string; count?: number; flush?: boolean; bands?: Record<number, string> }) {
   return (
     <TimetableGrid
       corner={corner}
+      flush={flush}
       days={WEEK.map((d) => ({ ...d, today: d.key === today }))}
-      periods={Array.from({ length: count }, (_, i) => ({ key: String(i + 1), label: String(i + 1) }))}
+      periods={Array.from({ length: count }, (_, i) => ({ key: String(i + 1), label: String(i + 1), band: bands?.[i + 1] }))}
       renderCell={(day, period) => lessonCell(day, period, today)}
     />
   );
@@ -686,16 +764,17 @@ function Week({ corner, today, count = 6 }: { corner?: ReactNode; today?: string
 const timetableGrid: Spec = {
   name: "TimetableGrid",
   summary:
-    "한 주 격자. 머리 줄은 검정, 교시 열은 well 이고, 오늘 요일 칸만 흰 칸으로 뒤집힙니다. 칸의 내용은 renderCell 이 정합니다. today 는 days 한 칸의 today 를 고르는 표본용 컨트롤입니다.",
+    "한 주 격자. 머리 줄은 검정, 교시 열은 well 이고, 오늘 요일 칸만 흰 칸으로 뒤집힙니다. 칸의 내용은 renderCell 이 정하고, periods 의 band 를 주면 그 교시는 칸 대신 요일 열 전체를 잇는 띠 행이 됩니다. flush 는 칸을 가장자리까지 채워 SlotCell 같은 상태 면 격자에 씁니다. today 는 days 한 칸의 today 를 고르는 표본용 컨트롤입니다.",
   controls: {
     corner: { kind: "text" },
     today: { kind: "select", options: ["none", ...WEEK.map((d) => d.label)] },
+    flush: { kind: "boolean" },
   },
   initial: { today: "수" },
-  defaults: { corner: "Pd", today: "none" },
+  defaults: { corner: "Pd", today: "none", flush: false },
   render: (v) => (
     <Frame width={640} top>
-      <Week corner={String(v.corner ?? "")} today={WEEK.find((d) => d.label === v.today)?.key} />
+      <Week corner={String(v.corner ?? "")} today={WEEK.find((d) => d.label === v.today)?.key} flush={Boolean(v.flush)} />
     </Frame>
   ),
   code: (v) => {
@@ -709,7 +788,7 @@ const timetableGrid: Spec = {
       jsx("TimetableGrid", [
         "days={days}",
         "periods={periods}",
-        ...printed(timetableGrid, { corner: v.corner }),
+        ...printed(timetableGrid, { corner: v.corner, flush: v.flush }),
         [
           "renderCell={(day, period) => {",
           "  const c = lessonAt(day, period);",
@@ -732,12 +811,193 @@ const timetableGrid: Spec = {
       ),
     },
     {
+      title: "band — 점심 · 저녁 띠",
+      note: "periods 한 칸에 band 를 주면 그 줄은 요일 열을 모두 잇는 BreakBand 하나가 되고, renderCell 은 그 줄에서 불리지 않습니다. 교시 열의 이름은 그대로 남습니다.",
+      render: () => (
+        <Stage>
+          <Frame width={640}>
+            <Week today="wed" count={8} bands={{ 4: "점심" }} />
+          </Frame>
+        </Stage>
+      ),
+    },
+    {
+      title: "flush — 상태 면 격자",
+      note: "flush 는 칸의 안쪽 여백을 빼서 SlotCell 의 면이 칸 가장자리까지 찹니다. 시간을 고르는 격자(빈 강의실 · 분석 비교)에 씁니다.",
+      render: () => (
+        <Stage>
+          <Frame width={480}>
+            <SlotGrid />
+          </Frame>
+        </Stage>
+      ),
+    },
+    {
       title: "Mobile 폭",
       note: "열이 좁아지면 칸 안의 글자는 말줄임표로 잘립니다. 격자가 가로로 넘치지 않고 열 폭을 나눠 가집니다.",
       render: () => (
         <Stage>
           <Frame width={360}>
             <Week today="wed" />
+          </Frame>
+        </Stage>
+      ),
+    },
+  ],
+};
+
+// ── BreakBand · TimeCaret · SlotCell ───────────────────────────────
+
+const breakBand: Spec = {
+  name: "BreakBand",
+  summary: "수업이 없는 시간. 빗금 면에 이름 라벨을 얹습니다. 시간표의 점심 · 저녁, 시간선의 쉬는 구간에 씁니다. 높이는 style 로 주면 분에 비례하는 띠가 됩니다. TimetableGrid 의 band 행이 이것을 그립니다.",
+  controls: {
+    label: { kind: "text" },
+  },
+  initial: { label: "점심" },
+  render: (v) => (
+    <Frame width={320}>
+      <div style={{ height: 40 }}>
+        <BreakBand label={txt(v.label)} style={{ height: "100%" }} />
+      </div>
+    </Frame>
+  ),
+  code: (v) => jsx("BreakBand", printed(breakBand, v)),
+  sections: [
+    {
+      title: "분에 비례하는 띠",
+      note: "시간선에서는 쉬는 구간의 길이만큼 높이를 줍니다. style 은 실행 중에 정해지는 값에만 씁니다.",
+      render: () => (
+        <Stage bg="raised">
+          {[24, 48, 96].map((h) => (
+            <Stack key={h} gap="xs" align="center" style={{ width: 120 }}>
+              <BreakBand label="저녁" style={{ height: h, width: "100%" }} />
+              <Text variant="micro" tone="muted">
+                {h}px
+              </Text>
+            </Stack>
+          ))}
+        </Stage>
+      ),
+    },
+  ],
+};
+
+/** TimeCaret 이 얹힐 축 — 부모가 relative 이고 높이가 있어야 합니다 */
+function Axis({ children }: { children: ReactNode }) {
+  return (
+    <Surface fill="well" border="line" style={{ position: "relative", height: 40 }}>
+      <BreakBand label="점심" style={{ position: "absolute", left: "45%", width: "20%", top: 0, bottom: 0 }} />
+      {children}
+    </Surface>
+  );
+}
+
+const timeCaret: Spec = {
+  name: "TimeCaret",
+  summary:
+    "지금을 짚는 선과 마름모. 시간 · 날짜 축 위에 얹습니다. 부모가 position: relative 이고, position(0~100, %)이 축 위의 자리입니다. 시간이 흐르면 천천히 옮겨 가고, label 을 주면 마름모 대신 꼬리표를 답니다. 스크린 리더에게는 읽히지 않습니다.",
+  controls: {
+    position: { kind: "number", min: 0, max: 100, step: 5 },
+    label: { kind: "text" },
+  },
+  initial: { position: 40 },
+  defaults: { label: "" },
+  render: (v) => (
+    <Frame width={420}>
+      <Axis>
+        <TimeCaret position={Number(v.position ?? 0)} label={txt(v.label)} />
+      </Axis>
+    </Frame>
+  ),
+  code: (v) => jsx("TimeCaret", printed(timeCaret, v)),
+  sections: [
+    {
+      title: "마름모와 꼬리표",
+      note: "label 이 없으면 마름모, 있으면 그 글자입니다. 날짜 축에서는 남은 날수(D-3)를 답니다. position 은 0 과 100 사이로 잘립니다.",
+      render: () => (
+        <Stage bg="raised">
+          <Frame width={420}>
+            <Stack gap="xl">
+              <Axis>
+                <TimeCaret position={30} />
+              </Axis>
+              <Axis>
+                <TimeCaret position={70} label="D-3" />
+              </Axis>
+            </Stack>
+          </Frame>
+        </Stage>
+      ),
+    },
+  ],
+};
+
+/** 상태 면 격자 — SlotCell 을 flush 격자에 둡니다. 눌러서 고른 칸은 selected 로 바뀝니다 */
+function SlotGrid() {
+  const [picked, setPicked] = useState<string[]>(["wed:3"]);
+  const toggle = (id: string) => setPicked((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+  const state = (day: string, period: string): SlotState => {
+    const id = `${day}:${period}`;
+    if (picked.includes(id)) return "selected";
+    return LESSONS.some((l) => l.day === day && Number(period) >= l.from && Number(period) <= l.to) ? "busy" : "free";
+  };
+  return (
+    <TimetableGrid
+      flush
+      days={WEEK}
+      periods={Array.from({ length: 6 }, (_, i) => ({ key: String(i + 1), label: String(i + 1) }))}
+      renderCell={(day, period) => <SlotCell state={state(day, period)} label={`${day} ${period}교시`} onToggle={() => toggle(`${day}:${period}`)} />}
+    />
+  );
+}
+
+const slotCell: Spec = {
+  name: "SlotCell",
+  summary:
+    "칸 전체를 상태 면으로 칠하는 격자 칸. TimetableGrid flush 안에 둡니다. free 는 비어 있음(초록), busy 는 점유(회색), selected 는 고름(검정), conflict 는 충돌(주황), common 은 공통(핑크), empty 는 면 없음입니다. onToggle 을 주면 눌러서 고르는 칸이 되고, 글자가 없는 칸이라 label 로 이름을 줍니다. 시간을 고르는 격자(빈 강의실 · 분석 비교)에 씁니다.",
+  controls: {
+    state: { kind: "select", options: SLOT_STATES },
+    onToggle: { kind: "boolean" },
+    disabled: { kind: "boolean" },
+  },
+  initial: { state: "free" },
+  defaults: { onToggle: false, disabled: false },
+  render: (v) => (
+    <Cell width={96} height={48}>
+      <SlotCell state={v.state as SlotState} onToggle={v.onToggle ? noop : undefined} disabled={Boolean(v.disabled)} label="월 3교시" />
+    </Cell>
+  ),
+  code: (v) =>
+    jsx("SlotCell", [
+      ...printed(slotCell, { state: v.state, disabled: v.disabled }),
+      v.onToggle ? "onToggle={() => toggle(id)}" : undefined,
+      v.onToggle ? 'label="월 3교시"' : undefined,
+    ]),
+  sections: [
+    {
+      title: "여섯 상태",
+      note: "뜻은 면의 색으로 말합니다. 글자를 넣을 때는 면 위에서 읽히는지 확인합니다.",
+      render: () => (
+        <Stage bg="raised">
+          {SLOT_STATES.map((st) => (
+            <Stack key={st} gap="xs" align="center">
+              <Cell width={96} height={48}>
+                <SlotCell state={st} />
+              </Cell>
+              <Text variant="overline">{st}</Text>
+            </Stack>
+          ))}
+        </Stage>
+      ),
+    },
+    {
+      title: "고르는 격자",
+      note: "onToggle 이 있는 칸은 button 이고 selected 일 때 aria-pressed 가 true 입니다. 회색은 수업이 있는 시간이고, 초록 칸을 눌러 고르면 검정으로 바뀝니다.",
+      render: () => (
+        <Stage bg="raised">
+          <Frame width={480}>
+            <SlotGrid />
           </Frame>
         </Stage>
       ),
@@ -907,19 +1167,56 @@ const toneBox: Spec = {
 
 const toneSwatch: Spec = {
   name: "ToneSwatch",
-  summary: "범례 칸입니다. 16px 네모에 검정 테두리이고, 뜻은 옆 글자가 말하므로 스크린 리더에게 읽히지 않습니다. accent 로 칠하는 점 · 띠는 Swatch 입니다.",
-  controls: { dept: { kind: "select", options: DEPTS } },
+  summary:
+    "범례 칸 · 왼쪽 띠입니다. box 는 16px 네모에 검정 테두리이고, rail 은 줄 높이를 채우는 4px 왼쪽 띠입니다. 뜻은 옆 글자가 말하므로 스크린 리더에게 읽히지 않습니다. tone 이 없으면 자리만 지킵니다. accent 로 칠하는 점 · 띠는 Swatch 입니다.",
+  controls: {
+    dept: { kind: "select", options: ["none", ...DEPTS] },
+    shape: { kind: "select", options: TONE_SWATCH_SHAPES },
+  },
   initial: { dept: "화학" },
+  defaults: { shape: "box" },
   render: (v) => (
-    <Inline gap="sm">
-      <ToneSwatch tone={deptColor(v.dept)} />
+    <Inline gap="sm" align="stretch">
+      <ToneSwatch tone={v.dept === "none" ? undefined : deptColor(v.dept)} shape={v.shape as "box" | "rail"} />
       <Text variant="caption" weight="black">
-        {String(v.dept ?? "")}
+        {v.dept === "none" ? "색 없음" : String(v.dept ?? "")}
       </Text>
     </Inline>
   ),
-  code: (v) => printJsx("ToneSwatch", { tone: deptColor(v.dept) }),
+  code: (v) => printJsx("ToneSwatch", { tone: v.dept === "none" ? undefined : deptColor(v.dept), shape: v.shape }, toneSwatch.defaults),
   sections: [
+    {
+      title: "rail — 줄 높이를 채우는 띠",
+      note: "rail 은 flex 줄 안에서 줄 높이를 채웁니다. 수업이 있는 줄은 학과색 띠를, 수업이 없는 줄은 tone 없이 자리만 지키는 띠를 둬서 두 줄의 글자 시작점이 어긋나지 않습니다.",
+      render: () => (
+        <Stage bg="raised">
+          <Stack gap="md" style={{ width: 280 }}>
+            <Inline gap="md" align="stretch">
+              <ToneSwatch shape="rail" tone={DEPT_COLORS.수학} />
+              <Stack gap="2xs">
+                <Text variant="caption" weight="black">
+                  미적분학1
+                </Text>
+                <Text variant="micro" tone="muted">
+                  형설202 · 월 1–2교시
+                </Text>
+              </Stack>
+            </Inline>
+            <Inline gap="md" align="stretch">
+              <ToneSwatch shape="rail" />
+              <Stack gap="2xs">
+                <Text variant="caption" weight="black">
+                  공강
+                </Text>
+                <Text variant="micro" tone="muted">
+                  수업이 없습니다
+                </Text>
+              </Stack>
+            </Inline>
+          </Stack>
+        </Stage>
+      ),
+    },
     {
       title: "범례",
       render: () => (
@@ -938,6 +1235,40 @@ const toneSwatch: Spec = {
   ],
 };
 
+const toneText: Spec = {
+  name: "ToneText",
+  summary:
+    "실행 중의 색으로 칠하는 글자. Text 의 글자 역할(variant · weight · truncate …)을 그대로 받고 글자색만 tone(hex)으로 바꿉니다. 흰 면 위의 대비는 그 색에 달려 있어서, 큰 글자나 이름에만 씁니다.",
+  controls: {
+    dept: { kind: "select", options: DEPTS },
+    variant: { kind: "select", options: ["heading", "title", "subheading", "label", "caption"] },
+    children: { kind: "text" },
+  },
+  initial: { dept: "수학", variant: "heading", children: "미적분학1" },
+  defaults: { variant: "body" },
+  render: (v) => (
+    <ToneText tone={deptColor(v.dept)} variant={v.variant as "heading"}>
+      {String(v.children ?? "")}
+    </ToneText>
+  ),
+  code: (v) => printJsx("ToneText", { tone: deptColor(v.dept), variant: v.variant, children: v.children }, toneText.defaults),
+  sections: [
+    {
+      title: "학과색 열한 가지",
+      note: "⚠️ 글자색이라 면처럼 자동으로 검정 · 흰색을 고르지 않습니다. 노랑 · 연한 청록 계열은 흰 면 위에서 대비가 모자랄 수 있으니 이름 같은 큰 글자에만 씁니다.",
+      render: () => (
+        <Stage bg="raised">
+          {DEPTS.map((dept) => (
+            <ToneText key={dept} tone={DEPT_COLORS[dept]} variant="subheading">
+              {dept}
+            </ToneText>
+          ))}
+        </Stage>
+      ),
+    },
+  ],
+};
+
 export const COMPONENT_SPECS: Record<string, Spec> = {
   AppBar: appBar,
   SideNav: sideNav,
@@ -947,8 +1278,12 @@ export const COMPONENT_SPECS: Record<string, Spec> = {
   PersonCard: personCard,
   ClassTile: classTile,
   TimetableGrid: timetableGrid,
+  BreakBand: breakBand,
+  TimeCaret: timeCaret,
+  SlotCell: slotCell,
   ToneButton: toneButton,
   ToneChip: toneChip,
   ToneBox: toneBox,
   ToneSwatch: toneSwatch,
+  ToneText: toneText,
 };

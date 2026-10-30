@@ -10,11 +10,13 @@ funky-ui의 움직임 — 시간, 곡선, 누름의 거리, 판이 나타나는 
 
 그림자를 켜지 않은 컨트롤은 가라앉지 않고 층(색)만 바뀌며, 누르는 순간만 작아집니다(`tap`). 테두리가 없는 Ghost는 가라앉을 상자가 없어서 그림자를 받지 않고 `tap`입니다. 골라지면 `filled`(테두리가 있는 면)가 되므로, 그때는 다른 버튼처럼 그림자와 커짐을 받습니다.
 
-몸짓은 [Pressable](../primitives/README.md#pressable) 하나가 맡습니다 — `none`(움직이지 않음, 기본) · `sink`(가라앉음) · `raise`(그림자가 올라옴) · `lift`(떠오름) · `tap`(작아짐만) · `shrink`(그림자를 둔 채 작아짐) 여섯입니다. 눌림은 순간의 반응이라, 골라져 남아 있는 칸의 모양은 여기에 없습니다([커짐](#커짐)). hover 때 바뀌는 층(색)은 칠([Paint](../primitives/README.md#paint)의 `hoverable`)이라 몸짓과 따로 섭니다. Button은 `shadow`로 몸짓을 고릅니다 — 켜면 `sink`, `"hover"`면 `raise`, `"shrink"`면 `shrink`, 끄면 `tap`입니다.
+몸짓은 [Pressable](../primitives/README.md#pressable) 하나가 맡습니다 — `none`(움직이지 않음, 기본) · `sink`(가라앉음) · `raise`(그림자가 올라옴) · `lift`(떠오름) · `tap`(작아짐만) · `shrink`(그림자를 둔 채 작아짐) · `still`(그림자를 둔 채 움직이지 않음) 일곱입니다. 눌림은 순간의 반응이라, 골라져 남아 있는 칸의 모양은 여기에 없습니다([커짐](#커짐)). hover 때 바뀌는 층(색)은 칠([Paint](../primitives/README.md#paint)의 `hoverable`)이라 몸짓과 따로 섭니다. Button은 `shadow`로 몸짓을 고릅니다 — 켜면 `sink`, `"hover"`면 `raise`, `"shrink"`면 `shrink`, `"static"`이면 `still`, 끄면 `tap`입니다.
 
 `shrink`는 Ask 플로팅 버튼과 창 머리 단추만 씁니다. 그림자를 그대로 둔 채 hover 때 95%, 누르면 92%로 작아집니다(`PRESS.shrink` · `PRESS.shrinkActive`). 앱의 눌림 규칙에서 일부러 뺀 자리라고 class-explorer 가이드가 적어 둔 예외이고, 재원님 결정으로 그대로 옮겼습니다. 다른 자리에 쓰지 않습니다.
 
 목록 줄 · 아코디언 머리 · 메뉴 항목처럼 누르지만 움직이지 않는 것은 `none`입니다(Pressable의 기본값). 반응은 칠의 hover 층이 맡습니다.
+
+`still`은 `none`과 달리 그림자를 둡니다. 밖에서 이미 켜진 상태나 꺼진 칸처럼 hover에 반응하면 안 되지만 떠 있는 모양은 남겨야 할 때 씁니다(Button의 `shadow="static"`). 움직임이 없으므로 누르는 순간의 작아짐도 없습니다.
 
 ## 올라옴
 
@@ -38,19 +40,34 @@ Button은 골라진 버튼에 그림자와 상관없이 `grow`를 줍니다 — 
 
 ## 등장
 
-새로 나타나는 판의 몸짓은 셋입니다(`ENTER`). 판이 클수록 멀리서, 오래 옵니다.
+새로 나타나는 판의 몸짓은 다섯입니다(`ENTER`). 판이 클수록 멀리서, 오래 옵니다.
 
 | 이름 | 거리 | 시간 | 쓰는 곳 |
 | --- | --- | --- | --- |
 | `rise` | 4px | `fast` 100ms | 기준 요소 옆에 붙는 작은 판 — 메뉴 · 툴팁 |
 | `pop` | 8px | `base` 200ms | 화면 가운데 큰 판 — 모달 |
 | `fade` | 0 | `slow` 300ms | 제자리에서 — 펼친 아코디언 본문 (class-explorer의 `fade-in duration-300`) |
+| `panel` | 8px, 96%에서 시작 | `base` 200ms | 앱이 만든 작은 창 — Ask 데스크탑 창 |
+| `sheet` | 24px | `base` 200ms | 화면을 덮는 판 — Ask 모바일 판 |
 
-`rise`와 `pop`은 아래에서 거리만큼 떠오르면서 투명에서 불투명으로 바뀌고, `fade`는 움직이지 않고 불투명해지기만 합니다. `fade`가 위치를 건드리지 않는 이유는 커져 있거나 옮겨진 요소에도 그대로 걸 수 있게 하려는 것입니다. 곡선은 셋 모두 `out`입니다. 모달 뒤의 막은 `fade`를 `pop`과 같은 `base` 시간으로 걸어 제자리에서 나타납니다.
+`rise` · `pop` · `sheet`는 아래에서 거리만큼 떠오르면서 투명에서 불투명으로 바뀌고, `panel`은 거기에 96%에서 100%로 커지는 움직임을 더하며, `fade`는 움직이지 않고 불투명해지기만 합니다. `fade`가 위치를 건드리지 않는 이유는 커져 있거나 옮겨진 요소에도 그대로 걸 수 있게 하려는 것입니다. 곡선은 모두 `out`입니다. 모달 뒤의 막은 `fade`를 `pop`과 같은 `base` 시간으로 걸어 제자리에서 나타납니다.
 
-몸짓은 [Floating](../primitives/README.md#floating)의 `enter`(기본 `rise`)로 고릅니다. 모달은 `pop`을, 아코디언 본문은 `fade`를 씁니다. 키프레임은 `styles/enter.css.ts`가 `ENTER`에서 만들고, 값 자체는 `/tokens`의 `ENTER`로 읽습니다. 움직임을 줄인 사람에게는 맨 아래 규칙대로 시간이 거의 0으로 줄어 곧바로 나타납니다.
+몸짓은 [Floating](../primitives/README.md#floating)의 `enter`(기본 `rise`)로 고릅니다. 모달은 `pop`을, 아코디언 본문은 `fade`를 씁니다. Floating을 쓰지 않고 앱이 직접 그리는 판은 `enterClass.panel` · `enterClass.sheet`처럼 같은 class를 빌려 씁니다. 뒤 화면을 막는 판에는 Floating의 `scrim`이 있습니다. 키프레임은 `styles/enter.css.ts`가 `ENTER`에서 만들고, 값 자체는 `/tokens`의 `ENTER`로 읽습니다. 움직임을 줄인 사람에게는 맨 아래 규칙대로 시간이 거의 0으로 줄어 곧바로 나타납니다.
 
 **퇴장은 없습니다.** 닫는 모션을 보이려면 판을 그 시간만큼 더 들고 있어야 하는데, 그사이 한 번 더 누르면 판 뒤의 화면이 눌립니다. class-explorer의 Ask 창 규칙에서 온 것입니다.
+
+## 깜빡임 · 아이콘 몸짓
+
+불러오는 동안은 깜빡이고(`pulse`), 아이콘은 제자리에서 돌거나(`spin`) 마우스를 올릴 때만 움직입니다(`motion`).
+
+| 이름 | 값 | 쓰는 곳 |
+| --- | --- | --- |
+| `pulse` | 2초 주기, 투명도 100% ↔ 50% | `Text`의 `pulse` · `Swatch`의 `pulse` — 글자 자리를 지키는 `Loading…`, 살아 있는 상태 점 |
+| `spin` | 1초에 한 바퀴 | `Icon`의 `spin` · Button의 `iconSpin` — Spinner와 같은 회전 |
+| `turn` | -45° | `Icon`의 `motion` · Button의 `iconMotion` — 바깥 버튼 · 링크에 마우스를 올리면 아이콘만 돕니다 |
+| `nudge` | 2px 옆으로 | 같은 자리 — 이어지는 화면을 가리키는 화살표 |
+
+아이콘 몸짓의 값은 `ICON_MOTION`이고, `ICON_MOTIONS`(`turn` · `nudge`)가 어휘입니다. 버튼의 뒤 아이콘은 이와 따로, 판을 열어 둔 동안(`aria-expanded`) 180° 뒤집힙니다. `pulse`의 시간은 아래 `DURATION.pulse`입니다.
 
 ## 시간 · 곡선
 
@@ -60,6 +77,7 @@ Button은 골라진 버튼에 그림자와 상관없이 `grow`를 줍니다 — 
 | `base` | 200ms | 펼침 · 나타남 — 모달의 등장(`pop`)과 뒤 막 |
 | `slow` | 300ms | 막대 길이 · 펼친 본문의 등장(`fade`) |
 | `crawl` | 700ms | 시간선 위 캐럿처럼 연속으로 움직이는 위치 전용 |
+| `pulse` | 2000ms | 불러오는 동안의 깜빡임 한 주기 |
 | `standard` | `cubic-bezier(0.2, 0, 0, 1)` | 기본 곡선 |
 | `out` | `cubic-bezier(0, 0, 0.2, 1)` | 나타남 |
 
@@ -67,4 +85,4 @@ Button은 골라진 버튼에 그림자와 상관없이 `grow`를 줍니다 — 
 
 ## 움직임을 줄인 사람에게
 
-`prefers-reduced-motion: reduce`에서는 이동과 애니메이션을 멈추고, 색 바뀜과 포커스 링만 남깁니다.
+`prefers-reduced-motion: reduce`에서는 이동과 애니메이션을 멈추고, 색 바뀜과 포커스 링만 남깁니다. 깜빡임과 회전도 한 번으로 끝나며, Marquee는 넘쳐도 움직이지 않습니다.

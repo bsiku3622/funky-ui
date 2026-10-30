@@ -2,18 +2,18 @@
 
 Molecules는 Atoms와 Primitives를 묶은 범용 조합입니다. 카드 · 선택 줄 · 떠 있는 판 · 폼 칸 · 숫자 · 알림처럼 한 번 만들어 두면 어느 앱에서나 쓰는 덩어리이고, class-explorer를 모르므로 학과나 학번 같은 앱 지식은 여기 없습니다. 같은 층 안에서는 `Card`만 다시 씁니다(PageHeader와 Accordion이 Card 위에 섭니다).
 
-`SegmentedControl`과 `Tabs`는 같은 버튼 무리이고 뜻만 다릅니다(값 고르기와 화면 바꾸기). 둘 다 방향키와 Tab 순서를 [`useSelectableGroup`](../primitives/README.md#useselectablegroup) 하나로 받고, `Menu`도 같은 훅 위에 섭니다. `Tooltip`과 `Menu`는 [Floating](../primitives/README.md#floating) 위에 서서 body 끝(Portal)에 그려지므로 카드의 `overflow`에 잘리지 않고, `Modal` 안에서 열면 그 `<dialog>` 안에 그려집니다. `Modal`은 native `<dialog>`의 top layer에 올라 z-index를 고르지 않습니다. `accent` · `variant` · `size` · `shadow`는 [Atoms](../atoms/README.md)와 같은 뜻입니다. 예시는 import를 생략하며, `term`이나 `setTerm`처럼 앱이 가진 상태와 핸들러는 이미 있다고 봅니다.
+`SegmentedControl`과 `Tabs`는 같은 버튼 무리이고 뜻만 다릅니다(값 고르기와 화면 바꾸기). 둘 다 방향키와 Tab 순서를 [`useSelectableGroup`](../primitives/README.md#useselectablegroup) 하나로 받고, `Menu`도 같은 훅 위에 섭니다. `Tooltip` · `Popover` · `Menu`는 [Floating](../primitives/README.md#floating) 위에 서서 body 끝(Portal)에 그려지므로 카드의 `overflow`에 잘리지 않고, `Modal` 안에서 열면 그 `<dialog>` 안에 그려집니다. `Modal`은 native `<dialog>`의 top layer에 올라 z-index를 고르지 않습니다. `accent` · `variant` · `size` · `shadow`는 [Atoms](../atoms/README.md)와 같은 뜻입니다. 예시는 import를 생략하며, `term`이나 `setTerm`처럼 앱이 가진 상태와 핸들러는 이미 있다고 봅니다.
 
-새로 나타나는 판은 등장 몸짓을 하나씩 가집니다 — 메뉴 · 툴팁은 4px 아래에서 올라오고(`rise`, 100ms), 모달은 8px 아래에서 올라오며(`pop`, 200ms), 펼친 아코디언 본문은 제자리에서 나타납니다(`fade`, 300ms). 퇴장 모션은 없습니다. 닫는 모션을 보이려면 판을 그만큼 더 들고 있어야 하는데, 그사이 한 번 더 누르면 판 뒤의 화면이 눌리기 때문입니다. 거리와 시간은 `ENTER` 토큰이 정하고([Motion](../foundations/motion.md#등장)), 움직임을 줄인 사람에게는 이동 없이 곧바로 나타납니다.
+새로 나타나는 판은 등장 몸짓을 하나씩 가집니다 — 메뉴 · 툴팁 · 팝오버는 4px 아래에서 올라오고(`rise`, 100ms), 모달은 8px 아래에서 올라오며(`pop`, 200ms), 펼친 아코디언 본문은 제자리에서 나타납니다(`fade`, 300ms). 앱이 만든 작은 창과 화면을 덮는 판에는 `panel` · `sheet`가 따로 있습니다([Floating](../primitives/README.md#floating)의 `enter`). 퇴장 모션은 없습니다. 닫는 모션을 보이려면 판을 그만큼 더 들고 있어야 하는데, 그사이 한 번 더 누르면 판 뒤의 화면이 눌리기 때문입니다. 거리와 시간은 `ENTER` 토큰이 정하고([Motion](../foundations/motion.md#등장)), 움직임을 줄인 사람에게는 이동 없이 곧바로 나타납니다.
 
 | 묶음 | 컴포넌트 |
 | --- | --- |
 | surface | Card · SectionTitle · PageHeader · Accordion |
 | choice | SegmentedControl · Tabs · Menu |
-| overlay | Modal · Tooltip |
-| form | SearchField · FormField |
-| data | Stat · Meter |
-| feedback | Notice · EmptyState |
+| overlay | Modal · Drawer · Tooltip · Popover |
+| form | SearchField · FormField · FileDrop |
+| data | Stat · Meter · Table |
+| feedback | Notice · Busy · EmptyState |
 
 ## Card
 
@@ -46,17 +46,28 @@ Molecules는 Atoms와 Primitives를 묶은 범용 조합입니다. 카드 · 선
 
 ### Card.Header
 
-카드 머리입니다. 섹션 소제목 글자(`subtitle`)와 오른쪽 끝 자리를 가집니다.
+카드 머리입니다. 섹션 소제목 글자(`subtitle`)와 오른쪽 끝 자리를 가집니다. 아래는 이름표와 설명이 붙은 두 줄 머리입니다.
+
+```tsx
+<Card padding="0">
+  <Card.Header eyebrow="Syllabus" title="미적분학 II 영어강의" description="2026-2 · 월 3–4교시" titleStyle="heading" />
+  <Card.Section divided>…</Card.Section>
+</Card>
+```
 
 | prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `title` | `ReactNode` | 필수 | 제목 글자입니다. |
+| `eyebrow` | `ReactNode` | — | 제목 위의 작은 이름표(`overline`)입니다. 주면 두 줄 머리가 되어 제목이 줄바꿈됩니다. |
+| `description` | `ReactNode` | — | 제목 아래 설명(`caption`)입니다. 주면 두 줄 머리가 되어 제목이 줄바꿈됩니다. |
+| `titleStyle` | `"subtitle" \| "heading"` | `"subtitle"` | 제목의 글자입니다. `subtitle`은 대문자 14px 한 줄이고, `heading`은 대소문자를 그대로 둔 20px이며 줄바꿈됩니다. |
 | `icon` | `IconComponent` | — | 제목 앞 아이콘입니다. |
 | `actions` | `ReactNode` | — | 오른쪽 끝입니다. 개수나 버튼을 둡니다. |
 | `tone` | `"plain" \| "bar"` | `"plain"` | `bar`는 Paint의 `filled`로 칠한 머리 막대입니다(모달 머리와 같은 모양). |
 | `accent` | `Accent` | — | 머리 막대의 색입니다(`tone="bar"`일 때). 주지 않으면 바깥 Paint의 색, 바깥에도 없으면 검정입니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 
+- `eyebrow` · `description` · `titleStyle="heading"` 중 하나라도 있으면 제목이 `truncate` 없이 줄바꿈되는 쌓인 머리가 됩니다. 아무것도 없는 기본 머리는 한 줄에서 자릅니다. `tone="bar"`에서는 세 줄 모두 막대의 글자색을 물려받습니다.
 - `bar`는 [Paint](../primitives/README.md#paint)의 `filled`(accent 면 · `ink` 글자)이고, 테두리만 아래 2px 검정 한 줄로 덮습니다. 막대가 카드 가장자리까지 닿도록 `Card`에 `padding="0"`을 주고 나머지는 `Card.Section`으로 나눕니다. 막대 위의 filled 배지는 accent를 따로 줍니다 — 안 주면 막대와 같은 색이 됩니다.
 
 ### Card.Section
@@ -69,6 +80,27 @@ Molecules는 Atoms와 Primitives를 묶은 범용 조합입니다. 카드 · 선
 | `padding` | `Space` | `"3xl"` | 안쪽 여백입니다(24px). |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 | `children` | `ReactNode` | — | 구역 내용입니다. |
+
+### Card.Strip
+
+카드 아래 또는 위 끝에 붙는 전폭 색 띠입니다. 상태를 한 줄로 알릴 때 씁니다. 아래는 거절 사유를 카드 바닥에 붙인 예입니다.
+
+```tsx
+<Card padding="0">
+  <Card.Section>교과 외 활동 증빙 자료</Card.Section>
+  <Card.Strip accent="red" variant="plain">거절 사유 · 파일을 열 수 없습니다</Card.Strip>
+</Card>
+```
+
+| prop | 타입 | 기본값 | 설명 |
+| --- | --- | --- | --- |
+| `accent` | `Accent` | — | 띠의 색입니다. 주지 않으면 바깥 Paint의 색을 따르고, 바깥에도 없으면 `black`입니다. |
+| `variant` | `Variant` | `"solid"` | 띠의 칠입니다. |
+| `placement` | `"top" \| "bottom"` | `"bottom"` | 카드의 어느 끝에 붙는지 정합니다. 테두리는 카드 쪽의 한 줄만 남습니다. |
+| `className` | `string` | — | 마지막에 덧붙는 class입니다. |
+| `children` | `ReactNode` | — | 띠 안의 글자입니다. |
+
+- 띠가 카드 가장자리까지 닿도록 `Card`에 `padding="0"`을 주고 나머지는 `Card.Section`으로 나눕니다.
 
 ## SectionTitle
 
@@ -138,6 +170,7 @@ Molecules는 Atoms와 Primitives를 묶은 범용 조합입니다. 카드 · 선
 | --- | --- | --- | --- |
 | `title` | `ReactNode` | 필수 | 머리 글자입니다. |
 | `titleStyle` | `AccordionTitle` | `"heading"` | 제목의 글자입니다. `heading`은 20px 문장이고, `section`은 대문자 섹션 제목으로 좁은 화면에서 14px, `md` 이상에서 20px입니다. |
+| `size` | `AccordionSize` | `"md"` | `sm`은 12px 제목의 촘촘한 줄입니다. 쉐브론이 작아지고 본문 여백이 좁아지며, 이때 `titleStyle`은 쓰지 않습니다. |
 | `icon` | `IconComponent` | — | 제목 앞 아이콘입니다. |
 | `trailing` | `ReactNode` | — | 제목 옆입니다. 개수 배지 같은 것을 둡니다. |
 | `open` | `boolean` | — | 펼침 상태입니다. 주면 제어 모드가 됩니다. |
@@ -180,6 +213,7 @@ Molecules는 Atoms와 Primitives를 묶은 범용 조합입니다. 카드 · 선
 | `shadow` | `boolean` | `false` | 안 골린 칸을 4px 그림자 위에 띄웁니다(hover 때 가라앉음). 골린 칸은 이 값과 상관없이 105%로 커져 그림자 위에 섭니다. |
 | `gap` | `Space` | `"sm"` | 칸 사이 간격입니다(6px). |
 | `fill` | `boolean` | `false` | 줄을 꽉 채워 칸을 같은 폭으로 나눕니다. 줄바꿈은 꺼집니다. |
+| `attached` | `boolean` | `false` | 칸을 이어 붙입니다. 사이가 없고 맞닿은 테두리가 하나로 겹칩니다. `gap`은 쓰이지 않고 줄바꿈도 꺼집니다. |
 | `className` | `string` | — | 줄에 붙는 class입니다. |
 
 - 값을 고르는 줄입니다. 화면을 바꾸는 줄은 [Tabs](#tabs)입니다. 둘의 생김새는 같고 뜻만 다릅니다(`radiogroup`과 `tablist`).
@@ -308,10 +342,16 @@ native `<dialog>` 위에 서는 모달입니다. 아래는 수강 변경을 확�
 | `open` | `boolean` | 필수 | 열림 상태입니다. |
 | `onClose` | `() => void` | 필수 | Esc · 바깥 누름 · 닫기 버튼이 모두 이걸 부릅니다. `open`을 `false`로 바꾸는 일은 부르는 쪽이 합니다. |
 | `title` | `ReactNode` | — | 머리 막대의 제목입니다. |
+| `subtitle` | `ReactNode` | — | 머리 막대의 두 번째 줄입니다. 파일 설명 같은 것을 적고 두 줄에서 자릅니다. `title`이 있을 때만 그려집니다. |
+| `titleUppercase` | `boolean` | `true` | 제목을 대문자로 그립니다. 파일명처럼 원문이 뜻인 제목이면 끕니다. |
+| `actions` | `ReactNode` | — | 머리 막대 오른쪽, 닫기 앞에 놓는 동작 버튼입니다(새 탭에서 열기). `title`이 있을 때만 그려집니다. |
 | `accent` | `Accent` | `"purple"` | 머리 막대의 색입니다. 판 · 본문 · 푸터로는 흐르지 않으므로 푸터 버튼은 색을 각자 고릅니다. |
-| `size` | `"sm" \| "md" \| "lg" \| "xl"` | `"md"` | 최대 폭입니다. 400 · 512 · 768 · 1024px. |
+| `size` | `"sm" \| "md" \| "lg" \| "xl" \| "full"` | `"md"` | 최대 폭입니다. 400 · 512 · 768 · 1024 · 1280px. `full`은 높이도 96vh로 잡고 머리를 고정한 채 본문이 남은 높이를 채웁니다. |
 | `footer` | `ReactNode` | — | 아래 동작 줄입니다. 오른쪽 정렬입니다. |
+| `footerAccent` | `Accent` | — | 주면 아래 동작 줄을 그 색의 띠(`solid`)로 칠합니다. `footer`가 있을 때만 쓰입니다. |
 | `dismissible` | `boolean` | `true` | 바깥(막)을 눌러 닫을지 정합니다. 입력 중인 폼이면 `false`를 줍니다. |
+| `closable` | `boolean` | `true` | 닫을 수 있는 창인지 정합니다. `false`면 닫기 버튼이 없고 Esc · 바깥 누름도 닫지 않습니다. 다 끝내야 나가는 창에 씁니다. |
+| `flush` | `boolean` | `false` | 본문의 안쪽 여백을 뺍니다. 파일 미리보기처럼 본문이 가장자리까지 차는 창에 씁니다. |
 | `closeLabel` | `string` | `"닫기"` | 닫기 버튼(머리 막대 · 오른쪽 위)의 이름입니다. |
 | `className` | `string` | — | `<dialog>`에 붙는 class입니다. |
 | `children` | `ReactNode` | — | 본문입니다. |
@@ -319,8 +359,35 @@ native `<dialog>` 위에 서는 모달입니다. 아래는 수강 변경을 확�
 - 포커스 가두기 · Esc · 뒤 화면 비활성 · 가장 위 층은 브라우저(`showModal()`)가 맡으므로 z-index를 고르지 않습니다. 그림자는 시스템에서 유일한 6px이고, 열려 있는 동안 뒤 화면은 스크롤되지 않습니다.
 - 열릴 때 판은 8px 아래에서 올라오고(`pop`, 200ms) 뒤 막은 같은 시간에 제자리에서 나타납니다(`fade`). 닫힐 때의 모션은 없습니다.
 - 안에서 여는 [Menu](#menu) · [Tooltip](#tooltip)은 열린 `<dialog>` 안에 그려집니다. body 끝에 그리면 모달 바깥이라 뒤 화면처럼 비활성이 되어 보이지도 눌리지도 않기 때문입니다. 그런 판이 떠 있는 동안의 첫 Esc는 판만 닫고, 다음 Esc가 모달을 닫습니다.
-- `dismissible={false}`는 바깥 누름만 막고 Esc는 막지 않습니다. 닫혀 있는 동안에는 `children`을 렌더하지 않으므로 안의 폼 상태는 다시 열 때 초기화됩니다.
-- `title`을 주지 않으면 머리 막대 없이 흰 면 오른쪽 위에 닫기 버튼만 앉습니다. `title`이 있으면 `aria-labelledby`로 `<dialog>`의 이름에 연결됩니다.
+- `dismissible={false}`는 바깥 누름만 막고 Esc는 막지 않습니다. Esc까지 막으려면 `closable={false}`를 주고, 닫는 길을 `footer`의 버튼으로 둡니다. 닫는 길이 하나도 없으면 사용자가 갇히니 `onClose`를 부르는 버튼은 반드시 둡니다. 닫혀 있는 동안에는 `children`을 렌더하지 않으므로 안의 폼 상태는 다시 열 때 초기화됩니다.
+- `title`을 주지 않으면 머리 막대 없이 흰 면 오른쪽 위에 닫기 버튼만 앉습니다(`closable={false}`면 그마저 없습니다). `subtitle` · `actions`는 머리 막대 안의 것이라 이때 그려지지 않습니다. `title`이 있으면 `aria-labelledby`로 `<dialog>`의 이름에 연결됩니다.
+
+## Drawer
+
+가장자리에서 밀려 나오는 판입니다. 뒤 화면을 막지 않아서, 옆에 두고 함께 보는 패널에 씁니다. 화면을 막아야 하면 [Modal](#modal)입니다. 아래는 오른쪽에 붙는 안내 패널과, 닫혀 있어도 보이는 손잡이입니다.
+
+```tsx
+<Drawer open={open} aria-label="Ask" style={{ width: 360 }} handle={<IconButton icon={Sparkles} label="Ask 열기" onClick={toggle} />}>
+  <Stack gap="sm" padding="lg">
+    <Text variant="subheading">Ask</Text>
+  </Stack>
+</Drawer>
+```
+
+| prop | 타입 | 기본값 | 설명 |
+| --- | --- | --- | --- |
+| `open` | `boolean` | 필수 | 열림 상태입니다. 닫히면 판이 가장자리 밖으로 나갑니다. |
+| `side` | `DrawerSide` | `"right"` | 붙는 가장자리입니다. `right` · `left` · `bottom`. |
+| `handle` | `ReactNode` | — | 판 바깥에 붙어서 닫혀 있어도 화면에 남는 손잡이입니다. 여닫는 버튼은 쓰는 쪽이 그립니다. |
+| `aria-label` | `string` | — | 판의 이름입니다. `<aside>`로 읽힙니다. |
+| `style` | `CSSProperties` | — | 판의 폭 · 높이, 상단 바를 비키는 `top`처럼 실행 중에 정해지는 값입니다. |
+| `className` | `string` | — | 마지막에 덧붙는 class입니다. |
+| `children` | `ReactNode` | — | 판 안의 내용입니다. 넘치면 안에서 스크롤됩니다. |
+
+- 화면에 고정(`position: fixed`)되고 붙은 가장자리를 채웁니다. 폭(`right` · `left`)이나 높이(`bottom`)는 `style`로 줍니다.
+- 붙은 가장자리 쪽에는 선을 긋지 않고 세 변만 남깁니다. 열려 있는 동안만 4px 그림자를 가집니다.
+- 닫혀 있는 동안 안쪽은 `inert`라 Tab이 들어가지 않고 스크린 리더도 읽지 않습니다. 손잡이는 `inert` 바깥이라 닫혀 있어도 누를 수 있습니다.
+- 열 때의 모션은 판이 밀려 나오는 이동뿐이고, 포커스를 옮기지도 가두지도 않습니다. Esc · 바깥 누름으로 닫는 규칙도 없으니 필요하면 부르는 쪽이 붙입니다.
 
 ## Tooltip
 
@@ -345,6 +412,35 @@ native `<dialog>` 위에 서는 모달입니다. 아래는 수강 변경을 확�
 - 키보드로도 보이려면 children이 포커스를 받는 요소(버튼 · 링크 · 입력)여야 합니다.
 - Esc를 누르거나 바깥을 누르면 닫힙니다. `Modal` 안에서는 풍선이 열린 `<dialog>` 안에 그려지고, 풍선이 떠 있는 동안의 첫 Esc는 풍선만 닫습니다.
 
+## Popover
+
+내용을 담는 판입니다. 흰 면 · 2px 검정 · 4px 그림자 위에 사람 카드나 요약을 올립니다. 짧은 글자는 Tooltip, 누를 수 있는 내용이나 카드는 Popover입니다. 아래는 이름에 마우스를 올리면 사람 요약이 뜨는 예입니다.
+
+```tsx
+<Popover content={<PersonCard id="25-001" name="김예시" color={color} items={["미적분학 II"]} />}>
+  <Button size="sm" variant="muted">김예시</Button>
+</Popover>
+```
+
+| prop | 타입 | 기본값 | 설명 |
+| --- | --- | --- | --- |
+| `content` | `ReactNode` | 필수 | 판 안의 내용입니다. |
+| `children` | `ReactNode` | 필수 | 판을 붙일 요소입니다. |
+| `trigger` | `PopoverTrigger` | `"hover"` | 여는 법입니다. `hover`는 마우스를 올리거나 포커스하면, `click`은 누르면, `manual`은 부르는 쪽이 `open`으로만 엽니다. |
+| `open` | `boolean` | — | 주면 열림을 밖에서 쥡니다. |
+| `onOpenChange` | `(open: boolean) => void` | — | 열림이 바뀔 때 새 값과 함께 불립니다. |
+| `placement` | `"top" \| "bottom"` | `"top"` | 판이 뜨는 쪽입니다. 화면 밖으로 나가면 반대쪽으로 뒤집힙니다. |
+| `align` | `"start" \| "center" \| "end"` | `"center"` | 판을 기준 요소의 어느 쪽 끝에 맞출지 정합니다. |
+| `delay` | `number` | `300` | `hover`로 열기까지 기다리는 시간(ms)입니다. |
+| `padding` | `Space` | `"lg"` | 판의 안쪽 여백입니다. |
+| `block` | `boolean` | `false` | 기준 요소를 줄 전체로 둡니다. 폭을 채우는 막대 · 줄에 붙일 때 씁니다. |
+| `className` | `string` | — | 판에 붙는 class입니다. |
+
+- [Floating](../primitives/README.md#floating) 위에 서서 body 끝에 그려지므로 카드의 `overflow`에 잘리지 않고, `Modal` 안에서는 열린 `<dialog>` 안에 그려집니다. 바깥을 누르거나 Esc를 누르면 닫힙니다.
+- Tooltip과 달리 판이 포인터를 받습니다. `hover`에서 기준 요소에서 판으로 마우스를 옮기는 동안 100ms를 기다려 닫히지 않고, 판 위에 있는 동안은 열려 있습니다. 판을 누른 클릭은 기준 요소로 번지지 않습니다.
+- `manual`은 마우스나 눌림이 아닌 조건으로 열 때 씁니다. ⌘를 누를 때만 뜨는 판처럼, `open`과 `onOpenChange`를 함께 줍니다.
+- 폭은 `min(32rem, 화면 폭 − 여백)`까지 늘어납니다. [Meter](#meter)의 `tooltip`이 이 판을 `block`으로 씁니다.
+
 ## SearchField
 
 검색 칸입니다. 앞에 돋보기가 있고, 값이 있으면 뒤에 지우기 버튼이 붙습니다. 아래는 과목 · 교사 · 학번을 한 칸에서 찾는 검색 칸입니다.
@@ -367,12 +463,18 @@ native `<dialog>` 위에 서는 모달입니다. 아래는 수강 변경을 확�
 | `size` | `ControlSize` | `"md"` | 높이 사다리입니다. 같은 크기의 Button과 같은 높이입니다. |
 | `invalid` | `boolean` | `false` | 틀린 값입니다. 빨간 테두리와 `aria-invalid`가 붙습니다. |
 | `shadow` | `boolean` | `false` | 4px 그림자 위에 띄우고, 포커스를 받으면 거둡니다. [Input](../atoms/README.md#input)과 같습니다. |
+| `suggestions` | `readonly SearchSuggestion[]` | `[]` | 칸에 포커스가 있는 동안 아래에 붙는 제안입니다. 항목은 `value`와 보이는 글자 `label`(기본 `value`)입니다. 언제 비울지는 부르는 쪽이 정합니다(예: 입력이 비었을 때만). |
+| `suggestionsTitle` | `ReactNode` | — | 제안 목록 머리의 글자입니다. |
+| `onSuggestionSelect` | `(value: string) => void` | — | 제안을 눌렀을 때 그 `value`와 함께 불립니다. |
+| `onSuggestionRemove` | `(value: string) => void` | — | 주면 줄마다 지우기 버튼이 붙습니다. |
+| `onSuggestionsClear` | `() => void` | — | 주면 머리에 전체 지우기(`Clear all`)가 붙습니다. |
 | `className` | `string` | — | 바깥 `<span>`에 붙습니다. |
 | 그 밖 | `<input>`의 props (`value` · `onChange` · `type` 제외) | — | `placeholder` · `aria-label` · `onKeyDown` · `ref` 같은 native 속성이 `<input>`으로 갑니다. |
 
 - 입력은 `type="search"`로 고정이고, 브라우저가 그리는 기본 지우기 버튼은 숨깁니다.
 - 한글 조합 중 Enter는 부르는 쪽이 거릅니다. `onKeyDown`에서 `e.nativeEvent.isComposing`을 확인합니다.
 - 눈에 보이는 이름표가 없는 칸이므로 `aria-label`을 줍니다.
+- 제안은 [Menu](#menu)가 아닙니다. Menu는 열 때 포커스를 판 안으로 옮겨서 입력 중에 쓸 수 없습니다. 제안 판은 눌러도 포커스가 입력에 남고, 바깥을 누르거나 Esc를 누르면 닫힙니다. 제안을 골라 값을 채우는 일은 `onSuggestionSelect`에서 부르는 쪽이 합니다.
 
 ## FormField
 
@@ -388,13 +490,41 @@ native `<dialog>` 위에 서는 모달입니다. 아래는 수강 변경을 확�
 | --- | --- | --- | --- |
 | `label` | `ReactNode` | 필수 | 이름표입니다. |
 | `hint` | `ReactNode` | — | 칸 아래 안내입니다. |
-| `error` | `ReactNode` | — | 틀렸을 때의 안내입니다. 주면 칸이 빨갛게 바뀌고, 안내 자리에 `hint` 대신 빨간 글자로 나옵니다. |
+| `warning` | `ReactNode` | — | 막지 않는 경고입니다. 주면 칸이 주황으로 바뀌고, 안내 자리에 `hint` 대신 주황 글자로 나옵니다. |
+| `error` | `ReactNode` | — | 틀렸을 때의 안내입니다. 주면 칸이 빨갛게 바뀌고, 안내 자리에 `hint` 대신 빨간 글자로 나옵니다. `warning`보다 앞섭니다. |
 | `required` | `boolean` | — | 이름표에 별표를 붙이고 칸에도 `required`를 겁니다. |
 | `children` | `ReactElement` | 필수 | 칸 하나입니다(Input · Textarea · Select). |
 | `className` | `string` | — | 묶음 전체에 붙는 class입니다. |
 
 - 이름표는 `htmlFor`로, 안내는 `aria-describedby`로 칸에 연결됩니다. 칸이 이미 가진 값은 덮지 않습니다 — `id`는 칸의 것을 쓰고, 칸의 `aria-describedby` 뒤에 안내를 잇고, `required`는 FormField에 주지 않으면 칸의 것을 따릅니다.
-- `invalid`는 `error`가 있으면 켜지고, 없으면 칸에 준 값을 그대로 둡니다.
+- `invalid`는 `error`가 있으면 켜지고, 없으면 칸에 준 값을 그대로 둡니다. `warning`도 같아서 `error`가 없을 때만 켜집니다.
+- 안내 자리에는 `error`, `warning`, `hint` 중 앞선 하나만 나옵니다. `aria-describedby`도 그 하나에 연결됩니다.
+
+## FileDrop
+
+파일 끌어놓기 칸입니다. 점선 테두리 안에 안내를 두고, 눌러서 고를 수도 있습니다. 아래는 PDF 한 개를 받는 칸입니다.
+
+```tsx
+<FileDrop accept="application/pdf" icon={Upload} title="강의계획서를 끌어다 놓거나 눌러서 고르세요" onFiles={([file]) => upload(file)}>
+  PDF · 10MB 이하
+</FileDrop>
+```
+
+| prop | 타입 | 기본값 | 설명 |
+| --- | --- | --- | --- |
+| `onFiles` | `(files: File[]) => void` | 필수 | 파일을 고르거나 끌어다 놓으면 불립니다. |
+| `accept` | `string` | — | `<input type="file">`의 `accept`입니다. |
+| `multiple` | `boolean` | `false` | 여러 개를 받습니다. 아니면 첫 파일 하나만 `onFiles`로 넘깁니다. |
+| `disabled` | `boolean` | `false` | 받지 않습니다. 칸이 옅어집니다. |
+| `icon` | `IconComponent` | — | 위 아이콘입니다. |
+| `accent` | `Accent` | `"cyan"` | 끄는 동안 칸을 칠하는 색입니다. |
+| `title` | `ReactNode` | — | 제목 글자입니다. |
+| `className` | `string` | — | 마지막에 덧붙는 class입니다. |
+| `children` | `ReactNode` | — | 제목 아래 안내입니다. 형식 · 크기 제한을 적습니다. |
+
+- 칸 전체가 `<label>`이고 안쪽이 native 파일 입력이라, 키보드로도 열리고 스크린 리더가 파일 입력으로 읽습니다.
+- 평소에는 점선 테두리의 `frameline`이고, 파일을 끄는 동안 `tinted`(연한 면 + 색 테두리)로 바뀝니다.
+- 같은 파일을 다시 골라도 `onFiles`가 불리도록 고른 뒤 입력을 비웁니다. 파일 형식과 크기는 확인하지 않으니 `accept`와 `onFiles` 안에서 검사합니다.
 
 ## Stat
 
@@ -432,14 +562,58 @@ native `<dialog>` 위에 서는 모달입니다. 아래는 수강 변경을 확�
 | `max` | `number` | `100` | 가득 찼을 때의 값입니다. |
 | `valueLabel` | `ReactNode` | — | 막대 위 오른쪽에 적을 글자입니다. 주지 않으면 `value`를 적습니다. |
 | `accent` | `Accent` | — | 채움 색입니다. 주지 않으면 바깥 Paint의 색을 따르고, 바깥에도 없으면 `black`입니다. |
+| `onSelect` | `() => void` | — | 이름을 누르면 불립니다. 이름이 조용한 링크(hover 때 밑줄)가 됩니다. 막대를 눌러 그 항목으로 거를 때 씁니다. |
+| `tooltip` | `ReactNode` | — | 막대에 마우스를 올리면 그 위에 뜨는 판의 내용입니다. |
+| `layout` | `"stack" \| "row"` | `"stack"` | `stack`은 이름 · 값 줄 아래 막대이고, `row`는 넓은 화면에서 이름 · 막대 · 값을 한 줄로 둡니다. 좁으면 쌓입니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 
 - 막대 홈은 `well`이고 채움은 accent의 solid입니다. 채움 폭은 0~100%로 잘려서 `value`가 `max`를 넘어도 넘치지 않고, 값이 바뀌면 300ms 동안 움직입니다.
+- `tooltip`은 [Popover](#popover)를 막대에 `block`으로 붙인 것입니다. 판은 막대 위에 고정되고 마우스를 따라다니지 않습니다.
+- `onSelect`가 있으면 이름은 `<button>`입니다. 링크 색은 `accent`를 따르고, 주지 않으면 `pink`입니다.
 - `role="meter"`에 `aria-valuemin` · `aria-valuemax` · `aria-valuenow`가 붙습니다.
+
+## Table
+
+데이터 표입니다. 2px 검정 틀 안의 native `<table>`이고, 폭이 모자라면 표만 가로로 스크롤합니다. 요일 × 교시 시간표는 `TimetableGrid`이고, 읽는 값의 표는 이것입니다. 아래는 학기별 학점 표입니다.
+
+```tsx
+<Table aria-label="학기별 학점">
+  <Table.Head>
+    <Table.Row>
+      <Table.HeadCell>학기</Table.HeadCell>
+      <Table.HeadCell numeric>학점</Table.HeadCell>
+    </Table.Row>
+  </Table.Head>
+  <Table.Body>
+    <Table.Row hoverable>
+      <Table.Cell header>2026-1</Table.Cell>
+      <Table.Cell numeric>19</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table>
+```
+
+| prop | 타입 | 기본값 | 설명 |
+| --- | --- | --- | --- |
+| `head` | `TableHead` | `"inverse"` | 머리 줄의 칠입니다. `inverse`는 검정, `well`은 한 단 내려앉은 면입니다. |
+| `frameClassName` | `string` | — | 바깥 틀에 붙는 class입니다. |
+| `className` | `string` | — | `<table>`에 붙는 class입니다. |
+| 그 밖 | `<table>`의 props | — | `aria-label` 같은 native 속성이 `<table>`로 갑니다. |
+
+조각은 다섯입니다. `Table.Head`(`<thead>`)와 `Table.Body`(`<tbody>`)는 native 속성만 받고, 나머지는 아래와 같습니다.
+
+| 조각 | prop | 설명 |
+| --- | --- | --- |
+| `Table.Row` | `hoverable` | 마우스를 올린 줄이 한 단 어두워집니다. 줄 전체를 누르거나 훑어 읽는 표에 씁니다. |
+| `Table.HeadCell` | `numeric` · `divided` | `<th scope="col">`입니다. `numeric`은 숫자 열이라 오른쪽 정렬이고, `divided`는 열 묶음의 왼쪽 선입니다. |
+| `Table.Cell` | `header` · `numeric` · `divided` | `header`를 주면 `<th scope="row">`인 행 머리가 됩니다. `numeric`은 오른쪽 정렬에 같은 폭의 숫자입니다. |
+
+- 숫자 열은 머리 칸과 본문 칸 양쪽에 `numeric`을 줍니다. 한쪽만 주면 정렬이 어긋납니다.
+- 표에 이름이 필요하면 `aria-label`을 주고, 화면에 보이는 제목이 있으면 `aria-labelledby`로 연결합니다.
 
 ## Notice
 
-눈에 띄는 안내 상자입니다. Plain variant(연한 면 · 진한 테두리 · 진한 글자)로 그립니다. 아래는 다시 시도 버튼이 붙은 오류와, 가벼운 안내입니다.
+눈에 띄는 안내 상자입니다. 기본은 Plain variant(연한 면 · 진한 테두리 · 진한 글자)이고, `variant="solid"`는 꽉 찬 색 띠입니다. 아래는 다시 시도 버튼이 붙은 오류, 가벼운 안내, 그림자를 켠 띠입니다.
 
 ```tsx
 <Notice
@@ -451,11 +625,17 @@ native `<dialog>` 위에 서는 모달입니다. 아래는 수강 변경을 확�
   네트워크 연결을 확인해주세요.
 </Notice>
 <Notice accent="sky" icon={Info}>수강 변경은 10월 31일까지 가능합니다.</Notice>
+<Notice accent="yellow" variant="solid" shadow wrap title="마감 임박" action={<Button size="xs" variant="paper">확인</Button>}>
+  오늘 18시까지 신청할 수 있습니다.
+</Notice>
 ```
 
 | prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `accent` | `Accent` | `"error"` | 색입니다. 안내면 `sky`, 됐다는 알림이면 `success`를 줍니다. |
+| `variant` | `NoticeVariant` | `"plain"` | `plain`은 연한 면이고, `solid`는 꽉 찬 색 띠에 검정 테두리입니다. |
+| `shadow` | `boolean` | `false` | 4px 그림자입니다. 화면의 주인공 알림에 줍니다. |
+| `wrap` | `boolean` | `false` | 좁은 폭에서 `action`이 글 아래로 내려갑니다. 버튼이 여럿인 배너의 글이 짜부라지지 않습니다. |
 | `icon` | `IconComponent` | — | 앞 아이콘입니다. |
 | `title` | `ReactNode` | — | 굵은 제목 줄입니다. |
 | `action` | `ReactNode` | — | 오른쪽 끝입니다. 다시 시도 같은 버튼을 둡니다. |
@@ -463,8 +643,30 @@ native `<dialog>` 위에 서는 모달입니다. 아래는 수강 변경을 확�
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 | `children` | `ReactNode` | — | 본문입니다. |
 
-- [Paint](../primitives/README.md#paint)의 `plain`(연한 면 · 진한 테두리 · 진한 글자)으로 칠합니다.
+- [Paint](../primitives/README.md#paint)의 `plain`(연한 면 · 진한 테두리 · 진한 글자) 또는 `solid`로 칠하고, `shadow`는 Paint의 `shadow`입니다. 움직이지 않는 면이라 hover에 반응하지 않습니다.
+- 한 줄 안내가 자리에 안 들어가면 `children`을 [Marquee](../atoms/README.md#marquee)로 감쌉니다.
 - 기본 accent가 `error`(빨강)라서 오류가 아닌 안내에는 accent를 바꿔 줍니다. `role`은 기본이 `status`이고, 스크린 리더가 곧바로 읽어야 하는 오류만 `alert`으로 올립니다.
+
+## Busy
+
+영역을 덮는 불러오는 중 표시입니다. 내용을 지우지 않고 흐리게 두어서 자리가 튀지 않습니다. 아래는 시간표 카드를 불러오는 동안 덮는 예입니다.
+
+```tsx
+<Busy active={loading} label="시간표를 가져오는 중">
+  <Card>…</Card>
+</Busy>
+```
+
+| prop | 타입 | 기본값 | 설명 |
+| --- | --- | --- | --- |
+| `active` | `boolean` | 필수 | 불러오는 중입니다. `false`면 덮개 없이 내용만 그려집니다. |
+| `label` | `ReactNode` | `"불러오는 중"` | 스피너 아래 글자입니다. 문자열이면 스크린 리더가 읽는 스피너 이름으로도 씁니다. |
+| `className` | `string` | — | 바깥 상자에 붙는 class입니다. |
+| `children` | `ReactNode` | — | 덮을 내용입니다. |
+
+- 켜져 있는 동안 내용은 40%로 흐려지고 누를 수 없습니다(`pointer-events: none`). 덮개는 영역 위에 `absolute`로 얹히므로 영역의 높이는 그대로입니다.
+- 영역에 `aria-busy`가 붙습니다. 포커스를 받는 요소는 흐려졌어도 Tab으로 들어올 수 있으니, 불러오는 동안 막아야 하는 입력은 따로 `disabled`로 둡니다.
+- 버튼 하나의 불러오는 중은 Busy가 아니라 Button의 `loading`입니다. 글자 자리를 불러오는 중인 Text는 `pulse`입니다.
 
 ## EmptyState
 

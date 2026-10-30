@@ -28,9 +28,12 @@ import {
   useSelectableGroup,
   type Accent,
   type Border,
+  type BorderSide,
+  type BorderStyle,
   type Shadow,
   type Space,
   type SurfaceFill,
+  type TextDecoration,
   type TextVariant,
   type Variant,
   type Tone,
@@ -41,9 +44,12 @@ import {
   ACCENT_ROLES,
   ALIGNS,
   BORDERS,
+  BORDER_SIDES,
+  BORDER_STYLES,
   ENTER_MOTIONS,
   FAMILIES,
   ICON,
+  ICON_MOTIONS,
   ICON_SIZES,
   ICON_STROKE,
   JUSTIFIES,
@@ -52,6 +58,7 @@ import {
   SHADOWS,
   SPACES,
   SURFACE_FILLS,
+  TEXT_DECORATIONS,
   TEXT_VARIANTS,
   TONES,
   VARIANTS,
@@ -60,6 +67,7 @@ import {
   type Align,
   type EnterMotion,
   type Family,
+  type IconMotion,
   type IconSize,
   type Justify,
   type Leading,
@@ -233,17 +241,21 @@ const surface: Spec = {
   controls: {
     fill: { kind: "select", options: SURFACE_FILLS },
     border: { kind: "select", options: BORDERS },
+    borderSide: { kind: "select", options: BORDER_SIDES },
+    borderStyle: { kind: "select", options: BORDER_STYLES },
     shadow: { kind: "select", options: SHADOWS },
     hoverable: { kind: "boolean" },
     padding: { kind: "select", options: SPACES },
     children: { kind: "text" },
   },
   initial: { border: "line", shadow: "raised", padding: "xl", children: "오늘 수업" },
-  defaults: { fill: "raised", border: "none", shadow: "none", hoverable: false, padding: "0" },
+  defaults: { fill: "raised", border: "none", borderSide: "all", borderStyle: "solid", shadow: "none", hoverable: false, padding: "0" },
   render: (v) => (
     <Surface
       fill={v.fill as SurfaceFill}
       border={v.border as Border}
+      borderSide={v.borderSide as BorderSide}
+      borderStyle={v.borderStyle as BorderStyle}
       shadow={v.shadow as Shadow}
       hoverable={Boolean(v.hoverable)}
       padding={v.padding as Space}
@@ -308,6 +320,28 @@ const surface: Spec = {
       ),
     },
     {
+      title: "borderSide · borderStyle",
+      note: "borderSide 는 테두리를 긋는 변을 고르고(all · left · right · top · bottom · x · y), borderStyle 은 선을 실선 또는 점선(dashed)으로 바꿉니다. 칸을 나누는 왼쪽 선이나 위아래 선은 변으로, 비어 있는 자리는 점선으로 그립니다. 테두리가 없으면(border=none) 둘 다 쓰이지 않습니다.",
+      render: () => (
+        <>
+          <Stage>
+            {BORDER_SIDES.map((side) => (
+              <Surface key={side} border="line" borderSide={side} padding="lg" style={{ minWidth: 72 }}>
+                {side}
+              </Surface>
+            ))}
+          </Stage>
+          <Stage>
+            {BORDER_STYLES.map((st) => (
+              <Surface key={st} border="line" borderStyle={st} padding="lg">
+                {st}
+              </Surface>
+            ))}
+          </Stage>
+        </>
+      ),
+    },
+    {
       title: "다른 primitive 와 묶기",
       note: "칠한 판 위에 늘어놓으려면 Surface 안에 Stack 을 넣습니다. 누르는 카드는 surfaceClass() 로 Pressable 에 면만 빌려 줍니다 — Card motion 이 그렇게 조립됩니다.",
       render: () => (
@@ -343,18 +377,24 @@ const paint: Spec = {
   controls: {
     accent: { kind: "select", options: ACCENT_OPTIONS },
     variant: { kind: "select", options: VARIANTS },
+    borderSide: { kind: "select", options: BORDER_SIDES },
+    borderStyle: { kind: "select", options: BORDER_STYLES },
+    shadow: { kind: "boolean" },
     selected: { kind: "boolean" },
     hoverable: { kind: "boolean" },
     padding: { kind: "select", options: SPACES },
     children: { kind: "text" },
   },
   initial: { accent: "green", variant: "plain", hoverable: true, padding: "lg", children: "세계사의이해 · 3분반" },
-  defaults: { accent: "black", variant: "outline", selected: false, hoverable: false, padding: "0" },
+  defaults: { accent: "black", variant: "outline", borderSide: "all", borderStyle: "solid", shadow: false, selected: false, hoverable: false, padding: "0" },
   // hoverable 이어도 Paint 하나입니다 — hover 색은 Pressable 없이 켜지고, 커서는 화살표 그대로입니다
   render: (v) => (
     <Paint
       accent={v.accent as Accent}
       variant={v.variant as Variant}
+      borderSide={v.borderSide as BorderSide}
+      borderStyle={v.borderStyle as BorderStyle}
+      shadow={Boolean(v.shadow)}
       selected={Boolean(v.selected)}
       hoverable={Boolean(v.hoverable)}
       padding={v.padding as Space}
@@ -366,6 +406,9 @@ const paint: Spec = {
     const attrs = [
       v.accent !== "black" ? `accent="${String(v.accent)}"` : "",
       v.variant !== "outline" ? `variant="${String(v.variant)}"` : "",
+      v.borderSide !== "all" ? `borderSide="${String(v.borderSide)}"` : "",
+      v.borderStyle !== "solid" ? `borderStyle="${String(v.borderStyle)}"` : "",
+      v.shadow ? "shadow" : "",
       v.selected ? "selected" : "",
       v.hoverable ? "hoverable" : "",
       v.padding !== "0" ? `padding="${String(v.padding)}"` : "",
@@ -384,6 +427,23 @@ const paint: Spec = {
             </Paint>
           )}
         />
+      ),
+    },
+    {
+      title: "borderSide · borderStyle · shadow",
+      note: "테두리를 긋는 변과 선은 Surface 와 같은 어휘입니다. shadow 는 4px 그림자를 켭니다 — 움직이지 않는 색 면(지표 카드 · 알림 띠)에 쓰고, 누르는 물건의 그림자는 Pressable 의 몸짓이 가집니다.",
+      render: () => (
+        <Stage bg="raised">
+          <Paint accent="cyan" variant="tinted" borderSide="left" padding="lg">
+            <Text variant="label">borderSide left</Text>
+          </Paint>
+          <Paint accent="cyan" variant="frameline" borderStyle="dashed" padding="lg">
+            <Text variant="label">borderStyle dashed</Text>
+          </Paint>
+          <Paint accent="pink" variant="solid" shadow padding="lg">
+            <Text variant="label">shadow</Text>
+          </Paint>
+        </Stage>
       ),
     },
     {
@@ -767,11 +827,13 @@ const text: Spec = {
     align: { kind: "select", options: TEXT_ALIGNS },
     truncate: { kind: "boolean" },
     numeric: { kind: "boolean" },
+    decoration: { kind: "select", options: withNone(TEXT_DECORATIONS) },
+    pulse: { kind: "boolean" },
     children: { kind: "text" },
   },
   // weight · tone 의 "none" 은 역할이 정한 값을 그대로 쓴다는 뜻입니다 (overline 은 약한 잉크가 기본)
   initial: { variant: "heading", weight: "none", tone: "none", children: "오늘 수업 · Today's Classes 1234" },
-  defaults: { variant: "body", leading: "fixed", family: "sans", align: "start", truncate: false, numeric: false },
+  defaults: { variant: "body", leading: "fixed", family: "sans", align: "start", truncate: false, numeric: false, pulse: false },
   render: (v) => (
     <Frame width={320}>
       <Text
@@ -783,6 +845,8 @@ const text: Spec = {
         align={v.align as TextAlign}
         truncate={Boolean(v.truncate)}
         numeric={Boolean(v.numeric)}
+        decoration={given<TextDecoration>(v.decoration)}
+        pulse={Boolean(v.pulse)}
       >
         {String(v.children ?? "")}
       </Text>
@@ -790,8 +854,8 @@ const text: Spec = {
   ),
   sections: [
     {
-      title: "Variant — 열 가지 역할",
-      note: "overline 과 subtitle 은 약한 잉크가 역할에 들어 있어서 tone 을 주지 않아도 흐립니다.",
+      title: "Variant — 열한 가지 역할",
+      note: "overline 과 subtitle 은 약한 잉크가 역할에 들어 있어서 tone 을 주지 않아도 흐립니다. hero 는 랜딩 · 검색 프로필의 큰 제목으로, 역할 중 유일하게 폭에 따라 변합니다 — 좁은 화면 36px, md 이상 60px 이라 창 폭을 바꿔 보면 크기가 달라집니다.",
       render: () => (
         <Stage bg="raised">
           <Stack gap="lg" style={{ width: "100%" }}>
@@ -890,6 +954,20 @@ const text: Spec = {
       ),
     },
     {
+      title: "decoration · pulse",
+      note: "decoration 은 글자에 선을 긋습니다 — strike 는 취소선, underline 은 굵은 밑줄입니다. pulse 는 불러오는 동안 2초 주기로 깜빡여 글자 자리를 지킵니다(움직임을 줄인 사람에게는 한 번으로 끝납니다).",
+      render: () => (
+        <Stage bg="raised">
+          {TEXT_DECORATIONS.map((d) => (
+            <Text key={d} decoration={d}>
+              {d} · 미적분학 II
+            </Text>
+          ))}
+          <Text pulse>Loading…</Text>
+        </Stage>
+      ),
+    },
+    {
       title: "truncate",
       note: "줄임표는 블록에서만 듣습니다. 기본 태그(span)는 인라인이라 그냥 두면 줄어들지 않으니, as=div 처럼 블록으로 그리거나 flex · grid 안에 둡니다. Inline 안의 Text 는 옆 자식에게 자리를 내주며 줄어듭니다.",
       render: () => (
@@ -925,10 +1003,12 @@ const iconSpec: Spec = {
     size: { kind: "select", options: ICON_SIZES },
     strokeWidth: { kind: "number", min: 1, max: 4, step: 0.5 },
     tone: { kind: "select", options: TONES },
+    spin: { kind: "boolean" },
+    motion: { kind: "select", options: withNone(ICON_MOTIONS) },
     label: { kind: "text" },
   },
   // icon 을 맨 앞에 둬서 코드가 `icon={…} size="xl"` 순서로 찍힙니다. tone 의 기본 inherit 은 안 준 것과 같습니다
-  defaults: { icon: undefined, size: "md", strokeWidth: ICON_STROKE, tone: "inherit" },
+  defaults: { icon: undefined, size: "md", strokeWidth: ICON_STROKE, tone: "inherit", spin: false },
   initial: { icon: "GraduationCap", size: "xl" },
   render: (v) => {
     const glyph = icon(v.icon);
@@ -945,6 +1025,8 @@ const iconSpec: Spec = {
         size={v.size as IconSize}
         strokeWidth={Number(v.strokeWidth) || ICON_STROKE}
         tone={v.tone as Tone}
+        spin={Boolean(v.spin)}
+        motion={given<IconMotion>(v.motion)}
         label={v.label ? String(v.label) : undefined}
       />
     );
@@ -960,6 +1042,30 @@ const iconSpec: Spec = {
               <Icon icon={Search} size={s} />
               <Text variant="micro" tone="muted">
                 {s} · {ICON[s]}px
+              </Text>
+            </Stack>
+          ))}
+        </Stage>
+      ),
+    },
+    {
+      title: "spin · motion",
+      note: "spin 은 불러오는 동안 제자리에서 돕니다. motion 은 바깥 버튼 · 링크에 마우스를 올릴 때 아이콘만 움직입니다 — turn 은 -45° 돌고 nudge 는 2px 옆으로 밀립니다. 아이콘 자신이 아니라 가장 가까운 a · button · label 이 hover 를 받아야 해서, 아래 표본은 버튼 안에 넣었습니다. 버튼 쪽 prop 은 Button 의 iconSpin · iconMotion 입니다.",
+      render: () => (
+        <Stage bg="raised">
+          <Stack gap="sm" align="center">
+            <Icon icon={Search} size="xl" spin />
+            <Text variant="micro" tone="muted">
+              spin
+            </Text>
+          </Stack>
+          {ICON_MOTIONS.map((m) => (
+            <Stack key={m} gap="sm" align="center">
+              <Button variant="outline" shadow icon={Search} iconMotion={m}>
+                {m}
+              </Button>
+              <Text variant="micro" tone="muted">
+                Button iconMotion
               </Text>
             </Stack>
           ))}
@@ -1006,7 +1112,7 @@ const MOTION_NOTE: Record<PressMotion, string> = {
 const pressable: Spec = {
   name: "Pressable",
   summary:
-    "누르는 물건 — 버튼의 의미(type · disabled) · 커서 · 꺼진 모양 · 몸짓을 맡습니다. 몸짓은 기본 none(움직이지 않음)이고, sink 는 4px 그림자 위에 떠 있다가 hover 때 가라앉고, raise 는 평평하다가 hover 때 그림자가 올라오고, lift 는 떠오르고, tap 은 그림자 없이 누르는 순간만 작아지고, shrink 는 그림자를 둔 채 hover 때부터 작아집니다. 색은 하나도 없습니다 — hover 색까지 Paint 의 hoverable 이고, Pressable 이 그걸 켜 주지 않습니다. 흑백 면은 surfaceClass(), 색은 paintClass() 로 얹습니다. 골라진 상태는 Pressable 이 아니라 Selectable 입니다 — Button 이 Pressable + Selectable + Paint 입니다.",
+    "누르는 물건 — 버튼의 의미(type · disabled) · 커서 · 꺼진 모양 · 몸짓을 맡습니다. 몸짓은 기본 none(움직이지 않음)이고, sink 는 4px 그림자 위에 떠 있다가 hover 때 가라앉고, raise 는 평평하다가 hover 때 그림자가 올라오고, lift 는 떠오르고, tap 은 그림자 없이 누르는 순간만 작아지고, shrink 는 그림자를 둔 채 hover 때부터 작아지고, still 은 그림자를 둔 채 움직이지 않습니다. 색은 하나도 없습니다 — hover 색까지 Paint 의 hoverable 이고, Pressable 이 그걸 켜 주지 않습니다. 흑백 면은 surfaceClass(), 색은 paintClass() 로 얹습니다. 골라진 상태는 Pressable 이 아니라 Selectable 입니다 — Button 이 Pressable + Selectable + Paint 입니다.",
   controls: {
     motion: { kind: "select", options: MOTIONS },
     padding: { kind: "select", options: SPACES },
@@ -1037,8 +1143,8 @@ const pressable: Spec = {
   },
   sections: [
     {
-      title: "몸짓 여섯 — none · sink · raise · lift · tap · shrink",
-      note: "마우스를 올려 보세요. none 은 움직이지 않고(목록 줄), sink 는 사람 카드처럼 그림자 자리로 가라앉고, raise 는 평평하다가 제자리에서 그림자가 올라오고(sink 를 거꾸로 돌린 몸짓), lift 는 탐색 카드처럼 4px 떠오르며 그림자가 길어지고, tap 은 그림자 없이 누르는 순간만 작아지고, shrink 는 그림자를 그대로 둔 채 hover 때 95%, 누르면 92% 로 작아집니다(Ask 단추 전용). 골라진 칸의 모양(커지기)은 여기 없습니다 — 남아 있는 상태라 Selectable 의 grow 입니다.",
+      title: "몸짓 일곱 — none · sink · raise · lift · tap · shrink · still",
+      note: "마우스를 올려 보세요. none 은 움직이지 않고(목록 줄), sink 는 사람 카드처럼 그림자 자리로 가라앉고, raise 는 평평하다가 제자리에서 그림자가 올라오고(sink 를 거꾸로 돌린 몸짓), lift 는 탐색 카드처럼 4px 떠오르며 그림자가 길어지고, tap 은 그림자 없이 누르는 순간만 작아지고, shrink 는 그림자를 그대로 둔 채 hover 때 95%, 누르면 92% 로 작아지고(Ask 단추 전용), still 은 그림자를 둔 채 움직이지 않습니다(밖에서 켠 상태 · 꺼진 칸 — Button 의 shadow=\"static\"). 골라진 칸의 모양(커지기)은 여기 없습니다 — 남아 있는 상태라 Selectable 의 grow 입니다.",
       render: () => (
         <Stage>
           {MOTIONS.map((m) => (
@@ -1270,12 +1376,14 @@ function FloatingDemo({
   layer = "dropdown",
   enter = "rise",
   dismissible = true,
+  scrim = false,
 }: {
   placement?: (typeof PLACEMENTS)[number];
   align?: (typeof ALIGN_EDGES)[number];
   layer?: (typeof LAYERS)[number];
   enter?: EnterMotion;
   dismissible?: boolean;
+  scrim?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const anchor = useRef<HTMLSpanElement>(null);
@@ -1291,6 +1399,7 @@ function FloatingDemo({
           align={align}
           layer={layer}
           enter={enter}
+          scrim={scrim}
           onDismiss={dismissible ? () => setOpen(false) : undefined}
           padding="xl"
           className={surfaceClass({ border: "line", shadow: "raised" })}
@@ -1341,15 +1450,16 @@ function MenuInModal() {
 const floating: Spec = {
   name: "Floating",
   summary:
-    "떠 있는 판 — 판이 어디에 · 언제 있는지를 맡습니다. 문서 끝에 그려(Portal) 카드의 overflow 에 잘리지 않고, 기준 요소 옆에 붙어 화면 밖으로 나가면 뒤집히며, 쌓는 층(dropdown · tooltip)을 고르고, 바깥을 누르거나 Esc 를 누르면 onDismiss 로 닫자고 알리고, 열릴 때 포커스를 옮기고(initialFocus), 등장 몸짓(rise · pop · fade)으로 나타납니다. 그려져 있는 동안이 열려 있는 동안입니다 — {open && <Floating …>}. 면은 surfaceClass() 로 얹습니다. Tooltip · Menu 가 이 위에 섭니다.",
+    "떠 있는 판 — 판이 어디에 · 언제 있는지를 맡습니다. 문서 끝에 그려(Portal) 카드의 overflow 에 잘리지 않고, 기준 요소 옆에 붙어 화면 밖으로 나가면 뒤집히며, 쌓는 층(dropdown · tooltip)을 고르고, 바깥을 누르거나 Esc 를 누르면 onDismiss 로 닫자고 알리고, 열릴 때 포커스를 옮기고(initialFocus), 등장 몸짓(rise · pop · fade · panel · sheet)으로 나타납니다. scrim 을 주면 뒤 화면을 어둡게 하고 누름을 막습니다. 그려져 있는 동안이 열려 있는 동안입니다 — {open && <Floating …>}. 면은 surfaceClass() 로 얹습니다. Tooltip · Menu 가 이 위에 섭니다.",
   controls: {
     placement: { kind: "select", options: PLACEMENTS },
     align: { kind: "select", options: ALIGN_EDGES },
     layer: { kind: "select", options: LAYERS },
     enter: { kind: "select", options: ENTER_MOTIONS },
     dismissible: { kind: "boolean" },
+    scrim: { kind: "boolean" },
   },
-  defaults: { placement: "bottom", align: "start", layer: "dropdown", enter: "rise", dismissible: true },
+  defaults: { placement: "bottom", align: "start", layer: "dropdown", enter: "rise", dismissible: true, scrim: false },
   render: (v) => (
     <FloatingDemo
       placement={v.placement as (typeof PLACEMENTS)[number]}
@@ -1357,6 +1467,7 @@ const floating: Spec = {
       layer={v.layer as (typeof LAYERS)[number]}
       enter={v.enter as EnterMotion}
       dismissible={Boolean(v.dismissible)}
+      scrim={Boolean(v.scrim)}
     />
   ),
   code: (v) => {
@@ -1366,6 +1477,7 @@ const floating: Spec = {
       v.align !== "start" ? `align="${String(v.align)}"` : "",
       v.layer !== "dropdown" ? `layer="${String(v.layer)}"` : "",
       v.enter !== "rise" ? `enter="${String(v.enter)}"` : "",
+      v.scrim ? "scrim" : "",
       v.dismissible ? "onDismiss={() => setOpen(false)}" : "",
     ].filter(Boolean);
     return `{open && (\n  <Floating ${attrs.join(" ")} padding="xl" className={surfaceClass({ border: "line", shadow: "raised" })}>\n    기준 요소 옆에 붙었습니다\n  </Floating>\n)}`;

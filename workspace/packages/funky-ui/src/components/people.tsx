@@ -59,8 +59,8 @@ export function StudentBadge({ cohort, name, color, size = "xs", buzz = false, o
 }
 
 export interface PersonCardProps {
-  /** 학번 · 교번 */
-  id: ReactNode;
+  /** 학번 · 교번 — 교사 카드처럼 없으면 빼도 됩니다 */
+  id?: ReactNode;
   name: ReactNode;
   /** 사람의 색 (hex) — 왼쪽 칸의 면과 이름, 목록의 띠 */
   color: string;
@@ -87,7 +87,7 @@ export function PersonCard({ id, name, color, title, items = [], columns = 2, si
   const inner = (
     <>
       <div className={personHead}>
-        <span className={personId}>{id}</span>
+        {id && <span className={personId}>{id}</span>}
         <span className={personName}>{name}</span>
       </div>
       <div className={personBody}>

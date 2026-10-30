@@ -32,12 +32,16 @@ primitive가 받는 값은 모두 닫힌 집합입니다.
 | 어휘 | 값 |
 | --- | --- |
 | `Accent` | `black` `pink` `purple` `cyan` `yellow` `orange` `sky` `green` `red`, 역할 별칭 `system`(black) · `primary`(pink) · `secondary`(purple) · `success`(green) · `error`(red). 색 규칙은 [Color](../foundations/color.md) |
-| `Variant` | `filled` `outline` `hairline` `frameline` `framelineMuted` `plain` `solid` `solidMuted` `muted` `ghost` `ghostMuted` `paper` — 레시피는 [Color](../foundations/color.md#variant) |
+| `Variant` | `filled` `outline` `hairline` `frameline` `framelineMuted` `plain` `solid` `solidMuted` `muted` `ghost` `ghostMuted` `paper` `tinted` `wash` `ghostTint` — 열다섯 가지 레시피는 [Color](../foundations/color.md#variant) |
 | `SurfaceFill` | `none`(면 없음 — 바깥 면이 그대로 보임) · `canvas`(크림 바탕) · `raised`(흰 면) · `sunken`(크림 위 오목한 자리) · `well`(흰 면 안의 오목한 자리, 반투명) · `inverse`(검정) · `brand`(앱 뼈대의 보라 — 상단 바 · 하단 바에만) |
 | `Border` | `none` · `line`(검정) · `soft`(연한 회색) · `subtle`(카드 안 구분선 색) |
+| `BorderSide` | `all`(기본) · `left` · `right` · `top` · `bottom` · `x`(좌우) · `y`(위아래) — 테두리를 긋는 변 |
+| `BorderStyle` | `solid`(기본) · `dashed`(비어 있는 자리 · 넣을 수 있는 자리) |
 | `Shadow` | `none` · `raised`(4px) · `floating`(6px) |
-| `PressMotion` | `none`(움직이지 않음, 기본) · `sink`(그림자 위에서 가라앉음) · `raise`(평평하다가 그림자가 올라옴) · `lift`(떠오름) · `tap`(그림자 없이 누르는 순간만 작아짐) · `shrink`(그림자를 둔 채 hover 때부터 작아짐 — Ask 단추 전용). 거리와 시간은 [Motion](../foundations/motion.md) |
-| `EnterMotion` | `none`(그냥 나타남) · `rise`(아래에서 4px 떠오름 — 메뉴 · 툴팁) · `pop`(8px — 모달) · `fade`(제자리에서 나타남 — 펼친 본문). 거리와 시간은 [Motion](../foundations/motion.md#등장) |
+| `PressMotion` | `none`(움직이지 않음, 기본) · `sink`(그림자 위에서 가라앉음) · `raise`(평평하다가 그림자가 올라옴) · `lift`(떠오름) · `tap`(그림자 없이 누르는 순간만 작아짐) · `shrink`(그림자를 둔 채 hover 때부터 작아짐 — Ask 단추 전용) · `still`(그림자를 둔 채 움직이지 않음 — 밖에서 켠 칸). 거리와 시간은 [Motion](../foundations/motion.md) |
+| `EnterMotion` | `none`(그냥 나타남) · `rise`(아래에서 4px 떠오름 — 메뉴 · 툴팁) · `pop`(8px — 모달) · `fade`(제자리에서 나타남 — 펼친 본문) · `panel`(8px 아래에서 96%로 — 앱이 만든 작은 창) · `sheet`(24px — 화면을 덮는 판). 거리와 시간은 [Motion](../foundations/motion.md#등장) |
+| `IconMotion` | `turn`(-45° 돎) · `nudge`(2px 옆으로 밂) — 바깥 버튼 · 링크에 마우스를 올릴 때 아이콘만 움직임 |
+| `TextDecoration` | `strike`(취소선) · `underline`(굵은 밑줄) |
 | `Space` | `0` `2xs` `xs` `sm` `md` `lg` `xl` `2xl` `3xl` `4xl` `5xl` `6xl` — 0 · 2 · 4 · 6 · 8 · 12 · 16 · 20 · 24 · 32 · 48 · 64px. 안쪽 여백과 형제 사이 간격이 같은 사다리를 씁니다. [Layout](../foundations/layout.md) |
 
 ## Box
@@ -75,7 +79,7 @@ primitive가 받는 값은 모두 닫힌 집합입니다.
 | prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `as` | `ElementType` | `"span"` | 렌더할 요소입니다. |
-| `variant` | `TextVariant` | `"body"` | 글자 역할입니다. 크기 · 줄 높이 · 굵기 · 자간 · 대소문자를 한 번에 고릅니다. `display` `title` `heading` `subheading` `body` `caption` `label` `micro` `overline` `subtitle` 열 개이고, 숫자는 [Typography](../foundations/typography.md)에 있습니다. |
+| `variant` | `TextVariant` | `"body"` | 글자 역할입니다. 크기 · 줄 높이 · 굵기 · 자간 · 대소문자를 한 번에 고릅니다. `hero` `display` `title` `heading` `subheading` `body` `caption` `label` `micro` `overline` `subtitle` 열한 가지이고, 숫자는 [Typography](../foundations/typography.md)에 있습니다. |
 | `weight` | `Weight` | — | `regular` `medium` `bold` `black`. 역할의 기본 굵기를 바꿀 때만 줍니다. |
 | `leading` | `Leading` | `"fixed"` | 줄 높이입니다. `fixed`는 역할이 정한 px이고, `relaxed`는 글자 크기의 1.625배입니다. 여러 줄을 읽는 문단에 줍니다. |
 | `tone` | `Tone` | — | 글자색입니다. `primary` `secondary` `muted` `faint` `inverse` `inverseMuted` `accent` `accentSoft` `inherit`와 색 이름 `pink` `purple` `cyan` `yellow` `orange` `sky` `green` `red`. `accent`는 가장 가까운 Paint의 진한 글자, `accentSoft`는 연한 글자이고, 바깥에 Paint가 없으면 검정(시스템)의 사다리입니다. 색 이름은 그 색의 진한 글자입니다. |
@@ -83,8 +87,11 @@ primitive가 받는 값은 모두 닫힌 집합입니다.
 | `align` | `"start" \| "center" \| "end"` | — | 글자 정렬입니다. |
 | `truncate` | `boolean` | `false` | 한 줄에서 자르고 …을 붙입니다. |
 | `numeric` | `boolean` | `false` | 숫자 글리프만 같은 폭으로 맞춥니다(`tabular-nums`). 표와 시각에 씁니다. |
+| `decoration` | `TextDecoration` | — | 글자에 긋는 선입니다. `strike`는 취소선, `underline`은 굵은 밑줄입니다. |
+| `pulse` | `boolean` | `false` | 불러오는 동안 깜빡입니다. 2초 주기로 투명도가 100%와 50% 사이를 오가므로, 글자 자리를 지키는 `Loading…`에 씁니다. 움직임을 줄인 사람에게는 한 번으로 끝납니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 
+- `hero`는 랜딩 · 검색 프로필의 큰 제목입니다. 역할 중 유일하게 폭에 따라 변해서, 좁은 화면에서는 36px · 줄 높이 40이고 `md`(768px) 이상에서 60px · 줄 높이 60입니다. 나머지는 모두 한 크기입니다.
 - `overline`과 `subtitle`은 기본 잉크가 `muted`입니다. 정의 순서가 역할 → 굵기 → 잉크라서 `tone`과 `weight`로 그 기본값을 바꿀 수 있습니다.
 - `faint`는 장식 · placeholder · 꺼진 자리 전용입니다. 대비가 AA에 못 미치므로 필수 정보에 쓰지 않습니다.
 - 문서 구조는 `as`가, 생김새는 `variant`가 맡습니다. 제목 태그의 크기를 바꾸고 싶으면 태그를 바꾸지 말고 `variant`를 바꿉니다.
@@ -106,8 +113,11 @@ primitive가 받는 값은 모두 닫힌 집합입니다.
 | `strokeWidth` | `number` | `2.5` | 선 굵기입니다. class-explorer의 굵은 선을 그대로 씁니다. |
 | `tone` | `Tone` | — | 글자색 사다리와 같습니다(`accent`는 가장 가까운 Paint의 색). 주지 않으면 주변 글자색(`currentColor`)을 따릅니다. |
 | `label` | `string` | — | 뜻이 있는 아이콘이면 이름을 줍니다. 없으면 장식으로 숨깁니다. |
+| `spin` | `boolean` | `false` | 제자리에서 계속 돕니다. 불러오는 동안의 새로고침에 씁니다. |
+| `motion` | `IconMotion` | — | 바깥 버튼 · 링크에 마우스를 올리면 아이콘만 움직입니다. `turn`은 -45° 돌고 `nudge`는 2px 옆으로 밀립니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 
+- `motion`은 아이콘 자신이 아니라 가장 가까운 `a` · `button` · `label`(또는 `role="button"`)의 hover를 읽습니다. 그런 요소 밖에서는 움직이지 않으니, 버튼 안에서는 Button의 `iconMotion`으로 넘기는 편이 간단합니다.
 - `label`이 있으면 `role="img"`와 `aria-label`이 붙고, 없으면 `aria-hidden`입니다. 글자와 함께 놓는 아이콘은 장식이므로 이름을 주지 않습니다.
 - 블록(`display: block`)이고 줄어들지 않습니다(`flex-shrink: 0`). 글자 줄에 끼어도 줄 높이가 흔들리지 않습니다.
 - 버튼 안의 아이콘은 `Button`의 `icon` · `iconEnd`로 넘깁니다. 크기와 굵기를 버튼 크기가 정하므로 호출부에서 `size`나 `strokeWidth`를 적지 않습니다.
@@ -180,6 +190,8 @@ primitive가 받는 값은 모두 닫힌 집합입니다.
 | `as` | `ElementType` | `"div"` | 렌더할 요소입니다. 모달은 `"dialog"`입니다. |
 | `fill` | `SurfaceFill` | `"raised"` | 면입니다. `none`은 면 없이 바깥 면을 그대로 보입니다 — 목록 줄 · 아코디언 머리처럼 면 위의 한 칸에 씁니다. `brand`는 앱의 뼈대(상단 바 · 하단 바)에만 쓰는 보라 면입니다. |
 | `border` | `Border` | `"none"` | 2px 테두리의 색입니다. |
+| `borderSide` | `BorderSide` | `"all"` | 테두리를 긋는 변입니다. 칸을 나누는 왼쪽 선이나 위아래 선에 씁니다. `border`가 `none`이면 쓰이지 않습니다. |
+| `borderStyle` | `BorderStyle` | `"solid"` | 테두리의 선입니다. `dashed`는 비어 있는 자리를 그립니다. `border`가 `none`이면 쓰이지 않습니다. |
 | `shadow` | `Shadow` | `"none"` | 깊이입니다. 떠 있는 물건은 `raised`(4px), 모달만 `floating`(6px)입니다. |
 | `hoverable` | `boolean` | `false` | hover · 누르는 중에 흑백 상태 층(글자색의 7% · 12%)을 면 위에 덮습니다. 면 · 글자 · 테두리는 그대로이고, Pressable 없이 혼자 동작합니다. 꺼진 요소에는 걸지 않습니다. |
 | `padding` `paddingX` `paddingY` | [Box](#box)와 같음 | — | Box와 같은 prop입니다. |
@@ -188,7 +200,7 @@ primitive가 받는 값은 모두 닫힌 집합입니다.
 - 글자색은 부모를 따르고(`color: inherit`), `inverse`와 `brand`만 흰 글자로 바꿉니다. 어두운 면 위에 검정 글자가 생기지 않고, 링크나 버튼으로 그려도 브라우저의 파란 글자가 남지 않습니다.
 - 상태 층은 글자색을 묽혀 만들어서 흰 면 위에서는 회색, 어두운 면(검정 · 보라) 위에서는 흰 층이 됩니다. 색 요소의 hover는 [Paint](#paint)의 `hoverable`이고, 상태마다 누가 무엇을 맡는지는 [아래 표](#칠--누름--골라짐)에 있습니다.
 - `brand`는 accent가 아니라 자리의 이름입니다. 상단 바 · 하단 바는 색을 고르는 요소가 아니라 앱의 뼈대라서 Paint가 아니라 Surface가 칠합니다. 값은 보라 네온(`#7828c8`)이고 흰 글자가 7.15:1입니다. 바는 Paint가 아니므로 accent를 흘리지 않습니다 — 바 안의 Button 같은 컨트롤은 보라를 물려받지 않고, 바 위에는 accent가 없는 [Glass](#glass)를 얹습니다. 테두리와 그림자는 면이 아니라 바의 CSS가 한쪽에만 겁니다. [Card](../molecules/README.md#card)의 `fill`은 `brand`를 받지 않습니다 — 카드는 흑백 박스입니다.
-- 테두리는 2px 한 굵기라 굵기를 고르지 않고 색만 고릅니다.
+- 테두리는 2px 한 굵기라 굵기를 고르지 않고 색만 고릅니다. 변과 선은 `borderSide` · `borderStyle`이 고르고, 두 규칙은 특이도를 한 단 올려서 Paint가 긋는 테두리도 같은 방식으로 덮습니다.
 - `surfaceClass(props)`가 같은 prop을 class 문자열로 돌려줍니다. 누르는 카드는 [Pressable](#pressable)에 이 class로 면만 빌려 줍니다(`Card motion`이 그렇게 조립됩니다). 칠한 판 위에 늘어놓으려면 Surface 안에 Stack · Inline · Grid를 넣습니다.
 
 ## Paint
@@ -216,14 +228,17 @@ hover 색은 Pressable 없이도 켜집니다. 누르는 물건으로 만들려�
 | --- | --- | --- | --- |
 | `as` | `ElementType` | `"div"` | 렌더할 요소입니다. |
 | `accent` | `Accent` | — | 색입니다. 이 요소를 칠하고 안쪽으로 흐릅니다. 주지 않으면 바깥 Paint의 색, 바깥에도 없으면 검정(시스템)입니다. |
-| `variant` | `Variant` | `"outline"` | 칠하는 방식입니다. 12가지 레시피는 [Color](../foundations/color.md#variant)에 있습니다. |
+| `variant` | `Variant` | `"outline"` | 칠하는 방식입니다. 15가지 레시피는 [Color](../foundations/color.md#variant)에 있습니다. |
+| `borderSide` | `BorderSide` | `"all"` | 테두리를 긋는 변입니다. Surface와 같습니다. |
+| `borderStyle` | `BorderStyle` | `"solid"` | 테두리의 선입니다. Surface와 같습니다. |
+| `shadow` | `boolean` | `false` | 4px 그림자를 켭니다. 움직이지 않는 색 면(지표 카드 · 알림 띠)에 씁니다. 누르는 물건의 그림자는 아래 설명대로 Pressable의 몸짓이 가집니다. |
 | `selected` | `boolean` | `false` | 골라진 상태입니다. 같은 accent의 `filled`로 칠합니다. 알리는 aria와 골라진 모양(커지기)은 [Selectable](#selectable)입니다. |
 | `hoverable` | `boolean` | `false` | hover · 누르는 중에 색이 반응합니다. variant 표의 Hover 칸(층 · 글자 · 테두리)대로 바뀌고, 누르는 동안 한 단 더 짙어집니다. Pressable 없이 혼자 동작하므로 툴팁을 띄우는 배지처럼 누르지 않는 요소에도 씁니다. 꺼진 요소(`disabled` · `aria-disabled`)에는 걸지 않습니다. |
 | `padding` `paddingX` `paddingY` | [Box](#box)와 같음 | — | Box와 같은 prop입니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 
-- 그림자와 가라앉는 몸짓은 Paint가 하지 않습니다. 그림자 위에 떠 있다가 가라앉는 버튼은 `Pressable motion="sink"` + `paintClass()`이고, Button의 `shadow`가 이 조립을 대신 고릅니다.
-- 테두리가 없는 variant(`ghost` · `ghostMuted`)는 가라앉을 상자가 없어서 그림자를 받지 않습니다. Button은 이 둘에 `shadow`를 줘도 `tap`으로 그립니다. 골라지면 `filled`로 칠해져 테두리가 생기므로, 그때는 `shadow`대로 그림자와 커짐을 받습니다.
+- `shadow`는 가만히 있는 그림자 하나뿐입니다. 가라앉는 몸짓은 Paint가 하지 않습니다. 그림자 위에 떠 있다가 가라앉는 버튼은 `Pressable motion="sink"` + `paintClass()`이고, Button의 `shadow`가 이 조립을 대신 고릅니다.
+- 테두리가 없는 variant(`ghost` · `ghostMuted` · `wash` · `ghostTint`)는 가라앉을 상자가 없어서 그림자를 받지 않습니다. Button은 이 넷에 `shadow`를 줘도 `tap`으로 그립니다. 골라지면 `filled`로 칠해져 테두리가 생기므로, 그때는 `shadow`대로 그림자와 커짐을 받습니다.
 - 크기 · 글자 · 아이콘은 Paint가 정하지 않습니다. 그건 Button · Badge처럼 Paint 위에 선 컴포넌트의 몫입니다.
 - `paintClass(props)`가 같은 prop을 class 문자열로 돌려줍니다. Pressable처럼 다른 2차 primitive에 칠을 얹을 때 씁니다.
 - 위 층 컴포넌트는 Paint의 칠을 쓰면서 형태만 자기 CSS로 덮습니다. 모달 머리 막대와 `Card.Header`의 막대는 filled를 쓰고 테두리를 아래 한 줄만 남깁니다.
@@ -276,13 +291,13 @@ hover 색은 Pressable 없이도 켜집니다. 누르는 물건으로 만들려�
 | prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `as` | `ElementType` | `"button"` | 렌더할 요소입니다. 링크면 `"a"`나 라우터 링크를 줍니다. |
-| `motion` | `PressMotion` | `"none"` | 몸짓입니다. `none`은 움직이지 않고, `sink`는 4px 그림자 위에서 가라앉고, `raise`는 평평하다가 hover 때 제자리에서 그림자가 올라오고, `lift`는 떠오르고, `tap`은 그림자 없이 누르는 순간만 작아지고, `shrink`는 그림자를 둔 채 hover 때 95%, 누르면 92%로 작아집니다(Ask 단추 전용). |
+| `motion` | `PressMotion` | `"none"` | 몸짓입니다. `none`은 움직이지 않고, `sink`는 4px 그림자 위에서 가라앉고, `raise`는 평평하다가 hover 때 제자리에서 그림자가 올라오고, `lift`는 떠오르고, `tap`은 그림자 없이 누르는 순간만 작아지고, `shrink`는 그림자를 둔 채 hover 때 95%, 누르면 92%로 작아지고(Ask 단추 전용), `still`은 그림자를 둔 채 움직이지 않습니다. |
 | `disabled` | `boolean` | `false` | `button`이면 `disabled` 속성이, 그 밖의 요소면 `aria-disabled`가 붙습니다. 불투명도 0.4에 `not-allowed` 커서이고 몸짓이 멈춥니다. |
 | `padding` `paddingX` `paddingY` | [Box](#box)와 같음 | — | Box와 같은 prop입니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. 면은 여기로 얹습니다. |
 
-- `none`은 누르는 물건의 의미 · 커서 · 꺼진 모양만 남기고 움직이지 않습니다(목록 줄 · 아코디언 머리 · 메뉴 항목). `sink`는 hover 때 그림자 자리로 가라앉고(사람 카드 · 그림자를 켠 버튼) 누르는 순간 한 번 더 작아집니다. `raise`는 그 반대로, 평평하다가 hover 때 제자리에서 4px 그림자가 올라오고 누르는 순간 다시 내려앉습니다(평평한 칩). `lift`는 hover 때 4px 떠오르고 그림자가 화면에 남아 길어집니다(탐색 카드). `tap`은 그림자가 없는 버튼의 몸짓입니다. 거리와 시간은 [Motion](../foundations/motion.md)에 있습니다.
-- 그림자는 몸짓의 일부라 `shadow` prop이 없습니다. `sink` · `raise` · `lift`가 그림자를 갖고, `none` · `tap`은 갖지 않습니다.
+- `none`은 누르는 물건의 의미 · 커서 · 꺼진 모양만 남기고 움직이지 않습니다(목록 줄 · 아코디언 머리 · 메뉴 항목). `sink`는 hover 때 그림자 자리로 가라앉고(사람 카드 · 그림자를 켠 버튼) 누르는 순간 한 번 더 작아집니다. `raise`는 그 반대로, 평평하다가 hover 때 제자리에서 4px 그림자가 올라오고 누르는 순간 다시 내려앉습니다(평평한 칩). `lift`는 hover 때 4px 떠오르고 그림자가 화면에 남아 길어집니다(탐색 카드). `tap`은 그림자가 없는 버튼의 몸짓입니다. `still`은 밖에서 이미 켜진 상태나 꺼진 칸처럼 hover에 반응하면 안 되는 칸에서 그림자만 둔 채 멈춰 있습니다(Button의 `shadow="static"`). 거리와 시간은 [Motion](../foundations/motion.md)에 있습니다.
+- 그림자는 몸짓의 일부라 `shadow` prop이 없습니다. `sink` · `raise` · `lift` · `shrink` · `still`이 그림자를 갖고, `none` · `tap`은 갖지 않습니다.
 - 누르는 순간의 크기는 `--fk-press-scale`(기본 0.96)입니다. 큰 면은 자기 class에서 0.98로 덮습니다 — 400px 카드가 0.96이면 16px나 줄어들기 때문입니다. Card · PersonCard가 그렇게 합니다.
 - 칠하지 않으므로 혼자 쓰면 브라우저 기본 버튼 모양(회색 면 · 테두리)이 남습니다. 면은 언제나 칠(`surfaceClass()` · `paintClass()` · `glassClass()` 또는 `as={Pressable}`)로 얹습니다.
 - display와 폭은 태그 그대로입니다(`<button>`은 inline-block). 카드처럼 폭을 채우는 것은 쓰는 쪽이 정합니다 — [Card](../molecules/README.md#card)의 `motion`이 블록 · 폭 100% · 글자 정렬을 줍니다.
@@ -473,7 +488,8 @@ function ViewPicker() {
 | `placement` | `"top" \| "bottom"` | `"bottom"` | 기준 요소의 위 · 아래입니다. 화면 밖으로 나가면 반대쪽으로 뒤집습니다. |
 | `align` | `"start" \| "center" \| "end"` | `"start"` | 판을 기준 요소의 어느 끝에 맞출지 정합니다. `center`가 아니면 판이 기준 요소보다 좁아지지 않습니다. |
 | `layer` | `"dropdown" \| "tooltip"` | `"dropdown"` | 쌓는 층입니다. `dropdown`은 z 200이고, 설명 풍선은 `tooltip`으로 z 500입니다. |
-| `enter` | `EnterMotion` | `"rise"` | 등장 몸짓입니다. `none` `rise` `pop` `fade` 중에서 고릅니다. |
+| `enter` | `EnterMotion` | `"rise"` | 등장 몸짓입니다. `none` `rise` `pop` `fade` `panel` `sheet` 중에서 고릅니다. |
+| `scrim` | `boolean` | `false` | 뒤 화면을 어둡게 하고 누름을 막습니다. 바깥을 눌러 닫을 때 뒤의 버튼이 같이 눌리지 않습니다(하단 바 More 판). |
 | `onDismiss` | `(reason: "outside" \| "escape") => void` | — | 판 바깥을 누르거나 Esc를 누르면 부릅니다. 주지 않으면 스스로 닫자고 하지 않는 판이라 여는 쪽이 닫습니다. |
 | `initialFocus` | `(panel: HTMLElement) => HTMLElement \| null \| undefined` | — | 열릴 때 포커스를 줄 요소를 판 안에서 고릅니다. 판이 그려진 직후 한 번만 부릅니다. |
 | `padding` `paddingX` `paddingY` | [Box](#box)와 같음 | — | Box와 같은 prop입니다. |
@@ -485,6 +501,8 @@ function ViewPicker() {
 - Esc는 판에서 멈춥니다. 판이 Esc의 기본 동작(`preventDefault`)을 막아서, 모달 안의 판이면 첫 Esc는 판만 닫고 다음 Esc가 모달을 닫습니다. `onDismiss`를 주지 않은 판은 Esc도 바깥 누름도 듣지 않으므로 Esc가 그대로 모달로 갑니다.
 - 열릴 때의 포커스는 `initialFocus`가 고른 요소로 갑니다(Menu는 골라진 칸, 없으면 첫 칸). 닫힐 때 포커스를 돌려주는 일은 여는 쪽이 정합니다 — Menu는 Esc로 닫으면 여는 버튼으로 돌려주고, 바깥을 눌러 닫으면 누른 자리에 둡니다.
 - 위치는 `position: fixed` 좌표입니다. 기준 요소와 8px 띄워 붙고, 스크롤과 창 크기가 바뀔 때마다 다시 재서 기준 요소를 따라갑니다. 좌우는 화면 가장자리 8px 안에 묶습니다.
+- `scrim`은 판 뒤에 화면 전체를 덮는 막을 하나 더 그립니다. 막이 누름을 받아서 `onDismiss`로 판은 닫히되 뒤 화면은 눌리지 않습니다. 막은 판과 같은 층이고 DOM에서 앞서므로 판 바로 뒤에 섭니다.
+- 앱이 직접 그리는 판(Floating을 쓰지 않는 창)도 같은 몸짓을 쓰도록 `enterClass`(등장)와 `pulseClass`(깜빡임)를 내보냅니다. `className={enterClass.panel}`처럼 줍니다.
 - 등장은 기본 `rise`입니다. 퇴장은 없습니다. 이유는 [Motion](../foundations/motion.md#등장)에 있습니다.
 - [Tooltip](../molecules/README.md#tooltip)은 `layer="tooltip"` · `align="center"`로, [Menu](../molecules/README.md#menu)는 `initialFocus` · `onDismiss`로 이 위에 섭니다.
 

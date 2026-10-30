@@ -1,4 +1,4 @@
-/** Atoms 의 나머지 — IconButton · NavButton · Link · Code · Swatch · Wordmark · Spinner · Divider · Input · Textarea · Select · Checkbox · Radio · Switch · Label */
+/** Atoms 의 나머지 — IconButton · NavButton · Link · Code · Swatch · Wordmark · Marquee · Spinner · Divider · Input · Textarea · Select · Checkbox · Radio · Switch · Label */
 import { useId, useState, type MouseEvent, type ReactNode } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import {
@@ -13,6 +13,7 @@ import {
   Input,
   Label,
   Link,
+  Marquee,
   NavButton,
   Radio,
   Select,
@@ -35,11 +36,13 @@ import {
   ACCENTS,
   ACCENT_ROLES,
   CONTROL_SIZES,
+  ICON_MOTIONS,
   LINK_UNDERLINES,
   SWATCH_RUNGS,
   SWATCH_SHAPES,
   VARIANTS,
   WORDMARK_SIZES,
+  type IconMotion,
   type LinkUnderline,
   type SwatchRung,
   type SwatchShape,
@@ -100,10 +103,12 @@ const iconButton: Spec = {
     size: { kind: "select", options: CONTROL_SIZES },
     shadow: { kind: "boolean" },
     selected: { kind: "boolean" },
+    iconSpin: { kind: "boolean" },
+    iconMotion: { kind: "select", options: ["none", ...ICON_MOTIONS] },
     disabled: { kind: "boolean" },
   },
   // icon · label 을 맨 앞에 둬서 코드가 `icon={…} label="…"` 순서로 찍힙니다
-  defaults: { icon: undefined, label: undefined, accent: "black", variant: "ghostMuted", size: "md", shadow: false, selected: false, disabled: false },
+  defaults: { icon: undefined, label: undefined, accent: "black", variant: "ghostMuted", size: "md", shadow: false, selected: false, iconSpin: false, disabled: false },
   initial: { icon: "RefreshCw", label: "새로고침", accent: "cyan", variant: "solid", shadow: true },
   render: (v) => {
     const glyph = icon(v.icon);
@@ -123,6 +128,8 @@ const iconButton: Spec = {
         size={v.size as ControlSize}
         shadow={Boolean(v.shadow)}
         selected={v.selected ? true : undefined}
+        iconSpin={Boolean(v.iconSpin)}
+        iconMotion={v.iconMotion && v.iconMotion !== "none" ? (v.iconMotion as IconMotion) : undefined}
         disabled={Boolean(v.disabled)}
       />
     );
@@ -130,7 +137,7 @@ const iconButton: Spec = {
   sections: [
     {
       title: "Variants",
-      note: "Button 과 같은 열두 레시피입니다. 그림자는 테두리가 있는 variant 에만 붙고, 테두리가 없는 ghost 둘은 가라앉을 상자가 없어 받지 않습니다. 칸에 마우스를 올리면 label 이 title 로 뜹니다.",
+      note: "Button 과 같은 열다섯 레시피입니다. 그림자는 테두리가 있는 variant 에만 붙고, 테두리가 없는 ghost 둘은 가라앉을 상자가 없어 받지 않습니다. 칸에 마우스를 올리면 label 이 title 로 뜹니다.",
       render: () => (
         <Stage bg="raised">
           {VARIANTS.map((variant) => (
@@ -428,12 +435,13 @@ const swatch: Spec = {
     accent: { kind: "select", options: ACCENT_OPTIONS },
     shape: { kind: "select", options: SWATCH_SHAPES },
     rung: { kind: "select", options: SWATCH_RUNGS },
+    pulse: { kind: "boolean" },
   },
   initial: { accent: "pink" },
-  defaults: { accent: "black", shape: "dot", rung: "solid" },
+  defaults: { accent: "black", shape: "dot", rung: "solid", pulse: false },
   render: (v) => (
     <Inline gap="md">
-      <Swatch accent={v.accent as Accent} shape={v.shape as SwatchShape} rung={v.rung as SwatchRung} />
+      <Swatch accent={v.accent as Accent} shape={v.shape as SwatchShape} rung={v.rung as SwatchRung} pulse={Boolean(v.pulse)} />
       <Text weight="black">기말고사</Text>
     </Inline>
   ),
@@ -451,6 +459,26 @@ const swatch: Spec = {
               </Text>
             </Inline>
           ))}
+        </Stage>
+      ),
+    },
+    {
+      title: "pulse — 살아 있는 상태 점",
+      note: "pulse 는 2초 주기로 깜빡입니다. 연결이 살아 있다는 표시처럼 지금 진행 중이라는 뜻을 점 하나로 전할 때 씁니다. 움직임을 줄인 사람에게는 한 번으로 끝납니다.",
+      render: () => (
+        <Stage bg="raised">
+          <Inline gap="md">
+            <Swatch accent="green" shape="round" pulse />
+            <Text variant="caption" weight="black">
+              연결됨
+            </Text>
+          </Inline>
+          <Inline gap="md">
+            <Swatch accent="pink" shape="round" pulse />
+            <Text variant="caption" weight="black">
+              수업 중
+            </Text>
+          </Inline>
         </Stage>
       ),
     },
@@ -518,6 +546,58 @@ const wordmark: Spec = {
           <Surface fill="brand" paddingX="xl" paddingY="lg">
             <Wordmark>Class Explorer</Wordmark>
           </Surface>
+        </Stage>
+      ),
+    },
+  ],
+};
+
+const marquee: Spec = {
+  name: "Marquee",
+  summary:
+    "한 줄인데 자리가 모자랄 때 …로 자르는 대신 좌우로 훑고 돌아옵니다. 문장 전체가 곧 내용인 자리(배너)에 씁니다. 넘칠 때만 움직이고, 폭이 바뀌면 다시 재고, 움직임을 줄인 사람에게는 움직이지 않습니다. 폭은 바깥이 정합니다.",
+  controls: {
+    width: { kind: "number", min: 80, max: 480, step: 20 },
+    children: { kind: "text" },
+  },
+  initial: { width: 200, children: "2026-2학기 수강 변경 신청이 10월 31일 18시에 마감됩니다" },
+  render: (v) => (
+    <Surface border="line" paddingX="md" paddingY="xs" style={{ width: Number(v.width) || 200 }}>
+      <Text as="div" variant="caption" weight="black">
+        <Marquee>{String(v.children ?? "")}</Marquee>
+      </Text>
+    </Surface>
+  ),
+  // width 는 바깥 틀의 폭이라 Marquee 의 prop 이 아닙니다
+  code: (v) => `<Marquee>${String(v.children ?? "")}</Marquee>`,
+  sections: [
+    {
+      title: "넘칠 때만 움직입니다",
+      note: "왼쪽은 글자가 자리에 들어가서 가만히 있고, 가운데와 오른쪽은 넘쳐서 끝까지 훑은 뒤 돌아옵니다. 속도는 거리와 상관없이 일정하고(초당 45px), 양 끝에서 잠깐 멈춥니다.",
+      render: () => (
+        <Stage bg="raised">
+          {[360, 200, 120].map((w) => (
+            <Labeled key={w} name={`${w}px`}>
+              <Surface border="line" paddingX="md" paddingY="xs" style={{ width: w }}>
+                <Text as="div" variant="caption" weight="black">
+                  <Marquee>수강 변경 신청이 곧 마감됩니다</Marquee>
+                </Text>
+              </Surface>
+            </Labeled>
+          ))}
+        </Stage>
+      ),
+    },
+    {
+      title: "배너 안에서",
+      note: "Notice 의 solid 띠처럼 한 줄 안내를 담는 자리에 놓았습니다.",
+      render: () => (
+        <Stage bg="raised">
+          <Paint accent="yellow" variant="solid" shadow paddingX="lg" paddingY="sm" style={{ width: 260 }}>
+            <Text as="div" variant="caption" weight="black" tone="inherit">
+              <Marquee>학사 일정이 바뀌었으니 달력에서 다시 확인해 주세요</Marquee>
+            </Text>
+          </Paint>
         </Stage>
       ),
     },
@@ -662,17 +742,23 @@ const input: Spec = {
   controls: {
     size: { kind: "select", options: CONTROL_SIZES },
     invalid: { kind: "boolean" },
+    warning: { kind: "boolean" },
+    quiet: { kind: "boolean" },
+    bare: { kind: "boolean" },
     shadow: { kind: "boolean" },
     disabled: { kind: "boolean" },
     placeholder: { kind: "text" },
   },
   initial: { shadow: true, placeholder: "이름을 입력하세요" },
-  defaults: { size: "md", invalid: false, shadow: false, disabled: false },
+  defaults: { size: "md", invalid: false, warning: false, quiet: false, bare: false, shadow: false, disabled: false },
   render: (v) => (
     <Frame width={260}>
       <Input
         size={v.size as ControlSize}
         invalid={Boolean(v.invalid)}
+        warning={Boolean(v.warning)}
+        quiet={Boolean(v.quiet)}
+        bare={Boolean(v.bare)}
         shadow={Boolean(v.shadow)}
         disabled={Boolean(v.disabled)}
         placeholder={String(v.placeholder ?? "")}
@@ -700,8 +786,21 @@ const input: Spec = {
       ),
     },
     {
+      title: "bare — 줄 안에서 치는 칸",
+      note: "bare 는 면 · 테두리 · 높이를 모두 빼고 글자를 바깥 것으로 씁니다. 표 칸의 숫자나 글자를 그 자리에서 고칠 때 씁니다. 상태(warning · quiet · shadow)는 그리지 않고 invalid 의 aria 만 남습니다. 칸이 보이도록 아래는 점선 틀을 둘렀습니다.",
+      render: () => (
+        <Stage bg="raised">
+          <Surface border="line" borderStyle="dashed" paddingX="md" paddingY="sm" style={{ width: 160 }}>
+            <Text as="div" variant="caption" weight="black">
+              <Input bare type="number" defaultValue={18} aria-label="학점" />
+            </Text>
+          </Surface>
+        </Stage>
+      ),
+    },
+    {
       title: "States",
-      note: "invalid 는 빨간 테두리와 aria-invalid 를 같이 켭니다. readOnly 와 disabled 는 오목한 면으로 내려앉고, shadow 는 폼의 주인공 칸을 4px 위에 띄웁니다.",
+      note: "invalid 는 빨간 테두리와 aria-invalid 를 같이 켭니다. warning 은 막지 않는 경고라 주황 테두리만 켜고(aria-invalid 는 없습니다), quiet 은 비어 있거나 해당 없는 칸을 옅은 테두리 · 약한 글자로 물리며 hover 때 테두리가 진해집니다. readOnly 와 disabled 는 오목한 면으로 내려앉고, shadow 는 폼의 주인공 칸을 4px 위에 띄웁니다.",
       render: () => (
         <Stage bg="raised">
           <Grid columns={2} gap="xl" style={{ width: "100%", maxWidth: 560 }}>
@@ -713,6 +812,12 @@ const input: Spec = {
             </Labeled>
             <Labeled name="invalid">
               <Input invalid defaultValue="김예" aria-label="이름" />
+            </Labeled>
+            <Labeled name="warning">
+              <Input warning defaultValue="김예시1" aria-label="이름" />
+            </Labeled>
+            <Labeled name="quiet">
+              <Input quiet placeholder="해당 없음" aria-label="이름" />
             </Labeled>
             <Labeled name="disabled">
               <Input disabled defaultValue="김예시" aria-label="이름" />
@@ -1060,6 +1165,7 @@ export const ATOM_SPECS_MORE: Record<string, Spec> = {
   Code: codeSpec,
   Swatch: swatch,
   Wordmark: wordmark,
+  Marquee: marquee,
   Spinner: spinner,
   Divider: divider,
   Input: input,

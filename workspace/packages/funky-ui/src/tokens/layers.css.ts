@@ -9,7 +9,7 @@
  * 그 위에 섭니다.
  *
  * 앱 CSS 는 레이어 밖(또는 `fk` 뒤의 레이어)에 두면 로드 순서와 무관하게 패키지를 이깁니다. Tailwind v4 와
- * 함께 쓸 때는 앱 CSS 맨 위에 `@layer fk, theme, base, components, utilities;` 를 먼저 선언합니다.
+ * 함께 쓸 때는 앱 CSS 맨 위에 `@layer theme, base, fk, components, utilities;` 를 먼저 선언합니다. fk 가 base 앞에 서면 preflight 가 funky 의 여백 · 테두리를 지웁니다.
  */
 import { globalLayer } from "@vanilla-extract/css";
 

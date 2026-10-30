@@ -12,9 +12,9 @@ funky-ui/
     │   └── src/
     │       ├── index.ts        # entry `.` — 컴포넌트 ("use client")
     │       ├── inventory.ts    # 이름 · 층 · 순서의 정본 (import 없음)
-    │       ├── tokens/         # 값의 유일한 정의 위치 — palette(hex) → color(역할) · color-recipes(12 variant)
+    │       ├── tokens/         # 값의 유일한 정의 위치 — palette(hex) → color(역할) · color-recipes(15 variant)
     │       │                   #   · typography · shape · layout · motion · vocabulary(축) · variables(--fk-*) · layers
-    │       ├── styles/         # 공유 class — accent · variant · slots(레시피 → 슬롯) · space · typography · enter(등장) · global
+    │       ├── styles/         # 공유 class — accent · variant · slots(레시피 → 슬롯) · space · typography · enter(등장 · 깜빡임) · border(변 · 선) · global
     │       ├── internal/       # cx · polymorphic · glyphs · useAnchor
     │       ├── primitives/     # 1차 Box · Text · Icon · VisuallyHidden · Portal → 2차 Surface · Paint · Glass · Pressable · Selectable · Floating · Stack · Inline · Grid
     │       ├── atoms/          # 범용 컨트롤
@@ -49,13 +49,13 @@ Primitives 안은 두 단입니다(`PRIMITIVE_TIERS`). 1차(Box · Text · Icon 
 
 ## 스타일
 
-- 패키지 CSS 는 전부 `fk` 레이어 안에 듭니다(`fk.reset < theme < base < primitives < components < utilities`). 층 구조를 그대로 옮긴 순서라 위 층 CSS 는 Surface · Paint · Glass 의 칠을 언제나 덮습니다 — 모달 머리 막대가 Paint 의 filled 를 쓰고 테두리만 아래 한 줄로 덮는 식입니다. 소비 앱은 CSS 맨 위에 `@layer fk, theme, base, components, utilities;` 를 둡니다.
+- 패키지 CSS 는 전부 `fk` 레이어 안에 듭니다(`fk.reset < theme < base < primitives < components < utilities`). 층 구조를 그대로 옮긴 순서라 위 층 CSS 는 Surface · Paint · Glass 의 칠을 언제나 덮습니다 — 모달 머리 막대가 Paint 의 filled 를 쓰고 테두리만 아래 한 줄로 덮는 식입니다. 소비 앱은 CSS 맨 위에 `@layer theme, base, fk, components, utilities;` 를 둡니다. ⚠️ `fk` 가 `base` 앞에 서면 Tailwind preflight 가 funky 의 여백 · 테두리를 전부 지웁니다.
 - vanilla-extract 의 `.css.ts` 는 함수를 export 할 수 없습니다. 규칙을 만드는 함수는 일반 모듈(`styles/slots.ts` · `tokens/typography-recipes.ts`)에 둡니다.
 - `style()` 의 selector 는 자기 자신(`&`)을 겨눠야 합니다. 형제 · 자식을 꾸미는 규칙은 대상 쪽 style 에 `${other}:checked + &` 로 겁니다.
 - 그림자는 `raised`(4px) · `floating`(6px, 모달 전용) 두 단뿐입니다. blur 는 0.
 - 모서리는 0. `RADIUS.full` 은 스피너 · 점에만.
 - `transition: all` 을 쓰지 않습니다 — 움직이는 속성을 적습니다.
-- 판이 나타나는 몸짓은 `ENTER` 토큰과 `styles/enter.css.ts` 의 `enterClass` 를 같이 씁니다(Floating 의 `enter` · 모달 · 아코디언 본문). 판마다 keyframes 를 새로 쓰지 않고, 퇴장 모션은 두지 않습니다 — 닫는 모션을 보이려면 판을 더 들고 있어야 하는데 그사이 한 번 더 누르면 판 뒤의 화면이 눌립니다.
+- 판이 나타나는 몸짓은 `ENTER` 토큰과 `styles/enter.css.ts` 의 `enterClass` 를 같이 씁니다(Floating 의 `enter` · 모달 · 아코디언 본문). 판마다 keyframes 를 새로 쓰지 않고(`rise` `pop` `fade` `panel` `sheet`, Floating 밖에서 앱이 직접 그리는 판은 primitives 가 내보내는 `enterClass` 를 빌립니다), 퇴장 모션은 두지 않습니다 — 닫는 모션을 보이려면 판을 더 들고 있어야 하는데 그사이 한 번 더 누르면 판 뒤의 화면이 눌립니다.
 - inline style 은 실행 중에 정해지는 값(Grid 칸 폭 · Meter 길이 · `--fk-tone` · 떠 있는 판의 좌표)에만 씁니다.
 
 ## Playground

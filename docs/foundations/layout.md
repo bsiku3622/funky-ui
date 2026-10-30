@@ -35,8 +35,8 @@ class-explorer를 계측했을 때 서로 다른 그림자 값이 33개였습니
 | `base` | 0 | 바닥 |
 | `raised` | 1 | 골라진 칸(Selectable `grow`)이 나란한 이웃 위에 섭니다 — class-explorer의 `z-10` |
 | `sticky` | 100 | 상단 바 · 하단 바 |
-| `dropdown` | 200 | 메뉴 |
-| `overlay` | 300 | 덮개 |
+| `dropdown` | 200 | 메뉴 · 팝오버 · 검색 제안 · Floating의 `scrim` |
+| `overlay` | 300 | 덮개 · 서랍(Drawer) |
 | `toast` | 400 | 알림 |
 | `tooltip` | 500 | 설명 풍선 |
 
@@ -49,7 +49,7 @@ Tailwind 기본과 같은 값입니다(sm 640 · md 768 · lg 1024 · xl 1280). 
 | 이름 | px | 쓰는 곳 |
 | --- | --- | --- |
 | `prose` | 720 | 읽는 글 한 단 |
-| `dialog.sm · md · lg · xl` | 400 · 512 · 768 · 1024 | 모달 |
+| `dialog.sm · md · lg · xl · full` | 400 · 512 · 768 · 1024 · 1280 | 모달. `full`은 높이도 96vh로 잡아 화면을 거의 덮습니다 |
 | `shell.bar` | 80 | 상단 바 높이 |
 | `shell.sidebar` | 256 | 사이드바 폭 |
 | `shell.bottomBar` | 64 | 하단 바 높이 |

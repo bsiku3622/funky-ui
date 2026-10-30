@@ -59,14 +59,16 @@ funky-ui를 React 앱에 붙이는 방법입니다. 패키지는 vanilla-extract
 
 패키지 CSS는 전부 cascade layer `fk` 안에 듭니다. Tailwind v4도 자기 레이어(`theme · base · components · utilities`)를 선언하는데, 레이어의 순서는 **처음 선언된 순서**로 정해집니다. funky의 CSS가 Tailwind 뒤에 로드되면 `fk`가 `utilities`보다 뒤에 서서, 컴포넌트에 준 `className="mt-4"`가 지게 됩니다.
 
-그래서 앱 CSS 맨 위에서 순서를 먼저 못 박습니다.
+그래서 앱 CSS 맨 위에서 순서를 먼저 못 박고, 앱 진입점에서 이 CSS를 funky의 스타일시트보다 먼저 불러옵니다.
 
 ```css
-@layer fk, theme, base, components, utilities;
+@layer theme, base, fk, components, utilities;
 @import "tailwindcss";
 ```
 
 이렇게 두면 Tailwind 유틸리티가 항상 funky를 이기고, 레이어 밖에 쓴 앱 CSS는 둘 다 이깁니다.
+
+⚠️ `fk`를 `base` 앞에 두면 안 됩니다. Tailwind의 preflight가 `base`에 있어서, `* { padding: 0; border: 0 solid }`이 funky의 여백과 테두리를 전부 지웁니다.
 
 ## 이 저장소에서
 

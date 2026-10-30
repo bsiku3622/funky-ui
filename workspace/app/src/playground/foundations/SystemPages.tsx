@@ -1,5 +1,5 @@
 /** Foundations › Typography · Shape · Layout · Motion — 원본 숫자 → 역할 → 실제 표본 */
-import { Badge, Box, Button, Card, Floating, Grid, Inline, Input, SegmentedControl, Stack, Surface, Text, surfaceClass } from "@studio-baeks/funky-ui";
+import { Badge, Box, Button, Card, Floating, Grid, Inline, Input, SegmentedControl, Stack, Surface, Swatch, Text, surfaceClass } from "@studio-baeks/funky-ui";
 import {
   BADGE,
   BADGE_SIZES,
@@ -15,6 +15,7 @@ import {
   FOCUS_RING,
   FONT_FAMILY,
   ICON,
+  ICON_MOTION,
   LIFT,
   PRESS,
   RADIUS,
@@ -26,7 +27,7 @@ import {
   Z,
   type EnterMotion,
 } from "@studio-baeks/funky-ui/tokens";
-import { Sparkles } from "lucide-react";
+import { ArrowRight, RefreshCw, Sparkles } from "lucide-react";
 import { useRef, useState, type ReactNode } from "react";
 
 import { PageHead, Section, Stage } from "../kit";
@@ -67,7 +68,7 @@ export function TypographyPage() {
       <PageHead
         layer="foundations · 1"
         title="Typography"
-        summary="Pretendard Variable 하나. 본문도 700, 구조 라벨은 900 — funky 의 글자는 두껍습니다. 크기 사다리 여덟에 class-explorer 가 가장 많이 반복한 구조 라벨 둘(overline · subtitle)을 더한 열 역할입니다."
+        summary="Pretendard Variable 하나. 본문도 700, 구조 라벨은 900 — funky 의 글자는 두껍습니다. 크기 사다리 아홉에 class-explorer 가 가장 많이 반복한 구조 라벨 둘(overline · subtitle)을 더한 열한 역할입니다. 사다리의 맨 위 hero 만 폭에 따라 커집니다."
       />
       <Section title="글자 역할" note="태그(as)와 생김새(variant)는 따로 고릅니다. 줄 높이는 px 고정값입니다.">
         <Card padding="0">
@@ -84,6 +85,7 @@ export function TypographyPage() {
                       {r.size}/{r.leading} · {WEIGHT[r.weight]}
                       {r.tracking ? ` · ${r.tracking}em` : ""}
                       {"uppercase" in r && r.uppercase ? " · UPPER" : ""}
+                      {"md" in r && r.md ? ` · md↑ ${r.md.size}/${r.md.leading}` : ""}
                     </span>
                   </Stack>
                   <Text variant={v} truncate>
@@ -225,8 +227,8 @@ export function MotionPage() {
         summary="시그니처는 눌림입니다 — 떠 있는 물건이 hover 때 그림자 자리로 가라앉습니다. 가라앉는 거리는 그림자 거리와 같습니다(4px). 움직임을 줄인 사람에게는 이동을 멈추고 색과 포커스 링만 남깁니다."
       />
       <Section
-        title="누르는 몸짓 — sink · raise · lift · tap · shrink"
-        note="sink — 그림자를 켠 버튼 · 사람 카드. raise — 평평한 칩(hover 때 제자리에서 그림자가 올라옵니다). lift — 탐색 카드(위로 4px, 그림자는 화면에 그대로 남아 길어집니다). tap — 그림자를 끈 버튼. shrink — Ask 단추(그림자를 둔 채 hover 때 95%, 누르면 92%). 몸짓이 없는 누르는 물건(목록 줄)은 none 입니다."
+        title="누르는 몸짓 — sink · raise · lift · tap · shrink · still"
+        note="sink — 그림자를 켠 버튼 · 사람 카드. raise — 평평한 칩(hover 때 제자리에서 그림자가 올라옵니다). lift — 탐색 카드(위로 4px, 그림자는 화면에 그대로 남아 길어집니다). tap — 그림자를 끈 버튼. shrink — Ask 단추(그림자를 둔 채 hover 때 95%, 누르면 92%). still — 그림자를 둔 채 움직이지 않는 칸(밖에서 켠 상태 · 꺼진 칸, Button 의 shadow=static). 몸짓이 없는 누르는 물건(목록 줄)은 none 입니다."
       >
         <Stage bg="canvas">
           <Button shadow variant="solid" accent="cyan">
@@ -238,6 +240,9 @@ export function MotionPage() {
           <Button variant="outline">tap</Button>
           <Button shadow="shrink" variant="paper">
             shrink
+          </Button>
+          <Button shadow="static" variant="paper">
+            still
           </Button>
           <Card motion="sink" padding="xl" style={{ width: 180 }}>
             <Text variant="caption" weight="black">
@@ -262,15 +267,37 @@ export function MotionPage() {
         <Table head={["token", "value"]} rows={[["press.grow", PRESS.grow]]} />
       </Section>
       <Section
-        title="등장 — rise · pop · fade"
-        note="새로 나타나는 판이 같이 씁니다. rise 는 메뉴 · 툴팁, pop 은 모달, fade 는 펼친 아코디언 본문입니다. 눌러서 열어 보세요. 퇴장은 없습니다 — 닫는 모션을 보이려면 판을 그 시간만큼 더 들고 있어야 하는데, 그사이 한 번 더 누르면 판 뒤의 화면이 눌립니다."
+        title="등장 — rise · pop · fade · panel · sheet"
+        note="새로 나타나는 판이 같이 씁니다. rise 는 메뉴 · 툴팁, pop 은 모달, fade 는 펼친 아코디언 본문입니다. panel 은 앱이 만든 작은 창(8px 아래에서 96% 로 시작하는 Ask 데스크탑 창)이고, sheet 는 화면을 덮는 판(24px 아래에서 올라오는 Ask 모바일 판)입니다. 앱이 직접 그리는 판에는 enterClass 를 빌려 씁니다. 눌러서 열어 보세요. 퇴장은 없습니다 — 닫는 모션을 보이려면 판을 그 시간만큼 더 들고 있어야 하는데, 그사이 한 번 더 누르면 판 뒤의 화면이 눌립니다."
       >
         <Stage bg="canvas">
           {(Object.keys(ENTER) as (keyof typeof ENTER)[]).map((name) => (
             <EnterButton key={name} enter={name} />
           ))}
         </Stage>
-        <Table head={["enter", "거리", "시간"]} rows={Object.entries(ENTER).map(([n, v]) => [n, `${v.distance}px`, `${v.duration} · ${DURATION[v.duration]}ms`])} />
+        <Table
+          head={["enter", "거리", "시작 크기", "시간"]}
+          rows={Object.entries(ENTER).map(([n, v]) => [n, `${v.distance}px`, "scale" in v ? v.scale : "—", `${v.duration} · ${DURATION[v.duration]}ms`])}
+        />
+      </Section>
+      <Section
+        title="깜빡임 · 아이콘 몸짓"
+        note="pulse 는 불러오는 동안의 깜빡임입니다 — 2초 주기로 투명도가 100% 와 50% 사이를 오가고, Text 의 pulse 와 Swatch 의 pulse 가 같이 씁니다. 아이콘 몸짓은 바깥 버튼 · 링크에 마우스를 올릴 때 아이콘만 움직입니다 — turn 은 -45° 돌고 nudge 는 2px 밀립니다. 아이콘 spin 은 제자리에서 계속 돕니다. 모두 움직임을 줄인 사람에게는 멈춥니다."
+      >
+        <Stage bg="canvas">
+          <Text pulse>Loading…</Text>
+          <Swatch accent="green" shape="round" pulse />
+          <Button variant="outline" shadow icon={Sparkles} iconMotion="turn">
+            turn
+          </Button>
+          <Button variant="outline" shadow iconEnd={ArrowRight} iconMotion="nudge">
+            nudge
+          </Button>
+          <Button variant="outline" shadow icon={RefreshCw} iconSpin>
+            spin
+          </Button>
+        </Stage>
+        <Table head={["token", "value"]} rows={[["duration.pulse", `${DURATION.pulse}ms`], ["iconMotion.turn", `${ICON_MOTION.turn}°`], ["iconMotion.nudge", `${ICON_MOTION.nudge}px`]]} />
       </Section>
       <Section title="시간 · 곡선" note="crawl 700ms 는 시간선 위 캐럿처럼 연속으로 움직이는 위치에만 씁니다.">
         <Table head={["duration", "ms"]} rows={Object.entries(DURATION).map(([n, v]) => [n, v])} />

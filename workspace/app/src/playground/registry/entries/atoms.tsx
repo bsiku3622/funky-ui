@@ -1,8 +1,8 @@
 /** Atoms — Button · Badge 는 축의 출발점이라 표본을 가장 많이 둡니다. 나머지는 atoms-more.tsx */
 import { useState } from "react";
 import { Badge, Button, Inline, Stack, Text, type Variant } from "@studio-baeks/funky-ui";
-import { ACCENTS, ACCENT_ROLES, BADGE_SIZES, CONTROL_SIZES, VARIANTS } from "@studio-baeks/funky-ui/tokens";
-import { ArrowRight, Check, Download, Eye, FlaskConical, RefreshCw, Trash2, X } from "lucide-react";
+import { ACCENTS, ACCENT_ROLES, BADGE_SIZES, CONTROL_SIZES, ICON_MOTIONS, VARIANTS, type IconMotion } from "@studio-baeks/funky-ui/tokens";
+import { ArrowRight, Check, ChevronDown, Download, Eye, FlaskConical, RefreshCw, Trash2, X } from "lucide-react";
 
 import { AccentVariantMatrix, Stage } from "../../kit";
 import { icon } from "../icons";
@@ -49,6 +49,16 @@ function SelectedToggle() {
   );
 }
 
+/** 뒤 아이콘이 판의 열림(aria-expanded)을 따라 뒤집히는 버튼 */
+function ExpandToggle() {
+  const [open, setOpen] = useState(false);
+  return (
+    <Button variant="outline" shadow iconEnd={ChevronDown} aria-expanded={open} onClick={() => setOpen((o) => !o)}>
+      필터
+    </Button>
+  );
+}
+
 const button: Spec = {
   name: "Button",
   summary:
@@ -63,10 +73,14 @@ const button: Spec = {
     disabled: { kind: "boolean" },
     icon: { kind: "icon" },
     iconEnd: { kind: "icon" },
+    iconSpin: { kind: "boolean" },
+    iconMotion: { kind: "select", options: ["none", ...ICON_MOTIONS] },
+    uppercase: { kind: "boolean" },
+    wrap: { kind: "boolean" },
     children: { kind: "text" },
   },
   initial: { accent: "cyan", variant: "solid", shadow: true, icon: "Eye", iconEnd: "none", children: "Preview" },
-  defaults: { accent: "black", variant: "outline", size: "md", shadow: false, selected: false, loading: false, disabled: false },
+  defaults: { accent: "black", variant: "outline", size: "md", shadow: false, selected: false, loading: false, disabled: false, iconSpin: false, uppercase: true, wrap: false },
   render: (v) => (
     <Button
       accent={v.accent as never}
@@ -78,6 +92,10 @@ const button: Spec = {
       disabled={Boolean(v.disabled)}
       icon={icon(v.icon)}
       iconEnd={icon(v.iconEnd)}
+      iconSpin={Boolean(v.iconSpin)}
+      iconMotion={v.iconMotion && v.iconMotion !== "none" ? (v.iconMotion as IconMotion) : undefined}
+      uppercase={Boolean(v.uppercase)}
+      wrap={Boolean(v.wrap)}
     >
       {String(v.children ?? "")}
     </Button>
@@ -138,6 +156,63 @@ const button: Spec = {
           <Button size="sm" accent="cyan" variant="solid" shadow="hover">
             Preview
           </Button>
+        </Stage>
+      ),
+    },
+    {
+      title: "Shadow — 그대로 (shadow=\"static\")",
+      note: "그림자를 둔 채 움직이지 않는 몸짓(still)입니다. 밖에서 이미 켜진 상태이거나 꺼진 칸이라 hover 에 반응하면 안 될 때 씁니다. 왼쪽부터 가라앉는 true, 올라오는 \"hover\", 작아지는 \"shrink\", 그대로인 \"static\" 이니 마우스를 올려 비교해 보세요.",
+      render: () => (
+        <Stage bg="raised">
+          <Button variant="solid" accent="cyan" shadow>
+            true
+          </Button>
+          <Button variant="solid" accent="cyan" shadow="hover">
+            hover
+          </Button>
+          <Button variant="solid" accent="cyan" shadow="shrink">
+            shrink
+          </Button>
+          <Button variant="solid" accent="cyan" shadow="static">
+            static
+          </Button>
+        </Stage>
+      ),
+    },
+    {
+      title: "아이콘의 몸짓 — iconSpin · iconMotion · 뒤 아이콘",
+      note: "iconSpin 은 글자를 그대로 둔 채 앞 아이콘만 돌립니다(라벨을 지우는 loading 과 다릅니다). iconMotion 은 마우스를 올리면 아이콘만 움직이고 turn 은 -45° 돌고 nudge 는 2px 밀립니다. 앞 아이콘이 없으면 뒤 아이콘에 걸립니다. 뒤 아이콘은 aria-expanded 가 true 인 동안 뒤집히므로, 오른쪽 버튼을 눌러 보세요.",
+      render: () => (
+        <Stage bg="raised">
+          <Button variant="outline" shadow icon={RefreshCw} iconSpin>
+            새로고침
+          </Button>
+          <Button variant="outline" shadow icon={RefreshCw} iconMotion="turn">
+            turn
+          </Button>
+          <Button variant="outline" shadow iconEnd={ArrowRight} iconMotion="nudge">
+            nudge
+          </Button>
+          <ExpandToggle />
+        </Stage>
+      ),
+    },
+    {
+      title: "uppercase · wrap",
+      note: "라벨은 기본 대문자입니다. 소문자가 뜻인 라벨(파일명 · 학번)은 uppercase=false 로 끕니다. wrap 은 긴 문장 라벨을 줄바꿈하고 높이가 글자를 따라 늘어납니다. 기본은 한 줄이라 넘치면 가로로 밀립니다.",
+      render: () => (
+        <Stage bg="raised">
+          <Button variant="outline" shadow>
+            syllabus.pdf
+          </Button>
+          <Button variant="outline" shadow uppercase={false}>
+            syllabus.pdf
+          </Button>
+          <div style={{ width: 200 }}>
+            <Button variant="outline" shadow wrap fullWidth uppercase={false}>
+              지난 학기에 들은 과목과 같은 분반을 다시 신청합니다
+            </Button>
+          </div>
         </Stage>
       ),
     },
@@ -240,18 +315,19 @@ const button: Spec = {
 
 const badge: Spec = {
   name: "Badge",
-  summary: "상태 · 개수 · 분류를 적는 작은 라벨. Button 과 같은 11 레시피를 쓰지만 읽는 물건이라 hover 에 반응하지 않습니다.",
+  summary: "상태 · 개수 · 분류를 적는 작은 라벨. Button 과 같은 15 레시피를 쓰지만 읽는 물건이라 hover 에 반응하지 않습니다.",
   controls: {
     accent: { kind: "select", options: ACCENT_OPTIONS },
     variant: { kind: "select", options: VARIANTS },
     size: { kind: "select", options: BADGE_SIZES },
     icon: { kind: "icon" },
+    wrap: { kind: "boolean" },
     children: { kind: "text" },
   },
   initial: { accent: "cyan", variant: "solid", size: "md", icon: "none", children: "계획" },
-  defaults: { accent: "black", variant: "outline", size: "md" },
+  defaults: { accent: "black", variant: "outline", size: "md", wrap: false },
   render: (v) => (
-    <Badge accent={v.accent as never} variant={v.variant as Variant} size={v.size as never} icon={icon(v.icon)}>
+    <Badge accent={v.accent as never} variant={v.variant as Variant} size={v.size as never} icon={icon(v.icon)} wrap={Boolean(v.wrap)}>
       {String(v.children ?? "")}
     </Badge>
   ),
@@ -266,6 +342,19 @@ const badge: Spec = {
             </Badge>
           )}
         />
+      ),
+    },
+    {
+      title: "wrap",
+      note: "배지는 기본이 한 줄이라 길면 잘립니다. 길이가 정해지지 않은 글자(거절 사유)는 wrap 으로 줄바꿈시키면 높이가 글자를 따라 늘어납니다.",
+      render: () => (
+        <Stage bg="raised">
+          <div style={{ width: 180 }}>
+            <Badge variant="plain" accent="red" wrap>
+              시간표가 겹쳐서 이번 학기에는 승인할 수 없습니다
+            </Badge>
+          </div>
+        </Stage>
       ),
     },
     {

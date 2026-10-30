@@ -146,7 +146,7 @@ export function ColorPage() {
 
       <Section
         title="Variant 레시피"
-        note="12 variant 가 사다리의 어느 칸을 글자 · 면 · 테두리에 쓰는지, hover 때 무엇이 바뀌는지. 숫자도 hex 도 없이 칸 이름만 있어서, accent 를 바꾸면 규칙은 그대로 둔 채 색만 바뀝니다. black · gray · line · white 는 accent 와 무관한 시스템 값입니다."
+        note="15 variant 가 사다리의 어느 칸을 글자 · 면 · 테두리에 쓰는지, hover 때 무엇이 바뀌는지. 숫자도 hex 도 없이 칸 이름만 있어서, accent 를 바꾸면 규칙은 그대로 둔 채 색만 바뀝니다. black · gray · line · white 는 accent 와 무관한 시스템 값입니다."
       >
         <div style={{ overflowX: "auto" }}>
           <table className={k.table}>

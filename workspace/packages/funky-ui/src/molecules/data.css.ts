@@ -1,6 +1,7 @@
 import { style, styleVariants } from "@vanilla-extract/css";
 
 import { components } from "../tokens/layers.css";
+import { BREAKPOINT, SPACE } from "../tokens/layout";
 import { NUMERAL, TEXT_ROLES, WEIGHT, em, px } from "../tokens/typography";
 import { vars } from "../tokens/variables";
 
@@ -23,6 +24,18 @@ export const meterTrack = style(
     overflow: "hidden",
   }),
 );
+
+/** 넓은 화면에서 이름 · 막대 · 값이 한 줄입니다. 좁으면 세 줄로 쌓입니다 */
+export const meterRow = style(
+  c({
+    display: "grid",
+    gridTemplateColumns: "minmax(0, 1fr)",
+    alignItems: "center",
+    gap: px(SPACE.xs),
+    "@media": { [`(min-width: ${BREAKPOINT.sm}px)`]: { gridTemplateColumns: `${px(224)} minmax(0, 1fr) ${px(96)}`, gap: px(SPACE.xl) } },
+  }),
+);
+export const meterRowValue = style(c({ "@media": { [`(min-width: ${BREAKPOINT.sm}px)`]: { textAlign: "end" } } }));
 
 export const meterFill = style(
   c({
