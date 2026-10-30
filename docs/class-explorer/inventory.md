@@ -32,7 +32,7 @@ class-explorer `frontend/src`의 모든 컴포넌트를 세고, funky-ui의 층(
 계측이 요구한 축은 셋이었고, funky-ui는 그 셋을 그대로 만들었습니다.
 
 - **accent × variant** — 버튼 102종이 "어떤 색(accent 9)을 어떻게 칠하는가(variant 11)" 두 축 안으로 들어옵니다. 규칙은 [Color](../foundations/color.md)의 레시피 표입니다.
-- **selected는 상태** — 41번 쓰인 `isSelected`는 variant가 아니라 "같은 accent의 filled로 바뀜"입니다. 그림자를 켠 버튼이면 거기에 105%로 커지는 모양이 따라옵니다(class-explorer의 골린 버튼과 같습니다).
+- **selected는 상태** — 41번 쓰인 `isSelected`는 variant가 아니라 "같은 accent의 filled로 바뀜"입니다. 골라지면 105%로 커지는 모양이 따라옵니다(class-explorer의 골린 버튼 · 칩과 같습니다).
 - **그림자 두 단** — 33개 값이 `raised`(4px)와 `floating`(6px, 모달 전용)으로 모입니다.
 
 자세한 대응은 [이관표](migration.md)에 있습니다.
@@ -59,19 +59,19 @@ class-explorer의 컴포넌트를 funky-ui의 층에 놓으면 이렇습니다. 
 
 | class-explorer | funky-ui |
 | --- | --- |
-| `atoms/RetroCard` | `Card` (+ `Card.Header` · `Card.Section`) — Surface 위 |
+| `atoms/RetroCard` | `Card` (+ `Card.Header` · `Card.Section`) — Surface 위. 색 면 카드(`StatsCards`)는 아직 없습니다 |
 | `atoms/RetroSubTitle` | `SectionTitle` |
 | `molecules/PageHeader` | `PageHeader` |
-| `molecules/AccordionSection` | `Accordion` |
+| `molecules/AccordionSection` | `Accordion` — 앱의 대문자 섹션 제목 모양은 아직 없습니다 |
 | `atoms/RetroStatItem` | `Stat` |
-| `molecules/BarChartRow` | `Meter` |
-| `atoms/RetroTooltip` | `Tooltip` (`disabled`로 ⌘ 누를 때만) |
-| `atoms/SearchInput` | `SearchField` |
+| `molecules/BarChartRow` | `Meter` — 읽기 전용입니다. 이름 · 막대를 누르는 쓰임과 마우스를 따라가는 풍선은 아직 없습니다 |
+| `atoms/RetroTooltip` | 글자 설명은 `Tooltip`(`disabled`로 ⌘ 누를 때만). 호출 5곳 중 3곳이 쓰는 사람 카드 풍선과 부모가 여닫는 쓰임은 아직 없습니다 |
+| `atoms/SearchInput` | `SearchField` — 최근 검색어 목록은 아직 없습니다 |
 | `TermSwitcher`의 목록 | `Menu` |
 | 모달 겹판 7개 | `Modal` (native `<dialog>`) — 안에서 여는 `Menu` · `Tooltip`도 그 안에 그려져 보입니다 |
 | 화면 전환 버튼 줄 (Browse의 Students · Teachers …) | `Tabs` |
-| 값 고르는 버튼 줄 (급식 끼니 · 필터 · 학기) | `SegmentedControl` |
-| 오류 · 안내 상자 (`bg-retro-primary/10 border-retro-primary`) | `Notice` — Paint(plain) 위 |
+| 값 고르는 버튼 줄 (Admin 학기 · 거르개 칩) | `SegmentedControl`. accent 가 줄 전체에 하나라, 칸마다 색이 다른 급식 끼니는 `Button selected`를 나란히 놓습니다 |
+| 오류 · 안내 상자 (`bg-retro-primary/10 border-retro-primary`) | `Notice` — Paint(plain) 위. 꽉 찬 색 띠에 그림자를 단 알림(Upload · Materials)은 아직 없습니다 |
 | 빈 카드 ("오늘은 정해진 일정이 없습니다") | `EmptyState` |
 | 폼의 이름표 + 칸 + 안내 | `FormField` |
 
@@ -84,9 +84,10 @@ class-explorer의 컴포넌트를 funky-ui의 층에 놓으면 이렇습니다. 
 | `BottomNav` | `BottomNav` (보라는 Surface `brand`이고 `accent`를 받지 않음, 펼친 More 판은 앱에 남음) |
 | `TermSwitcher` | `TermSwitcher` |
 | `atoms/StudentBadge` | `StudentBadge` (진동 `buzz` 포함) |
-| `atoms/StudentCard` · `atoms/TeacherCard` | `PersonCard` |
-| 학과색 칸 (DayRuler · TodayTimeline · WeekTimetable) | `ClassTile` (`upcoming · now · past · free`) |
-| `TimetableGrid` · `SectionsTimetable` · `RoomsPage`의 격자 | `TimetableGrid` |
+| `atoms/StudentCard` · `atoms/TeacherCard` | `PersonCard` — 2열 · 그림자 카드까지입니다. 교사 카드의 1열, 풍선 안의 평면 변형은 아직 없습니다 |
+| 학과색 칸 (DayRuler · WeekTimetable) | `ClassTile` (`upcoming · now · past · free`). `TodayTimeline`의 줄은 타일이 아니라 왼쪽 띠가 있는 줄이라 여기 들지 않습니다 |
+| `TimetableGrid` · `SectionsTimetable` | `TimetableGrid` |
+| `RoomsPage` · `AnalysisPage`의 시간 고르는 격자 | 아직 없습니다 — 칸 전체를 상태 면으로 칠하는 격자라 `ClassTile` 격자와 다릅니다 |
 
 ### 앱에 남음 — funky 컴포넌트로 다시 짬
 
@@ -96,10 +97,103 @@ class-explorer의 컴포넌트를 funky-ui의 층에 놓으면 이렇습니다. 
 
 ## 아직 시스템에 없는 것
 
-검수에서 정할 것들입니다.
+class-explorer의 `components/` · `pages/` 파일 81개를 funky-ui와 하나씩 대조한 결과입니다(2026-10-30). `InventoryPage`는 실제 화면이 아니라 견본 페이지라 뺐습니다. 80개 가운데 빈 곳 없이 옮겨지는 파일이 14개, 일부가 빠지는 파일이 48개, 재현할 수 없는 조각이 있는 파일이 18개입니다. 크기나 색이 사다리의 가까운 값으로 모이는 정규화는 빈 곳으로 세지 않았습니다.
+
+아래 횟수는 검사에서 센 쓰임새입니다. 같은 모양을 파일마다 세었으니 정확한 개수가 아니라 규모를 가늠하는 값입니다.
+
+### Foundations · Primitives — 글자 · 선 · 몸짓
+
+| 빠진 것 | 횟수 | 대표 자리 |
+| --- | --- | --- |
+| 여러 줄 문단의 줄 높이 — Text 역할마다 줄 높이가 고정입니다 | 47 | `GoogleLinkModal.tsx:83` |
+| 상자 없는 색 글자 · 아이콘 — Text tone에 빨강 · 주황 · 초록이 없습니다 | 43 | `AdminPage.tsx:784` |
+| 연한 면 + accent 테두리 + 검정 글자 레시피 | 6 | `CourseGraph.tsx:23-24` |
+| 실행 중 hex로 칠하는 글자 | 6 | `home/TodayCardV3.tsx:388-399` |
+| 한쪽만 긋는 테두리 | 5 | `RequestSidebar.tsx:91` |
+| 로딩 글자 · 상태 점의 깜빡임(`animate-pulse`) | 5 | `Sidebar.tsx:98` |
+| 48~72px 큰 제목 — `display`(36px) 위의 한 단 (랜딩 · 검색 프로필) | 5 | `SearchResultDisplay.tsx:243` |
+| 점선 테두리 — EmptyState · ClassTile 안에만 있습니다 | 4 | `CourseGraph.tsx:25-28` |
+| hover와 무관하게 남는 그림자, 그림자를 둔 채 꺼진 칸 | 4 | `CourseGraph.tsx:247-255` |
+| 어두운 면 위의 흐린 글자 — 토큰은 있는데 Text tone에 없습니다 | 3 | `LandingPage.tsx:318` |
+| 넘칠 때만 좌우로 훑는 한 줄 (`MarqueeText`) | 2 | `atoms/MarqueeText.tsx:27` |
+| hover 때 작아지는 몸짓 — Ask 플로팅 버튼 · 창 머리 단추 | 2 | `agent/AgentDock.tsx:41` |
+| 앱이 만든 창에 등장 몸짓을 거는 길, 96% 크기 · 24px 단 | 2 | `agent/AgentPanel.tsx:81` |
+| hover 때 아이콘만 도는 몸짓 | 2 | `FilterSection.tsx:43` |
+| 끌기 커서 · 드롭 대상 강조 | 2 | `zamong/Roadmap.tsx:487-489` |
+| 부모 hover 때 안쪽 화살표가 밀리는 몸짓 | 1 | `HomePage.tsx:448` |
+| 보라 바 위의 흐린 글자 | 1 | `Navigation.tsx:53` |
+| 면만 칠하고 테두리 없는 연한 칩 (달력 분류) | 1 | `CalendarGrid.tsx:119` |
+| 취소선 글자 | 1 | `TradePage.tsx:962` |
+| 떠 있는 판 뒤의 어두운 막 (하단 바 More 판) | 1 | `BottomNav.tsx:106` |
+
+### Atoms
+
+| 빠진 것 | 횟수 | 대표 자리 |
+| --- | --- | --- |
+| 문장 속 인라인 코드 칩 — Badge는 대문자 · nowrap입니다 | 22 | `SettingsPage.tsx:19` |
+| 흰 면 + 검정 테두리 — 색 머리줄 위의 배지, 크림 위의 흰 버튼 | 21 | `UploadPage.tsx:367` |
+| 분류 점(8px) · 띠(4px) | 18 | `home/TodayCardV2.tsx:184-186` |
+| hover 때만 밑줄이 생기는 조용한 링크 | 14 | `admin/FactsPanel.tsx:550` |
+| 기울어진 로고 글자 단독 — AppBar 안에만 있습니다 | 12 | `LoginPage.tsx:54` |
+| 면 · 테두리 없이 줄 안에서 치는 입력 | 6 | `zamong/Roadmap.tsx:262-284` |
+| 줄바꿈되는 배지 (거절 사유 같은 긴 글자) | 5 | `RequestSidebar.tsx:114-128` |
+| 무테 버튼 · 줄이 accent 면으로 반응하는 hover | 5 | `zamong/Roadmap.tsx:518-534` |
+| 어두운 면 위의 흐린 링크 | 4 | `LandingPage.tsx:467` |
+| 불러오는 동안 제자리에서 도는 아이콘 | 3 | `admin/FactsPanel.tsx:446` |
+| 막지 않는 경고 상태의 입력칸 (주황) | 3 | `AdminPage.tsx:780` |
+| 대소문자를 유지하는 버튼 글자 | 2 | `GoogleLoginButton.tsx:48-59` |
+| 두 줄 · 56~64px 타일형 버튼 (빈 강의실) | 1 | `RoomsPage.tsx:187-206` |
+| 줄바꿈되는 긴 문장 버튼 | 1 | `ZamongPage.tsx:593` |
+| 무테 하이라이트 마커 | 1 | `zamong/Roadmap.tsx:456-469` |
+
+### Molecules
+
+| 빠진 것 | 횟수 | 대표 자리 |
+| --- | --- | --- |
+| 대문자 섹션 제목의 Accordion | 24 | `molecules/AccordionSection.tsx:30` |
+| 범용 데이터 표 — 머리 · 행 머리 · 숫자 칸 · 가로 스크롤 | 6 | `zamong/Roadmap.tsx:151-218` |
+| 칸이 이어 붙은 세그먼트 | 5 | `AdminPage.tsx:746` |
+| 두 줄 카드 머리 | 5 | `ExamsPage.tsx:54` |
+| 꽉 찬 색 띠 + 그림자 알림 | 5 | `UploadPage.tsx:337` |
+| 눌러 고정하거나 ⌘로 뜨는 흰 면 판 (사람 카드 · 요약) | 5 | `SectionCard.tsx:78` |
+| 누르는 막대 · 막대 위 설명 | 5 | `AnalysisPage.tsx:674-687` |
+| 색 면 + 그림자 + 떠오름 카드 (StatsCards · Trade) | 4 | `StatsCards.tsx:20` |
+| 실행 중 색의 왼쪽 띠가 있는 줄 (오늘 목록 · 홈) | 4 | `home/TodayCardV3.tsx:295-302` |
+| 카드 · 모달 안의 전폭 색 띠 | 3 | `UploadPage.tsx:324` |
+| 입력에 붙는 제안 · 최근 검색어 목록 | 3 | `atoms/SearchInput.tsx:123` |
+| 촘촘한 접이식 줄 | 3 | `AdminPage.tsx:1091` |
+| 파일 끌어놓기 칸 | 2 | `UploadPage.tsx:283` |
+| 닫기 버튼 없는 모달 | 2 | `GoogleLinkModal.tsx:72-80` |
+| 머리 막대의 동작 버튼 · 두 줄 제목 | 2 | `MaterialPreviewModal.tsx:78-86` |
+| 본문이 남은 높이를 채우는 넓은 모달 (자료 미리보기) | 2 | `MaterialPreviewModal.tsx:72-77` |
+| 좁은 폭에서 버튼이 아래로 내려가는 Notice | 2 | `ZamongPage.tsx:467` |
+| 가장자리에서 밀려 나오는 서랍 · 시트 | 1 | `RequestSidebar.tsx:31-35` |
+| 카드를 담는 흰 풍선 | 1 | `atoms/RetroTooltip.tsx:88` |
+| 마우스를 따라가는 풍선 | 1 | `molecules/BarChartRow.tsx:45` |
+| 영역을 덮는 불러오는 중 | 1 | `SearchPage.tsx:126-136` |
+
+### Components (class-explorer 전용)
+
+| 빠진 것 | 횟수 | 대표 자리 |
+| --- | --- | --- |
+| 학과 · 기수 hex로 칠하는 버튼 · 칩 · 박스 | 13 | `MajorPicker.tsx:49-57` |
+| 시간표의 점심 · 저녁 빗금 행 | 4 | `home/WeekTimetable.tsx:515-550` |
+| 열릴 때 도는 ▾ (TermSwitcher) | 3 | `TermSwitcher.tsx:59` |
+| 칸 전체를 상태 면으로 칠하는 격자 (빈 강의실 · 분석 비교) | 2 | `RoomsPage.tsx:142-155` |
+| 두 줄 과목명 · 여러 줄 메타의 타일 | 2 | `home/WeekTimetable.tsx:649-695` |
+| 지목한 칸 강조 · 나머지 흐림 (Trade) | 2 | `TimetableGrid.tsx:105` |
+| 지금을 짚는 선 + 마름모 캐럿 (DayRuler · VacationBar) | 2 | `DayRuler.tsx:229` |
+| 풍선 안의 평면 사람 카드 | 2 | `atoms/StudentCard.tsx:56` |
+| 1열 교사 카드 | 1 | `atoms/TeacherCard.tsx:22` |
+| 사람 카드의 떠오름 · + N MORE | 1 | `EntityCard.tsx:20` |
+| 움직임을 줄인 사람에게도 보이는 일치 표시 | 1 | `SectionCard.tsx:241` |
+| 교시 열 · 요일 머리 고정과 스크롤 | 1 | `home/WeekTimetable.tsx:422-425` |
+| 옅은 머리 + 오늘 칸 색 | 1 | `home/WeekTimetable.tsx:460-484` |
+| 오늘 열 기둥 | 1 | `home/WeekTimetable.tsx:499-507` |
+| 연강 행 병합 | 1 | `home/WeekTimetable.tsx:601-648` |
+| 교육과정 SVG 그래프 — 앱에 남깁니다 | 1 | `CourseGraph.tsx:151-209` |
+
+### 정해 둔 것
 
 - **실행 중에 정해지는 색의 버튼** — `MajorPicker`는 학과색(hex 11가지)으로 고른 버튼을 칠합니다. 학과색은 네온 accent 아홉 밖의 색이라 `Button`으로는 칠할 수 없습니다. hex를 받는 탈출구를 Button(Paint)에 두지는 않기로 했습니다 — 실행 중에 색을 계산하지 않는다는 규칙을 깨고, 임의의 색에서는 글자 대비(WCAG)도 보장할 수 없기 때문입니다. 지금 실행 중의 색은 Components가 `--fk-tone`(`toneStyle`)으로만 칠합니다(`ClassTile` · `StudentBadge`). 남은 것은 학과를 accent에 묶을지, 학과색 버튼도 그 길(Components)에 올릴지입니다.
 - **고른 카드** — EntityCard의 `isActive`(`scale-105 shadow-retro-lg`)는 가이드에만 있고 코드에는 없습니다. 쓰이는 곳이 없어 `Card`에 `selected`는 더하지 않았습니다.
-- **떠 있는 창 · 아래에서 올라오는 판** — Ask의 데스크탑 미니 창(`Window`)과 모바일 전체 화면 판(`Sheet`). 지금은 `agent/AgentPanel` 안에 있습니다.
-- **좌우로 훑는 글자** (`MarqueeText`) — 범용 primitive 후보입니다.
-- **어두운 면 위의 글자 링크** — 랜딩 · 개인정보 화면의 바닥글(`text-white/40 hover:text-white`).

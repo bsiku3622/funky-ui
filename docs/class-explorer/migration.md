@@ -8,24 +8,25 @@ class-explorer의 지금 클래스 문자열을 funky-ui의 무엇으로 바꾸�
 
 | 지금 | funky-ui | 예 |
 | --- | --- | --- |
-| `RetroButton` (기본 흰색) | `<Button shadow>` | 대부분의 RetroButton |
+| `RetroButton` (기본 흰색) | `<Button shadow>` — ⚠️ `outline`은 면이 투명해서 크림 위에서는 흰 버튼이 크림으로 보입니다. 흰 면을 지키는 길은 아직 없습니다 | 대부분의 RetroButton |
 | `RetroButton variant="black"` | `<Button variant="filled" shadow>` | 로그인 · 저장 |
 | `RetroButton variant="primary"` | `<Button accent="pink" variant="solid" shadow>` | |
 | `RetroButton isSelected` | `<Button shadow selected>` — 105%로 커지고 그림자를 그대로 둡니다 | 학과 · 화면 전환 |
-| `bg-white border-2 border-black` (12) | `<Button>` · 아이콘만이면 `<IconButton variant="outline">` | MealCard 날짜 화살표 · 업로드 동작 |
+| `bg-white border-2 border-black` (12) | `<Button>` · 아이콘만이면 `<IconButton variant="outline">` — 흰 면이 사라지는 것은 위와 같습니다 | MealCard 날짜 화살표 · 업로드 동작 |
 | `bg-black text-white border-black` (8) | `<Button variant="filled">` | RequestSidebar "허용" · Admin "확인" |
 | 안 골림 `border-black/30 text-black/40` → 골림 `bg-black text-white` (11 + 7) | `<Button variant="muted" selected={…}>` · 줄이면 `SegmentedControl` | EventFormModal 칩 · Admin 학기 |
 | `bg-retro-accent1 border-black shadow-3px` (4) | `<Button accent="cyan" variant="solid" shadow>` | SyllabusPanel · MaterialsPage "Preview" |
 | `bg-white border-black shadow-3px` (6) | `<Button variant="outline" shadow>` | "Download" · "다시 시도" |
 | `bg-white border-black/30 text-black/50` "Refetch" (8) | `<Button size="xs" variant="muted" icon={RefreshCw}>` | Admin · FactsPanel |
 | `text-black/40 hover:text-black` 아이콘 (4 + 4) | `<IconButton variant="ghostMuted">` | 닫기 · 새로고침 |
-| `text-red-500 hover:text-red-700` 휴지통 (2) | `<IconButton accent="red" variant="ghost">` | Admin |
+| `text-red-500 hover:text-red-700` 휴지통 (2) | `<IconButton accent="red" variant="ghostMuted">` — 옅다가 hover 때 진해지는 쪽입니다(`ghost`는 반대) | Admin |
+| `border-black/30 hover:border-black` 모달 취소 | `<Button variant="hairline">` | Admin 모달 |
 | `text-xs font-black hover:text-retro-primary` 글자 버튼 | `<Button size="xs" variant="ghost">` | FilterSection "Refresh" · "Reset" |
 | `bg-white/10 border-white/30 text-white` (3) | `<NavButton>` | 로그아웃 · 학기 선택 |
 | `bg-retro-green border-black` "Approve" | `<Button accent="green" variant="solid" shadow>` | MaterialReviewPanel |
 | `bg-retro-primary border-black` "Reject" · "Withdraw" | `<Button accent="pink" variant="solid">` | MaterialReviewPanel · UploadPage |
 | `border-retro-primary text-retro-primary` "거절" | `<Button accent="pink" variant="outline">` | RequestSidebar |
-| `bg-retro-accent2 border-black shadow-4px` 링크 | `<Button as={Link} accent="yellow" variant="solid" shadow>` | 홈 배너 |
+| `bg-retro-accent2 border-black shadow-4px` 링크 | 한 줄이면 `<Button as={Link} accent="yellow" variant="solid" shadow>`. 홈 배너는 두 줄 왼쪽 정렬에 오른쪽 화살표라 Button으로 못 옮기고 `<Pressable as={Link} motion="sink" className={paintClass({ accent: "yellow", variant: "solid", hoverable: true })}>`로 조립합니다 | 홈 배너 |
 
 ### Trade의 줄
 
@@ -42,6 +43,8 @@ Trade 화면은 색이 뜻을 짊어지는 대표 자리라 따로 적습니다.
 | 이동 중인 카드의 버튼 `bg-white/60 border-retro-accent5 text-black/50` | `<Button size="xs" accent="sky" variant="framelineMuted">` |
 | 드랍한 카드 (`bg-retro-primary/10 border-retro-primary`) | `<Paint accent="pink" variant="plain">` — 색이 있는 박스는 Paint입니다 |
 | 드랍한 카드 안 버튼 (카드 색을 따름) | 그 Paint 안의 `<Button variant="outline">` — accent가 아래로 흐릅니다 |
+| 추가 · 이동 카드 (`bg-retro-green` · 하늘, 그림자 · 떠오름 · 검정 글자) | 아직 없습니다 — Paint에는 그림자 · 몸짓이 없고, `plain`은 글자가 accent 색입니다 |
+| 흰 카드 안 안 골린 유지 · 이동 · 드랍 (`bg-white border-black text-black/40`) | `<Button size="xs" variant="framelineMuted">` |
 
 ## 그림자
 
@@ -62,26 +65,26 @@ class-explorer의 모션 전부를 몸짓 · 상태 모션 · 입력칸으로 �
 | 지금 | funky-ui | 자리 |
 | --- | --- | --- |
 | `hover:translate-x/y-[3~4px] hover:shadow-none` — 가라앉음 (29) | `sink` — Button `shadow` · Card `motion="sink"` | 그림자 있는 버튼 대부분 · 사람 카드 |
-| 골린 버튼 `scale-105 z-10` — 그림자는 그대로, hover 때 그림자만 숨김(제자리) · 누르면 100%. 색 버튼은 커지지 않음 (RetroButton `isSelected` · Rooms · SectionCard) | Selectable의 `grow` — Button `shadow` + `selected`. 105%로 커져 이웃 위에 서고 그림자를 그대로 두며, hover 때 그림자만 숨고 누르면 100%로 돌아옵니다. 그림자가 없는 버튼은 `selected`여도 색만 바뀝니다 | Browse 보기 탭 · 학과 · Admin 필터 · 강의실 · 급식 끼니(색) |
+| 골린 버튼 `scale-105 z-10` — 그림자는 그대로, hover 때 그림자만 숨김(제자리) · 누르면 100%. 색 버튼은 커지지 않음 (RetroButton `isSelected` · Rooms · SectionCard) | Selectable의 `grow` — Button `selected`(그림자와 상관없음). 105%로 커져 이웃 위에 서고 4px 그림자 위에 서며, hover 때 그림자만 숨고 누르면 100%로 돌아옵니다. 쉴 때 평평한 칩(분반 카드의 교사 · 교실)도 같습니다. 색 버튼의 '안 커짐' 예외는 두지 않았습니다 | Browse 보기 탭 · 학과 · Admin 필터 · 강의실 · 급식 끼니(색) |
 | 골린 카드 `scale-105 shadow-retro-lg` (EntityCard `isActive`) | 없음 — 가이드에만 있고 코드에는 없는 prop이라 옮길 것이 없습니다. Card에 `selected`는 없습니다 | |
 | `hover:shadow-[2px…]` — 평평하다가 그림자가 생김 (4) | `raise` — Button `shadow="hover"` (그림자는 4px로) | 복사 버튼 · Trade 과목 추가 칩 |
-| `hover:-translate-y-1(.5)` + 그림자 6px — 떠오름 (3) | `lift` — Card `motion="lift"` (4px로 통일) | EntityCard · Trade 카드 |
+| `hover:-translate-y-1(.5)` + 그림자 6px — 떠오름 (3) | `lift` — Card `motion="lift"` (4px로 통일). EntityCard는 색 면 패널이 있는 `PersonCard` 구조인데 PersonCard는 `sink` 고정이라 아직 못 옮깁니다 | EntityCard · Trade 카드 |
 | `active:scale-95` — 누르는 순간 작아짐 (15) | `tap` · sink의 누르는 순간 | 그림자 없는 버튼 |
 | `active:translate-0.5 active:shadow-none`, hover는 색만 (2) | `sink`로 통일 | Show More |
-| `hover:scale-95 active:scale-[0.92]` (2) | `sink`로 통일 (그림자가 있는 버튼) | Ask 플로팅 버튼 · Ask 판 아이콘 버튼 |
-| `hover:scale-105 active:scale-95` (2) | 로고는 AppBar가 가짐 · 칩은 `raise` | 로고 · Trade 칩 |
+| `hover:scale-95 active:scale-[0.92]` (2) | 없음 — class-explorer 가이드가 사용자 요청의 예외로 두고 되돌리지 말라고 적은 몸짓입니다. `sink`로 합칠지 정해야 합니다 | Ask 플로팅 버튼 · Ask 판 아이콘 버튼 |
+| `hover:scale-105 active:scale-95` (2) | 로고는 AppBar가 가짐. Trade 칩은 학번색이라 `StudentBadge onClick`으로 가고, 거기엔 누르는 순간 작아지는 몸짓만 있습니다 | 로고 · Trade 칩 |
 | 목록 줄의 hover 회색 층 | Pressable `none` + Surface `fill="none" hoverable` | 검색 추천 · 메뉴 항목 · 아코디언 머리 |
 | `group-hover:rotate-[-45deg]` · `group-hover:translate-x-0.5` · `group-hover:scale-105` | 없음 | 초기화 아이콘 · 링크 화살표 · 카드 안 이름 |
 | 입력칸 `shadow-[4px…] focus:shadow-none` — 평소 있고 포커스에 거둠 | Input · Textarea · Select `shadow` — 쉴 때 4px, 포커스에 거두고 그 자리를 핑크 링이 채웁니다 | 로그인 · 업로드 · Admin · Materials |
 | 입력칸 평소 평평하고 `focus:shadow-[4px…]` — 포커스에 생김 | 없앰 — 위 규칙 하나로 모읍니다. 평평하게 두면 포커스는 링만 받고, 폼의 주인공 칸이면 `shadow`를 줍니다 | Trade 검색칸 둘 (Select Student · Add Subjects) |
-| `rotate-180` · `rotate-90` 펼침 화살표 | Accordion에 있음 | Accordion · Trade · TermSwitcher · Agent |
+| `rotate-180` · `rotate-90` 펼침 화살표 | Accordion에만 있음 — TermSwitcher의 ▾는 돌지 않고, Agent의 단계 줄은 Accordion으로 못 옮깁니다 | Accordion · Trade · TermSwitcher · Agent |
 | `animate-in fade-in duration-300` 펼친 내용 | Accordion 본문의 `fade` (300ms, 제자리) | AccordionSection |
 | `animate-pulse` 로딩 글자 · 상태 점 (7) | 없음 | Loading… · API 상태 점 |
-| `animate-spin` | Spinner | |
+| `animate-spin` | Spinner. 불러오는 동안 아이콘이 제자리에서 도는 모양(3곳)은 아직 없습니다 | Admin Refetch · 조사 Fetch |
 | `badge-buzz` | StudentBadge `buzz` | |
 | `marquee-swing` | 없음 — MarqueeText 미결 | 넘치는 한 줄 |
-| `ask-pop` · `ask-rise` · view-transition · `slide-in-from-right` | 없음 — Window · Sheet 미결 | Ask 창 · Zamong 학기 판 |
-| DayRuler 캐럿 `transition-[left] duration-700` | `crawl` 토큰 (컴포넌트는 미이관) | 오늘 시간선 |
+| `ask-pop` · `ask-rise` · view-transition · `slide-in-from-right` | 등장 몸짓 `pop` · `rise`는 있지만 Floating 안에서만 걸립니다 — 앱이 만든 창에 거는 길과 96% 크기 · 기준점 · 24px 단은 없습니다. Window · Sheet 미결 | Ask 창 · Zamong 학기 판 |
+| DayRuler 캐럿 `transition-[left] duration-700` | `crawl` 토큰 (컴포넌트는 미이관) | 오늘 시간선 · 방학 막대 |
 | `duration-150` · `75` · `500` | `fast`(100) · `base`(200) · `slow`(300)로 통일 | |
 
 ## 글자
@@ -109,7 +112,7 @@ class-explorer의 모션 전부를 몸짓 · 상태 모션 · 입력칸으로 �
 | --- | --- |
 | `retro-primary` · `retro-accent3` (같은 값) | `pink` |
 | `retro-secondary` | `purple` |
-| 상단 바 · 하단 바의 `bg-retro-secondary` | 없앰 — `AppBar` · `BottomNav`가 Surface `brand`(보라)로 칠하고 `accent`를 받지 않습니다. 바는 앱의 뼈대라 색을 고르는 자리가 아닙니다 |
+| 상단 바 · 하단 바의 `bg-retro-secondary` | 없앰 — `AppBar` · `BottomNav`가 Surface `brand`(보라)로 칠하고 `accent`를 받지 않습니다. 바는 앱의 뼈대라 색을 고르는 자리가 아닙니다. 머리띠(Landing · Privacy)도 `Surface fill="brand"`이고, 랜딩의 CTA 띠는 바가 아니라 `Paint accent="purple" variant="filled"`입니다 |
 | `retro-accent1` | `cyan` |
 | `retro-accent2` | `yellow` |
 | `retro-accent4` | `orange` |
@@ -118,7 +121,7 @@ class-explorer의 모션 전부를 몸짓 · 상태 모션 · 입력칸으로 �
 | Tailwind `red-500` · `red-600` | `red` |
 | `retro-bg` | `surface.canvas` |
 | `retro-fg` | `ink.primary` |
-| `retro-accent-light` (#f0fdff hover 면) | 없앰 — 흑백 면 위의 줄이면 Surface `hoverable`(글자색 7% 층), 색 요소면 Paint `hoverable` |
+| `retro-accent-light` (#f0fdff hover 면) | 없앰 — 흑백 면 위의 줄이면 Surface `hoverable`(글자색 7% 층), 색 요소면 Paint `hoverable`. 늘 깔린 배경(Zamong · Landing)은 `Paint accent="cyan" variant="solidMuted"`, 달력의 골린 날은 Surface `fill="well"`입니다 |
 | `bg-black/5` · `bg-black/[0.03]` | `surface.well` |
 | `border-black/10` | `line.subtle` (`Divider`) |
 | `border-black/20` · `/30` | `line.soft` |

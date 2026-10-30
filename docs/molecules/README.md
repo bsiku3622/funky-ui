@@ -176,7 +176,7 @@ Molecules는 Atoms와 Primitives를 묶은 범용 조합입니다. 카드 · 선
 | `accent` | `Accent` | — | 색입니다. 주지 않으면 바깥 Paint의 색을 따르고, 바깥에도 없으면 `black`입니다. |
 | `variant` | `Variant` | `"muted"` | 안 골린 칸의 칠입니다. 골린 칸은 같은 accent의 `filled`입니다. |
 | `size` | `ControlSize` | `"sm"` | 칸의 크기입니다. |
-| `shadow` | `boolean` | `false` | 칸을 4px 그림자 위에 띄웁니다. 골린 칸은 105%로 커지고 그림자를 그대로 둡니다. |
+| `shadow` | `boolean` | `false` | 안 골린 칸을 4px 그림자 위에 띄웁니다(hover 때 가라앉음). 골린 칸은 이 값과 상관없이 105%로 커져 그림자 위에 섭니다. |
 | `gap` | `Space` | `"sm"` | 칸 사이 간격입니다(6px). |
 | `fill` | `boolean` | `false` | 줄을 꽉 채워 칸을 같은 폭으로 나눕니다. 줄바꿈은 꺼집니다. |
 | `className` | `string` | — | 줄에 붙는 class입니다. |
@@ -208,7 +208,7 @@ Molecules는 Atoms와 Primitives를 묶은 범용 조합입니다. 카드 · 선
 | `accent` | `Accent` | — | 색입니다. 주지 않으면 바깥 Paint의 색을 따르고, 바깥에도 없으면 `black`입니다. |
 | `variant` | `Variant` | `"outline"` | 안 골린 탭의 칠입니다. 골린 탭은 같은 accent의 `filled`입니다. |
 | `size` | `ControlSize` | `"sm"` | 탭의 크기입니다. |
-| `shadow` | `boolean` | `true` | 탭을 4px 그림자 위에 띄웁니다. 골린 탭은 105%로 커지고 그림자를 그대로 둡니다. |
+| `shadow` | `boolean` | `true` | 안 골린 탭을 4px 그림자 위에 띄웁니다(hover 때 가라앉음). 골린 탭은 이 값과 상관없이 105%로 커져 그림자 위에 섭니다. |
 | `gap` | `Space` | `"md"` | 탭 사이 간격입니다(8px). `Tabs.List`가 읽습니다. |
 | `fill` | `boolean` | `false` | 줄을 꽉 채워 탭을 같은 폭으로 나눕니다. |
 | `children` | `ReactNode` | — | `Tabs.List`와 `Tabs.Panel`입니다. |

@@ -320,7 +320,7 @@ function Row({ as, children, ...rest }) {
 
 ## Selectable
 
-2차 primitive, 골라지는 물건입니다(Box + 골라짐). '골라져 있다'는 남아 있는 상태를 맡습니다 — 그 사실을 알리는 aria 하나와, 골라진 칸의 모양(커지기). 눌림은 순간의 반응이고 골라짐은 남아 있는 상태라서 [Pressable](#pressable)과 따로 서고, 고르는 칸은 대개 둘을 같이 씁니다. 색은 하나도 없습니다 — 골라진 색은 칠의 몫이라 Paint · Glass의 `selected`를 주거나 Surface의 `fill`을 바꿉니다. 아래는 학년 버튼 한 줄입니다. 안 골린 칸은 `sink`로 그림자 위에 떠 있고, 골린 칸은 `grow`로 커집니다.
+2차 primitive, 골라지는 물건입니다(Box + 골라짐). '골라져 있다'는 남아 있는 상태를 맡습니다 — 그 사실을 알리는 aria 하나와, 골라진 칸의 모양(커지기). 눌림은 순간의 반응이고 골라짐은 남아 있는 상태라서 [Pressable](#pressable)과 따로 서고, 고르는 칸은 대개 둘을 같이 씁니다. 색은 하나도 없습니다 — 골라진 색은 칠의 몫이라 Paint · Glass의 `selected`를 주거나 Surface의 `fill`을 바꿉니다. 아래는 학년 버튼 한 줄입니다. 안 골린 칸은 `sink`로 그림자 위에 떠 있고, 골린 칸은 `grow`로 커집니다. `grow`가 `sink`를 덮으므로 몸짓은 골라짐에 따라 바꾸지 않습니다.
 
 ```tsx
 <Inline gap="md">
@@ -330,7 +330,7 @@ function Row({ as, children, ...rest }) {
       <Selectable
         key={g}
         as={Pressable}
-        motion={picked ? "none" : "sink"}
+        motion="sink"
         selected={picked}
         grow
         paddingX="lg"
@@ -348,12 +348,15 @@ function Row({ as, children, ...rest }) {
 | prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `as` | `ElementType` | `"div"` | 렌더할 요소입니다. 누르는 칸이면 `as={Pressable}`을 주고 칠은 `className`으로 얹습니다. |
-| `selected` | `boolean` | — | 골라졌는지입니다. 주지 않으면 고르는 물건이 아니라서 aria가 붙지 않습니다. |
+| `selected` | `boolean` | — | 골라졌는지입니다(쓰는 쪽이 들고 있는 값). `selected`도 `defaultSelected`도 없으면 고르는 물건이 아니라서 aria가 붙지 않습니다. |
+| `defaultSelected` | `boolean` | — | 처음 골라짐입니다. 주면 누를 때마다 스스로 켜지고 꺼지는 토글이 됩니다. |
+| `onSelectedChange` | `(selected: boolean) => void` | — | 눌러서 골라짐이 바뀔 때 부릅니다. `selected`와 같이 주면 쓰는 쪽이 값을 들고 있는 토글입니다. |
 | `role` | `AriaRole` | — | 요소의 role입니다. 골라짐을 알리는 aria가 이걸로 정해집니다. 고르는 무리의 칸이면 `radio` · `tab`을 줍니다. |
 | `current` | `"page" \| "step" \| "location" \| "date" \| "time" \| true` | — | 고른 것이 아니라 '지금 여기'인 것입니다. 내비의 지금 화면은 `"page"`입니다. `aria-current` 하나로 알립니다. |
-| `grow` | `boolean` | `false` | 골라지면 105%로 커져 이웃 위에 서고 4px 그림자를 그대로 둡니다. hover 때는 그림자만 숨기고, 누르면 100%로 돌아옵니다. `selected`일 때만 걸립니다. |
+| `grow` | `boolean` | `false` | 골라지면 105%로 커져 이웃 위에 서고 4px 그림자 위에 섭니다(쉴 때 평평하던 칩도). hover 때는 그림자만 숨기고, 누르면 100%로 돌아옵니다. 골라졌을 때만 걸리고, 함께 쓰는 Pressable의 몸짓을 덮습니다. |
 | `padding` `paddingX` `paddingY` | [Box](#box)와 같음 | — | Box와 같은 prop입니다. |
-| `className` | `string` | — | 마지막에 덧붙는 class입니다. 칠은 여기로 얹습니다. |
+| `className` | `string \| ({ selected }) => string` | — | 마지막에 덧붙는 class입니다. 칠은 여기로 얹습니다. 골라짐에 따라 칠이 바뀌면 함수로 줍니다 — 스스로 켜고 끄는 토글은 값을 안에 들고 있어서 이 길로만 칠에 넘깁니다. |
+| `onClick` | `(event) => void` | — | 누름입니다. 토글이면 이걸 먼저 부르고, 여기서 `preventDefault()`하지 않았으면 골라짐을 뒤집습니다. |
 
 골라짐을 알리는 aria는 `selected`가 있을 때 하나만 붙습니다. 어느 속성인지는 아래 순서로 정합니다.
 
@@ -369,12 +372,13 @@ function Row({ as, children, ...rest }) {
 - 기본 요소가 `div`라서, `role`도 `current`도 없이 쓰면 `aria-pressed`가 button이 아닌 요소에 붙습니다. 고르는 칸은 `as={Pressable}`로 button을 그리거나 `role`을 줍니다.
 - `current`는 내비 칸이 씁니다. SideNav · BottomNav의 칸이 `current="page"`로 지금 화면을 알립니다. 내비는 Tab 키로 칸마다 들르는 것이 맞아서 아래 `useSelectableGroup`으로 묶지 않습니다.
 - `grow`는 이웃 위에 서려고 `position: relative`와 `z-index: 1`을 걸고, 4px 그림자를 둔 채 105%(`PRESS.grow`)로 커집니다. hover 때는 가라앉지 않고 제자리에서 그림자만 숨습니다. 이미 고른 칸을 다시 '눌러 들어가게' 하지 않으려는 것이고, class-explorer의 골라진 버튼(`scale-105 z-10`)이 이렇게 움직입니다. 꺼진 요소에는 hover · 누르는 중 규칙을 걸지 않습니다.
-- `grow`는 그 자체로 몸짓이라 같이 쓰는 Pressable의 `motion`은 `none`으로 둡니다. 둘이 겹쳐도 골라진 모양이 이기도록 Selectable의 CSS가 Pressable의 CSS를 읽어 들여 규칙 순서를 뒤로 둡니다. 2차 primitive 사이에 있는 유일한 import입니다.
-- 그림자를 켜지 않은 칩은 커지지 않고 색만 바뀝니다(class-explorer의 색 버튼). `grow`는 주는 쪽이 정합니다 — Button은 `shadow`를 켠 버튼이 골라질 때만 줍니다.
+- `grow`는 그 자체로 몸짓이라 함께 쓰는 Pressable의 몸짓(`sink` · `raise` · `lift` · `tap`)을 덮습니다. class를 두 번 겹친 선택자(`.grow.grow`)로 특이도를 한 단 올려서, 쓰는 쪽이 골라질 때마다 `motion`을 바꿀 필요가 없고 CSS가 실리는 순서에도 기대지 않습니다. Selectable의 CSS가 Pressable의 CSS에서 `FLAT_SHADOW` 값을 읽는 것이 2차 primitive 사이의 유일한 import입니다.
+- 쉴 때 평평한 칩도 골라지면 커지며 그림자가 생깁니다 — class-explorer 분반 카드의 교사 · 교실 칩이 그렇습니다. `grow`는 주는 쪽이 정하고, Button은 골라진 버튼에 늘 줍니다.
+- 누르면 골라지는 토글은 둘입니다. `defaultSelected`를 주면 누를 때마다 스스로 켜지고 꺼지며, 칠은 `className`을 함수(`({ selected }) => paintClass({ selected })`)로 줘서 그 값을 받습니다. `selected` + `onSelectedChange`면 쓰는 쪽이 값을 들고 있는 토글입니다. 무리의 칸(라디오 · 탭)은 무리가 값을 들고 있으므로 둘 다 주지 않습니다 — 이미 고른 라디오를 다시 눌러도 꺼지지 않아야 합니다.
 
 ### useSelectable
 
-골라짐의 속입니다. `<Selectable>`과 Button · IconButton · NavButton · 메뉴 칸 · 내비 칸이 같은 훅을 씁니다. 받는 옵션은 `<Selectable>`에서 `as`를 뺀 props와 같고, 요소에 펼칠 `selectProps`를 돌려줍니다 — `role`, 골라짐을 알리는 aria 하나, 골라진 모양과 여백의 `className`입니다. 아래는 지금 화면을 알리는 하단 바의 칸입니다. `usePressable`의 `className`과 하나로 합치려고 `selectProps.className`을 그쪽에 넘겼습니다.
+골라짐의 속입니다. `<Selectable>`과 Button · IconButton · NavButton · 메뉴 칸 · 내비 칸이 같은 훅을 씁니다. 받는 옵션은 `<Selectable>`에서 `as`를 뺀 props와 같고(`className`은 문자열만 받습니다 — 함수는 `<Selectable>`이 풉니다), 요소에 펼칠 `selectProps`를 돌려줍니다 — `role`, 골라짐을 알리는 aria 하나, 골라진 모양과 여백의 `className`입니다. 지금 값 `selected`도 같이 돌려주고, 토글이면(`defaultSelected` · `onSelectedChange`) 뒤집는 `toggle`도 돌려줍니다 — 누름에 이어 부릅니다. 아래는 지금 화면을 알리는 하단 바의 칸입니다. `usePressable`의 `className`과 하나로 합치려고 `selectProps.className`을 그쪽에 넘겼습니다.
 
 ```tsx
 function NavItem({ active, children, ...rest }) {
@@ -439,7 +443,7 @@ function ViewPicker() {
 - 골라짐은 눌림과 달리 남아 있는 상태입니다. 색은 칠의 `selected`가, 알림과 커지기는 Selectable이 맡으므로 서로 없이도 쓸 수 있습니다 — 칠 없이 Selectable만 써도 aria가 붙고, Selectable 없이 칠의 `selected`만 줘도 색은 바뀝니다.
 - 여러 축에 걸치는 것은 꺼짐뿐입니다. Pressable이 `disabled` · `aria-disabled`를 붙이고, 나머지 primitive가 그 HTML 상태를 읽어 각자의 축에서 멈춥니다.
 - `transition-property`는 한 속성이라 자기 속성만 적으면 한 요소 위에서 서로를 덮습니다. 그래서 칠 · Pressable · Selectable 모두 색과 몸짓을 합친 한 목록(`STATE_TRANSITION`)을 씁니다.
-- Button이 셋을 묶는 자리입니다. `selected`를 Paint의 `selected`(색)와 Selectable의 `selected`(알림)로 나눠 주고, `shadow`로 몸짓을 고릅니다 — 켜면 `sink`, `"hover"`면 `raise`, 끄면 `tap`입니다. `shadow`를 켠(`true`) 버튼이 골라지면 `sink` 대신 `grow`가 몸짓을 맡아 Pressable의 `motion`은 `none`이 됩니다.
+- Button이 셋을 묶는 자리입니다. `selected`를 Paint의 `selected`(색)와 Selectable의 `selected`(알림)로 나눠 주고, `shadow`로 몸짓을 고릅니다 — 켜면 `sink`, `"hover"`면 `raise`, 끄면 `tap`입니다. 골라진 버튼에는 그림자와 상관없이 `grow`를 주고, `grow`가 몸짓을 덮으므로 `motion`은 쉴 때의 것 그대로 둡니다.
 
 ## Floating
 

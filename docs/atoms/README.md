@@ -27,7 +27,7 @@ accent(색) × variant(칠하는 방식) × size × shadow로 만드는 기본 �
 | `variant` | `Variant` | `"outline"` | 칠하는 방식입니다. `filled` `outline` `hairline` `frameline` `framelineMuted` `plain` `solid` `solidMuted` `muted` `ghost` `ghostMuted` 열한 가지입니다. |
 | `size` | `ControlSize` | `"md"` | 높이 사다리입니다. `xs` 24 · `sm` 32 · `md` 40 · `lg` 48px. |
 | `shadow` | `boolean \| "hover"` | `false` | 4px 그림자입니다. `true`면 그림자 위에 떠 있다가 hover 때 가라앉고(`sink`), `"hover"`면 평평하다가 hover 때 제자리에서 그림자가 올라옵니다(`raise` — 복사 버튼 · 과목 추가 칩). 끄면 누르는 순간만 작아집니다(`tap`). |
-| `selected` | `boolean` | — | 골라진 상태입니다. 같은 accent의 `filled`로 칠하고, 그 사실을 aria 하나로 알립니다(어느 aria인지는 `role`이 정합니다). `shadow`가 `true`면 가라앉는 대신 105%로 커집니다. |
+| `selected` | `boolean` | — | 골라진 상태입니다. 같은 accent의 `filled`로 칠하고, 그 사실을 aria 하나로 알립니다(어느 aria인지는 `role`이 정합니다). 골라지면 105%로 커져 그림자 위에 섭니다(`shadow`와 상관없습니다). |
 | `role` | `AriaRole` | — | 요소의 `role`입니다. `selected`를 알리는 aria가 이걸로 정해집니다. 고르는 무리의 칸이면 `radio` · `tab`을 줍니다. |
 | `loading` | `boolean` | `false` | 글자 자리를 지킨 채 가운데에 스피너를 둡니다. `aria-busy` · `aria-disabled`가 붙고 누름을 삼킵니다. |
 | `icon` | `IconComponent` | — | 앞 아이콘입니다. 크기와 굵기는 버튼 크기가 정합니다. |
@@ -39,12 +39,12 @@ accent(색) × variant(칠하는 방식) × size × shadow로 만드는 기본 �
 
 - 테두리가 없는 `ghost`와 `ghostMuted`는 가라앉을 상자가 없어 `shadow`를 줘도 그림자가 붙지 않습니다. `selected`로 `filled`가 되면 받습니다.
 - 선택은 variant가 아니라 상태입니다. `selected`를 주면 같은 accent의 `filled`로 칠하므로 `variant`에는 안 골랐을 때의 모양만 적습니다(`muted` 학기 버튼이 골라지면 검정 블록이 됩니다).
-- `shadow`가 `true`인 버튼이 골라지면 가라앉는 대신 105%로 커져 이웃 위에 서고, 그림자를 그대로 둡니다. hover 때는 그림자만 숨고(크기는 그대로) 누르면 100%로 돌아옵니다 — class-explorer의 골린 버튼이 이렇게 움직입니다([Motion](../foundations/motion.md#커짐)). 그림자가 없는 버튼과 `"hover"` 버튼은 골라져도 커지지 않고 색만 바뀝니다. class-explorer의 색 칩이 그렇게 움직입니다.
+- 골라진 버튼은 105%로 커져 이웃 위에 서고 4px 그림자 위에 섭니다. 쉴 때 그림자가 없던 버튼(`muted` 칩 · `shadow="hover"`)도 같습니다. hover 때는 그림자만 숨고(크기는 그대로) 누르면 100%로 돌아옵니다 — class-explorer의 골린 버튼 · 칩이 이렇게 움직입니다([Motion](../foundations/motion.md#커짐)). class-explorer의 색 버튼(급식 끼니 · 학과색)은 커지지 않았지만, funky에는 그런 런타임 색 버튼이 없어 이 예외를 두지 않았습니다.
 - 골라짐은 aria 하나로 알리고, 어느 aria인지는 `role`이 정합니다. `role`이 없는 그냥 버튼은 `aria-pressed`(눌러서 켜는 토글), `radio` · `checkbox` · `switch`는 `aria-checked`, `tab` · `option`은 `aria-selected`입니다. 역할에 맞지 않는 aria를 겹쳐 붙이지 않으려는 것입니다. `selected`를 아예 주지 않으면 aria도 붙지 않고, `false`를 주면 `false`로 붙습니다.
 - `role`을 준다고 방향키가 생기지는 않습니다. 줄 안에서 방향키로 옮기고 Tab에는 골라진 칸 하나만 들어오게 하는 일(roving tabindex)은 [SegmentedControl](../molecules/README.md#segmentedcontrol) · [Tabs](../molecules/README.md#tabs)가 [`useSelectableGroup`](../primitives/README.md#useselectablegroup)으로 붙입니다.
 - `loading`은 글자를 투명하게 두고 스피너를 겹쳐서 폭이 흔들리지 않습니다. 불러오는 동안은 마우스 · Enter · Space 어느 누름도 `onClick`에 닿지 않습니다. `disabled`를 쓰지 않는 이유는 꺼진 모양(불투명도 0.4)이 아니라 스피너를 보여야 해서입니다.
 
-Button은 Pressable과 Selectable, Paint를 이렇게 묶습니다 — `shadow`를 켜면 `sink`, `"hover"`면 `raise`, 끄면 `tap`이고, 그림자를 켠 버튼이 골라지면 몸짓을 `none`으로 두고 Selectable의 `grow`가 커지기를 맡습니다. 커지는 것 자체가 몸짓이라 가라앉는 몸짓과 겹치면 안 되기 때문입니다. 크기 · 아이콘 없이 같은 칠과 몸짓만 필요한 자리(예: 줄 전체가 누르는 링크)는 이 조립을 직접 씁니다 — `<Paint as={Pressable} motion="sink" accent="cyan" variant="solid" hoverable>`(링크면 Paint의 `as`가 이미 Pressable이라 `as="a"`를 줄 수 없으므로, Pressable 쪽에 칠을 class로 얹습니다 — `<Pressable as="a" motion="sink" className={paintClass({ … hoverable: true })}>`). 누르지 않는 요소의 칠은 [Paint](../primitives/README.md#paint)입니다.
+Button은 Pressable과 Selectable, Paint를 이렇게 묶습니다 — `shadow`를 켜면 `sink`, `"hover"`면 `raise`, 끄면 `tap`이고, 골라진 버튼에는 Selectable의 `grow`를 얹습니다. `grow`가 몸짓을 덮으므로(특이도가 한 단 높습니다) 몸짓은 쉴 때의 것을 그대로 둡니다. 크기 · 아이콘 없이 같은 칠과 몸짓만 필요한 자리(예: 줄 전체가 누르는 링크)는 이 조립을 직접 씁니다 — `<Paint as={Pressable} motion="sink" accent="cyan" variant="solid" hoverable>`(링크면 Paint의 `as`가 이미 Pressable이라 `as="a"`를 줄 수 없으므로, Pressable 쪽에 칠을 class로 얹습니다 — `<Pressable as="a" motion="sink" className={paintClass({ … hoverable: true })}>`). 누르지 않는 요소의 칠은 [Paint](../primitives/README.md#paint)입니다.
 
 ## IconButton
 
@@ -64,7 +64,7 @@ Button은 Pressable과 Selectable, Paint를 이렇게 묶습니다 — `shadow`�
 | `variant` | `Variant` | `"ghostMuted"` | 칠하는 방식입니다. |
 | `size` | `ControlSize` | `"md"` | 정사각형이고, 한 변은 같은 `size`인 Button의 높이와 같습니다. |
 | `shadow` | `boolean \| "hover"` | `false` | 4px 그림자입니다. Button과 같습니다 — `true`는 가라앉음, `"hover"`는 올라옴입니다. |
-| `selected` | `boolean` | — | 골라진 상태입니다. Button과 같습니다 — 같은 accent의 `filled` · aria 하나, `shadow`가 `true`면 커집니다. |
+| `selected` | `boolean` | — | 골라진 상태입니다. Button과 같습니다 — 같은 accent의 `filled` · aria 하나 · 골라지면 커집니다. |
 | `role` | `AriaRole` | — | 요소의 `role`입니다. Button과 같습니다. |
 | `disabled` | `boolean` | `false` | hover와 눌림이 꺼지고 불투명도 0.4가 됩니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
