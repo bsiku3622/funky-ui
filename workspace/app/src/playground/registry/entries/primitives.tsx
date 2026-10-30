@@ -410,7 +410,7 @@ const paint: Spec = {
     },
     {
       title: "색 · 누름 · 골라짐은 따로 섭니다",
-      note: "Paint 는 색, Pressable 은 누름, Selectable 은 골라짐이고 서로를 켜지 않습니다. hoverable 은 Pressable 없이 hover 색을 내고(둘째 — 커서는 화살표 그대로), Pressable 은 칠 없이 가라앉습니다(셋째). Button 은 셋을 묶은 것이고(넷째), 골라지면 Paint 의 selected(색)와 Selectable 의 grow(커지기)를 같이 줍니다(다섯째) — grow 가 그 자체로 몸짓이라 이때 Pressable 의 motion 은 none 입니다.",
+      note: "Paint 는 색, Pressable 은 누름, Selectable 은 골라짐이고 서로를 켜지 않습니다. hoverable 은 Pressable 없이 hover 색을 내고(둘째 — 커서는 화살표 그대로), Pressable 은 칠 없이 가라앉습니다(셋째). Button 은 셋을 묶은 것이고(넷째), 골라지면 Paint 의 selected(색)와 Selectable 의 grow(커지기)를 같이 줍니다(다섯째) — grow 가 함께 쓰는 Pressable 의 몸짓을 덮어서 motion 은 쉴 때의 것 그대로 둡니다.",
       render: () => (
         <Stage bg="raised">
           <Paint accent="cyan" variant="muted" padding="md">
@@ -425,8 +425,16 @@ const paint: Spec = {
           <Pressable motion="sink" padding="md" className={paintClass({ accent: "cyan", variant: "solid", hoverable: true })}>
             <Text variant="label">둘 다 · Button</Text>
           </Pressable>
-          <Selectable as={Pressable} selected grow padding="md" className={paintClass({ accent: "cyan", variant: "muted", selected: true, hoverable: true })}>
-            <Text variant="label">selected · grow</Text>
+          <Selectable
+            as={Pressable}
+            defaultSelected
+            grow
+            padding="md"
+            className={({ selected }) => paintClass({ accent: "cyan", variant: "muted", selected, hoverable: true })}
+          >
+            <Text variant="label" tone="inherit">
+              selected · grow
+            </Text>
           </Selectable>
         </Stage>
       ),
@@ -1065,7 +1073,28 @@ const ARIA_OF: Record<SelectRole, string> = {
 
 const roleOf = (r: SelectRole): AriaRole | undefined => (r === "button" || r === "current" ? undefined : r);
 
-/** 그림자를 켠 버튼 무리 — 안 골린 칸은 sink, 골린 칸은 grow (Button 이 고르는 조합 그대로) */
+/** 미리보기 — 누를 때마다 스스로 켜지고 꺼지는 토글입니다. 패널의 selected 는 처음 값이라, 바꾸면 처음부터 다시 그립니다 */
+function ToggleDemo({ initial, grow, role, label }: { initial: boolean; grow: boolean; role: SelectRole; label: string }) {
+  return (
+    <Selectable
+      as={Pressable}
+      motion="sink"
+      defaultSelected={initial}
+      grow={grow}
+      role={roleOf(role)}
+      current={role === "current" ? "page" : undefined}
+      paddingX="xl"
+      paddingY="md"
+      className={({ selected }) => paintClass({ variant: "outline", selected, hoverable: true })}
+    >
+      <Text variant="label" tone="inherit">
+        {label}
+      </Text>
+    </Selectable>
+  );
+}
+
+/** 고르는 줄 — 안 골린 칸은 쉴 때의 몸짓(그림자 줄은 sink, 평평한 줄은 tap), 골린 칸은 두 줄 모두 grow (Button 과 같은 조합) */
 function GrowRow({ shadow }: { shadow: boolean }) {
   const [on, setOn] = useState("전체");
   return (
@@ -1076,9 +1105,9 @@ function GrowRow({ shadow }: { shadow: boolean }) {
           <Selectable
             key={label}
             as={Pressable}
-            motion={shadow ? (picked ? "none" : "sink") : "tap"}
+            motion={shadow ? "sink" : "tap"}
             selected={picked}
-            grow={shadow}
+            grow
             paddingX="lg"
             paddingY="sm"
             className={paintClass({ variant: shadow ? "outline" : "muted", selected: picked, hoverable: true })}
@@ -1106,6 +1135,7 @@ function GroupDemo() {
           as={Pressable}
           role="radio"
           {...itemProps(v)}
+          grow
           paddingX="lg"
           paddingY="sm"
           className={paintClass({ accent: "purple", variant: "muted", selected: value === v, hoverable: true })}
@@ -1122,7 +1152,7 @@ function GroupDemo() {
 const selectable: Spec = {
   name: "Selectable",
   summary:
-    "골라지는 물건 — '골라져 있다' 는 남아 있는 상태를 맡습니다. 그 사실을 쓰임에 맞는 aria 하나로 알리고(role 이 정합니다 — 그냥 버튼은 aria-pressed, radio 는 aria-checked, tab · option 은 aria-selected, 내비의 지금 화면은 current 로 aria-current), grow 면 골라진 모양을 그립니다: 105% 로 커져 이웃 위에 서고 4px 그림자를 그대로 두며, hover 때 그림자만 숨고 누르면 100% 로 돌아옵니다. 색은 없습니다 — 골라진 색은 칠(Paint · Glass · Surface)의 selected 입니다. 누름(Pressable)은 순간의 반응이라 따로이고, 고르는 칸은 둘을 같이 씁니다. 무리의 값 · 방향키는 useSelectableGroup 입니다.",
+    "골라지는 물건 — '골라져 있다' 는 남아 있는 상태를 맡습니다. 그 사실을 쓰임에 맞는 aria 하나로 알리고(role 이 정합니다 — 그냥 버튼은 aria-pressed, radio 는 aria-checked, tab · option 은 aria-selected, 내비의 지금 화면은 current 로 aria-current), grow 면 골라진 모양을 그립니다: 105% 로 커져 이웃 위에 서고 4px 그림자를 그대로 두며, hover 때 그림자만 숨고 누르면 100% 로 돌아옵니다. 색은 없습니다 — 골라진 색은 칠(Paint · Glass · Surface)의 selected 이고, 스스로 켜고 끄는 토글이면 className 을 함수({ selected }) => …로 줘서 칠이 그 값을 받습니다. defaultSelected 를 주면 누를 때마다 켜지고 꺼지고(미리보기를 눌러 보세요), selected + onSelectedChange 면 쓰는 쪽이 값을 듭니다. 누름(Pressable)은 순간의 반응이라 따로이고, 고르는 칸은 둘을 같이 씁니다. 무리의 값 · 방향키는 useSelectableGroup 입니다.",
   controls: {
     selected: { kind: "boolean" },
     grow: { kind: "boolean" },
@@ -1131,51 +1161,43 @@ const selectable: Spec = {
   },
   initial: { selected: true, grow: true, children: "전체" },
   defaults: { selected: false, grow: false, role: "button" },
-  render: (v) => {
-    const r = v.role as SelectRole;
-    return (
-      <Selectable
-        as={Pressable}
-        selected={Boolean(v.selected)}
-        grow={Boolean(v.grow)}
-        role={roleOf(r)}
-        current={r === "current" ? "page" : undefined}
-        paddingX="xl"
-        paddingY="md"
-        className={paintClass({ variant: "outline", selected: Boolean(v.selected), hoverable: true })}
-      >
-        <Text variant="label" tone="inherit">
-          {String(v.children ?? "")}
-        </Text>
-      </Selectable>
-    );
-  },
+  render: (v) => (
+    <ToggleDemo
+      key={`${String(v.selected)}-${String(v.role)}`}
+      initial={Boolean(v.selected)}
+      grow={Boolean(v.grow)}
+      role={v.role as SelectRole}
+      label={String(v.children ?? "")}
+    />
+  ),
   code: (v) => {
     const r = v.role as SelectRole;
     const attrs = [
-      v.selected ? "selected" : "selected={false}",
+      'motion="sink"',
+      v.selected ? "defaultSelected" : "defaultSelected={false}",
       v.grow ? "grow" : "",
       roleOf(r) ? `role="${r}"` : "",
       r === "current" ? 'current="page"' : "",
     ].filter(Boolean);
-    return `<Selectable as={Pressable} ${attrs.join(" ")} className={paintClass({ selected, hoverable: true })}>\n  ${String(v.children ?? "")}\n</Selectable>\n// → ${ARIA_OF[r]}`;
+    return `<Selectable as={Pressable} ${attrs.join(" ")} className={({ selected }) => paintClass({ selected, hoverable: true })}>\n  ${String(v.children ?? "")}\n</Selectable>\n// 누를 때마다 켜지고 꺼집니다 → ${ARIA_OF[r]}`;
   },
   sections: [
     {
       title: "aria 하나 — role 이 정합니다",
-      note: "골라짐을 알리는 aria 는 하나뿐입니다. 예전에는 Button 이 aria-pressed 를 붙이면 SegmentedControl · Tabs 가 그걸 지우고 aria-checked · aria-selected 를 다시 붙였습니다. 지금은 칸이 자기 role 을 Selectable 에 넘기고, Selectable 이 맞는 것 하나만 붙입니다. 주지 않으면(selected 가 없으면) 고르는 물건이 아니라서 아무것도 붙지 않습니다.",
+      note: "골라짐을 알리는 aria 는 하나뿐입니다. 예전에는 Button 이 aria-pressed 를 붙이면 SegmentedControl · Tabs 가 그걸 지우고 aria-checked · aria-selected 를 다시 붙였습니다. 지금은 칸이 자기 role 을 Selectable 에 넘기고, Selectable 이 맞는 것 하나만 붙입니다. 주지 않으면(selected 가 없으면) 고르는 물건이 아니라서 아무것도 붙지 않습니다. 칸을 누르면 켜지고 꺼지면서 그 aria 값도 같이 바뀝니다.",
       render: () => (
         <Stage>
           {SELECT_ROLES.map((r) => (
             <Labeled key={r} name={r === "current" ? 'current="page"' : `role="${r}"`}>
               <Selectable
                 as={Pressable}
-                selected
+                defaultSelected
+                grow
                 role={roleOf(r)}
                 current={r === "current" ? "page" : undefined}
                 paddingX="lg"
                 paddingY="sm"
-                className={paintClass({ variant: "outline", selected: true })}
+                className={({ selected }) => paintClass({ variant: "outline", selected, hoverable: true })}
               >
                 <Text variant="micro" tone="inherit">
                   {ARIA_OF[r]}
@@ -1188,7 +1210,7 @@ const selectable: Spec = {
     },
     {
       title: "grow — 골라진 칸이 커집니다",
-      note: "class-explorer 의 골라진 버튼입니다(RetroButton isSelected · 빈 강의실 · 분반 칩). 그림자를 켠 무리(위)에서 골린 칸은 105% 로 커져 이웃 위에 서고 그림자를 그대로 둡니다. hover 때 가라앉지 않고 제자리에서 그림자만 숨깁니다 — 이미 고른 칸이라 '눌러 들어가는' 몸짓을 하지 않습니다. 그림자를 켜지 않은 무리(아래, muted 칩)는 색만 바뀝니다.",
+      note: "class-explorer 의 골라진 버튼 · 칩입니다(RetroButton isSelected · 빈 강의실 · 분반 칩). 골린 칸은 105% 로 커져 이웃 위에 서고 4px 그림자 위에 섭니다 — 쉴 때 그림자 위에 떠 있던 줄(위)도, 평평한 muted 칩 줄(아래)도 같습니다(분반 카드의 교사 · 교실 칩이 평평하다가 골라지면 그림자가 생깁니다). hover 때 가라앉지 않고 제자리에서 그림자만 숨깁니다 — 이미 고른 칸이라 '눌러 들어가는' 몸짓을 하지 않습니다. 커지는 모양이 함께 쓰는 Pressable 의 몸짓을 덮으므로 motion 은 쉴 때의 것 그대로 둡니다.",
       render: () => (
         <Stage>
           <Stack gap="3xl">

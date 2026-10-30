@@ -1,5 +1,5 @@
 /** Foundations › Typography · Shape · Layout · Motion — 원본 숫자 → 역할 → 실제 표본 */
-import { Badge, Box, Button, Card, Grid, Inline, Input, Stack, Surface, Text } from "@studio-baeks/funky-ui";
+import { Badge, Box, Button, Card, Floating, Grid, Inline, Input, SegmentedControl, Stack, Surface, Text, surfaceClass } from "@studio-baeks/funky-ui";
 import {
   BADGE,
   BADGE_SIZES,
@@ -11,6 +11,7 @@ import {
   DURATION,
   EASING,
   ELEVATION,
+  ENTER,
   FOCUS_RING,
   FONT_FAMILY,
   ICON,
@@ -23,9 +24,10 @@ import {
   TEXT_VARIANTS,
   WEIGHT,
   Z,
+  type EnterMotion,
 } from "@studio-baeks/funky-ui/tokens";
 import { Sparkles } from "lucide-react";
-import type { ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 
 import { PageHead, Section, Stage } from "../kit";
 import * as k from "../kit.css";
@@ -178,6 +180,42 @@ export function LayoutPage() {
   );
 }
 
+const GRADES = [
+  { value: "1", label: "1학년" },
+  { value: "2", label: "2학년" },
+  { value: "3", label: "3학년" },
+] as const;
+
+/** 고르는 줄 둘 — 그림자 위에 뜬 칸(위)과 평평한 칩(아래). 골린 칸은 둘 다 커집니다 */
+function GrowDemo() {
+  const [a, setA] = useState<string>("2");
+  const [b, setB] = useState<string>("2");
+  return (
+    <Stack gap="xl" align="center">
+      <SegmentedControl aria-label="그림자 줄" options={GRADES} value={a} onChange={setA} variant="outline" shadow gap="md" />
+      <SegmentedControl aria-label="평평한 줄" options={GRADES} value={b} onChange={setB} />
+    </Stack>
+  );
+}
+
+/** 등장 몸짓 — 누를 때마다 판이 새로 나타납니다. 닫을 때는 움직이지 않습니다 */
+function EnterButton({ enter }: { enter: EnterMotion }) {
+  const [open, setOpen] = useState(false);
+  const anchor = useRef<HTMLSpanElement>(null);
+  return (
+    <span ref={anchor} style={{ display: "inline-flex" }}>
+      <Button variant="outline" shadow selected={open} onClick={() => setOpen((o) => !o)}>
+        {enter}
+      </Button>
+      {open && (
+        <Floating anchor={anchor} enter={enter} onDismiss={() => setOpen(false)} padding="xl" className={surfaceClass({ border: "line", shadow: "raised" })}>
+          <Text variant="label">{enter} 로 나타났습니다</Text>
+        </Floating>
+      )}
+    </span>
+  );
+}
+
 export function MotionPage() {
   return (
     <div>
@@ -187,7 +225,7 @@ export function MotionPage() {
         summary="시그니처는 눌림입니다 — 떠 있는 물건이 hover 때 그림자 자리로 가라앉습니다. 가라앉는 거리는 그림자 거리와 같습니다(4px). 움직임을 줄인 사람에게는 이동을 멈추고 색과 포커스 링만 남깁니다."
       />
       <Section
-        title="몸짓 — sink · raise · lift · tap"
+        title="누르는 몸짓 — sink · raise · lift · tap"
         note="sink — 그림자를 켠 버튼 · 사람 카드. raise — 평평한 칩(hover 때 제자리에서 그림자가 올라옵니다). lift — 탐색 카드(위로 4px, 그림자는 화면에 그대로 남아 길어집니다). tap — 그림자를 끈 버튼. 몸짓이 없는 누르는 물건(목록 줄)은 none 입니다."
       >
         <Stage bg="canvas">
@@ -210,6 +248,26 @@ export function MotionPage() {
           </Card>
         </Stage>
         <Table head={["token", "value"]} rows={[["press.sink", `${PRESS.sink}px`], ["press.activeScale", PRESS.activeScale], ["lift.rise", `${LIFT.rise}px`]]} />
+      </Section>
+      <Section
+        title="커짐 — 골라진 칸"
+        note="골라진 칸은 가라앉지 않고 105% 로 커져 이웃 위에 서고 4px 그림자 위에 섭니다 — 쉴 때 평평하던 칩도 같습니다. hover 때는 제자리에서 그림자만 숨고, 누르면 100% 로 돌아옵니다. Selectable 의 grow 이고, 함께 쓰는 몸짓을 덮습니다."
+      >
+        <Stage bg="canvas">
+          <GrowDemo />
+        </Stage>
+        <Table head={["token", "value"]} rows={[["press.grow", PRESS.grow]]} />
+      </Section>
+      <Section
+        title="등장 — rise · pop · fade"
+        note="새로 나타나는 판이 같이 씁니다. rise 는 메뉴 · 툴팁, pop 은 모달, fade 는 펼친 아코디언 본문입니다. 눌러서 열어 보세요. 퇴장은 없습니다 — 닫는 모션을 보이려면 판을 그 시간만큼 더 들고 있어야 하는데, 그사이 한 번 더 누르면 판 뒤의 화면이 눌립니다."
+      >
+        <Stage bg="canvas">
+          {(Object.keys(ENTER) as (keyof typeof ENTER)[]).map((name) => (
+            <EnterButton key={name} enter={name} />
+          ))}
+        </Stage>
+        <Table head={["enter", "거리", "시간"]} rows={Object.entries(ENTER).map(([n, v]) => [n, `${v.distance}px`, `${v.duration} · ${DURATION[v.duration]}ms`])} />
       </Section>
       <Section title="시간 · 곡선" note="crawl 700ms 는 시간선 위 캐럿처럼 연속으로 움직이는 위치에만 씁니다.">
         <Table head={["duration", "ms"]} rows={Object.entries(DURATION).map(([n, v]) => [n, v])} />

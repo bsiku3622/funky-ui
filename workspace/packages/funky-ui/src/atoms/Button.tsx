@@ -6,7 +6,7 @@ import { Icon, type IconComponent } from "../primitives/Icon";
 import { paintClass } from "../primitives/Paint";
 import { usePressable } from "../primitives/Pressable";
 import { useSelectable } from "../primitives/Selectable";
-import { BORDERLESS_VARIANTS, SELECTED_VARIANT } from "../tokens/color-recipes";
+import { BORDERLESS_VARIANTS } from "../tokens/color-recipes";
 import { CONTROL } from "../tokens/shape";
 import type { Accent, ControlSize, PressMotion, Variant } from "../tokens/vocabulary";
 import { buttonBase, buttonSize, fullWidth as fullWidthClass, loading as loadingClass, loadingSpinner } from "./Button.css";
@@ -25,8 +25,8 @@ export interface ButtonOwnProps {
   shadow?: boolean | "hover";
   /**
    * 골라진 상태 — 같은 accent 의 filled 로 칠하고, 그 사실을 aria 하나로 알립니다(그냥 버튼은 `aria-pressed`,
-   * `role="radio"` 는 `aria-checked`, `role="tab"` 은 `aria-selected`). 그림자를 켠 버튼은 105% 로 커져
-   * 그림자를 그대로 둡니다 — hover 때 그림자만 숨고, 누르면 100% 로 돌아옵니다
+   * `role="radio"` 는 `aria-checked`, `role="tab"` 은 `aria-selected`). 골라진 버튼은 105% 로 커져 4px 그림자 위에
+   * 섭니다 — 쉴 때 그림자가 없던 버튼(muted 칩)도 같습니다. hover 때 그림자만 숨고, 누르면 100% 로 돌아옵니다
    */
   selected?: boolean;
   /** 요소의 role — 골라짐을 알리는 aria 가 이걸로 정해집니다. 고르는 무리의 칸이면 `radio` · `tab` */
@@ -51,14 +51,14 @@ const swallow = (e: SyntheticEvent) => {
 
 /**
  * 그림자 · 골라짐에서 몸짓을 고릅니다 — 그림자를 켜면 sink(가라앉음), `"hover"` 면 raise(올라옴), 끄면 tap.
- * 그림자를 켠 버튼이 골라지면 가라앉지 않고 커집니다(Selectable 의 grow — 그 자체가 몸짓이라 motion 은 none).
+ * 골라진 버튼은 그림자와 상관없이 커집니다(Selectable 의 grow) — class-explorer 에서 쉴 때 평평한 칩도 골라지면
+ * 커지며 그림자가 생깁니다. grow 가 몸짓을 덮으므로 motion 은 쉴 때의 것을 그대로 둡니다.
  * 테두리가 없는 variant(ghost)는 가라앉을 상자가 없어 그림자를 받지 않습니다. IconButton · SideNav.Item 이 같은 규칙을 씁니다.
  */
 export function pressOf(variant: Variant, shadow: boolean | "hover", selected: boolean | undefined): { motion: PressMotion; grow: boolean } {
-  const painted: Variant = selected ? SELECTED_VARIANT : variant;
-  if (!shadow || BORDERLESS_VARIANTS.includes(painted)) return { motion: "tap", grow: false };
-  if (shadow === "hover") return { motion: "raise", grow: false };
-  return selected ? { motion: "none", grow: true } : { motion: "sink", grow: false };
+  const grow = Boolean(selected);
+  if (!shadow || BORDERLESS_VARIANTS.includes(variant)) return { motion: "tap", grow };
+  return { motion: shadow === "hover" ? "raise" : "sink", grow };
 }
 
 /**

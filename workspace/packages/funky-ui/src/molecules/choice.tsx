@@ -4,7 +4,7 @@
  * 둘 다 버튼 무리이고 규칙도 같습니다: 안 골린 것은 `variant`, 골린 것은 같은 accent 의 filled.
  * 다른 건 뜻과 기본 생김새입니다 — 값이면 radiogroup(기본 muted · sm · 그림자 없음 · 간격 sm),
  * 화면이면 tablist(기본 outline · sm · 그림자 · 간격 md, class-explorer 의 화면 전환 버튼).
- * 그림자를 켠 줄에서는 골린 칸이 105% 로 커집니다(Button 의 골라짐).
+ * 골린 칸은 105% 로 커져 그림자 위에 섭니다(Button 의 골라짐) — 쉴 때 그림자가 없는 값 줄도 같습니다.
  * 방향키 · Home · End 로 옮기면 바로 고르고, Tab 키로는 골린 칸 하나에만 들어옵니다 — 둘 다 `useSelectableGroup`.
  */
 import { createContext, useContext, useId, type ReactNode } from "react";

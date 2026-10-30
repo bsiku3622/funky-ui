@@ -66,7 +66,7 @@ function Labeled({ name, children }: { name: string; children: ReactNode }) {
 
 /* ── IconButton ──────────────────────────────────────────────────────── */
 
-/** 켜고 끄는 아이콘 버튼 — 그림자를 켰으니 selected 는 커진 채로 남습니다 */
+/** 켜고 끄는 아이콘 버튼 — selected 는 커진 채로 남습니다 */
 function PinToggle() {
   const [on, setOn] = useState(false);
   return <IconButton icon={Pin} label={on ? "고정 해제" : "고정"} variant="outline" shadow selected={on} onClick={() => setOn((p) => !p)} />;
@@ -192,6 +192,16 @@ function NavBarDemo() {
   );
 }
 
+/** 눌러서 켜고 끄는 유리 버튼 — 켜면 유리가 짙어집니다 */
+function NavToggle() {
+  const [on, setOn] = useState(true);
+  return (
+    <NavButton selected={on} onClick={() => setOn((p) => !p)}>
+      selected
+    </NavButton>
+  );
+}
+
 const navButton: Spec = {
   name: "NavButton",
   summary: "보라 바(Surface brand) 위의 버튼입니다. Pressable(tap) 위에 Glass(유리 칠)를 얹은 것이라 반투명 유리 면에 흰 글자이고, hover 때 테두리가 진해집니다. 상단 바 · 하단 바 · 학기 선택에만 쓰고, 밝은 면 위에서는 Button 을 씁니다.",
@@ -244,7 +254,7 @@ const navButton: Spec = {
           </NavButton>
           <NavButton icon={Search} label="검색" />
           <NavButton size="md" icon={Search} label="검색" />
-          <NavButton selected>selected</NavButton>
+          <NavToggle />
           <NavButton disabled>disabled</NavButton>
         </Stage>
       ),

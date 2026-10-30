@@ -1,8 +1,16 @@
 /** 사이트 크롬 — funky 변수로만 그립니다 */
 import { globalStyle, style } from "@vanilla-extract/css";
-import { vars } from "@studio-baeks/funky-ui/tokens";
+import { CONTAINER, Z, vars } from "@studio-baeks/funky-ui/tokens";
 
 export const page = style({ minHeight: "100vh", display: "flex", flexDirection: "column" });
+
+const BAR = `${CONTAINER.shell.bar}px`;
+
+/**
+ * 상단 바는 화면 위에 붙어 있습니다. 바가 스크롤로 사라지면, 그 아래 sticky 사이드바가 맨 위로 올라붙는데
+ * 높이는 `100vh − 바` 그대로라 아래에 바 높이만큼 빈 띠가 남고 오른쪽 선도 거기서 끊겼습니다.
+ */
+export const header = style({ position: "sticky", top: 0, zIndex: Z.sticky });
 
 export const topLinks = style({ display: "flex", alignItems: "center", gap: 8 });
 
@@ -16,9 +24,9 @@ export const shell = style({
 
 export const sidebar = style({
   position: "sticky",
-  top: 0,
+  top: BAR,
   alignSelf: "start",
-  height: "calc(100vh - 80px)",
+  height: `calc(100vh - ${BAR})`,
   overflowY: "auto",
   padding: `${vars.space["3xl"]} ${vars.space.xl}`,
   borderRight: `${vars.stroke.base} solid ${vars.line.base}`,

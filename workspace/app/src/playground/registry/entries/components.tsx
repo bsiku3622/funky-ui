@@ -249,7 +249,7 @@ function SystemStatus() {
   );
 }
 
-function SideNavDemo({ footer, height = 440 }: { footer: boolean; height?: number }) {
+function SideNavDemo({ footer, height = 600 }: { footer: boolean; height?: number }) {
   const [active, setActive] = useState("home");
   return (
     // SideNav 가 오른쪽 선을 스스로 가지므로 상자의 오른쪽 선은 뺍니다 (겹치면 4px 이 됩니다)
@@ -323,7 +323,7 @@ function BottomNavDemo() {
 
 const bottomNav: Spec = {
   name: "BottomNav",
-  summary: "모바일 하단 바. 상단 바와 같은 brand 면이고 높이 64px 에 다섯 칸까지입니다. fixed 로 쓰면 넓은 화면(md 이상)에서는 숨습니다. 메뉴 순서는 앱이 정하고 셸은 그리기만 합니다. 지금 화면은 aria-current=\"page\" 로 알립니다.",
+  summary: "모바일 하단 바. 상단 바와 같은 brand 면이고 높이 64px 에 다섯 칸까지입니다. fixed 로 쓰면 넓은 화면(md 이상)에서는 숨습니다. 메뉴 순서는 앱이 정하고 셸은 그리기만 합니다. 칸의 글자는 바의 흰 글자를 물려받아 안 고른 칸은 묽게, 지금 화면은 진하게 나오고 윗선이 붙으며 aria-current=\"page\" 로 알립니다. 내비라 Tab 키로 칸마다 들릅니다 — 방향키 무리로 묶지 않습니다.",
   render: () => <BottomNavDemo />,
   code: (v) =>
     jsx("BottomNav", printed(bottomNav, v), [
@@ -331,17 +331,6 @@ const bottomNav: Spec = {
       jsx("BottomNav.Item", ["icon={Search}", 'onClick={() => navigate("/search")}'], ["Search"]),
       jsx("BottomNav.Item", ["icon={CalendarDays}", 'onClick={() => navigate("/calendar")}'], ["Calendar"]),
     ]),
-  sections: [
-    {
-      title: "지금 화면",
-      note: "칸의 글자는 바의 흰 글자를 물려받습니다. 안 고른 칸은 묽게, 지금 화면은 진하게 나오고 윗선이 붙습니다. 내비라 Tab 키로 칸마다 들릅니다 — 방향키 무리로 묶지 않습니다.",
-      render: () => (
-        <Stage>
-          <BottomNavDemo />
-        </Stage>
-      ),
-    },
-  ],
 };
 
 // ── TermSwitcher ────────────────────────────────────────────────────

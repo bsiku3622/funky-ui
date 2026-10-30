@@ -21,7 +21,7 @@ export interface IconButtonOwnProps {
   size?: ControlSize;
   /** Button 과 같습니다 — `true` 면 sink, `"hover"` 면 raise */
   shadow?: boolean | "hover";
-  /** Button 과 같습니다 — 골라진 색 · aria 하나 · 그림자를 켰으면 커지기 */
+  /** Button 과 같습니다 — 골라진 색 · aria 하나 · 커지기 */
   selected?: boolean;
   role?: AriaRole;
   disabled?: boolean;

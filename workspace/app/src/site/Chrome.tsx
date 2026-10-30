@@ -17,6 +17,7 @@ export function Chrome({ children }: { children: ReactNode }) {
     <div className={s.page}>
       <AppBar
         brand="funky-ui"
+        className={s.header}
         onBrandClick={() => navigate("/")}
         actions={
           <div className={s.topLinks}>

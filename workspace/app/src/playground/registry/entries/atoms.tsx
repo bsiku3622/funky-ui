@@ -39,6 +39,16 @@ function TermChips() {
   );
 }
 
+/** 눌러서 켜고 끄는 버튼 — 켜면 105% 로 커지고, 끄면 다시 그림자 위에 떠 있습니다 */
+function SelectedToggle() {
+  const [on, setOn] = useState(true);
+  return (
+    <Button shadow selected={on} onClick={() => setOn((p) => !p)}>
+      selected
+    </Button>
+  );
+}
+
 const button: Spec = {
   name: "Button",
   summary:
@@ -110,9 +120,7 @@ const button: Spec = {
               {v}
             </Button>
           ))}
-          <Button shadow selected>
-            selected
-          </Button>
+          <SelectedToggle />
         </Stage>
       ),
     },
@@ -135,7 +143,7 @@ const button: Spec = {
     },
     {
       title: "Selected — 고르면 filled",
-      note: "선택은 따로 된 variant 가 아니라 상태입니다(Selectable). 안 골린 칸은 고른 variant, 골린 칸은 같은 accent 의 filled. 그림자를 켠 버튼은 골리면 105% 로 커져 그림자를 그대로 두고, hover 때 그림자만 숨깁니다 — 위 Shadow 절의 selected. 골라짐은 aria 하나로 알립니다: 그냥 버튼은 aria-pressed, 무리의 칸(role=radio · tab)은 aria-checked · aria-selected.",
+      note: "선택은 따로 된 variant 가 아니라 상태입니다(Selectable). 안 골린 칸은 고른 variant, 골린 칸은 같은 accent 의 filled. 골린 칸은 그림자를 켰든 안 켰든 105% 로 커져 4px 그림자 위에 서고, hover 때 그림자만 숨깁니다 — 위 Shadow 절의 selected, 아래 muted 학기 칩. 골라짐은 aria 하나로 알립니다: 그냥 버튼은 aria-pressed, 무리의 칸(role=radio · tab)은 aria-checked · aria-selected.",
       render: () => (
         <Stage bg="raised">
           <Stack gap="lg" align="center">
