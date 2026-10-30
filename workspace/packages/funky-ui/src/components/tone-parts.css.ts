@@ -62,7 +62,7 @@ export const toneChip = style(
 
 export const toneChipOn = style(c({ backgroundColor: tint(12) }));
 
-/** 꺼진 칩 — 흐린 회색으로 물러나 있다가 hover 때 제 색으로 돌아옵니다 */
+/** 꺼진 칩 — 흐린 회색으로 물러나 있다가 hover 때 흐림이 걷힙니다. 안쪽 칸은 켜야 칠해집니다 */
 export const toneChipOff = style(
   c({
     borderColor: vars.line.soft,

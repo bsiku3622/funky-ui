@@ -856,7 +856,7 @@ const toneButton: Spec = {
 const toneChip: Spec = {
   name: "ToneChip",
   summary:
-    "여러 개를 함께 켜는 색 칩입니다. 켜면 tone 12% 면에 그림자 위에 서고(hover 때 가라앉음), 끄면 흐린 회색으로 물러나 있다가 hover 때 제 색으로 돌아옵니다. 기본으로 전부 켜 두는 줄이라 Button 과 달리 커지지 않습니다.",
+    "여러 개를 함께 켜는 색 칩입니다. 켜면 tone 12% 면에 그림자 위에 서고(hover 때 가라앉음), 끄면 흐린 회색으로 물러나 있다가 hover 때 흐림이 걷힙니다. 기본으로 전부 켜 두는 줄이라 Button 과 달리 커지지 않습니다.",
   controls: {
     cohort: { kind: "select", options: Object.keys(COHORT_COLORS) },
     selected: { kind: "boolean" },
