@@ -209,3 +209,12 @@ class-explorer의 모션 전부를 몸짓 · 상태 모션 · 입력칸으로 �
 4. raw `<button>`을 위 표대로 바꿉니다. 화면 단위로 나눠 갑니다.
 5. 모달 일곱을 `<Modal>`로, 셸(`Navigation` · `Sidebar` · `BottomNav`)을 Components로 바꿉니다.
 6. `index.css`의 `@theme` 색과 `.shadow-retro*` · `.student-badge`를 걷어냅니다. 남은 `retro-*` 사용처가 0이 되면 끝입니다.
+
+## 실제로 붙여 보니
+
+2026-10-31에 위 순서대로 class-explorer `dev` 브랜치에 붙였습니다. 표만으로는 보이지 않던 것이 넷 나왔고, 지금은 모두 패키지 안에서 해결되어 있습니다.
+
+- **열린 모달이 왼쪽 위에 붙었습니다.** `<dialog>`의 가운데 정렬은 브라우저 기본값인 `margin: auto`인데, Tailwind preflight의 `margin: 0`이 이것을 지웁니다. 그래서 `Modal`이 직접 적습니다.
+- **Text 역할의 대소문자와 잉크는 위 층에서 덮이지 않습니다.** 역할이 `fk.utilities`에 있어서 `fk.components`로는 이길 수 없습니다. 같은 층의 prop인 `Text uppercase`와 `Stat labelTone`으로 받습니다.
+- **`trailing` 앞에 auto margin을 또 주면 칩 위치가 줄마다 달라집니다.** Accordion이 제목에 남는 폭을 주므로 칩에 `ml-auto`를 더하지 않습니다.
+- **필드에 `warning`과 `invalid`가 함께 오면 빨강이 이깁니다.** 오류가 경고보다 급한 정보라서 그렇습니다.

@@ -172,7 +172,7 @@ Molecules는 Atoms와 Primitives를 묶은 범용 조합입니다. 카드 · 선
 | `titleStyle` | `AccordionTitle` | `"heading"` | 제목의 글자입니다. `heading`은 20px 문장이고, `section`은 대문자 섹션 제목으로 좁은 화면에서 14px, `md` 이상에서 20px입니다. |
 | `size` | `AccordionSize` | `"md"` | `sm`은 12px 제목의 촘촘한 줄입니다. 쉐브론이 작아지고 본문 여백이 좁아지며, 이때 `titleStyle`은 쓰지 않습니다. |
 | `icon` | `IconComponent` | — | 제목 앞 아이콘입니다. |
-| `trailing` | `ReactNode` | — | 제목 옆입니다. 개수 배지 같은 것을 둡니다. |
+| `trailing` | `ReactNode` | — | 제목 옆입니다. 개수 배지 같은 것을 둡니다. 넓은 화면에서는 오른쪽 끝에 모이고, 좁은 화면에서는 제목 아래로 내려갑니다. |
 | `open` | `boolean` | — | 펼침 상태입니다. 주면 제어 모드가 됩니다. |
 | `defaultOpen` | `boolean` | `false` | 제어하지 않을 때 처음 펼침 상태입니다. |
 | `onOpenChange` | `(open: boolean) => void` | — | 머리를 눌렀을 때 새 상태와 함께 불립니다. |
@@ -542,6 +542,7 @@ native `<dialog>` 위에 서는 모달입니다. 아래는 수강 변경을 확�
 | `unit` | `ReactNode` | — | 숫자 뒤 단위입니다. |
 | `size` | `"sm" \| "lg"` | `"lg"` | 숫자 크기입니다. 36 · 48px. |
 | `accent` | `Accent` | — | 주면 숫자를 accent의 진한 글자로 칠합니다. |
+| `labelTone` | `Tone` | — | 이름표의 글자색입니다. 기본은 역할의 약한 잉크이고, 네온 면 위에서는 안 읽히므로 `inherit`를 줍니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 
 - 큰 숫자(36 · 48px)는 글자 역할 사다리 밖의 유일한 예외 크기이고, `tabular-nums`로 자리만 맞춥니다. 자세한 값은 [Typography](../foundations/typography.md)에 있습니다.
@@ -569,7 +570,7 @@ native `<dialog>` 위에 서는 모달입니다. 아래는 수강 변경을 확�
 
 - 막대 홈은 `well`이고 채움은 accent의 solid입니다. 채움 폭은 0~100%로 잘려서 `value`가 `max`를 넘어도 넘치지 않고, 값이 바뀌면 300ms 동안 움직입니다.
 - `tooltip`은 [Popover](#popover)를 막대에 `block`으로 붙인 것입니다. 판은 막대 위에 고정되고 마우스를 따라다니지 않습니다.
-- `onSelect`가 있으면 이름은 `<button>`입니다. 링크 색은 `accent`를 따르고, 주지 않으면 `pink`입니다.
+- `onSelect`가 있으면 이름은 `<button>`입니다. 링크 색은 `accent`를 따르고, 주지 않으면 hover 때 밑줄만 생깁니다.
 - `role="meter"`에 `aria-valuemin` · `aria-valuemax` · `aria-valuenow`가 붙습니다.
 
 ## Table

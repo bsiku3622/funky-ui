@@ -45,6 +45,9 @@ export const alignClass = styleVariants({
 /** 한 줄 자르기 — 폭이 있어야 잘리므로 블록으로 섭니다 (inline span 은 폭을 갖지 않아 잘리지 않습니다) */
 export const truncateClass = style(u({ display: "block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0 }));
 
+/** 역할과 상관없이 대문자로 — 역할이 `textTransform` 을 정하므로 같은 층의 뒤에 둡니다 */
+export const uppercaseClass = style(u({ textTransform: "uppercase" }));
+
 export const numericClass = style(u({ fontVariantNumeric: "tabular-nums" }));
 
 export const decorationClass = styleVariants({

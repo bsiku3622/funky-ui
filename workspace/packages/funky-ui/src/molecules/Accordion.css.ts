@@ -36,6 +36,20 @@ export const accordionTitleSection = style(
   }),
 );
 
+/** 제목 + 제목 옆 자리 — 제목이 남는 폭을 다 쓰고, 좁은 화면에서는 옆 자리가 제목 아래로 내려갑니다 */
+export const accordionHead = style(
+  c({
+    display: "flex",
+    flex: "1 1 0",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    gap: px(SPACE.md),
+    minWidth: 0,
+    "@media": { [`(min-width: ${BREAKPOINT.sm}px)`]: { flexDirection: "row", alignItems: "center", gap: px(SPACE.lg) } },
+  }),
+);
+export const accordionTitle = style(c({ flex: "1 1 auto", minWidth: 0, maxWidth: "100%" }));
+
 /** 촘촘한 줄 — 12px 제목에 여백을 줄입니다 (Admin 의 접는 목록 · Ask 의 단계 줄) */
 export const accordionHeaderSm = style(c({ gap: px(SPACE.md), padding: px(SPACE.lg) }));
 export const accordionBodySm = style(c({ padding: px(SPACE.lg) }));

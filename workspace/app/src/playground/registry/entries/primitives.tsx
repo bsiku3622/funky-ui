@@ -827,13 +827,14 @@ const text: Spec = {
     align: { kind: "select", options: TEXT_ALIGNS },
     truncate: { kind: "boolean" },
     numeric: { kind: "boolean" },
+    uppercase: { kind: "boolean" },
     decoration: { kind: "select", options: withNone(TEXT_DECORATIONS) },
     pulse: { kind: "boolean" },
     children: { kind: "text" },
   },
   // weight · tone 의 "none" 은 역할이 정한 값을 그대로 쓴다는 뜻입니다 (overline 은 약한 잉크가 기본)
   initial: { variant: "heading", weight: "none", tone: "none", children: "오늘 수업 · Today's Classes 1234" },
-  defaults: { variant: "body", leading: "fixed", family: "sans", align: "start", truncate: false, numeric: false, pulse: false },
+  defaults: { variant: "body", leading: "fixed", family: "sans", align: "start", truncate: false, numeric: false, uppercase: false, pulse: false },
   render: (v) => (
     <Frame width={320}>
       <Text
@@ -845,6 +846,7 @@ const text: Spec = {
         align={v.align as TextAlign}
         truncate={Boolean(v.truncate)}
         numeric={Boolean(v.numeric)}
+        uppercase={Boolean(v.uppercase)}
         decoration={given<TextDecoration>(v.decoration)}
         pulse={Boolean(v.pulse)}
       >

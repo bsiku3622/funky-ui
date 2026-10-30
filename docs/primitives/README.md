@@ -86,6 +86,7 @@ primitive가 받는 값은 모두 닫힌 집합입니다.
 | `family` | `"sans" \| "mono"` | — | 서체입니다. 코드나 식별자 같은 기술적 자리에만 `mono`를 씁니다. |
 | `align` | `"start" \| "center" \| "end"` | — | 글자 정렬입니다. |
 | `truncate` | `boolean` | `false` | 한 줄에서 자르고 …을 붙입니다. |
+| `uppercase` | `boolean` | `false` | 역할이 정한 것과 상관없이 대문자로 그립니다. |
 | `numeric` | `boolean` | `false` | 숫자 글리프만 같은 폭으로 맞춥니다(`tabular-nums`). 표와 시각에 씁니다. |
 | `decoration` | `TextDecoration` | — | 글자에 긋는 선입니다. `strike`는 취소선, `underline`은 굵은 밑줄입니다. |
 | `pulse` | `boolean` | `false` | 불러오는 동안 깜빡입니다. 2초 주기로 투명도가 100%와 50% 사이를 오가므로, 글자 자리를 지키는 `Loading…`에 씁니다. 움직임을 줄인 사람에게는 한 번으로 끝납니다. |

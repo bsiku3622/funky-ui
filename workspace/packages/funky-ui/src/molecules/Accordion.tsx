@@ -10,7 +10,7 @@ import { enterClass } from "../styles/enter.css";
 import { truncateClass } from "../styles/typography.css";
 import type { AccordionSize, AccordionTitle } from "../tokens/vocabulary";
 import { Card } from "./Card";
-import { accordionBody, accordionBodySm, accordionChevron, accordionChevronOpen, accordionHeader, accordionHeaderSm, accordionTitleSection } from "./Accordion.css";
+import { accordionBody, accordionBodySm, accordionChevron, accordionChevronOpen, accordionHead, accordionHeader, accordionHeaderSm, accordionTitle, accordionTitleSection } from "./Accordion.css";
 
 export interface AccordionProps {
   title: ReactNode;
@@ -19,7 +19,7 @@ export interface AccordionProps {
   /** `sm` 은 12px 제목의 촘촘한 줄입니다 (기본 `md`). 이때 `titleStyle` 은 쓰지 않습니다 */
   size?: AccordionSize;
   icon?: IconComponent;
-  /** 제목 옆 — 개수 배지 같은 것 */
+  /** 제목 옆 — 개수 배지 같은 것. 넓은 화면에서는 오른쪽 끝에 모이고, 좁은 화면에서는 제목 아래로 내려갑니다 */
   trailing?: ReactNode;
   /** 제어할 때 */
   open?: boolean;
@@ -47,18 +47,20 @@ export function Accordion({ title, titleStyle = "heading", size = "md", icon, tr
     <Card padding="0" className={className}>
       <Pressable id={headerId} className={cx(surfaceClass({ fill: "none", hoverable: true }), accordionHeader, small && accordionHeaderSm)} aria-expanded={isOpen} aria-controls={isOpen ? id : undefined} onClick={toggle}>
         {icon && <Icon icon={icon} size={small ? "sm" : "lg"} strokeWidth={3} />}
-        {small ? (
-          <Text variant="caption" weight="black" truncate>
-            {title}
-          </Text>
-        ) : titleStyle === "section" ? (
-          <span className={cx(accordionTitleSection, truncateClass)}>{title}</span>
-        ) : (
-          <Text variant="heading" truncate>
-            {title}
-          </Text>
-        )}
-        {trailing}
+        <span className={accordionHead}>
+          {small ? (
+            <Text variant="caption" weight="black" truncate className={accordionTitle}>
+              {title}
+            </Text>
+          ) : titleStyle === "section" ? (
+            <span className={cx(accordionTitleSection, truncateClass, accordionTitle)}>{title}</span>
+          ) : (
+            <Text variant="heading" truncate className={accordionTitle}>
+              {title}
+            </Text>
+          )}
+          {trailing}
+        </span>
         <ChevronDownGlyph size={small ? 16 : 22} strokeWidth={3} className={cx(accordionChevron, isOpen && accordionChevronOpen)} />
       </Pressable>
       {isOpen && (

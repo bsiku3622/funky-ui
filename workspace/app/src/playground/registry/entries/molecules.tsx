@@ -19,6 +19,7 @@ import {
   Modal,
   Notice,
   PageHeader,
+  Paint,
   Popover,
   SearchField,
   SectionTitle,
@@ -60,6 +61,7 @@ import {
   SPACES,
   SURFACE_FILLS,
   TABLE_HEADS,
+  TONES,
   VARIANTS,
   type AccordionSize,
   type AccordionTitle,
@@ -68,6 +70,7 @@ import {
   type PopoverTrigger,
   type PressMotion,
   type TableHead,
+  type Tone,
 } from "@studio-baeks/funky-ui/tokens";
 import {
   ArrowUpDown,
@@ -107,6 +110,7 @@ const ACCENT_OR_NONE = ["none", ...ACCENT_OPTIONS] as const;
 const CARD_SHADOWS = ["raised", "none"] as const;
 const MODAL_SIZES = ["sm", "md", "lg", "xl", "full"] as const;
 const STAT_SIZES = ["sm", "lg"] as const;
+const METER_LAYOUTS = ["stack", "row"] as const;
 const MENU_ALIGNS = ["start", "center", "end"] as const;
 const TOOLTIP_PLACEMENTS = ["top", "bottom"] as const;
 const NOTICE_ROLES = ["status", "alert"] as const;
@@ -1726,9 +1730,10 @@ const stat: Spec = {
     unit: { kind: "text" },
     size: { kind: "select", options: STAT_SIZES },
     accent: { kind: "select", options: ACCENT_OR_NONE },
+    labelTone: { kind: "select", options: ["none", ...TONES] },
   },
   initial: { label: "Credits", value: "72", unit: "학점", accent: "purple" },
-  defaults: { size: "lg", accent: "none" },
+  defaults: { size: "lg", accent: "none", labelTone: "none" },
   render: (v) => (
     <Stat
       label={String(v.label ?? "")}
@@ -1736,9 +1741,10 @@ const stat: Spec = {
       unit={txt(v.unit)}
       size={v.size as "sm" | "lg"}
       accent={opt<Accent>(v.accent)}
+      labelTone={opt<Tone>(v.labelTone)}
     />
   ),
-  code: (v) => jsx("Stat", printed(stat, { label: v.label, value: v.value, unit: v.unit, size: v.size, accent: v.accent })),
+  code: (v) => jsx("Stat", printed(stat, { label: v.label, value: v.value, unit: v.unit, size: v.size, accent: v.accent, labelTone: v.labelTone })),
   sections: [
     {
       title: "Size",
@@ -1758,6 +1764,20 @@ const stat: Spec = {
           <Stat size="sm" label="Classes" value="214" unit="개" accent="cyan" />
           <Stat size="sm" label="Rooms" value="38" unit="실" accent="green" />
           <Stat size="sm" label="Pending" value="7" unit="건" accent="orange" />
+        </Stage>
+      ),
+    },
+    {
+      title: "labelTone",
+      note: "이름표는 약한 잉크가 기본이라 네온 면 위에서는 흐립니다. 그런 면에서는 inherit 로 면의 글자색을 따르게 합니다 — Text 역할의 잉크는 위 층에서 덮을 수 없어서 prop 으로 받습니다.",
+      render: () => (
+        <Stage>
+          <Paint accent="cyan" variant="solid" padding="xl" shadow>
+            <Stat size="sm" label="기본" value="128" unit="명" />
+          </Paint>
+          <Paint accent="cyan" variant="solid" padding="xl" shadow>
+            <Stat size="sm" label="inherit" value="128" unit="명" labelTone="inherit" />
+          </Paint>
         </Stage>
       ),
     },
@@ -1793,11 +1813,12 @@ const meter: Spec = {
     max: { kind: "number", min: 1, max: 200, step: 1 },
     valueLabel: { kind: "text" },
     accent: { kind: "select", options: ACCENT_OR_NONE },
+    layout: { kind: "select", options: METER_LAYOUTS },
     onSelect: { kind: "boolean" },
     tooltip: { kind: "boolean" },
   },
   initial: { label: "수학 · 필수", value: 12, max: 15, accent: "purple" },
-  defaults: { max: 100, valueLabel: "", accent: "none", onSelect: false, tooltip: false },
+  defaults: { max: 100, valueLabel: "", accent: "none", layout: "stack", onSelect: false, tooltip: false },
   render: (v) => (
     <Frame width={320}>
       <Meter
@@ -1806,6 +1827,7 @@ const meter: Spec = {
         max={Number(v.max ?? 100)}
         valueLabel={txt(v.valueLabel)}
         accent={opt<Accent>(v.accent)}
+        layout={v.layout as (typeof METER_LAYOUTS)[number]}
         onSelect={v.onSelect ? stopNav : undefined}
         tooltip={v.tooltip ? <Text variant="caption">12 / 15학점 이수</Text> : undefined}
       />
@@ -1813,7 +1835,7 @@ const meter: Spec = {
   ),
   code: (v) =>
     jsx("Meter", [
-      ...printed(meter, { label: v.label, value: v.value, max: v.max, valueLabel: v.valueLabel, accent: v.accent }),
+      ...printed(meter, { label: v.label, value: v.value, max: v.max, valueLabel: v.valueLabel, accent: v.accent, layout: v.layout }),
       v.onSelect ? "onSelect={() => filterBy(subject)}" : undefined,
       v.tooltip ? 'tooltip={<Text variant="caption">12 / 15학점 이수</Text>}' : undefined,
     ]),
@@ -1830,6 +1852,20 @@ const meter: Spec = {
               <Meter label="생물학" value={6} max={12} valueLabel="6 / 12학점" accent="green" />
               <Meter label="화학" value={3} max={12} valueLabel="3 / 12학점" accent="orange" />
               <Meter label="국어" value={0} max={9} valueLabel="0 / 9학점" accent="red" />
+            </Stack>
+          </Frame>
+        </Stage>
+      ),
+    },
+    {
+      title: "Layout",
+      note: "stack 은 이름 · 값 줄 아래 막대(기본)이고, row 는 넓은 화면에서 이름 · 막대 · 값을 한 줄로 둡니다. 좁은 화면에서는 이름 · 막대 · 값이 차례로 쌓입니다.",
+      render: () => (
+        <Stage bg="raised">
+          <Frame width={560}>
+            <Stack gap="lg">
+              <Meter label="수학" value={12} max={15} valueLabel="12 / 15학점" accent="purple" />
+              <Meter layout="row" label="수학" value={12} max={15} valueLabel="12 / 15학점" accent="purple" />
             </Stack>
           </Frame>
         </Stage>

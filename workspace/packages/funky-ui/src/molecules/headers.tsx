@@ -60,7 +60,7 @@ export function PageHeader({ title, subtitle, icon, action, children, className 
             )}
             <Stack gap="2xs">
               {subtitle && <Text variant="overline">{subtitle}</Text>}
-              <Text as="h1" variant="title" className={pageTitle}>
+              <Text as="h1" variant="title" uppercase className={pageTitle}>
                 {title}
               </Text>
             </Stack>

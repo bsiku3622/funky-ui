@@ -3,7 +3,7 @@ import type { ElementType } from "react";
 import { cx } from "../internal/cx";
 import type { PolyProps } from "../internal/polymorphic";
 import { pulseClass } from "../styles/enter.css";
-import { alignClass, decorationClass, familyClass, leadingClass, numericClass, textRoleClass, toneClass, truncateClass, weightClass } from "../styles/typography.css";
+import { alignClass, decorationClass, familyClass, leadingClass, numericClass, textRoleClass, toneClass, truncateClass, uppercaseClass, weightClass } from "../styles/typography.css";
 import type { Family, Leading, TextDecoration, TextVariant, Tone, Weight } from "../tokens/vocabulary";
 
 export interface TextOwnProps {
@@ -24,6 +24,8 @@ export interface TextOwnProps {
   truncate?: boolean;
   /** 숫자 글리프만 같은 폭으로 (표 · 시각) */
   numeric?: boolean;
+  /** 역할이 정한 것과 상관없이 대문자로 그립니다 */
+  uppercase?: boolean;
   /** 글자에 긋는 선 — 취소선 · 굵은 밑줄 */
   decoration?: TextDecoration;
   /** 불러오는 동안 깜빡입니다 — 글자 자리를 지키는 "Loading…" */
@@ -44,6 +46,7 @@ export function Text<E extends ElementType = "span">({
   align,
   truncate,
   numeric,
+  uppercase,
   decoration,
   pulse,
   className,
@@ -61,6 +64,7 @@ export function Text<E extends ElementType = "span">({
         align && alignClass[align],
         truncate && truncateClass,
         numeric && numericClass,
+        uppercase && uppercaseClass,
         decoration && decorationClass[decoration],
         pulse && pulseClass,
         className,

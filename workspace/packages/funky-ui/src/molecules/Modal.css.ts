@@ -10,6 +10,8 @@ const c = (rule: Record<string, unknown>) => ({ "@layer": { [components]: rule }
 
 export const modal = style(
   c({
+    // ⚠️ 가운데 정렬은 브라우저 기본의 `margin: auto` 입니다 — Tailwind preflight 의 `margin: 0` 이 지우므로 직접 적습니다
+    margin: "auto",
     padding: 0,
     width: `calc(100% - ${px(SPACE["4xl"])})`,
     maxHeight: "90vh",

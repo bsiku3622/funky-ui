@@ -7,7 +7,7 @@ import { Inline, Stack } from "../primitives/layout";
 import { surfaceClass } from "../primitives/Surface";
 import { Text } from "../primitives/Text";
 import { useAccent } from "../primitives/Paint";
-import type { Accent } from "../tokens/vocabulary";
+import type { Accent, Tone } from "../tokens/vocabulary";
 import { meterFill, meterRow, meterRowValue, meterTrack, statUnit, statValue, statValueAccent } from "./data.css";
 import { Popover } from "./floating";
 
@@ -18,15 +18,19 @@ export interface StatProps {
   size?: "sm" | "lg";
   /** 숫자를 accent 의 진한 글자로 */
   accent?: Accent;
+  /** 이름표의 글자색 (기본은 역할의 약한 잉크). 네온 면 위에서는 약한 잉크가 안 읽히므로 `inherit` 를 줍니다 */
+  labelTone?: Tone;
   className?: string;
 }
 
 /** 지표 — 이름표(overline) 위, 큰 숫자 아래 */
-export function Stat({ label, value, unit, size = "lg", accent, className }: StatProps) {
+export function Stat({ label, value, unit, size = "lg", accent, labelTone, className }: StatProps) {
   const accentCls = useAccent(accent);
   return (
     <Stack gap="xs" className={cx(accentCls, className)}>
-      <Text variant={size === "lg" ? "subtitle" : "overline"}>{label}</Text>
+      <Text variant={size === "lg" ? "subtitle" : "overline"} tone={labelTone}>
+        {label}
+      </Text>
       <Inline gap="sm" align="baseline">
         <span className={cx(statValue[size], accent && statValueAccent)}>{value}</span>
         {unit && <span className={statUnit[size]}>{unit}</span>}

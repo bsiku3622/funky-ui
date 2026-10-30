@@ -32,4 +32,4 @@ export const pageHeaderIcon = style(
   }),
 );
 
-export const pageTitle = style(c({ textTransform: "uppercase", margin: 0 }));
+export const pageTitle = style(c({ margin: 0 }));
