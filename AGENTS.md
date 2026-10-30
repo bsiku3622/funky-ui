@@ -12,7 +12,7 @@ funky-ui/
     │   └── src/
     │       ├── index.ts        # entry `.` — 컴포넌트 ("use client")
     │       ├── inventory.ts    # 이름 · 층 · 순서의 정본 (import 없음)
-    │       ├── tokens/         # 값의 유일한 정의 위치 — palette(hex) → color(역할) · color-recipes(11 variant)
+    │       ├── tokens/         # 값의 유일한 정의 위치 — palette(hex) → color(역할) · color-recipes(12 variant)
     │       │                   #   · typography · shape · layout · motion · vocabulary(축) · variables(--fk-*) · layers
     │       ├── styles/         # 공유 class — accent · variant · slots(레시피 → 슬롯) · space · typography · enter(등장) · global
     │       ├── internal/       # cx · polymorphic · glyphs · useAnchor
@@ -43,8 +43,9 @@ Primitives 안은 두 단입니다(`PRIMITIVE_TIERS`). 1차(Box · Text · Icon 
 - **칠은 primitive 셋이 나눠 맡습니다.** 박스는 `Surface`(면 — 흑백 다섯과 뼈대의 보라 `brand` · 테두리 · 그림자 · hoverable 흑백 상태 층 — 면 위의 줄은 `fill="none"`), 요소는 `Paint`(accent × variant · selected · hoverable — 색의 모든 상태), 색 바 위는 `Glass`(흰 유리 · selected · hoverable — accent 없음). `Pressable` 은 누르는 물건(의미 · 커서 · 꺼짐 · 몸짓)이고 색이 없습니다 — hover 색도 칠(Paint · Surface · Glass)의 `hoverable` 이고, Pressable 이 켜 주지 않습니다. `Selectable` 은 골라짐(aria 하나 · 골라진 칸의 커지기)이고 역시 색이 없습니다 — 골라진 색은 칠의 `selected` 입니다. 위 층은 이 셋을 렌더하거나 `surfaceClass()` · `paintClass()` · `glassClass()` 로 class 만 빌려 옵니다 — 칠을 다시 조립하지 않습니다. `Box` 는 태그 · ref · 여백만 다루고 색을 모릅니다.
 - **`brand` 는 바의 면입니다.** 상단 바 · 하단 바(AppBar · BottomNav)만 쓰는 구조 면이고, 색을 고르는 요소가 아니라서 accent 가 아니라 면의 이름입니다. 바는 Paint 가 아니라 Surface 라서 accent 를 흘리지 않고, 그 위의 컨트롤은 accent 가 없는 Glass 입니다. Card 의 `fill` 은 `brand` 를 받지 않습니다.
 - ⚠️ variant 는 슬롯 일곱을 **전부** 씁니다. 변수는 상속되므로 하나라도 비우면 바깥 컨트롤의 값이 새어 들어옵니다.
-- ⚠️ **accent 는 그 색으로 칠해지는 요소만 갖습니다.** primitive 에서는 Paint 하나이고, 위 층에서는 Paint 를 쓰는 컴포넌트와 Variant 없이 자기 색을 칠하는 컴포넌트(Link · Stat · Meter — `useAccent()` 로 accent class 만 가져갑니다)입니다. `accentClass` 를 직접 읽는 곳은 Paint 모듈 하나입니다. CSS 변수라 아래로 흐르고 `:root` 는 검정(시스템)입니다. Box · Surface · 배치 · Card · Accordion · AppBar · BottomNav 에 accent prop 을 다시 달지 않습니다 — 칠하지 않는 박스가 안쪽 색을 바꾸면 색이 어디서 왔는지 화면에서 찾을 수 없습니다. `X as ElementType` 으로 넓힌 자리는 타입 검사가 못 잡으니, accent 가 Surface · Pressable 로 흘러 DOM 속성으로 새지 않는지 봅니다.
-- 런타임에 색을 계산하지 않습니다. 실행 중에 정해지는 색(학과 · 학번)은 Components 에서 `--fk-tone` 하나로 받습니다.
+- ⚠️ **accent 는 그 색으로 칠해지는 요소만 갖습니다.** primitive 에서는 Paint 하나이고, 위 층에서는 Paint 를 쓰는 컴포넌트와 Variant 없이 자기 색을 칠하는 컴포넌트(Link · Swatch · Stat · Meter — `useAccent()` 로 accent class 만 가져갑니다)입니다. Text 의 색 이름 tone(`pink` · `red` …)은 accent 가 아니라 글자색 값입니다 — 안쪽으로 흐르지 않고, 1차 primitive 인 Text 가 Paint 에 기대지 않습니다. `accentClass` 를 직접 읽는 곳은 Paint 모듈 하나입니다. CSS 변수라 아래로 흐르고 `:root` 는 검정(시스템)입니다. Box · Surface · 배치 · Card · Accordion · AppBar · BottomNav 에 accent prop 을 다시 달지 않습니다 — 칠하지 않는 박스가 안쪽 색을 바꾸면 색이 어디서 왔는지 화면에서 찾을 수 없습니다. `X as ElementType` 으로 넓힌 자리는 타입 검사가 못 잡으니, accent 가 Surface · Pressable 로 흘러 DOM 속성으로 새지 않는지 봅니다.
+- 런타임에 색을 계산하지 않습니다. 실행 중에 정해지는 색(학과 · 학번)은 Components 에서 `--fk-tone` 하나로 받습니다. Paint · Button 은 hex 를 받지 않고, 색 버튼은 Components 의 `ToneButton` 이 슬롯을 덮어 칠합니다. 예외는 하나, 면을 tone 으로 꽉 채울 때 글자를 고르는 `toneInk` 입니다(재원님 결정, 2026-10-30).
+- ⚠️ `toneInk` 의 경계는 0.179(WCAG 교차점)입니다. class-explorer `readableInk` 의 0.35 로 맞추면 휘도 0.18~0.35 인 면에서 흰 글자가 AA 에 못 미칩니다.
 
 ## 스타일
 

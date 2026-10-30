@@ -10,7 +10,9 @@ funky-ui의 움직임 — 시간, 곡선, 누름의 거리, 판이 나타나는 
 
 그림자를 켜지 않은 컨트롤은 가라앉지 않고 층(색)만 바뀌며, 누르는 순간만 작아집니다(`tap`). 테두리가 없는 Ghost는 가라앉을 상자가 없어서 그림자를 받지 않고 `tap`입니다. 골라지면 `filled`(테두리가 있는 면)가 되므로, 그때는 다른 버튼처럼 그림자와 커짐을 받습니다.
 
-몸짓은 [Pressable](../primitives/README.md#pressable) 하나가 맡습니다 — `none`(움직이지 않음, 기본) · `sink`(가라앉음) · `raise`(그림자가 올라옴) · `lift`(떠오름) · `tap`(작아짐만) 다섯입니다. 눌림은 순간의 반응이라, 골라져 남아 있는 칸의 모양은 여기에 없습니다([커짐](#커짐)). hover 때 바뀌는 층(색)은 칠([Paint](../primitives/README.md#paint)의 `hoverable`)이라 몸짓과 따로 섭니다. Button은 `shadow`로 몸짓을 고릅니다 — 켜면 `sink`, `"hover"`면 `raise`, 끄면 `tap`입니다.
+몸짓은 [Pressable](../primitives/README.md#pressable) 하나가 맡습니다 — `none`(움직이지 않음, 기본) · `sink`(가라앉음) · `raise`(그림자가 올라옴) · `lift`(떠오름) · `tap`(작아짐만) · `shrink`(그림자를 둔 채 작아짐) 여섯입니다. 눌림은 순간의 반응이라, 골라져 남아 있는 칸의 모양은 여기에 없습니다([커짐](#커짐)). hover 때 바뀌는 층(색)은 칠([Paint](../primitives/README.md#paint)의 `hoverable`)이라 몸짓과 따로 섭니다. Button은 `shadow`로 몸짓을 고릅니다 — 켜면 `sink`, `"hover"`면 `raise`, `"shrink"`면 `shrink`, 끄면 `tap`입니다.
+
+`shrink`는 Ask 플로팅 버튼과 창 머리 단추만 씁니다. 그림자를 그대로 둔 채 hover 때 95%, 누르면 92%로 작아집니다(`PRESS.shrink` · `PRESS.shrinkActive`). 앱의 눌림 규칙에서 일부러 뺀 자리라고 class-explorer 가이드가 적어 둔 예외이고, 재원님 결정으로 그대로 옮겼습니다. 다른 자리에 쓰지 않습니다.
 
 목록 줄 · 아코디언 머리 · 메뉴 항목처럼 누르지만 움직이지 않는 것은 `none`입니다(Pressable의 기본값). 반응은 칠의 hover 층이 맡습니다.
 

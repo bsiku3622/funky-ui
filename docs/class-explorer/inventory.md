@@ -31,7 +31,7 @@ class-explorer `frontend/src`의 모든 컴포넌트를 세고, funky-ui의 층(
 
 계측이 요구한 축은 셋이었고, funky-ui는 그 셋을 그대로 만들었습니다.
 
-- **accent × variant** — 버튼 102종이 "어떤 색(accent 9)을 어떻게 칠하는가(variant 11)" 두 축 안으로 들어옵니다. 규칙은 [Color](../foundations/color.md)의 레시피 표입니다.
+- **accent × variant** — 버튼 102종이 "어떤 색(accent 9)을 어떻게 칠하는가(variant 12)" 두 축 안으로 들어옵니다. 규칙은 [Color](../foundations/color.md)의 레시피 표입니다.
 - **selected는 상태** — 41번 쓰인 `isSelected`는 variant가 아니라 "같은 accent의 filled로 바뀜"입니다. 골라지면 105%로 커지는 모양이 따라옵니다(class-explorer의 골린 버튼 · 칩과 같습니다).
 - **그림자 두 단** — 33개 값이 `raised`(4px)와 `floating`(6px, 모달 전용)으로 모입니다.
 
@@ -53,7 +53,10 @@ class-explorer의 컴포넌트를 funky-ui의 층에 놓으면 이렇습니다. 
 | 체크박스 (native 그대로였음) | `Checkbox` · `Radio` · `Switch` | |
 | 폼 이름표 (`labelClass`) | `Label` | overline 글자 |
 | 카드 안 구분선 (`border-black/10`) | `Divider` | |
-| PrivacyPage의 밑줄 링크 | `Link` | |
+| PrivacyPage의 밑줄 링크 · `hover:underline` 조용한 링크 | `Link` | 조용한 링크는 `underline="hover"` |
+| SettingsPage의 코드 칩 | `Code` | |
+| 달력 · 오늘 카드의 분류 점 · 띠 | `Swatch` | 점 · 둥근 점 · 띠 |
+| `-skew-x-6` 로고 글자 | `Wordmark` | AppBar가 이걸 씁니다 |
 
 ### Molecules로
 
@@ -62,7 +65,7 @@ class-explorer의 컴포넌트를 funky-ui의 층에 놓으면 이렇습니다. 
 | `atoms/RetroCard` | `Card` (+ `Card.Header` · `Card.Section`) — Surface 위. 색 면 카드(`StatsCards`)는 아직 없습니다 |
 | `atoms/RetroSubTitle` | `SectionTitle` |
 | `molecules/PageHeader` | `PageHeader` |
-| `molecules/AccordionSection` | `Accordion` — 앱의 대문자 섹션 제목 모양은 아직 없습니다 |
+| `molecules/AccordionSection` | `Accordion titleStyle="section"` |
 | `atoms/RetroStatItem` | `Stat` |
 | `molecules/BarChartRow` | `Meter` — 읽기 전용입니다. 이름 · 막대를 누르는 쓰임과 마우스를 따라가는 풍선은 아직 없습니다 |
 | `atoms/RetroTooltip` | 글자 설명은 `Tooltip`(`disabled`로 ⌘ 누를 때만). 호출 5곳 중 3곳이 쓰는 사람 카드 풍선과 부모가 여닫는 쓰임은 아직 없습니다 |
@@ -70,7 +73,7 @@ class-explorer의 컴포넌트를 funky-ui의 층에 놓으면 이렇습니다. 
 | `TermSwitcher`의 목록 | `Menu` |
 | 모달 겹판 7개 | `Modal` (native `<dialog>`) — 안에서 여는 `Menu` · `Tooltip`도 그 안에 그려져 보입니다 |
 | 화면 전환 버튼 줄 (Browse의 Students · Teachers …) | `Tabs` |
-| 값 고르는 버튼 줄 (Admin 학기 · 거르개 칩) | `SegmentedControl`. accent 가 줄 전체에 하나라, 칸마다 색이 다른 급식 끼니는 `Button selected`를 나란히 놓습니다 |
+| 값 고르는 버튼 줄 (Admin 학기 · 거르개 칩) | `SegmentedControl`. accent 가 줄 전체에 하나라, 칸마다 색이 다른 급식 끼니는 `ToneButton`을 나란히 놓습니다 |
 | 오류 · 안내 상자 (`bg-retro-primary/10 border-retro-primary`) | `Notice` — Paint(plain) 위. 꽉 찬 색 띠에 그림자를 단 알림(Upload · Materials)은 아직 없습니다 |
 | 빈 카드 ("오늘은 정해진 일정이 없습니다") | `EmptyState` |
 | 폼의 이름표 + 칸 + 안내 | `FormField` |
@@ -88,6 +91,10 @@ class-explorer의 컴포넌트를 funky-ui의 층에 놓으면 이렇습니다. 
 | 학과색 칸 (DayRuler · WeekTimetable) | `ClassTile` (`upcoming · now · past · free`). `TodayTimeline`의 줄은 타일이 아니라 왼쪽 띠가 있는 줄이라 여기 들지 않습니다 |
 | `TimetableGrid` · `SectionsTimetable` | `TimetableGrid` |
 | `RoomsPage` · `AnalysisPage`의 시간 고르는 격자 | 아직 없습니다 — 칸 전체를 상태 면으로 칠하는 격자라 `ClassTile` 격자와 다릅니다 |
+| `RetroButton color` (학과 · 끼니) | `ToneButton` |
+| 기수 거르개 (`FilterSection` · `BrowsePage`) | `ToneChip` |
+| 색을 깐 안내 상자 · 프로필 칸 (`MajorPrompt` · `SearchResultDisplay`) | `ToneBox` |
+| 학과 · 등급 범례 칸 (`ZamongPage`) | `ToneSwatch` |
 
 ### 앱에 남음 — funky 컴포넌트로 다시 짬
 
@@ -97,16 +104,16 @@ class-explorer의 컴포넌트를 funky-ui의 층에 놓으면 이렇습니다. 
 
 ## 아직 시스템에 없는 것
 
-class-explorer의 `components/` · `pages/` 파일 81개를 funky-ui와 하나씩 대조한 결과입니다(2026-10-30). `InventoryPage`는 실제 화면이 아니라 견본 페이지라 뺐습니다. 80개 가운데 빈 곳 없이 옮겨지는 파일이 14개, 일부가 빠지는 파일이 48개, 재현할 수 없는 조각이 있는 파일이 18개입니다. 크기나 색이 사다리의 가까운 값으로 모이는 정규화는 빈 곳으로 세지 않았습니다.
+class-explorer의 `components/` · `pages/` 파일 81개를 funky-ui와 하나씩 대조한 결과입니다(2026-10-30). `InventoryPage`는 실제 화면이 아니라 견본 페이지라 뺐습니다. 크기나 색이 사다리의 가까운 값으로 모이는 정규화는 빈 곳으로 세지 않았습니다.
 
-아래 횟수는 검사에서 센 쓰임새입니다. 같은 모양을 파일마다 세었으니 정확한 개수가 아니라 규모를 가늠하는 값입니다.
+처음 대조했을 때는 80개 가운데 빈 곳 없이 옮겨지는 파일이 14개, 일부가 빠지는 파일이 48개, 재현할 수 없는 조각이 있는 파일이 18개였고, 빠진 조각은 72종(센 쓰임 385회)이었습니다. 그 뒤 13종(224회)을 채워 지금은 빈 곳 없는 파일이 27개, 일부가 빠지는 파일이 39개, 재현할 수 없는 조각이 있는 파일이 14개입니다. 아래 표에는 남은 59종만 둡니다.
+
+횟수는 검사에서 센 쓰임새입니다. 같은 모양을 파일마다 세었으니 정확한 개수가 아니라 규모를 가늠하는 값입니다.
 
 ### Foundations · Primitives — 글자 · 선 · 몸짓
 
 | 빠진 것 | 횟수 | 대표 자리 |
 | --- | --- | --- |
-| 여러 줄 문단의 줄 높이 — Text 역할마다 줄 높이가 고정입니다 | 47 | `GoogleLinkModal.tsx:83` |
-| 상자 없는 색 글자 · 아이콘 — Text tone에 빨강 · 주황 · 초록이 없습니다 | 43 | `AdminPage.tsx:784` |
 | 연한 면 + accent 테두리 + 검정 글자 레시피 | 6 | `CourseGraph.tsx:23-24` |
 | 실행 중 hex로 칠하는 글자 | 6 | `home/TodayCardV3.tsx:388-399` |
 | 한쪽만 긋는 테두리 | 5 | `RequestSidebar.tsx:91` |
@@ -114,14 +121,11 @@ class-explorer의 `components/` · `pages/` 파일 81개를 funky-ui와 하나�
 | 48~72px 큰 제목 — `display`(36px) 위의 한 단 (랜딩 · 검색 프로필) | 5 | `SearchResultDisplay.tsx:243` |
 | 점선 테두리 — EmptyState · ClassTile 안에만 있습니다 | 4 | `CourseGraph.tsx:25-28` |
 | hover와 무관하게 남는 그림자, 그림자를 둔 채 꺼진 칸 | 4 | `CourseGraph.tsx:247-255` |
-| 어두운 면 위의 흐린 글자 — 토큰은 있는데 Text tone에 없습니다 | 3 | `LandingPage.tsx:318` |
 | 넘칠 때만 좌우로 훑는 한 줄 (`MarqueeText`) | 2 | `atoms/MarqueeText.tsx:27` |
-| hover 때 작아지는 몸짓 — Ask 플로팅 버튼 · 창 머리 단추 | 2 | `agent/AgentDock.tsx:41` |
 | 앱이 만든 창에 등장 몸짓을 거는 길, 96% 크기 · 24px 단 | 2 | `agent/AgentPanel.tsx:81` |
 | hover 때 아이콘만 도는 몸짓 | 2 | `FilterSection.tsx:43` |
 | 끌기 커서 · 드롭 대상 강조 | 2 | `zamong/Roadmap.tsx:487-489` |
 | 부모 hover 때 안쪽 화살표가 밀리는 몸짓 | 1 | `HomePage.tsx:448` |
-| 보라 바 위의 흐린 글자 | 1 | `Navigation.tsx:53` |
 | 면만 칠하고 테두리 없는 연한 칩 (달력 분류) | 1 | `CalendarGrid.tsx:119` |
 | 취소선 글자 | 1 | `TradePage.tsx:962` |
 | 떠 있는 판 뒤의 어두운 막 (하단 바 More 판) | 1 | `BottomNav.tsx:106` |
@@ -130,15 +134,9 @@ class-explorer의 `components/` · `pages/` 파일 81개를 funky-ui와 하나�
 
 | 빠진 것 | 횟수 | 대표 자리 |
 | --- | --- | --- |
-| 문장 속 인라인 코드 칩 — Badge는 대문자 · nowrap입니다 | 22 | `SettingsPage.tsx:19` |
-| 흰 면 + 검정 테두리 — 색 머리줄 위의 배지, 크림 위의 흰 버튼 | 21 | `UploadPage.tsx:367` |
-| 분류 점(8px) · 띠(4px) | 18 | `home/TodayCardV2.tsx:184-186` |
-| hover 때만 밑줄이 생기는 조용한 링크 | 14 | `admin/FactsPanel.tsx:550` |
-| 기울어진 로고 글자 단독 — AppBar 안에만 있습니다 | 12 | `LoginPage.tsx:54` |
 | 면 · 테두리 없이 줄 안에서 치는 입력 | 6 | `zamong/Roadmap.tsx:262-284` |
 | 줄바꿈되는 배지 (거절 사유 같은 긴 글자) | 5 | `RequestSidebar.tsx:114-128` |
 | 무테 버튼 · 줄이 accent 면으로 반응하는 hover | 5 | `zamong/Roadmap.tsx:518-534` |
-| 어두운 면 위의 흐린 링크 | 4 | `LandingPage.tsx:467` |
 | 불러오는 동안 제자리에서 도는 아이콘 | 3 | `admin/FactsPanel.tsx:446` |
 | 막지 않는 경고 상태의 입력칸 (주황) | 3 | `AdminPage.tsx:780` |
 | 대소문자를 유지하는 버튼 글자 | 2 | `GoogleLoginButton.tsx:48-59` |
@@ -150,7 +148,6 @@ class-explorer의 `components/` · `pages/` 파일 81개를 funky-ui와 하나�
 
 | 빠진 것 | 횟수 | 대표 자리 |
 | --- | --- | --- |
-| 대문자 섹션 제목의 Accordion | 24 | `molecules/AccordionSection.tsx:30` |
 | 범용 데이터 표 — 머리 · 행 머리 · 숫자 칸 · 가로 스크롤 | 6 | `zamong/Roadmap.tsx:151-218` |
 | 칸이 이어 붙은 세그먼트 | 5 | `AdminPage.tsx:746` |
 | 두 줄 카드 머리 | 5 | `ExamsPage.tsx:54` |
@@ -176,7 +173,6 @@ class-explorer의 `components/` · `pages/` 파일 81개를 funky-ui와 하나�
 
 | 빠진 것 | 횟수 | 대표 자리 |
 | --- | --- | --- |
-| 학과 · 기수 hex로 칠하는 버튼 · 칩 · 박스 | 13 | `MajorPicker.tsx:49-57` |
 | 시간표의 점심 · 저녁 빗금 행 | 4 | `home/WeekTimetable.tsx:515-550` |
 | 열릴 때 도는 ▾ (TermSwitcher) | 3 | `TermSwitcher.tsx:59` |
 | 칸 전체를 상태 면으로 칠하는 격자 (빈 강의실 · 분석 비교) | 2 | `RoomsPage.tsx:142-155` |
@@ -195,5 +191,8 @@ class-explorer의 `components/` · `pages/` 파일 81개를 funky-ui와 하나�
 
 ### 정해 둔 것
 
-- **실행 중에 정해지는 색의 버튼** — `MajorPicker`는 학과색(hex 11가지)으로 고른 버튼을 칠합니다. 학과색은 네온 accent 아홉 밖의 색이라 `Button`으로는 칠할 수 없습니다. hex를 받는 탈출구를 Button(Paint)에 두지는 않기로 했습니다 — 실행 중에 색을 계산하지 않는다는 규칙을 깨고, 임의의 색에서는 글자 대비(WCAG)도 보장할 수 없기 때문입니다. 지금 실행 중의 색은 Components가 `--fk-tone`(`toneStyle`)으로만 칠합니다(`ClassTile` · `StudentBadge`). 남은 것은 학과를 accent에 묶을지, 학과색 버튼도 그 길(Components)에 올릴지입니다.
+- **크림 위의 흰 버튼** — `outline`은 스케치대로 면을 투명하게 두고, 흰 면 variant `paper`를 더했습니다. `outline`의 면을 흰색으로 바꾸면 흰 카드 안에서는 같아 보이지만 스케치의 정의를 어깁니다.
+- **실행 중에 정해지는 색의 버튼** — `MajorPicker`는 학과색(hex 11가지)으로 고른 버튼을 칠합니다. 학과색은 네온 accent 아홉 밖의 색이라 `Button`으로는 칠할 수 없습니다. hex를 받는 탈출구를 Button(Paint)에 두지 않고, Components에 `ToneButton` · `ToneChip` · `ToneBox` · `ToneSwatch`를 두었습니다. 학과를 accent에 묶지 않았습니다 — 열한 색이 아홉으로 줄어 학과가 겹칩니다. 글자는 `toneInk`가 면 색에서 검정이나 흰색을 고르고, 이것이 실행 중에 색을 계산하지 않는다는 규칙의 유일한 예외입니다.
+- **Ask 버튼의 몸짓** — class-explorer 가이드가 사용자 요청의 예외로 두고 되돌리지 말라고 적은 몸짓이라 `sink`로 합치지 않고 `shrink`를 더했습니다. Ask 단추 말고는 쓰지 않습니다.
+- **색 버튼의 커지기** — class-explorer의 색 버튼은 나란히 붙으면 테두리가 굵어 보인다는 이유로 골라져도 커지지 않습니다. funky-ui는 골라진 Button을 색과 상관없이 키웁니다. 끼니 버튼을 옮기면 모양이 조금 달라지고, 어색하면 그때 끄는 길을 더합니다. 여러 개를 함께 켜는 `ToneChip`은 Button이 아니고 줄 전체가 커지면 뜻이 없어서 커지지 않습니다.
 - **고른 카드** — EntityCard의 `isActive`(`scale-105 shadow-retro-lg`)는 가이드에만 있고 코드에는 없습니다. 쓰이는 곳이 없어 `Card`에 `selected`는 더하지 않았습니다.

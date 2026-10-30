@@ -8,15 +8,16 @@ class-explorer의 지금 클래스 문자열을 funky-ui의 무엇으로 바꾸�
 
 | 지금 | funky-ui | 예 |
 | --- | --- | --- |
-| `RetroButton` (기본 흰색) | `<Button shadow>` — ⚠️ `outline`은 면이 투명해서 크림 위에서는 흰 버튼이 크림으로 보입니다. 흰 면을 지키는 길은 아직 없습니다 | 대부분의 RetroButton |
+| `RetroButton` (기본 흰색) | `<Button variant="paper" shadow>` — 기본 `outline`은 면이 투명해서 크림 위에서 흰 면이 사라집니다 | 대부분의 RetroButton |
 | `RetroButton variant="black"` | `<Button variant="filled" shadow>` | 로그인 · 저장 |
 | `RetroButton variant="primary"` | `<Button accent="pink" variant="solid" shadow>` | |
-| `RetroButton isSelected` | `<Button shadow selected>` — 105%로 커지고 그림자를 그대로 둡니다 | 학과 · 화면 전환 |
-| `bg-white border-2 border-black` (12) | `<Button>` · 아이콘만이면 `<IconButton variant="outline">` — 흰 면이 사라지는 것은 위와 같습니다 | MealCard 날짜 화살표 · 업로드 동작 |
+| `RetroButton isSelected` | `<Button variant="paper" shadow selected>` — 105%로 커지고 그림자를 그대로 둡니다 | 학과 · 화면 전환 |
+| `RetroButton color={hex}` | `<ToneButton tone={hex} selected={…}>` — [실행 중의 색](#실행-중의-색) | MajorPicker · 급식 끼니 |
+| `bg-white border-2 border-black` (12) | `<Button variant="paper">` · 아이콘만이면 `<IconButton variant="paper">` | MealCard 날짜 화살표 · 업로드 동작 |
 | `bg-black text-white border-black` (8) | `<Button variant="filled">` | RequestSidebar "허용" · Admin "확인" |
 | 안 골림 `border-black/30 text-black/40` → 골림 `bg-black text-white` (11 + 7) | `<Button variant="muted" selected={…}>` · 줄이면 `SegmentedControl` | EventFormModal 칩 · Admin 학기 |
 | `bg-retro-accent1 border-black shadow-3px` (4) | `<Button accent="cyan" variant="solid" shadow>` | SyllabusPanel · MaterialsPage "Preview" |
-| `bg-white border-black shadow-3px` (6) | `<Button variant="outline" shadow>` | "Download" · "다시 시도" |
+| `bg-white border-black shadow-3px` (6) | `<Button variant="paper" shadow>` | "Download" · "다시 시도" |
 | `bg-white border-black/30 text-black/50` "Refetch" (8) | `<Button size="xs" variant="muted" icon={RefreshCw}>` | Admin · FactsPanel |
 | `text-black/40 hover:text-black` 아이콘 (4 + 4) | `<IconButton variant="ghostMuted">` | 닫기 · 새로고침 |
 | `text-red-500 hover:text-red-700` 휴지통 (2) | `<IconButton accent="red" variant="ghostMuted">` — 옅다가 hover 때 진해지는 쪽입니다(`ghost`는 반대) | Admin |
@@ -71,8 +72,8 @@ class-explorer의 모션 전부를 몸짓 · 상태 모션 · 입력칸으로 �
 | `hover:-translate-y-1(.5)` + 그림자 6px — 떠오름 (3) | `lift` — Card `motion="lift"` (4px로 통일). EntityCard는 색 면 패널이 있는 `PersonCard` 구조인데 PersonCard는 `sink` 고정이라 아직 못 옮깁니다 | EntityCard · Trade 카드 |
 | `active:scale-95` — 누르는 순간 작아짐 (15) | `tap` · sink의 누르는 순간 | 그림자 없는 버튼 |
 | `active:translate-0.5 active:shadow-none`, hover는 색만 (2) | `sink`로 통일 | Show More |
-| `hover:scale-95 active:scale-[0.92]` (2) | 없음 — class-explorer 가이드가 사용자 요청의 예외로 두고 되돌리지 말라고 적은 몸짓입니다. `sink`로 합칠지 정해야 합니다 | Ask 플로팅 버튼 · Ask 판 아이콘 버튼 |
-| `hover:scale-105 active:scale-95` (2) | 로고는 AppBar가 가짐. Trade 칩은 학번색이라 `StudentBadge onClick`으로 가고, 거기엔 누르는 순간 작아지는 몸짓만 있습니다 | 로고 · Trade 칩 |
+| `hover:scale-95 active:scale-[0.92]` (2) | `shrink` — `<IconButton variant="paper" shadow="shrink">`. 플로팅 버튼의 흰 면 + 보라 아이콘은 `accent="purple"`을 더합니다. class-explorer 가이드가 사용자 요청의 예외로 두고 되돌리지 말라고 적은 몸짓이라 그대로 옮겼습니다. 창 머리 단추의 2px 그림자는 4px로 모입니다 | Ask 플로팅 버튼 · Ask 판 아이콘 버튼 |
+| `hover:scale-105 active:scale-95` (2) | 로고는 `Wordmark onClick`(AppBar가 씁니다). Trade 칩은 학번색이라 `StudentBadge onClick`으로 가고, 거기엔 누르는 순간 작아지는 몸짓만 있습니다 | 로고 · Trade 칩 |
 | 목록 줄의 hover 회색 층 | Pressable `none` + Surface `fill="none" hoverable` | 검색 추천 · 메뉴 항목 · 아코디언 머리 |
 | `group-hover:rotate-[-45deg]` · `group-hover:translate-x-0.5` · `group-hover:scale-105` | 없음 | 초기화 아이콘 · 링크 화살표 · 카드 안 이름 |
 | 입력칸 `shadow-[4px…] focus:shadow-none` — 평소 있고 포커스에 거둠 | Input · Textarea · Select `shadow` — 쉴 때 4px, 포커스에 거두고 그 자리를 핑크 링이 채웁니다 | 로그인 · 업로드 · Admin · Materials |
@@ -105,6 +106,28 @@ class-explorer의 모션 전부를 몸짓 · 상태 모션 · 입력칸으로 �
 | `text-black/40` · `/45` · `/50` 약한 글자 | `tone="muted"` (AA) |
 | `text-black/55` · `/60` · `/70` | `tone="secondary"` |
 | `text-black/20` · `/25` · `/30` | `tone="faint"` — 장식 · 꺼진 자리에만 |
+| `text-white/65` · `/50` · `/40` — 어두운 면 · 보라 바 위 (4) | `tone="inverseMuted"` (흰 60%) |
+| `leading-relaxed` 안내 문단 (47) | `<Text leading="relaxed">` |
+| 상자 없는 색 글자 `text-retro-primary` · `text-red-600` … (43) | `<Text tone="pink">` · `tone="red"` — 그 색의 진한 글자(AA)로 모입니다. 예를 들어 핑크는 #ff4eba에서 #a0006e가 됩니다 |
+| `bg-black text-white px-1.5 py-0.5 text-xs font-black` 코드 칩 (22) | `<Code>` |
+| `hover:underline` (14) | `<Link underline="hover">` — 글자 · 굵기는 바깥 `Text`에서 물려받습니다 |
+| `hover:text-retro-primary hover:underline` | `<Link underline="hover" accent="pink">` |
+| `text-white/40 hover:text-white` 바닥글 링크 (4) | `<Text tone="inverseMuted">` 안의 `<Link underline="hover">` — hover 때 흰 글자가 되는 대신 밑줄이 생깁니다 |
+| `-skew-x-6 font-black uppercase` 로고 (12) | `<Wordmark>` — 20 · 24 · 36px으로 모입니다. 제목이면 `as="h1"` |
+| `AccordionSection` (`text-sm md:text-xl uppercase`, 24) | `<Accordion titleStyle="section">` |
+| `h-2 w-2 bg-*` 분류 점 · `w-1` 띠 · `rounded-full` 상태 점 (18) | `<Swatch accent>` · `shape="rail"` · `shape="round"`. `bg-black/50`은 `accent="black" rung="softInk"`, `bg-black/25`는 `rung="soft"` |
+
+## 실행 중의 색
+
+학과 · 기수 hex는 Paint로 가지 않고 Components의 Tone 부품으로 갑니다. 글자색 규칙과 커지는 규칙이 class-explorer와 달라서 모양이 조금 바뀝니다.
+
+| 지금 | funky-ui | 달라지는 것 |
+| --- | --- | --- |
+| `RetroButton color={hex} isSelected` — `backgroundColor: hex` + `readableInk` | `<ToneButton tone={hex} selected>` | 글자 경계가 0.35에서 0.179로 바뀌어 학과색 열한 가지 중 다섯(화학 · 생물학 · 지구과학 · 외국어 · 예체능)의 글자가 흰색에서 검정이 됩니다. 지금은 대비가 2.94~3.74:1로 AA에 못 미치는 색들이고, 5.61~7.15:1이 됩니다. 골라지면 105%로 커집니다 |
+| 기수 거르개 `label` — `${color}20` 면 · 끄면 `grayscale opacity-40` | `<ToneChip tone={hex} selected>` | `<label>` + 숨긴 체크박스 대신 `<button aria-pressed>`입니다. 안쪽 네모는 12~16px에서 16px로 모입니다 |
+| `border-2` + `withAlpha(tint, 0.08)` 안내 상자 | `<ToneBox tone={hex}>` | 안쪽 글자의 hex 색은 앱이 inline style로 줍니다 |
+| 프로필 칸 `${color}15` 면 (테두리 없음) | `<ToneBox tone={hex} framed={false}>` | |
+| 범례 `h-4 w-4 border-2` + `backgroundColor: hex` | `<ToneSwatch tone={hex}>` | 테두리가 `border-black/30`에서 검정이 됩니다 |
 
 ## 색 이름
 

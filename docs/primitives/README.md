@@ -32,11 +32,11 @@ primitive가 받는 값은 모두 닫힌 집합입니다.
 | 어휘 | 값 |
 | --- | --- |
 | `Accent` | `black` `pink` `purple` `cyan` `yellow` `orange` `sky` `green` `red`, 역할 별칭 `system`(black) · `primary`(pink) · `secondary`(purple) · `success`(green) · `error`(red). 색 규칙은 [Color](../foundations/color.md) |
-| `Variant` | `filled` `outline` `hairline` `frameline` `framelineMuted` `plain` `solid` `solidMuted` `muted` `ghost` `ghostMuted` — 레시피는 [Color](../foundations/color.md#variant) |
+| `Variant` | `filled` `outline` `hairline` `frameline` `framelineMuted` `plain` `solid` `solidMuted` `muted` `ghost` `ghostMuted` `paper` — 레시피는 [Color](../foundations/color.md#variant) |
 | `SurfaceFill` | `none`(면 없음 — 바깥 면이 그대로 보임) · `canvas`(크림 바탕) · `raised`(흰 면) · `sunken`(크림 위 오목한 자리) · `well`(흰 면 안의 오목한 자리, 반투명) · `inverse`(검정) · `brand`(앱 뼈대의 보라 — 상단 바 · 하단 바에만) |
 | `Border` | `none` · `line`(검정) · `soft`(연한 회색) · `subtle`(카드 안 구분선 색) |
 | `Shadow` | `none` · `raised`(4px) · `floating`(6px) |
-| `PressMotion` | `none`(움직이지 않음, 기본) · `sink`(그림자 위에서 가라앉음) · `raise`(평평하다가 그림자가 올라옴) · `lift`(떠오름) · `tap`(그림자 없이 누르는 순간만 작아짐). 거리와 시간은 [Motion](../foundations/motion.md) |
+| `PressMotion` | `none`(움직이지 않음, 기본) · `sink`(그림자 위에서 가라앉음) · `raise`(평평하다가 그림자가 올라옴) · `lift`(떠오름) · `tap`(그림자 없이 누르는 순간만 작아짐) · `shrink`(그림자를 둔 채 hover 때부터 작아짐 — Ask 단추 전용). 거리와 시간은 [Motion](../foundations/motion.md) |
 | `EnterMotion` | `none`(그냥 나타남) · `rise`(아래에서 4px 떠오름 — 메뉴 · 툴팁) · `pop`(8px — 모달) · `fade`(제자리에서 나타남 — 펼친 본문). 거리와 시간은 [Motion](../foundations/motion.md#등장) |
 | `Space` | `0` `2xs` `xs` `sm` `md` `lg` `xl` `2xl` `3xl` `4xl` `5xl` `6xl` — 0 · 2 · 4 · 6 · 8 · 12 · 16 · 20 · 24 · 32 · 48 · 64px. 안쪽 여백과 형제 사이 간격이 같은 사다리를 씁니다. [Layout](../foundations/layout.md) |
 
@@ -77,7 +77,8 @@ primitive가 받는 값은 모두 닫힌 집합입니다.
 | `as` | `ElementType` | `"span"` | 렌더할 요소입니다. |
 | `variant` | `TextVariant` | `"body"` | 글자 역할입니다. 크기 · 줄 높이 · 굵기 · 자간 · 대소문자를 한 번에 고릅니다. `display` `title` `heading` `subheading` `body` `caption` `label` `micro` `overline` `subtitle` 열 개이고, 숫자는 [Typography](../foundations/typography.md)에 있습니다. |
 | `weight` | `Weight` | — | `regular` `medium` `bold` `black`. 역할의 기본 굵기를 바꿀 때만 줍니다. |
-| `tone` | `Tone` | — | 글자색입니다. `primary` `secondary` `muted` `faint` `inverse` `accent` `accentSoft` `inherit`. `accent`는 가장 가까운 Paint의 진한 글자, `accentSoft`는 연한 글자이고, 바깥에 Paint가 없으면 검정(시스템)의 사다리입니다. |
+| `leading` | `Leading` | `"fixed"` | 줄 높이입니다. `fixed`는 역할이 정한 px이고, `relaxed`는 글자 크기의 1.625배입니다. 여러 줄을 읽는 문단에 줍니다. |
+| `tone` | `Tone` | — | 글자색입니다. `primary` `secondary` `muted` `faint` `inverse` `inverseMuted` `accent` `accentSoft` `inherit`와 색 이름 `pink` `purple` `cyan` `yellow` `orange` `sky` `green` `red`. `accent`는 가장 가까운 Paint의 진한 글자, `accentSoft`는 연한 글자이고, 바깥에 Paint가 없으면 검정(시스템)의 사다리입니다. 색 이름은 그 색의 진한 글자입니다. |
 | `family` | `"sans" \| "mono"` | — | 서체입니다. 코드나 식별자 같은 기술적 자리에만 `mono`를 씁니다. |
 | `align` | `"start" \| "center" \| "end"` | — | 글자 정렬입니다. |
 | `truncate` | `boolean` | `false` | 한 줄에서 자르고 …을 붙입니다. |
@@ -87,7 +88,7 @@ primitive가 받는 값은 모두 닫힌 집합입니다.
 - `overline`과 `subtitle`은 기본 잉크가 `muted`입니다. 정의 순서가 역할 → 굵기 → 잉크라서 `tone`과 `weight`로 그 기본값을 바꿀 수 있습니다.
 - `faint`는 장식 · placeholder · 꺼진 자리 전용입니다. 대비가 AA에 못 미치므로 필수 정보에 쓰지 않습니다.
 - 문서 구조는 `as`가, 생김새는 `variant`가 맡습니다. 제목 태그의 크기를 바꾸고 싶으면 태그를 바꾸지 말고 `variant`를 바꿉니다.
-- Text는 accent를 읽기만 하고 정하지 않습니다. 색을 정하는 것은 Paint입니다.
+- Text는 accent를 읽기만 하고 정하지 않습니다. 안쪽으로 흐르는 색을 정하는 것은 Paint입니다. `tone`의 색 이름은 이 글자 하나의 색이라, 안에 든 요소의 accent를 바꾸지 않습니다. 그래서 `tone="red"`는 목록을 돌며 그리는 콜백 안에서도 씁니다(`useAccent`는 훅이라 그 자리에서 부를 수 없습니다).
 
 ## Icon
 
@@ -215,7 +216,7 @@ hover 색은 Pressable 없이도 켜집니다. 누르는 물건으로 만들려�
 | --- | --- | --- | --- |
 | `as` | `ElementType` | `"div"` | 렌더할 요소입니다. |
 | `accent` | `Accent` | — | 색입니다. 이 요소를 칠하고 안쪽으로 흐릅니다. 주지 않으면 바깥 Paint의 색, 바깥에도 없으면 검정(시스템)입니다. |
-| `variant` | `Variant` | `"outline"` | 칠하는 방식입니다. 11가지 레시피는 [Color](../foundations/color.md#variant)에 있습니다. |
+| `variant` | `Variant` | `"outline"` | 칠하는 방식입니다. 12가지 레시피는 [Color](../foundations/color.md#variant)에 있습니다. |
 | `selected` | `boolean` | `false` | 골라진 상태입니다. 같은 accent의 `filled`로 칠합니다. 알리는 aria와 골라진 모양(커지기)은 [Selectable](#selectable)입니다. |
 | `hoverable` | `boolean` | `false` | hover · 누르는 중에 색이 반응합니다. variant 표의 Hover 칸(층 · 글자 · 테두리)대로 바뀌고, 누르는 동안 한 단 더 짙어집니다. Pressable 없이 혼자 동작하므로 툴팁을 띄우는 배지처럼 누르지 않는 요소에도 씁니다. 꺼진 요소(`disabled` · `aria-disabled`)에는 걸지 않습니다. |
 | `padding` `paddingX` `paddingY` | [Box](#box)와 같음 | — | Box와 같은 prop입니다. |
@@ -275,7 +276,7 @@ hover 색은 Pressable 없이도 켜집니다. 누르는 물건으로 만들려�
 | prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `as` | `ElementType` | `"button"` | 렌더할 요소입니다. 링크면 `"a"`나 라우터 링크를 줍니다. |
-| `motion` | `PressMotion` | `"none"` | 몸짓입니다. `none`은 움직이지 않고, `sink`는 4px 그림자 위에서 가라앉고, `raise`는 평평하다가 hover 때 제자리에서 그림자가 올라오고, `lift`는 떠오르고, `tap`은 그림자 없이 누르는 순간만 작아집니다. |
+| `motion` | `PressMotion` | `"none"` | 몸짓입니다. `none`은 움직이지 않고, `sink`는 4px 그림자 위에서 가라앉고, `raise`는 평평하다가 hover 때 제자리에서 그림자가 올라오고, `lift`는 떠오르고, `tap`은 그림자 없이 누르는 순간만 작아지고, `shrink`는 그림자를 둔 채 hover 때 95%, 누르면 92%로 작아집니다(Ask 단추 전용). |
 | `disabled` | `boolean` | `false` | `button`이면 `disabled` 속성이, 그 밖의 요소면 `aria-disabled`가 붙습니다. 불투명도 0.4에 `not-allowed` 커서이고 몸짓이 멈춥니다. |
 | `padding` `paddingX` `paddingY` | [Box](#box)와 같음 | — | Box와 같은 prop입니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. 면은 여기로 얹습니다. |
@@ -372,7 +373,7 @@ function Row({ as, children, ...rest }) {
 - 기본 요소가 `div`라서, `role`도 `current`도 없이 쓰면 `aria-pressed`가 button이 아닌 요소에 붙습니다. 고르는 칸은 `as={Pressable}`로 button을 그리거나 `role`을 줍니다.
 - `current`는 내비 칸이 씁니다. SideNav · BottomNav의 칸이 `current="page"`로 지금 화면을 알립니다. 내비는 Tab 키로 칸마다 들르는 것이 맞아서 아래 `useSelectableGroup`으로 묶지 않습니다.
 - `grow`는 이웃 위에 서려고 `position: relative`와 `z-index: 1`을 걸고, 4px 그림자를 둔 채 105%(`PRESS.grow`)로 커집니다. hover 때는 가라앉지 않고 제자리에서 그림자만 숨습니다. 이미 고른 칸을 다시 '눌러 들어가게' 하지 않으려는 것이고, class-explorer의 골라진 버튼(`scale-105 z-10`)이 이렇게 움직입니다. 꺼진 요소에는 hover · 누르는 중 규칙을 걸지 않습니다.
-- `grow`는 그 자체로 몸짓이라 함께 쓰는 Pressable의 몸짓(`sink` · `raise` · `lift` · `tap`)을 덮습니다. class를 두 번 겹친 선택자(`.grow.grow`)로 특이도를 한 단 올려서, 쓰는 쪽이 골라질 때마다 `motion`을 바꿀 필요가 없고 CSS가 실리는 순서에도 기대지 않습니다. Selectable의 CSS가 Pressable의 CSS에서 `FLAT_SHADOW` 값을 읽는 것이 2차 primitive 사이의 유일한 import입니다.
+- `grow`는 그 자체로 몸짓이라 함께 쓰는 Pressable의 몸짓(`sink` · `raise` · `lift` · `tap` · `shrink`)을 덮습니다. class를 두 번 겹친 선택자(`.grow.grow`)로 특이도를 한 단 올려서, 쓰는 쪽이 골라질 때마다 `motion`을 바꿀 필요가 없고 CSS가 실리는 순서에도 기대지 않습니다. Selectable의 CSS가 Pressable의 CSS에서 `FLAT_SHADOW` 값을 읽는 것이 2차 primitive 사이의 유일한 import입니다.
 - 쉴 때 평평한 칩도 골라지면 커지며 그림자가 생깁니다 — class-explorer 분반 카드의 교사 · 교실 칩이 그렇습니다. `grow`는 주는 쪽이 정하고, Button은 골라진 버튼에 늘 줍니다.
 - 누르면 골라지는 토글은 둘입니다. `defaultSelected`를 주면 누를 때마다 스스로 켜지고 꺼지며, 칠은 `className`을 함수(`({ selected }) => paintClass({ selected })`)로 줘서 그 값을 받습니다. `selected` + `onSelectedChange`면 쓰는 쪽이 값을 들고 있는 토글입니다. 무리의 칸(라디오 · 탭)은 무리가 값을 들고 있으므로 둘 다 주지 않습니다 — 이미 고른 라디오를 다시 눌러도 꺼지지 않아야 합니다.
 
@@ -443,7 +444,7 @@ function ViewPicker() {
 - 골라짐은 눌림과 달리 남아 있는 상태입니다. 색은 칠의 `selected`가, 알림과 커지기는 Selectable이 맡으므로 서로 없이도 쓸 수 있습니다 — 칠 없이 Selectable만 써도 aria가 붙고, Selectable 없이 칠의 `selected`만 줘도 색은 바뀝니다.
 - 여러 축에 걸치는 것은 꺼짐뿐입니다. Pressable이 `disabled` · `aria-disabled`를 붙이고, 나머지 primitive가 그 HTML 상태를 읽어 각자의 축에서 멈춥니다.
 - `transition-property`는 한 속성이라 자기 속성만 적으면 한 요소 위에서 서로를 덮습니다. 그래서 칠 · Pressable · Selectable 모두 색과 몸짓을 합친 한 목록(`STATE_TRANSITION`)을 씁니다.
-- Button이 셋을 묶는 자리입니다. `selected`를 Paint의 `selected`(색)와 Selectable의 `selected`(알림)로 나눠 주고, `shadow`로 몸짓을 고릅니다 — 켜면 `sink`, `"hover"`면 `raise`, 끄면 `tap`입니다. 골라진 버튼에는 그림자와 상관없이 `grow`를 주고, `grow`가 몸짓을 덮으므로 `motion`은 쉴 때의 것 그대로 둡니다.
+- Button이 셋을 묶는 자리입니다. `selected`를 Paint의 `selected`(색)와 Selectable의 `selected`(알림)로 나눠 주고, `shadow`로 몸짓을 고릅니다 — 켜면 `sink`, `"hover"`면 `raise`, `"shrink"`면 `shrink`, 끄면 `tap`입니다. 골라진 버튼에는 그림자와 상관없이 `grow`를 주고, `grow`가 몸짓을 덮으므로 `motion`은 쉴 때의 것 그대로 둡니다.
 
 ## Floating
 

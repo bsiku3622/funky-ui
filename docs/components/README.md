@@ -1,14 +1,15 @@
 # Components
 
-Components는 class-explorer 전용 컴포넌트입니다. 앱 셸(상단 바 · 사이드바 · 하단 바 · 학기 선택), 사람(학번 배지 · 학생 카드), 시간표(수업 칸 · 한 주 격자)가 여기 있고, 아래 층(Primitives · Atoms · Molecules)을 모두 쓸 수 있습니다. 범용이 아니므로 다른 앱은 이 층을 쓰지 않고 Atoms와 Molecules로 직접 짭니다. 기존 class-explorer 컴포넌트에서 옮기는 방법은 [이관표](../class-explorer/migration.md)에 있습니다.
+Components는 class-explorer 전용 컴포넌트입니다. 앱 셸(상단 바 · 사이드바 · 하단 바 · 학기 선택), 사람(학번 배지 · 학생 카드), 시간표(수업 칸 · 한 주 격자), 실행 중의 색(버튼 · 칩 · 상자 · 범례 칸)이 여기 있고, 아래 층(Primitives · Atoms · Molecules)을 모두 쓸 수 있습니다. 범용이 아니므로 다른 앱은 이 층을 쓰지 않고 Atoms와 Molecules로 직접 짭니다. 기존 class-explorer 컴포넌트에서 옮기는 방법은 [이관표](../class-explorer/migration.md)에 있습니다.
 
-색은 앱이 학번이나 학과로 정해 `color`(hex)로 넘기고, 이 층이 `toneStyle`로 `--fk-tone` 변수에 실어 칠합니다. 셸의 치수는 class-explorer의 셸에 맞춘 `CONTAINER.shell`(상단 바 80 · 사이드바 256 · 하단 바 64px)을 따르고, 화면에 고정할지는 `fixed`로 고릅니다. 메뉴의 순서와 내용은 앱이 정하며 셸은 그리기만 합니다. 이 층은 컴포넌트 여덟 개와 함수 `toneStyle` 하나를 내보냅니다. 예시는 import를 생략하며, `navigate`나 `terms`처럼 앱이 가진 값은 이미 있다고 봅니다.
+색은 앱이 학번이나 학과로 정해 hex로 넘기고(사람 · 시간표 부품은 `color`, Tone 부품은 `tone`), 이 층이 `toneStyle`로 `--fk-tone` 변수에 실어 칠합니다. Button과 Paint는 hex를 받지 않으므로 실행 중의 색은 이 층에만 있습니다. 셸의 치수는 class-explorer의 셸에 맞춘 `CONTAINER.shell`(상단 바 80 · 사이드바 256 · 하단 바 64px)을 따르고, 화면에 고정할지는 `fixed`로 고릅니다. 메뉴의 순서와 내용은 앱이 정하며 셸은 그리기만 합니다. 이 층은 컴포넌트 열두 개와 함수 `toneStyle` · `toneInk` 둘을 내보냅니다. 예시는 import를 생략하며, `navigate`나 `terms`처럼 앱이 가진 값은 이미 있다고 봅니다.
 
 | 묶음 | 컴포넌트 |
 | --- | --- |
 | shell | AppBar · SideNav · BottomNav · TermSwitcher |
 | people | StudentBadge · PersonCard |
 | schedule | ClassTile · TimetableGrid |
+| tone | ToneButton · ToneChip · ToneBox · ToneSwatch |
 
 ## AppBar
 
@@ -25,7 +26,7 @@ Components는 class-explorer 전용 컴포넌트입니다. 앱 셸(상단 바 ·
 
 | prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `brand` | `ReactNode` | 필수 | 로고 글자입니다. 기울어진(−6°) 900 대문자로 그립니다. |
+| `brand` | `ReactNode` | 필수 | 로고 글자입니다. [Wordmark](../atoms/README.md#wordmark)(기울어진 900 대문자)로 그립니다. |
 | `onBrandClick` | `() => void` | — | 주면 로고가 button이 되고, 주지 않으면 글자(`<span>`)로 그립니다. |
 | `actions` | `ReactNode` | — | 오른쪽 끝입니다. 학기 선택 · 계정 · 로그아웃을 둡니다. |
 | `fixed` | `boolean` | `false` | 화면 위에 고정합니다. |
@@ -260,6 +261,101 @@ SideNav.Item과 같은 prop입니다.
 - 첫 열(교시)은 2.5rem 고정이고 요일 열은 같은 폭입니다. 칸은 최소 높이 48px에 안쪽 여백 4px이라 `ClassTile`을 그대로 넣으면 칸을 채웁니다.
 - `role="table"`에 행 · 열 머리 · 칸의 역할이 붙어 표로 읽힙니다.
 
+## ToneButton
+
+실행 중에 정해지는 색(학과 · 끼니)으로 칠하는 버튼입니다. 안 골린 칸은 흰 면이고, 골라지면 그 색의 면이 됩니다. 아래는 학과를 고르는 줄입니다.
+
+```tsx
+{majors.map((m) => (
+  <ToneButton key={m.name} tone={m.color} selected={major === m.name} onClick={() => setMajor(m.name)}>
+    {m.name}
+  </ToneButton>
+))}
+```
+
+`accent`와 `variant`를 뺀 [Button](../atoms/README.md#button)의 prop을 그대로 받습니다.
+
+| prop | 타입 | 기본값 | 설명 |
+| --- | --- | --- | --- |
+| `tone` | `string` | 필수 | 칠할 색(hex)입니다. 골라졌을 때 면이 됩니다. |
+| `selected` | `boolean` | — | 골라진 상태입니다. Button과 같이 105%로 커져 그림자 위에 섭니다. |
+| `shadow` | `ButtonShadow` | `true` | Button과 같습니다. 기본이 켜져 있습니다. |
+
+- 셋을 다 칠하면 어느 것을 보고 있는지 색으로 가릴 수 없어서 안 골린 칸은 `paper`입니다.
+- 글자는 [`toneInk`](#toneink)가 면 색에서 검정이나 흰색을 고르므로 어떤 색이든 4.58:1 이상입니다.
+- class-explorer의 색 버튼은 골라져도 커지지 않았지만, funky-ui는 골라진 버튼을 색과 상관없이 키웁니다(재원님 결정). 나란히 붙은 끼니 버튼의 모양이 조금 달라집니다.
+
+## ToneChip
+
+여러 개를 함께 켜는 색 칩입니다. 아래는 기수를 거르는 줄입니다.
+
+```tsx
+{cohorts.map((c) => (
+  <ToneChip key={c.year} tone={c.color} selected={on.includes(c.year)} onClick={() => toggle(c.year)}>
+    {c.year}학번
+  </ToneChip>
+))}
+```
+
+`<button>`이고 나머지 props는 그대로 갑니다.
+
+| prop | 타입 | 기본값 | 설명 |
+| --- | --- | --- | --- |
+| `tone` | `string` | 필수 | 칠할 색(hex)입니다. |
+| `selected` | `boolean` | `false` | 켜짐입니다. `aria-pressed`로 알립니다. |
+| `disabled` | `boolean` | `false` | 눌림이 꺼지고 불투명도 0.4가 됩니다. |
+
+- 켜면 tone 12% 면에 그림자 위에 서고 hover 때 가라앉습니다. 끄면 흐린 회색으로 물러나 있다가 hover 때 제 색으로 돌아옵니다.
+- Button과 달리 골라져도 커지지 않습니다. 기본으로 전부 켜 두는 줄이라 다 같이 커지면 뜻이 없습니다.
+- 글자 크기는 좁은 화면 12px, `md` 이상 14px입니다.
+
+## ToneBox
+
+색을 깐 상자입니다. tone 8% 면과 그 색의 2px 테두리이고, 글자는 칠하지 않습니다. 아래는 수강 이력으로 짐작한 전공을 알리는 상자입니다.
+
+```tsx
+<ToneBox tone={major.color} paddingX="lg" paddingY="md">
+  <Text weight="black">수강 이력으로 보면 {major.name} 트랙 같아요</Text>
+</ToneBox>
+```
+
+| prop | 타입 | 기본값 | 설명 |
+| --- | --- | --- | --- |
+| `as` | `ElementType` | `"div"` | 렌더할 요소입니다. |
+| `tone` | `string` | 필수 | 칠할 색(hex)입니다. |
+| `framed` | `boolean` | `true` | 그 색의 테두리입니다. 카드 안의 칸처럼 이미 틀이 있으면 끕니다. |
+| `padding` `paddingX` `paddingY` | [Box](../primitives/README.md#box)와 같음 | — | 안쪽 여백입니다. |
+| `className` | `string` | — | 마지막에 덧붙는 class입니다. |
+
+## ToneSwatch
+
+범례 칸입니다. 16px 네모에 검정 테두리입니다. 아래는 학과색 범례 한 칸입니다.
+
+```tsx
+<Inline gap="sm">
+  <ToneSwatch tone={dept.color} />
+  <Text variant="caption" weight="black">{dept.name}</Text>
+</Inline>
+```
+
+`<span>`이고 나머지 props는 그대로 갑니다. `aria-hidden`이 붙어 스크린 리더에게 읽히지 않습니다. accent로 칠하는 점 · 띠는 [Swatch](../atoms/README.md#swatch)입니다.
+
+| prop | 타입 | 기본값 | 설명 |
+| --- | --- | --- | --- |
+| `tone` | `string` | 필수 | 칠할 색(hex)입니다. |
+| `className` | `string` | — | 마지막에 덧붙는 class입니다. |
+
+## toneInk
+
+hex 면 위에서 읽히는 글자색을 고르는 함수입니다. 검정이나 흰색의 CSS 변수 참조를 돌려줍니다. 아래는 앱이 만든 면에 같은 글자를 쓰는 예입니다.
+
+```tsx
+<div style={{ backgroundColor: dept.color, color: toneInk(dept.color) }}>{dept.name}</div>
+```
+
+- 시스템에서 실행 중에 색을 계산하는 유일한 자리입니다(재원님 결정).
+- 경계는 검정과 흰색의 대비가 같아지는 휘도 0.179라서 어떤 색이든 4.58:1 이상입니다. class-explorer의 `readableInk`는 경계가 0.35라서 휘도 0.18~0.35인 면에 흰 글자를 올리고, 그 범위에서 AA에 못 미칩니다. 학과색 열한 가지 중 다섯(화학 · 생물학 · 지구과학 · 외국어 · 예체능)의 글자가 이 차이로 흰색에서 검정이 됩니다.
+
 ## toneStyle
 
 실행 중에 정해지는 색(학과 · 학번)을 `--fk-tone` 변수로 넘기는 함수입니다. 아래는 학과색을 요소에 실어 주는 예입니다.
@@ -276,5 +372,5 @@ SideNav.Item과 같은 prop입니다.
 | `color` | `string \| undefined` | 필수 | 칠할 색(hex)입니다. 비어 있으면 변수를 만들지 않고 `style`을 그대로 돌려줍니다. |
 | `style` | `CSSProperties` | — | 함께 줄 style입니다. `--fk-tone` 뒤에 합쳐지므로 같은 변수를 직접 주면 그쪽이 이깁니다. |
 
-- 칠하는 문법은 자리마다 같습니다. 면 = tone 8~15%, 테두리 = tone, 글자 = tone입니다. 이 문법을 지키면 새 자리를 만들어도 색이 따로 놀지 않습니다. StudentBadge가 8%, ClassTile이 12%, PersonCard의 왼쪽 칸이 15%입니다.
-- StudentBadge · PersonCard · ClassTile이 이 변수를 읽습니다. 앱 CSS도 `var(--fk-tone)`으로 읽을 수 있고, 변수가 없을 때를 대비해 폴백을 줍니다(컴포넌트는 본문 잉크색 `var(--fk-ink-primary)`를 씁니다).
+- 칠하는 문법은 자리마다 같습니다. 면 = tone 8~15%, 테두리 = tone, 글자 = tone입니다. 이 문법을 지키면 새 자리를 만들어도 색이 따로 놀지 않습니다. StudentBadge · ToneBox가 8%, ClassTile · ToneChip이 12%, PersonCard의 왼쪽 칸이 15%입니다. 면을 tone으로 꽉 채우는 ToneButton과 ToneSwatch만 이 문법 밖입니다.
+- StudentBadge · PersonCard · ClassTile · Tone 부품이 이 변수를 읽습니다. 앱 CSS도 `var(--fk-tone)`으로 읽을 수 있고, 변수가 없을 때를 대비해 폴백을 줍니다(컴포넌트는 본문 잉크색 `var(--fk-ink-primary)`를 씁니다).

@@ -6,7 +6,7 @@ Shape와 Layout의 경계는 "빈 캔버스에 그 요소 하나만 놓아도 �
 
 ## 선
 
-모든 면의 테두리는 2px 하나입니다. 굵기를 고르지 않고 색만 고릅니다(`line` · `soft` · `subtle` · accent). 목록의 왼쪽 띠만 4px(`rail`)입니다.
+모든 면의 테두리는 2px 하나입니다. 굵기를 고르지 않고 색만 고릅니다(`line` · `soft` · `subtle` · accent). 목록의 왼쪽 띠만 4px(`rail`)이고, [Swatch](../atoms/README.md#swatch)의 `rail`이 이 값을 씁니다. 분류 점은 8px, 범례 칸은 16px입니다(`SWATCH`).
 
 ## 모서리
 

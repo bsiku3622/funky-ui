@@ -75,7 +75,7 @@ accent 하나는 다섯 칸을 갖습니다. 칸마다 하는 일과 값을 고�
 
 ## Variant
 
-variant는 같은 accent를 어디에, 얼마나 진하게 칠하는지를 정합니다. 열한 개이고, 규칙은 `tokens/color-recipes.ts`에 사다리 칸 이름으로만 적혀 있습니다. 숫자도 hex도 없어서 accent를 바꾸면 규칙은 그대로 둔 채 색만 바뀝니다.
+variant는 같은 accent를 어디에, 얼마나 진하게 칠하는지를 정합니다. 열두 개이고, 규칙은 `tokens/color-recipes.ts`에 사다리 칸 이름으로만 적혀 있습니다. 숫자도 hex도 없어서 accent를 바꾸면 규칙은 그대로 둔 채 색만 바뀝니다.
 
 | # | variant | FG | BG | Border | Hover |
 | --- | --- | --- | --- | --- | --- |
@@ -90,10 +90,11 @@ variant는 같은 accent를 어디에, 얼마나 진하게 칠하는지를 정�
 | 9 | `muted` | softInk | — | soft | 테두리 → solid, 글자 → solidInk |
 | 10 | `ghost` | solidInk | — | — | 글자 → softInk |
 | 11 | `ghostMuted` | softInk | — | — | 글자 → solidInk |
+| 12 | `paper` | solidInk | white | line | accent 층 |
 
-`black` · `gray` · `line`은 accent와 무관한 시스템 값입니다(본문 잉크 #222, 약한 글자 #6f6f6f, 2px 검정 선). `—`는 투명입니다. 면이 투명한 variant는 바탕이 비치므로, 흰 카드 위에서는 흰색으로, 크림 페이지 위에서는 크림으로 보입니다.
+`black` · `gray` · `line` · `white`는 accent와 무관한 시스템 값입니다(본문 잉크 #222, 약한 글자 #6f6f6f, 2px 검정 선, 떠 있는 흰 면). `—`는 투명입니다. 면이 투명한 variant는 바탕이 비치므로, 흰 카드 위에서는 흰색으로, 크림 페이지 위에서는 크림으로 보입니다. 크림 위에서도 흰 면을 지켜야 하면 `paper`를 씁니다.
 
-표의 출처는 재원님의 Accent × Variant 스케치이고, 이름 둘을 바꾸고 두 군데에 해석을 더했습니다.
+표의 1~11번은 재원님의 Accent × Variant 스케치에서 왔고, 이름 둘을 바꾸고 두 군데에 해석을 더했습니다. 12번 `paper`는 스케치 밖에서 더했습니다. class-explorer에서 가장 많이 쓰는 버튼이 흰 면인데, 스케치의 `outline`은 면이 투명해서 크림 페이지 위에서 그릴 수 없기 때문입니다. 검정 accent의 solidInk가 본문 잉크이므로 accent를 주지 않으면 검정 글자이고, accent를 주면 그 색의 글자가 됩니다(Ask 플로팅 버튼의 흰 면 + 보라 아이콘).
 
 - **이름** — 스케치의 Solid(면과 같은 색 테두리)는 `filled`, Tonal(면 + 검정 테두리)은 `solid`, TonalMuted는 `solidMuted`라 부릅니다. 면을 채우기만 한 것이 filled이고, 거기에 검정 테두리를 두른 것이 이 시스템의 기본 solid 버튼입니다.
 

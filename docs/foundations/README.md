@@ -10,8 +10,8 @@ Color · Typography  →  Shape  →  Layout  →  Motion  →  Primitives  → 
 
 | 시스템 | 정본 | 하는 일 |
 | --- | --- | --- |
-| [Color](color.md) | `tokens/palette.ts` · `color.ts` · `color-recipes.ts` | 면 · 잉크 · 선, accent 사다리, 11 variant 레시피, 오버레이 · 포커스 |
-| [Typography](typography.md) | `tokens/typography.ts` | 서체, 글자 역할 열, 컨트롤 글자 |
+| [Color](color.md) | `tokens/palette.ts` · `color.ts` · `color-recipes.ts` | 면 · 잉크 · 선, accent 사다리, 12 variant 레시피, 오버레이 · 포커스 |
+| [Typography](typography.md) | `tokens/typography.ts` | 서체, 글자 역할 열, 줄 높이, 로고 글자, 컨트롤 글자 |
 | [Shape](shape.md) | `tokens/shape.ts` | 선 굵기 · 모서리 · 컨트롤 크기 · 포커스 링 |
 | [Layout](layout.md) | `tokens/layout.ts` | 간격 · 그림자 두 단 · z · breakpoint · 폭 |
 | [Motion](motion.md) | `tokens/motion.ts` | 시간 · 곡선 · 눌림 · 떠오름 · 커짐 · 등장 |

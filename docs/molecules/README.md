@@ -136,7 +136,8 @@ Molecules는 Atoms와 Primitives를 묶은 범용 조합입니다. 카드 · 선
 
 | prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `title` | `ReactNode` | 필수 | 머리 글자입니다(`heading` 역할). |
+| `title` | `ReactNode` | 필수 | 머리 글자입니다. |
+| `titleStyle` | `AccordionTitle` | `"heading"` | 제목의 글자입니다. `heading`은 20px 문장이고, `section`은 대문자 섹션 제목으로 좁은 화면에서 14px, `md` 이상에서 20px입니다. |
 | `icon` | `IconComponent` | — | 제목 앞 아이콘입니다. |
 | `trailing` | `ReactNode` | — | 제목 옆입니다. 개수 배지 같은 것을 둡니다. |
 | `open` | `boolean` | — | 펼침 상태입니다. 주면 제어 모드가 됩니다. |

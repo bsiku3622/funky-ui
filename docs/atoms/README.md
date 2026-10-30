@@ -2,12 +2,12 @@
 
 Atoms는 한 가지 일을 하는 컨트롤과 표시입니다. Primitives와 토큰 · 스타일만 읽고, 어떤 앱에도 쓸 수 있는 범용 층이라 class-explorer를 모릅니다. 누르는 버튼, 읽는 라벨, 입력 칸, 켜고 끄는 표식이 여기 있습니다.
 
-Button · IconButton은 [Pressable](../primitives/README.md#pressable)(누름)과 [Selectable](../primitives/README.md#selectable)(골라짐)에 [Paint](../primitives/README.md#paint)(칠)를 얹은 것이고, Badge는 Paint 위에 섭니다(NavButton은 Pressable과 Selectable에 [Glass](../primitives/README.md#glass)의 유리 칠을 얹은 것입니다). 색(accent × variant · selected · hover 색)은 Paint가, 누름(버튼의 의미 · 커서 · 그림자와 눌림)은 Pressable이, 골라짐(aria 하나와 커지기)은 Selectable이 맡고, Button · IconButton · Badge는 크기 · 글자 · 아이콘만 얹습니다. `accent`는 색 이름(아홉 가지와 역할 별칭 다섯)이고, `variant`는 같은 accent를 어디에 얼마나 진하게 칠할지 정하는 열한 가지 규칙입니다. 색을 이 두 축으로만 고르는 이유는 [원칙](../get-started/principles.md), 값과 규칙은 [Color](../foundations/color.md), 크기 사다리는 [Shape](../foundations/shape.md)에 있습니다. 요소를 그리는 컴포넌트가 `as`와 나머지 props를 다루는 방식은 [Primitives](../primitives/README.md)와 같고, Input · Textarea · Select · Checkbox · Radio · Switch는 native 요소를 감싸므로 `ref`와 폼 속성이 그대로 갑니다. 그중 Input · Textarea · Select는 면과 테두리를 [Surface](../primitives/README.md#surface)에서 빌리고, 틀림 · 꺼짐 · 읽기 전용 · 그림자의 규칙을 `useField` 하나로 받습니다. 예시는 import를 생략하며, `on`이나 `studentId`처럼 앱이 가진 상태와 핸들러는 이미 있다고 봅니다.
+Button · IconButton은 [Pressable](../primitives/README.md#pressable)(누름)과 [Selectable](../primitives/README.md#selectable)(골라짐)에 [Paint](../primitives/README.md#paint)(칠)를 얹은 것이고, Badge는 Paint 위에 섭니다(NavButton은 Pressable과 Selectable에 [Glass](../primitives/README.md#glass)의 유리 칠을 얹은 것입니다). 색(accent × variant · selected · hover 색)은 Paint가, 누름(버튼의 의미 · 커서 · 그림자와 눌림)은 Pressable이, 골라짐(aria 하나와 커지기)은 Selectable이 맡고, Button · IconButton · Badge는 크기 · 글자 · 아이콘만 얹습니다. `accent`는 색 이름(아홉 가지와 역할 별칭 다섯)이고, `variant`는 같은 accent를 어디에 얼마나 진하게 칠할지 정하는 열두 가지 규칙입니다. 색을 이 두 축으로만 고르는 이유는 [원칙](../get-started/principles.md), 값과 규칙은 [Color](../foundations/color.md), 크기 사다리는 [Shape](../foundations/shape.md)에 있습니다. 요소를 그리는 컴포넌트가 `as`와 나머지 props를 다루는 방식은 [Primitives](../primitives/README.md)와 같고, Input · Textarea · Select · Checkbox · Radio · Switch는 native 요소를 감싸므로 `ref`와 폼 속성이 그대로 갑니다. 그중 Input · Textarea · Select는 면과 테두리를 [Surface](../primitives/README.md#surface)에서 빌리고, 틀림 · 꺼짐 · 읽기 전용 · 그림자의 규칙을 `useField` 하나로 받습니다. 예시는 import를 생략하며, `on`이나 `studentId`처럼 앱이 가진 상태와 핸들러는 이미 있다고 봅니다.
 
 | 묶음 | 컴포넌트 |
 | --- | --- |
 | action | Button · IconButton · NavButton · Link |
-| display | Badge · Spinner · Divider |
+| display | Badge · Code · Swatch · Wordmark · Spinner · Divider |
 | input | Input · Textarea · Select · Checkbox · Radio · Switch · Label |
 
 ## Button
@@ -24,9 +24,9 @@ accent(색) × variant(칠하는 방식) × size × shadow로 만드는 기본 �
 | --- | --- | --- | --- |
 | `as` | `ElementType` | `"button"` | 렌더할 요소입니다. `<button>`이면 `type="button"`이 기본이라 폼 안에서도 제출하지 않고, 제출 버튼은 `type="submit"`을 줍니다. 그 밖의 요소면 `disabled` 대신 `aria-disabled`가 붙습니다. |
 | `accent` | `Accent` | — | 색입니다. 주지 않으면 바깥 Paint의 색을 따르고, 바깥에도 없으면 `black`(시스템)입니다. |
-| `variant` | `Variant` | `"outline"` | 칠하는 방식입니다. `filled` `outline` `hairline` `frameline` `framelineMuted` `plain` `solid` `solidMuted` `muted` `ghost` `ghostMuted` 열한 가지입니다. |
+| `variant` | `Variant` | `"outline"` | 칠하는 방식입니다. `filled` `outline` `hairline` `frameline` `framelineMuted` `plain` `solid` `solidMuted` `muted` `ghost` `ghostMuted` `paper` 열두 가지입니다. 크림 페이지 위에서 흰 면을 지켜야 하면 `paper`입니다. |
 | `size` | `ControlSize` | `"md"` | 높이 사다리입니다. `xs` 24 · `sm` 32 · `md` 40 · `lg` 48px. |
-| `shadow` | `boolean \| "hover"` | `false` | 4px 그림자입니다. `true`면 그림자 위에 떠 있다가 hover 때 가라앉고(`sink`), `"hover"`면 평평하다가 hover 때 제자리에서 그림자가 올라옵니다(`raise` — 복사 버튼 · 과목 추가 칩). 끄면 누르는 순간만 작아집니다(`tap`). |
+| `shadow` | `boolean \| "hover" \| "shrink"` | `false` | 4px 그림자입니다. `true`면 그림자 위에 떠 있다가 hover 때 가라앉고(`sink`), `"hover"`면 평평하다가 hover 때 제자리에서 그림자가 올라오고(`raise` — 복사 버튼 · 과목 추가 칩), `"shrink"`면 그림자를 둔 채 hover 때 95%, 누르면 92%로 작아집니다(`shrink` — Ask 단추 전용). 끄면 누르는 순간만 작아집니다(`tap`). |
 | `selected` | `boolean` | — | 골라진 상태입니다. 같은 accent의 `filled`로 칠하고, 그 사실을 aria 하나로 알립니다(어느 aria인지는 `role`이 정합니다). 골라지면 105%로 커져 그림자 위에 섭니다(`shadow`와 상관없습니다). |
 | `role` | `AriaRole` | — | 요소의 `role`입니다. `selected`를 알리는 aria가 이걸로 정해집니다. 고르는 무리의 칸이면 `radio` · `tab`을 줍니다. |
 | `loading` | `boolean` | `false` | 글자 자리를 지킨 채 가운데에 스피너를 둡니다. `aria-busy` · `aria-disabled`가 붙고 누름을 삼킵니다. |
@@ -44,7 +44,7 @@ accent(색) × variant(칠하는 방식) × size × shadow로 만드는 기본 �
 - `role`을 준다고 방향키가 생기지는 않습니다. 줄 안에서 방향키로 옮기고 Tab에는 골라진 칸 하나만 들어오게 하는 일(roving tabindex)은 [SegmentedControl](../molecules/README.md#segmentedcontrol) · [Tabs](../molecules/README.md#tabs)가 [`useSelectableGroup`](../primitives/README.md#useselectablegroup)으로 붙입니다.
 - `loading`은 글자를 투명하게 두고 스피너를 겹쳐서 폭이 흔들리지 않습니다. 불러오는 동안은 마우스 · Enter · Space 어느 누름도 `onClick`에 닿지 않습니다. `disabled`를 쓰지 않는 이유는 꺼진 모양(불투명도 0.4)이 아니라 스피너를 보여야 해서입니다.
 
-Button은 Pressable과 Selectable, Paint를 이렇게 묶습니다 — `shadow`를 켜면 `sink`, `"hover"`면 `raise`, 끄면 `tap`이고, 골라진 버튼에는 Selectable의 `grow`를 얹습니다. `grow`가 몸짓을 덮으므로(특이도가 한 단 높습니다) 몸짓은 쉴 때의 것을 그대로 둡니다. 크기 · 아이콘 없이 같은 칠과 몸짓만 필요한 자리(예: 줄 전체가 누르는 링크)는 이 조립을 직접 씁니다 — `<Paint as={Pressable} motion="sink" accent="cyan" variant="solid" hoverable>`(링크면 Paint의 `as`가 이미 Pressable이라 `as="a"`를 줄 수 없으므로, Pressable 쪽에 칠을 class로 얹습니다 — `<Pressable as="a" motion="sink" className={paintClass({ … hoverable: true })}>`). 누르지 않는 요소의 칠은 [Paint](../primitives/README.md#paint)입니다.
+Button은 Pressable과 Selectable, Paint를 이렇게 묶습니다 — `shadow`를 켜면 `sink`, `"hover"`면 `raise`, `"shrink"`면 `shrink`, 끄면 `tap`이고, 골라진 버튼에는 Selectable의 `grow`를 얹습니다. `grow`가 몸짓을 덮으므로(특이도가 한 단 높습니다) 몸짓은 쉴 때의 것을 그대로 둡니다. 크기 · 아이콘 없이 같은 칠과 몸짓만 필요한 자리(예: 줄 전체가 누르는 링크)는 이 조립을 직접 씁니다 — `<Paint as={Pressable} motion="sink" accent="cyan" variant="solid" hoverable>`(링크면 Paint의 `as`가 이미 Pressable이라 `as="a"`를 줄 수 없으므로, Pressable 쪽에 칠을 class로 얹습니다 — `<Pressable as="a" motion="sink" className={paintClass({ … hoverable: true })}>`). 누르지 않는 요소의 칠은 [Paint](../primitives/README.md#paint)입니다.
 
 ## IconButton
 
@@ -63,7 +63,7 @@ Button은 Pressable과 Selectable, Paint를 이렇게 묶습니다 — `shadow`�
 | `accent` | `Accent` | — | 색입니다. Button과 같습니다. |
 | `variant` | `Variant` | `"ghostMuted"` | 칠하는 방식입니다. |
 | `size` | `ControlSize` | `"md"` | 정사각형이고, 한 변은 같은 `size`인 Button의 높이와 같습니다. |
-| `shadow` | `boolean \| "hover"` | `false` | 4px 그림자입니다. Button과 같습니다 — `true`는 가라앉음, `"hover"`는 올라옴입니다. |
+| `shadow` | `boolean \| "hover" \| "shrink"` | `false` | 4px 그림자입니다. Button과 같습니다 — `true`는 가라앉음, `"hover"`는 올라옴, `"shrink"`는 그림자를 둔 채 작아짐입니다. |
 | `selected` | `boolean` | — | 골라진 상태입니다. Button과 같습니다 — 같은 accent의 `filled` · aria 하나 · 골라지면 커집니다. |
 | `role` | `AriaRole` | — | 요소의 `role`입니다. Button과 같습니다. |
 | `disabled` | `boolean` | `false` | hover와 눌림이 꺼지고 불투명도 0.4가 됩니다. |
@@ -101,11 +101,14 @@ Button은 Pressable과 Selectable, Paint를 이렇게 묶습니다 — `shadow`�
 
 ## Link
 
-글 속 링크입니다. accent의 진한 글자에 2px 밑줄이 있고, hover 때 accent 면으로 뒤집힙니다. 아래는 문장 안에 링크를 끼운 예입니다.
+글 속 링크입니다. accent의 진한 글자에 2px 밑줄이 있고, hover 때 accent 면으로 뒤집힙니다. 아래는 문장 안에 링크를 끼운 예와, 목록 줄의 과목명을 조용한 링크로 그린 예입니다.
 
 ```tsx
 <Text>
   수집 항목은 <Link href="/privacy" accent="pink">개인정보처리방침</Link>에서 확인합니다.
+</Text>
+<Text variant="subheading">
+  <Link as={RouterLink} to="/subjects/phys2" underline="hover">일반물리학 II</Link>
 </Text>
 ```
 
@@ -113,9 +116,12 @@ Button은 Pressable과 Selectable, Paint를 이렇게 묶습니다 — `shadow`�
 | --- | --- | --- | --- |
 | `as` | `ElementType` | `"a"` | 렌더할 요소입니다. 라우터 링크는 `as={RouterLink}`로 넘깁니다. |
 | `accent` | `Accent` | — | 색입니다. 주지 않으면 바깥 Paint의 색을 따르고, 바깥에도 없으면 `black`입니다. |
+| `underline` | `LinkUnderline` | `"always"` | `always`는 글 속 링크입니다. `hover`는 조용한 링크로, 글자색 · 굵기를 바깥에서 물려받고 hover 때만 밑줄이 생깁니다. `accent`를 주면 hover 때 그 색이 됩니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 
 - 글 속에 끼우는 링크입니다. 버튼처럼 보여야 하는 링크는 `Button`의 `as`로 렌더합니다.
+- 어두운 면 위의 바닥글 링크는 `<Text tone="inverseMuted">` 안의 `underline="hover"`입니다.
+- `underline="hover"`는 `as="button"`으로 그려도 버튼의 틀이 남지 않습니다. 이름을 누르면 거르는 자리에 씁니다.
 
 ## Badge
 
@@ -130,7 +136,7 @@ Button은 Pressable과 Selectable, Paint를 이렇게 묶습니다 — `shadow`�
 | --- | --- | --- | --- |
 | `as` | `ElementType` | `"span"` | 렌더할 요소입니다. |
 | `accent` | `Accent` | — | 색입니다. 주지 않으면 바깥 Paint의 색을 따르고, 바깥에도 없으면 `black`입니다. |
-| `variant` | `Variant` | `"outline"` | 칠하는 방식입니다. Button과 같은 열한 가지 규칙입니다. |
+| `variant` | `Variant` | `"outline"` | 칠하는 방식입니다. Button과 같은 열두 가지 규칙입니다. 색 머리줄 위의 흰 배지는 `paper`입니다. |
 | `size` | `BadgeSize` | `"md"` | `sm` 18 · `md` 22 · `lg` 26px입니다. |
 | `icon` | `IconComponent` | — | 앞 아이콘입니다. 크기는 배지 크기가 정합니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
@@ -139,6 +145,75 @@ Button은 Pressable과 Selectable, Paint를 이렇게 묶습니다 — `shadow`�
 - 읽는 물건이라 hover와 눌림에 반응하지 않습니다. 누르는 라벨이 필요하면 `size="xs"`의 Button을 씁니다.
 - 높이가 컨트롤보다 낮습니다. 같은 줄의 글자보다 커지지 않게 합니다.
 - 한 줄로 그려지고, `max-width: 100%`를 넘으면 말줄임으로 자릅니다.
+
+## Code
+
+문장 속 코드 칩입니다. 검정 면에 흰 900 글자이고, 대소문자를 그대로 둡니다. 아래는 검색식을 안내 문장에 끼운 예입니다.
+
+```tsx
+<Text as="p" leading="relaxed">
+  학번으로 찾으려면 <Code>student:25-001</Code>을 검색창에 적습니다.
+</Text>
+```
+
+`<code>` 요소이고 나머지 props는 그대로 갑니다.
+
+| prop | 타입 | 기본값 | 설명 |
+| --- | --- | --- | --- |
+| `className` | `string` | — | 마지막에 덧붙는 class입니다. |
+| `children` | `ReactNode` | — | 칩 글자입니다. |
+
+- 줄이 바뀌면 칩도 같이 줄을 바꾸고, 줄마다 좌우 여백을 유지합니다.
+- 상태를 적는 라벨은 Badge입니다. Badge는 대문자 · 한 줄 고정이라 `student:25-001`이 `STUDENT:25-001`로 보이고 좁은 폭에서 잘립니다.
+- 서체는 mono가 아니라 본문 서체입니다. class-explorer의 칩이 그렇습니다.
+
+## Swatch
+
+색 하나로 묶음을 알리는 점과 띠입니다. 아래는 달력 분류의 점과, 일정 목록의 왼쪽 띠입니다.
+
+```tsx
+<Inline gap="md">
+  <Swatch accent="pink" />
+  <Text variant="caption" weight="black">휴일</Text>
+</Inline>
+<Inline gap="md">
+  <Swatch accent="purple" shape="rail" />
+  <Stack gap="2xs">
+    <Text weight="black">기말고사</Text>
+    <Text variant="caption" tone="muted">12월 9일 ~ 12월 13일</Text>
+  </Stack>
+</Inline>
+```
+
+| prop | 타입 | 기본값 | 설명 |
+| --- | --- | --- | --- |
+| `accent` | `Accent` | — | 색입니다. 주지 않으면 바깥 Paint의 색을 따르고, 바깥에도 없으면 `black`입니다. |
+| `shape` | `SwatchShape` | `"dot"` | `dot`은 8px 네모 점(분류), `round`는 8px 둥근 점(상태), `rail`은 4px 왼쪽 띠입니다. |
+| `rung` | `SwatchRung` | `"solid"` | accent 사다리의 어느 칸으로 칠할지 고릅니다. `solid` `softInk` `soft`. |
+| `className` | `string` | — | 마지막에 덧붙는 class입니다. |
+
+- 회색 분류는 검정 사다리의 두 칸입니다 — `accent="black" rung="softInk"`(class-explorer의 `bg-black/50`), `rung="soft"`(`bg-black/25`).
+- `rail`은 flex 줄 안에서 줄의 높이를 채웁니다. flex 밖에서는 높이가 없어 보이지 않습니다.
+- `aria-hidden`이 붙어 스크린 리더에게 읽히지 않습니다. 뜻은 옆 글자가 말해야 합니다.
+- 실행 중에 정해지는 색의 범례는 [ToneSwatch](../components/README.md#toneswatch)입니다.
+
+## Wordmark
+
+로고 글자입니다. 기울어진 900 대문자이고, 색은 바깥 글자색을 물려받습니다. 아래는 로그인 화면의 제목과, 누르면 홈으로 가는 로고입니다.
+
+```tsx
+<Wordmark as="h1" size="lg">Class Explorer</Wordmark>
+<Wordmark onClick={() => navigate("/")}>Class Explorer</Wordmark>
+```
+
+| prop | 타입 | 기본값 | 설명 |
+| --- | --- | --- | --- |
+| `as` | `ElementType` | `"span"` | 렌더할 요소입니다. 주지 않고 `onClick`만 주면 `<button>`입니다. |
+| `size` | `WordmarkSize` | `"md"` | `sm` 20 · `md` 24 · `lg` 36px입니다. |
+| `onClick` | `MouseEventHandler` | — | 주면 hover 때 105%로 커지고 누르면 작아집니다. |
+| `className` | `string` | — | 마지막에 덧붙는 class입니다. |
+
+- [AppBar](../components/README.md#appbar)의 로고가 이것입니다. 랜딩의 48~72px 큰 제목은 로고가 아니라 아직 없는 큰 글자 역할의 자리입니다.
 
 ## Spinner
 
