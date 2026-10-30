@@ -12,17 +12,20 @@ import type { Accent, ControlSize, PressMotion, Variant } from "../tokens/vocabu
 import { buttonBase, buttonSize, fullWidth as fullWidthClass, loading as loadingClass, loadingSpinner } from "./Button.css";
 import { Spinner } from "./Spinner";
 
+export type ButtonShadow = boolean | "hover" | "shrink";
+
 export interface ButtonOwnProps {
   /** 색 — 주지 않으면 바깥 Paint 의 색을 따르고, 바깥에도 없으면 검정(시스템)입니다 */
   accent?: Accent;
-  /** 칠하는 방식 (기본 `outline`) — 11 가지 레시피는 docs/foundations/color.md */
+  /** 칠하는 방식 (기본 `outline`) — 12 가지 레시피는 docs/foundations/color.md */
   variant?: Variant;
   size?: ControlSize;
   /**
    * 4px 그림자. `true` 면 그림자 위에 떠 있다가 hover 때 가라앉고(sink), `"hover"` 면 평평하다가 hover 때
-   * 그림자가 올라옵니다(raise). 테두리가 없는 variant(ghost)는 그림자를 받지 않습니다
+   * 그림자가 올라오고(raise), `"shrink"` 면 그림자를 둔 채 hover 때 작아집니다(Ask 단추 전용).
+   * 테두리가 없는 variant(ghost)는 그림자를 받지 않습니다
    */
-  shadow?: boolean | "hover";
+  shadow?: ButtonShadow;
   /**
    * 골라진 상태 — 같은 accent 의 filled 로 칠하고, 그 사실을 aria 하나로 알립니다(그냥 버튼은 `aria-pressed`,
    * `role="radio"` 는 `aria-checked`, `role="tab"` 은 `aria-selected`). 골라진 버튼은 105% 로 커져 4px 그림자 위에
@@ -50,15 +53,16 @@ const swallow = (e: SyntheticEvent) => {
 };
 
 /**
- * 그림자 · 골라짐에서 몸짓을 고릅니다 — 그림자를 켜면 sink(가라앉음), `"hover"` 면 raise(올라옴), 끄면 tap.
+ * 그림자 · 골라짐에서 몸짓을 고릅니다 — 그림자를 켜면 sink(가라앉음), `"hover"` 면 raise(올라옴), `"shrink"` 면 shrink(작아짐), 끄면 tap.
  * 골라진 버튼은 그림자와 상관없이 커집니다(Selectable 의 grow) — class-explorer 에서 쉴 때 평평한 칩도 골라지면
  * 커지며 그림자가 생깁니다. grow 가 몸짓을 덮으므로 motion 은 쉴 때의 것을 그대로 둡니다.
  * 테두리가 없는 variant(ghost)는 가라앉을 상자가 없어 그림자를 받지 않습니다. IconButton · SideNav.Item 이 같은 규칙을 씁니다.
  */
-export function pressOf(variant: Variant, shadow: boolean | "hover", selected: boolean | undefined): { motion: PressMotion; grow: boolean } {
+export function pressOf(variant: Variant, shadow: ButtonShadow, selected: boolean | undefined): { motion: PressMotion; grow: boolean } {
   const grow = Boolean(selected);
   if (!shadow || BORDERLESS_VARIANTS.includes(variant)) return { motion: "tap", grow };
-  return { motion: shadow === "hover" ? "raise" : "sink", grow };
+  if (shadow === "hover") return { motion: "raise", grow };
+  return { motion: shadow === "shrink" ? "shrink" : "sink", grow };
 }
 
 /**

@@ -4,7 +4,7 @@
  * 숫자는 여기에만 적습니다. 컴포넌트는 역할(`body` · `overline` …)이나 컨트롤 크기로 고릅니다.
  * class-explorer 계측: 본문조차 700, 구조 라벨은 900 이었습니다 — funky 의 글자는 두껍습니다.
  */
-import type { ControlSize, TextVariant, Tone, Weight } from "./vocabulary";
+import type { ControlSize, Leading, TextVariant, Tone, Weight, WordmarkSize } from "./vocabulary";
 
 export const FONT_FAMILY = {
   sans: '"Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif',
@@ -54,6 +54,21 @@ export const TEXT_ROLES = {
   overline: { size: 10, leading: 14, weight: "black", tracking: 0.1, uppercase: true, tone: "muted" },
   subtitle: { size: 14, leading: 20, weight: "black", tracking: 0.1, uppercase: true, tone: "muted" },
 } as const satisfies Record<TextVariant, TextRole>;
+
+/**
+ * 줄 높이의 다른 값 — 역할의 고정 px 대신 글자 크기의 배수로 줍니다. class-explorer 의 안내 문단(`leading-relaxed`, 47회)이
+ * 이 값입니다. `fixed` 는 역할이 정한 값이라 여기 숫자가 없습니다.
+ */
+export const LEADING = {
+  relaxed: 1.625,
+} as const satisfies Record<Exclude<Leading, "fixed">, number>;
+
+/** 로고 글자 (px) — 바닥글 · 상단 바 · 로그인 화면. 숫자는 역할 사다리의 heading · title · display 와 같습니다 */
+export const WORDMARK = {
+  sm: TEXT_ROLES.heading.size,
+  md: TEXT_ROLES.title.size,
+  lg: TEXT_ROLES.display.size,
+} as const satisfies Record<WordmarkSize, number>;
 
 /**
  * 컨트롤 글자 — Button · Badge · NavButton 의 글자. 크기마다 하나, 전부 900 대문자입니다.

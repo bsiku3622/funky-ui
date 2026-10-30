@@ -20,4 +20,14 @@ export {
   type TimetableDay,
   type TimetablePeriod,
 } from "./schedule";
-export { toneStyle } from "./tone";
+export {
+  ToneButton,
+  ToneChip,
+  ToneBox,
+  ToneSwatch,
+  type ToneButtonProps,
+  type ToneChipProps,
+  type ToneBoxProps,
+  type ToneSwatchProps,
+} from "./tone-parts";
+export { toneStyle, toneInk } from "./tone";

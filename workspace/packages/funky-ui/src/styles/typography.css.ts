@@ -1,20 +1,25 @@
 /**
- * 글자 지도 — 역할 · 굵기 · 잉크 · 서체 (fk.utilities).
+ * 글자 지도 — 역할 · 줄 높이 · 굵기 · 잉크 · 서체 (fk.utilities).
  *
- * 정의 순서가 곧 우선순위입니다: 역할 → 굵기 → 잉크. 그래서 `overline` 의 기본 잉크(muted)를
- * `tone` 으로, 역할의 기본 굵기를 `weight` 로 바꿀 수 있습니다.
+ * 정의 순서가 곧 우선순위입니다: 역할 → 줄 높이 → 굵기 → 잉크. 그래서 `overline` 의 기본 잉크(muted)를
+ * `tone` 으로, 역할의 기본 굵기를 `weight` 로, 고정 줄 높이를 `leading` 으로 바꿀 수 있습니다.
  */
 import { style, styleVariants } from "@vanilla-extract/css";
 
 import { utilities } from "../tokens/layers.css";
-import { TEXT_ROLES, WEIGHT } from "../tokens/typography";
+import { LEADING, TEXT_ROLES, WEIGHT } from "../tokens/typography";
 import { TONE_VALUE, textRule } from "../tokens/typography-recipes";
 import { vars } from "../tokens/variables";
-import type { Family } from "../tokens/vocabulary";
+import type { Family, Leading } from "../tokens/vocabulary";
 
 const u = (rule: Record<string, unknown>) => ({ "@layer": { [utilities]: rule } });
 
 export const textRoleClass = styleVariants(TEXT_ROLES, (role) => u(textRule(role)));
+
+export const leadingClass = styleVariants({
+  fixed: u({}),
+  relaxed: u({ lineHeight: LEADING.relaxed }),
+} satisfies Record<Leading, object>);
 
 export const weightClass = styleVariants(WEIGHT, (w) => u({ fontWeight: w }));
 

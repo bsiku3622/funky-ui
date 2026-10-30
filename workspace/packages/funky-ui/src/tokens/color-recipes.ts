@@ -1,5 +1,5 @@
 /**
- * Variant 레시피 — 11 variant 가 accent 사다리의 어느 칸을 글자 · 면 · 테두리에 쓰고,
+ * Variant 레시피 — 12 variant 가 accent 사다리의 어느 칸을 글자 · 면 · 테두리에 쓰고,
  * hover 때 무엇이 바뀌는지. 숫자도 hex 도 없고 **칸 이름만** 있습니다.
  *
  * 그래서 accent 를 바꾸면 variant 규칙은 그대로 둔 채 색만 바뀝니다 (accent × variant).
@@ -9,9 +9,9 @@ import type { Variant } from "./vocabulary";
 /**
  * 칸 이름.
  * - accent 사다리: `ink` · `solidInk` · `solid` · `soft` · `softInk`
- * - accent 와 무관한 시스템 값: `black`(본문 잉크 #222) · `gray`(약한 글자) · `line`(2px 검정) · `none`(투명)
+ * - accent 와 무관한 시스템 값: `black`(본문 잉크 #222) · `gray`(약한 글자) · `line`(2px 검정) · `white`(떠 있는 흰 면) · `none`(투명)
  */
-export type Rung = "ink" | "solidInk" | "solid" | "soft" | "softInk" | "black" | "gray" | "line" | "none";
+export type Rung = "ink" | "solidInk" | "solid" | "soft" | "softInk" | "black" | "gray" | "line" | "white" | "none";
 
 /** hover 때 면 위에 얹는 층 */
 export type Layer = "white" | "gray" | "tint" | "none";
@@ -33,6 +33,10 @@ export interface VariantRecipe {
  *   곧 검정이라 같은 값이고, 보라처럼 ink 가 흰색인 accent 에서는 검정 글자가 2.2:1 로 읽히지
  *   않아 흰색으로 둡니다. 테두리 Ink 는 선이므로 `line`(#000)입니다.
  *   → solid = filled 면 + 검정 테두리.
+ *
+ * `paper` 만 스케치 밖에서 더했습니다(2026-10-30, 재원님 결정). 스케치의 `outline` 은 면이 투명해서 class-explorer 에서 가장
+ * 많이 쓰는 흰 버튼을 크림 위에서 그릴 수 없습니다 — 흰 면 + 검정 테두리이고, 글자는 `solidInk` 입니다. 검정 accent 의 solidInk 가
+ * 본문 잉크(#222)라 기본은 검정 글자이고, accent 를 주면 그 색의 글자가 됩니다(Ask 플로팅 버튼의 흰 면 + 보라 아이콘).
  */
 export const VARIANT_RECIPES = {
   filled: { fg: "ink", bg: "solid", border: "solid", hover: { layer: "white" } },
@@ -46,6 +50,7 @@ export const VARIANT_RECIPES = {
   muted: { fg: "softInk", bg: "none", border: "soft", hover: { border: "solid", fg: "solidInk" } },
   ghost: { fg: "solidInk", bg: "none", border: "none", hover: { fg: "softInk" } },
   ghostMuted: { fg: "softInk", bg: "none", border: "none", hover: { fg: "solidInk" } },
+  paper: { fg: "solidInk", bg: "white", border: "line", hover: { layer: "tint" } },
 } as const satisfies Record<Variant, VariantRecipe>;
 
 /** 선택된 컨트롤은 같은 accent 의 이 variant 로 바뀝니다 — 색이 "골랐다" 를 말합니다 */

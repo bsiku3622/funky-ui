@@ -225,8 +225,8 @@ export function MotionPage() {
         summary="시그니처는 눌림입니다 — 떠 있는 물건이 hover 때 그림자 자리로 가라앉습니다. 가라앉는 거리는 그림자 거리와 같습니다(4px). 움직임을 줄인 사람에게는 이동을 멈추고 색과 포커스 링만 남깁니다."
       />
       <Section
-        title="누르는 몸짓 — sink · raise · lift · tap"
-        note="sink — 그림자를 켠 버튼 · 사람 카드. raise — 평평한 칩(hover 때 제자리에서 그림자가 올라옵니다). lift — 탐색 카드(위로 4px, 그림자는 화면에 그대로 남아 길어집니다). tap — 그림자를 끈 버튼. 몸짓이 없는 누르는 물건(목록 줄)은 none 입니다."
+        title="누르는 몸짓 — sink · raise · lift · tap · shrink"
+        note="sink — 그림자를 켠 버튼 · 사람 카드. raise — 평평한 칩(hover 때 제자리에서 그림자가 올라옵니다). lift — 탐색 카드(위로 4px, 그림자는 화면에 그대로 남아 길어집니다). tap — 그림자를 끈 버튼. shrink — Ask 단추(그림자를 둔 채 hover 때 95%, 누르면 92%). 몸짓이 없는 누르는 물건(목록 줄)은 none 입니다."
       >
         <Stage bg="canvas">
           <Button shadow variant="solid" accent="cyan">
@@ -236,6 +236,9 @@ export function MotionPage() {
             raise
           </Button>
           <Button variant="outline">tap</Button>
+          <Button shadow="shrink" variant="paper">
+            shrink
+          </Button>
           <Card motion="sink" padding="xl" style={{ width: 180 }}>
             <Text variant="caption" weight="black">
               sink card
@@ -247,7 +250,7 @@ export function MotionPage() {
             </Text>
           </Card>
         </Stage>
-        <Table head={["token", "value"]} rows={[["press.sink", `${PRESS.sink}px`], ["press.activeScale", PRESS.activeScale], ["lift.rise", `${LIFT.rise}px`]]} />
+        <Table head={["token", "value"]} rows={[["press.sink", `${PRESS.sink}px`], ["press.activeScale", PRESS.activeScale], ["press.shrink", PRESS.shrink], ["press.shrinkActive", PRESS.shrinkActive], ["lift.rise", `${LIFT.rise}px`]]} />
       </Section>
       <Section
         title="커짐 — 골라진 칸"

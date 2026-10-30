@@ -34,6 +34,7 @@ const RUNG: Record<Rung, string> = {
   black: vars.ink.primary,
   gray: vars.ink.muted,
   line: vars.line.base,
+  white: vars.surface.raised,
   none: "transparent",
 };
 

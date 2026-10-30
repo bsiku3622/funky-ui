@@ -47,6 +47,7 @@ import {
   ICON_SIZES,
   ICON_STROKE,
   JUSTIFIES,
+  LEADINGS,
   MOTIONS,
   SHADOWS,
   SPACES,
@@ -61,6 +62,7 @@ import {
   type Family,
   type IconSize,
   type Justify,
+  type Leading,
   type PressMotion,
 } from "@studio-baeks/funky-ui/tokens";
 import { Search, Sparkles } from "lucide-react";
@@ -759,6 +761,7 @@ const text: Spec = {
   controls: {
     variant: { kind: "select", options: TEXT_VARIANTS },
     weight: { kind: "select", options: withNone(WEIGHTS) },
+    leading: { kind: "select", options: LEADINGS },
     tone: { kind: "select", options: withNone(TONES) },
     family: { kind: "select", options: FAMILIES },
     align: { kind: "select", options: TEXT_ALIGNS },
@@ -768,12 +771,13 @@ const text: Spec = {
   },
   // weight · tone 의 "none" 은 역할이 정한 값을 그대로 쓴다는 뜻입니다 (overline 은 약한 잉크가 기본)
   initial: { variant: "heading", weight: "none", tone: "none", children: "오늘 수업 · Today's Classes 1234" },
-  defaults: { variant: "body", family: "sans", align: "start", truncate: false, numeric: false },
+  defaults: { variant: "body", leading: "fixed", family: "sans", align: "start", truncate: false, numeric: false },
   render: (v) => (
     <Frame width={320}>
       <Text
         variant={v.variant as TextVariant}
         weight={given<Weight>(v.weight)}
+        leading={v.leading as Leading}
         tone={given<Tone>(v.tone)}
         family={v.family as Family}
         align={v.align as TextAlign}
@@ -807,13 +811,13 @@ const text: Spec = {
     },
     {
       title: "Tone",
-      note: "흑백 잉크 다섯, 가장 가까운 Paint 의 진한 글자 · 연한 글자(accent · accentSoft — 여기서는 purple ghost Paint 로 감쌌습니다), 부모 글자색을 따르는 inherit 입니다. faint 는 장식 전용이라 필수 정보에 쓰지 않습니다.",
+      note: "흑백 잉크 여섯(inverse · inverseMuted 는 어두운 면 위), 가장 가까운 Paint 의 진한 글자 · 연한 글자(accent · accentSoft — 여기서는 purple ghost Paint 로 감쌌습니다), 부모 글자색을 따르는 inherit, 그리고 색 이름 여덟입니다. 색 이름은 그 색의 진한 글자(AA)이고 이 글자만 칠합니다 — accent 를 다시 쓰지 않으므로 안쪽으로 흐르지 않습니다. faint 는 장식 전용이라 필수 정보에 쓰지 않습니다.",
       render: () => (
         <Stage bg="raised">
           <Paint accent="purple" variant="ghost">
             <Inline gap="xl" wrap>
               {TONES.map((t) => (
-                <Surface key={t} fill={t === "inverse" ? "inverse" : "raised"} paddingX="md" paddingY="xs">
+                <Surface key={t} fill={t === "inverse" || t === "inverseMuted" ? "inverse" : "raised"} paddingX="md" paddingY="xs">
                   <Text variant="subheading" tone={t}>
                     {t}
                   </Text>
@@ -821,6 +825,25 @@ const text: Spec = {
               ))}
             </Inline>
           </Paint>
+        </Stage>
+      ),
+    },
+    {
+      title: "Leading — 여러 줄 문단",
+      note: "역할의 줄 높이는 px 고정이라 한 줄짜리 라벨 · 표에서 칸이 흔들리지 않습니다. 대신 여러 줄을 읽는 안내 문단은 빽빽하므로 leading=relaxed(글자 크기의 1.625배)를 줍니다.",
+      render: () => (
+        <Stage bg="raised">
+          <Inline gap="3xl" align="start" wrap>
+            {LEADINGS.map((l) => (
+              <Frame key={l} width={280}>
+                <Labeled name={l}>
+                  <Text as="p" variant="caption" leading={l} style={{ margin: 0 }}>
+                    심화필수 전공 트랙은 3학년 2학기까지 바꿀 수 있어서, 고른 뒤에도 About 화면에서 언제든 고칠 수 있습니다. 수강 이력으로 짐작한 트랙은 틀릴 수 있으니 맞으면 아래에서 직접 눌러주세요.
+                  </Text>
+                </Labeled>
+              </Frame>
+            ))}
+          </Inline>
         </Stage>
       ),
     },
@@ -976,12 +999,13 @@ const MOTION_NOTE: Record<PressMotion, string> = {
   raise: "평평한 칩 — hover 때 그림자가 올라옵니다",
   lift: "탐색 카드 — 위로 떠오릅니다",
   tap: "그림자를 끈 버튼 — 누르는 순간만 작아집니다",
+  shrink: "Ask 단추 — 그림자를 둔 채 hover 때부터 작아집니다",
 };
 
 const pressable: Spec = {
   name: "Pressable",
   summary:
-    "누르는 물건 — 버튼의 의미(type · disabled) · 커서 · 꺼진 모양 · 몸짓을 맡습니다. 몸짓은 기본 none(움직이지 않음)이고, sink 는 4px 그림자 위에 떠 있다가 hover 때 가라앉고, raise 는 평평하다가 hover 때 그림자가 올라오고, lift 는 떠오르고, tap 은 그림자 없이 누르는 순간만 작아집니다. 색은 하나도 없습니다 — hover 색까지 Paint 의 hoverable 이고, Pressable 이 그걸 켜 주지 않습니다. 흑백 면은 surfaceClass(), 색은 paintClass() 로 얹습니다. 골라진 상태는 Pressable 이 아니라 Selectable 입니다 — Button 이 Pressable + Selectable + Paint 입니다.",
+    "누르는 물건 — 버튼의 의미(type · disabled) · 커서 · 꺼진 모양 · 몸짓을 맡습니다. 몸짓은 기본 none(움직이지 않음)이고, sink 는 4px 그림자 위에 떠 있다가 hover 때 가라앉고, raise 는 평평하다가 hover 때 그림자가 올라오고, lift 는 떠오르고, tap 은 그림자 없이 누르는 순간만 작아지고, shrink 는 그림자를 둔 채 hover 때부터 작아집니다. 색은 하나도 없습니다 — hover 색까지 Paint 의 hoverable 이고, Pressable 이 그걸 켜 주지 않습니다. 흑백 면은 surfaceClass(), 색은 paintClass() 로 얹습니다. 골라진 상태는 Pressable 이 아니라 Selectable 입니다 — Button 이 Pressable + Selectable + Paint 입니다.",
   controls: {
     motion: { kind: "select", options: MOTIONS },
     padding: { kind: "select", options: SPACES },
@@ -1012,8 +1036,8 @@ const pressable: Spec = {
   },
   sections: [
     {
-      title: "몸짓 다섯 — none · sink · raise · lift · tap",
-      note: "마우스를 올려 보세요. none 은 움직이지 않고(목록 줄), sink 는 사람 카드처럼 그림자 자리로 가라앉고, raise 는 평평하다가 제자리에서 그림자가 올라오고(sink 를 거꾸로 돌린 몸짓), lift 는 탐색 카드처럼 4px 떠오르며 그림자가 길어지고, tap 은 그림자 없이 누르는 순간만 작아집니다. 골라진 칸의 모양(커지기)은 여기 없습니다 — 남아 있는 상태라 Selectable 의 grow 입니다.",
+      title: "몸짓 여섯 — none · sink · raise · lift · tap · shrink",
+      note: "마우스를 올려 보세요. none 은 움직이지 않고(목록 줄), sink 는 사람 카드처럼 그림자 자리로 가라앉고, raise 는 평평하다가 제자리에서 그림자가 올라오고(sink 를 거꾸로 돌린 몸짓), lift 는 탐색 카드처럼 4px 떠오르며 그림자가 길어지고, tap 은 그림자 없이 누르는 순간만 작아지고, shrink 는 그림자를 그대로 둔 채 hover 때 95%, 누르면 92% 로 작아집니다(Ask 단추 전용). 골라진 칸의 모양(커지기)은 여기 없습니다 — 남아 있는 상태라 Selectable 의 grow 입니다.",
       render: () => (
         <Stage>
           {MOTIONS.map((m) => (

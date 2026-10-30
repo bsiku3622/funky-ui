@@ -15,7 +15,7 @@ export interface PaintOwnProps extends BoxOwnProps {
    * 그 색으로 흐릅니다. 주지 않으면 바깥 Paint 의 색, 바깥에도 없으면 검정(시스템)입니다.
    */
   accent?: Accent;
-  /** 칠하는 방식 (기본 `outline`) — 11 가지 레시피는 docs/foundations/color.md */
+  /** 칠하는 방식 (기본 `outline`) — 12 가지 레시피는 docs/foundations/color.md */
   variant?: Variant;
   /** 골라진 상태 — 같은 accent 의 filled 로 칠합니다. 알리는 aria 와 골라진 모양(커지기)은 `Selectable` 입니다 */
   selected?: boolean;
@@ -34,7 +34,7 @@ function accentOf(accent: Accent | undefined): string | undefined {
 
 /**
  * accent 를 요소에 거는 유일한 길 — 그 색의 사다리 일곱 칸을 변수로 다시 씁니다(안쪽으로 흐릅니다).
- * variant 없이 자기 색을 칠하는 위 층(Link · Stat · Meter)도 accentClass 를 직접 읽지 않고 이걸 씁니다.
+ * variant 없이 자기 색을 칠하는 위 층(Link · Swatch · Stat · Meter)도 accentClass 를 직접 읽지 않고 이걸 씁니다.
  * accent 를 주지 않으면 아무것도 걸지 않아 바깥 색을 그대로 따릅니다.
  */
 export function useAccent(accent: Accent | undefined): string | undefined {

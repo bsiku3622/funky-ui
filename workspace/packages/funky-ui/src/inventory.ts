@@ -31,7 +31,7 @@ export const INVENTORY = {
   },
   atoms: {
     action: ["Button", "IconButton", "NavButton", "Link"],
-    display: ["Badge", "Spinner", "Divider"],
+    display: ["Badge", "Code", "Swatch", "Wordmark", "Spinner", "Divider"],
     input: ["Input", "Textarea", "Select", "Checkbox", "Radio", "Switch", "Label"],
   },
   molecules: {
@@ -46,6 +46,8 @@ export const INVENTORY = {
     shell: ["AppBar", "SideNav", "BottomNav", "TermSwitcher"],
     people: ["StudentBadge", "PersonCard"],
     schedule: ["ClassTile", "TimetableGrid"],
+    /** 실행 중의 색(학과 · 학번)으로 칠하는 부품 — Paint 는 hex 를 받지 않으므로 이 층에만 있습니다 */
+    tone: ["ToneButton", "ToneChip", "ToneBox", "ToneSwatch"],
   },
 } as const;
 

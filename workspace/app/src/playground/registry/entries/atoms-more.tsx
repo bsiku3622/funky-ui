@@ -1,10 +1,11 @@
-/** Atoms 의 나머지 — IconButton · NavButton · Link · Spinner · Divider · Input · Textarea · Select · Checkbox · Radio · Switch · Label */
+/** Atoms 의 나머지 — IconButton · NavButton · Link · Code · Swatch · Wordmark · Spinner · Divider · Input · Textarea · Select · Checkbox · Radio · Switch · Label */
 import { useId, useState, type MouseEvent, type ReactNode } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import {
   Paint,
   Button,
   Checkbox,
+  Code,
   Divider,
   Grid,
   IconButton,
@@ -18,9 +19,11 @@ import {
   Spinner,
   Stack,
   Surface,
+  Swatch,
   Switch,
   Text,
   Textarea,
+  Wordmark,
   type Accent,
   type ControlSize,
   type DividerProps,
@@ -28,8 +31,21 @@ import {
   type SpinnerProps,
   type Variant,
 } from "@studio-baeks/funky-ui";
-import { ACCENTS, ACCENT_ROLES, CONTROL_SIZES, VARIANTS } from "@studio-baeks/funky-ui/tokens";
-import { CalendarDays, ChevronDown, Home, Pin, RefreshCw, Search, Trash2, X } from "lucide-react";
+import {
+  ACCENTS,
+  ACCENT_ROLES,
+  CONTROL_SIZES,
+  LINK_UNDERLINES,
+  SWATCH_RUNGS,
+  SWATCH_SHAPES,
+  VARIANTS,
+  WORDMARK_SIZES,
+  type LinkUnderline,
+  type SwatchRung,
+  type SwatchShape,
+  type WordmarkSize,
+} from "@studio-baeks/funky-ui/tokens";
+import { CalendarDays, ChevronDown, Home, Pin, RefreshCw, Search, Sparkles, Trash2, X } from "lucide-react";
 
 import { Stage } from "../../kit";
 import { printJsx } from "../code";
@@ -114,7 +130,7 @@ const iconButton: Spec = {
   sections: [
     {
       title: "Variants",
-      note: "Button 과 같은 열한 레시피입니다. 그림자는 테두리가 있는 variant 에만 붙고, 테두리가 없는 ghost 둘은 가라앉을 상자가 없어 받지 않습니다. 칸에 마우스를 올리면 label 이 title 로 뜹니다.",
+      note: "Button 과 같은 열두 레시피입니다. 그림자는 테두리가 있는 variant 에만 붙고, 테두리가 없는 ghost 둘은 가라앉을 상자가 없어 받지 않습니다. 칸에 마우스를 올리면 label 이 title 로 뜹니다.",
       render: () => (
         <Stage bg="raised">
           {VARIANTS.map((variant) => (
@@ -141,6 +157,16 @@ const iconButton: Spec = {
               </Text>
             </Stack>
           ))}
+        </Stage>
+      ),
+    },
+    {
+      title: "Ask 단추 — shadow=\"shrink\"",
+      note: "Ask 플로팅 버튼과 창 머리 단추만 쓰는 몸짓입니다. 그림자를 그대로 둔 채 hover 때 95%, 누르면 92% 로 작아집니다 — class-explorer 가이드가 사용자 요청의 예외로 적어 둔 자리라 다른 곳에 쓰지 않습니다.",
+      render: () => (
+        <Stage>
+          <IconButton icon={Sparkles} label="Ask" accent="purple" variant="paper" size="lg" shadow="shrink" />
+          <IconButton icon={X} label="닫기" variant="paper" size="sm" shadow="shrink" />
         </Stage>
       ),
     },
@@ -266,16 +292,17 @@ const navButton: Spec = {
 
 const link: Spec = {
   name: "Link",
-  summary: "글 속 링크입니다. accent 의 진한 글자에 2px 밑줄이 붙고, hover 때 accent 면으로 뒤집힙니다. 라우터 링크는 as 로 넘깁니다.",
+  summary: "글 속 링크입니다. accent 의 진한 글자에 2px 밑줄이 붙고, hover 때 accent 면으로 뒤집힙니다. underline=hover 는 글자를 물려받고 hover 때만 밑줄이 생기는 조용한 링크입니다. 라우터 링크는 as 로 넘깁니다.",
   controls: {
     accent: { kind: "select", options: ACCENT_OPTIONS },
+    underline: { kind: "select", options: LINK_UNDERLINES },
     href: { kind: "text" },
     children: { kind: "text" },
   },
   initial: { accent: "purple", href: "/trade", children: "Trade 열기" },
-  defaults: { accent: "black" },
+  defaults: { accent: "black", underline: "always" },
   render: (v) => (
-    <Link accent={v.accent as Accent} href={String(v.href ?? "")} onClick={stay}>
+    <Link accent={v.accent as Accent} underline={v.underline as LinkUnderline} href={String(v.href ?? "")} onClick={stay}>
       {String(v.children ?? "")}
     </Link>
   ),
@@ -314,6 +341,183 @@ const link: Spec = {
               {a}
             </Link>
           ))}
+        </Stage>
+      ),
+    },
+    {
+      title: "조용한 링크 — underline=\"hover\"",
+      note: "목록 줄의 과목명처럼 링크가 많은 자리에는 밑줄이 시끄럽습니다. 글자색 · 굵기를 바깥 Text 에서 물려받고 hover 때만 밑줄이 생깁니다. accent 를 주면 hover 때 그 색이 됩니다. 어두운 면 위에서는 Text 의 inverseMuted 안에 넣습니다. 버튼으로 그려도(as=button) 틀이 남지 않습니다.",
+      render: () => (
+        <Stage bg="raised">
+          <Text variant="subheading">
+            <Link href="#" underline="hover" onClick={stay}>
+              일반물리학 II
+            </Link>
+          </Text>
+          <Text variant="caption" tone="muted">
+            <Link href="#" underline="hover" onClick={stay}>
+              김예시
+            </Link>
+            {" · "}
+            <Link href="#" underline="hover" onClick={stay}>
+              302호
+            </Link>
+          </Text>
+          <Text weight="black">
+            <Link href="#" underline="hover" accent="pink" onClick={stay}>
+              hover 때 핑크
+            </Link>
+          </Text>
+          <Text weight="black">
+            <Link as="button" underline="hover" accent="purple">
+              버튼으로
+            </Link>
+          </Text>
+          <Surface fill="inverse" paddingX="lg" paddingY="md">
+            <Text variant="caption" tone="inverseMuted">
+              <Link href="#" underline="hover" onClick={stay}>
+                개인정보처리방침
+              </Link>
+            </Text>
+          </Surface>
+        </Stage>
+      ),
+    },
+  ],
+};
+
+/* ── Code · Swatch · Wordmark ────────────────────────────────────────── */
+
+const codeSpec: Spec = {
+  name: "Code",
+  summary: "문장 속 코드 칩입니다. 검정 면 · 흰 900 글자이고, 대소문자를 그대로 두며 줄이 바뀌면 칩도 같이 줄을 바꿉니다. 상태를 적는 라벨은 Badge 입니다.",
+  controls: { children: { kind: "text" } },
+  initial: { children: "student:25-001" },
+  render: (v) => <Code>{String(v.children ?? "")}</Code>,
+  sections: [
+    {
+      title: "글 속에서",
+      note: "Badge 는 대문자 · 한 줄 고정이라 검색식이 STUDENT:25-001 로 보이고 좁은 폭에서 잘립니다. Code 는 글자를 그대로 두고, 줄이 바뀌면 줄마다 좌우 여백을 유지합니다.",
+      render: () => (
+        <Stage bg="raised">
+          <Frame width={280}>
+            <Text as="p" leading="relaxed" style={{ margin: 0 }}>
+              학번으로 찾으려면 <Code>student:25-001</Code> 을, 과목으로 찾으려면 <Code>subject:미적분학 II 영어강의 전체 분반</Code> 을 검색창에 적습니다.
+            </Text>
+          </Frame>
+        </Stage>
+      ),
+    },
+  ],
+};
+
+/** class-explorer 의 달력 분류 여섯 — 색이 넷, 회색이 둘입니다 */
+const CATEGORIES: { name: string; accent: Accent; rung?: SwatchRung }[] = [
+  { name: "휴일", accent: "pink" },
+  { name: "시험", accent: "purple" },
+  { name: "학기", accent: "orange" },
+  { name: "기숙사", accent: "sky" },
+  { name: "학사", accent: "black", rung: "softInk" },
+  { name: "행사", accent: "black", rung: "soft" },
+];
+
+const swatch: Spec = {
+  name: "Swatch",
+  summary: "색 하나로 묶음을 알리는 점과 띠입니다. dot 은 8px 네모 점(분류), round 는 8px 둥근 점(상태), rail 은 4px 왼쪽 띠입니다. 뜻은 옆 글자가 말하므로 스크린 리더에게 읽히지 않습니다.",
+  controls: {
+    accent: { kind: "select", options: ACCENT_OPTIONS },
+    shape: { kind: "select", options: SWATCH_SHAPES },
+    rung: { kind: "select", options: SWATCH_RUNGS },
+  },
+  initial: { accent: "pink" },
+  defaults: { accent: "black", shape: "dot", rung: "solid" },
+  render: (v) => (
+    <Inline gap="md">
+      <Swatch accent={v.accent as Accent} shape={v.shape as SwatchShape} rung={v.rung as SwatchRung} />
+      <Text weight="black">기말고사</Text>
+    </Inline>
+  ),
+  sections: [
+    {
+      title: "분류 — 색 넷과 회색 둘",
+      note: "회색 분류는 검정 사다리의 두 칸(softInk · soft)입니다. 흐린 회색도 옆 글자로 뜻이 전해지므로 대비를 따지지 않습니다.",
+      render: () => (
+        <Stage bg="raised">
+          {CATEGORIES.map((c) => (
+            <Inline key={c.name} gap="md">
+              <Swatch accent={c.accent} rung={c.rung} />
+              <Text variant="caption" weight="black">
+                {c.name}
+              </Text>
+            </Inline>
+          ))}
+        </Stage>
+      ),
+    },
+    {
+      title: "모양 셋",
+      note: "rail 은 flex 줄 안에서 줄의 높이를 채웁니다. 일정 목록의 왼쪽 띠처럼 여러 줄짜리 내용 옆에 씁니다. round 는 연결 상태처럼 원이어야 뜻이 서는 자리에만 씁니다.",
+      render: () => (
+        <Stage bg="raised">
+          <Inline gap="md">
+            <Swatch accent="pink" />
+            <Text variant="caption" weight="black">
+              dot
+            </Text>
+          </Inline>
+          <Inline gap="md">
+            <Swatch accent="green" shape="round" />
+            <Text variant="caption" weight="black">
+              round
+            </Text>
+          </Inline>
+          <Inline gap="md">
+            <Swatch accent="purple" shape="rail" />
+            <Stack gap="2xs">
+              <Text variant="caption" weight="black">
+                rail
+              </Text>
+              <Text variant="micro" tone="muted">
+                줄의 높이를 채웁니다
+              </Text>
+            </Stack>
+          </Inline>
+        </Stage>
+      ),
+    },
+  ],
+};
+
+const wordmark: Spec = {
+  name: "Wordmark",
+  summary: "로고 글자입니다. 기울어진 900 대문자이고, 색은 바깥 글자색을 물려받습니다. onClick 을 주면 버튼이 되어 hover 때 커지고 누르면 작아집니다. AppBar 의 로고가 이것입니다.",
+  controls: {
+    size: { kind: "select", options: WORDMARK_SIZES },
+    pressable: { kind: "boolean" },
+    children: { kind: "text" },
+  },
+  initial: { children: "Class Explorer", pressable: true },
+  defaults: { size: "md", pressable: false },
+  render: (v) => (
+    <Wordmark size={v.size as WordmarkSize} onClick={v.pressable ? stay : undefined}>
+      {String(v.children ?? "")}
+    </Wordmark>
+  ),
+  code: (v) => printJsx("Wordmark", { size: v.size, children: v.children }, wordmark.defaults).replace("<Wordmark", v.pressable ? "<Wordmark onClick={goHome}" : "<Wordmark"),
+  sections: [
+    {
+      title: "크기 · 자리",
+      note: "sm 은 작은 머리띠, md 는 상단 바, lg 는 로그인 화면의 제목입니다. 제목이면 as=h1 로 그립니다. 글자색을 물려받으므로 보라 바 위에서는 흰색, 크림 위에서는 검정입니다.",
+      render: () => (
+        <Stage>
+          {WORDMARK_SIZES.map((s) => (
+            <Wordmark key={s} size={s}>
+              Class Explorer
+            </Wordmark>
+          ))}
+          <Surface fill="brand" paddingX="xl" paddingY="lg">
+            <Wordmark>Class Explorer</Wordmark>
+          </Surface>
         </Stage>
       ),
     },
@@ -853,6 +1057,9 @@ export const ATOM_SPECS_MORE: Record<string, Spec> = {
   IconButton: iconButton,
   NavButton: navButton,
   Link: link,
+  Code: codeSpec,
+  Swatch: swatch,
+  Wordmark: wordmark,
   Spinner: spinner,
   Divider: divider,
   Input: input,

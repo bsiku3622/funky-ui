@@ -59,7 +59,7 @@ export function recipeLine(r: VariantRecipe): string {
   return `${name(r.fg)} / ${name(r.bg)} / ${name(r.border)} / ${hover}`;
 }
 
-/** 행은 variant 11, 열은 accent 9 — 칸마다 `cell(accent, variant)` 을 그립니다 */
+/** 행은 variant 12, 열은 accent 9 — 칸마다 `cell(accent, variant)` 을 그립니다 */
 export function AccentVariantMatrix({ cell, bg = "raised" }: { cell: (accent: AccentName, variant: Variant) => ReactNode; bg?: "canvas" | "raised" }) {
   return (
     <div className={`${k.matrix} ${k.stageBg[bg]}`} style={{ gridTemplateColumns: `190px repeat(${ACCENTS.length}, minmax(96px, 1fr))` }}>

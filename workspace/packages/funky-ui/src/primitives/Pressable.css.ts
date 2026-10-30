@@ -8,6 +8,8 @@
  *   (평평한 칩 — sink 를 거꾸로 돌린 몸짓).
  * - `lift`  — hover 때 4px 떠오르고, 그림자는 화면에 그대로 남아 길어집니다 (탐색 카드).
  * - `tap`   — 그림자 없이 누르는 순간만 작아집니다 (그림자를 끈 버튼).
+ * - `shrink` — 그림자를 그대로 둔 채 hover 때 95%, 누르면 92% 로 작아집니다 (Ask 플로팅 버튼 · 창 머리 단추 — class-explorer
+ *   가이드가 사용자 요청의 예외로 적어 둔 자리입니다. 다른 자리에 쓰지 않습니다).
  *
  * 골라진 칸의 모양(커지기)은 여기가 아니라 Selectable 입니다 — 누름은 순간의 반응, 골라짐은 남아 있는 상태입니다.
  * 누르는 순간의 크기는 `--fk-press-scale`(기본 0.96)입니다. 큰 면은 자기 class 에서 0.98 로 덮습니다.
@@ -69,5 +71,12 @@ export const motionClass = styleVariants({
   }),
   tap: p({
     selectors: { [`&${ENABLED}:active`]: { transform: `scale(${vars.press.scale})` } },
+  }),
+  shrink: p({
+    boxShadow: vars.shadow.raised,
+    selectors: {
+      [`&${ENABLED}:hover`]: { transform: `scale(${vars.press.shrink})` },
+      [`&${ENABLED}:active`]: { transform: `scale(${vars.press.shrinkActive})` },
+    },
   }),
 } satisfies Record<PressMotion, object>);

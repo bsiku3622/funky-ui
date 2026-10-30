@@ -1,4 +1,4 @@
-/** Components — class-explorer 전용 여덟. 앱 셸 · 사람 · 시간표. 셸 부품은 fixed 를 끄고 테두리 상자 안에 둡니다 */
+/** Components — class-explorer 전용 열둘. 앱 셸 · 사람 · 시간표 · 실행 중의 색. 셸 부품은 fixed 를 끄고 테두리 상자 안에 둡니다 */
 import { useState, type CSSProperties, type ReactNode } from "react";
 import {
   AppBar,
@@ -16,11 +16,16 @@ import {
   TermSwitcher,
   Text,
   TimetableGrid,
+  ToneBox,
+  ToneButton,
+  ToneChip,
+  ToneSwatch,
   type ClassTileState,
+  type ControlSize,
   type IconComponent,
   type TermOption,
 } from "@studio-baeks/funky-ui";
-import { vars } from "@studio-baeks/funky-ui/tokens";
+import { CONTROL_SIZES, vars } from "@studio-baeks/funky-ui/tokens";
 import { CalendarDays, GraduationCap, Home, LogOut, MapPin, RefreshCw, Search, Sparkles, User } from "lucide-react";
 
 import { Stage } from "../../kit";
@@ -740,6 +745,199 @@ const timetableGrid: Spec = {
   ],
 };
 
+// ── Tone ────────────────────────────────────────────────────────────
+
+const DEPTS = Object.keys(DEPT_COLORS) as Dept[];
+const MEALS = [
+  { name: "아침", tone: "#ffd500" },
+  { name: "점심", tone: "#ff9100" },
+  { name: "저녁", tone: "#7828c8" },
+] as const;
+
+/** 하나만 고르는 학과 — 골라진 칸만 색이 있습니다 */
+function MajorChoice() {
+  const [major, setMajor] = useState<Dept>("물리학");
+  return (
+    <Grid columns="repeat(2, minmax(0, 1fr))" gap="md">
+      {DEPTS.slice(0, 6).map((dept) => (
+        <ToneButton key={dept} tone={DEPT_COLORS[dept]} selected={major === dept} fullWidth onClick={() => setMajor(dept)}>
+          {dept}
+        </ToneButton>
+      ))}
+    </Grid>
+  );
+}
+
+/** 나란히 붙은 끼니 — 색 버튼도 골라지면 커집니다 */
+function MealChoice() {
+  const [meal, setMeal] = useState("점심");
+  return (
+    <Inline gap="sm">
+      {MEALS.map(({ name, tone }) => (
+        <ToneButton key={name} tone={tone} size="sm" selected={meal === name} onClick={() => setMeal(name)}>
+          {name}
+        </ToneButton>
+      ))}
+    </Inline>
+  );
+}
+
+/** 여러 개를 함께 켜는 기수 거르개 */
+function CohortFilter() {
+  const [on, setOn] = useState<string[]>(["23", "24", "25"]);
+  const toggle = (cohort: string) => setOn((prev) => (prev.includes(cohort) ? prev.filter((c) => c !== cohort) : [...prev, cohort]));
+  return (
+    <Inline gap="lg" wrap>
+      {Object.keys(COHORT_COLORS).map((cohort) => (
+        <ToneChip key={cohort} tone={cohortColor(cohort)} selected={on.includes(cohort)} onClick={() => toggle(cohort)}>
+          {cohort}학번
+        </ToneChip>
+      ))}
+    </Inline>
+  );
+}
+
+const toneButton: Spec = {
+  name: "ToneButton",
+  summary:
+    "실행 중에 정해지는 색(학과 · 끼니)으로 칠하는 버튼입니다. 안 골린 칸은 흰 면(paper)이고, 골라지면 그 색의 면이 되며 Button 과 같이 105% 로 커집니다. 글자는 면 색에서 검정 · 흰색을 골라 AA 를 지킵니다. Paint 는 hex 를 받지 않으므로 이 길은 Components 에만 있습니다.",
+  controls: {
+    dept: { kind: "select", options: DEPTS },
+    size: { kind: "select", options: CONTROL_SIZES },
+    selected: { kind: "boolean" },
+    disabled: { kind: "boolean" },
+    children: { kind: "text" },
+  },
+  initial: { dept: "물리학", selected: true, children: "물리학" },
+  defaults: { size: "md", selected: false, disabled: false },
+  render: (v) => (
+    <ToneButton tone={deptColor(v.dept)} size={v.size as ControlSize} selected={Boolean(v.selected)} disabled={Boolean(v.disabled)}>
+      {String(v.children ?? "")}
+    </ToneButton>
+  ),
+  code: (v) => printJsx("ToneButton", { tone: deptColor(v.dept), size: v.size, selected: v.selected, disabled: v.disabled, children: v.children }, toneButton.defaults),
+  sections: [
+    {
+      title: "학과 고르기",
+      note: "셋을 다 칠하면 어느 것을 보고 있는지 색으로 가릴 수 없어서 안 골린 칸은 흰 면입니다. 눌러 보세요.",
+      render: () => (
+        <Stage>
+          <Frame width={360}>
+            <MajorChoice />
+          </Frame>
+        </Stage>
+      ),
+    },
+    {
+      title: "끼니 — 나란히 붙은 줄",
+      note: "class-explorer 는 색 버튼을 키우지 않았지만, funky-ui 는 골라진 버튼을 색과 상관없이 키웁니다. 글자는 면에 따라 검정 · 흰색으로 갈립니다.",
+      render: () => (
+        <Stage>
+          <MealChoice />
+        </Stage>
+      ),
+    },
+    {
+      title: "학과색 열한 가지 — 글자 대비",
+      note: "글자는 검정과 흰색의 대비가 같아지는 휘도(0.179)를 경계로 고릅니다. 그래서 어떤 색이든 4.58:1 이상입니다.",
+      render: () => (
+        <Stage>
+          {DEPTS.map((dept) => (
+            <ToneButton key={dept} tone={DEPT_COLORS[dept]} size="sm" selected>
+              {dept}
+            </ToneButton>
+          ))}
+        </Stage>
+      ),
+    },
+  ],
+};
+
+const toneChip: Spec = {
+  name: "ToneChip",
+  summary:
+    "여러 개를 함께 켜는 색 칩입니다. 켜면 tone 12% 면에 그림자 위에 서고(hover 때 가라앉음), 끄면 흐린 회색으로 물러나 있다가 hover 때 제 색으로 돌아옵니다. 기본으로 전부 켜 두는 줄이라 Button 과 달리 커지지 않습니다.",
+  controls: {
+    cohort: { kind: "select", options: Object.keys(COHORT_COLORS) },
+    selected: { kind: "boolean" },
+    disabled: { kind: "boolean" },
+    children: { kind: "text" },
+  },
+  initial: { cohort: "25", selected: true, children: "25학번" },
+  defaults: { selected: false, disabled: false },
+  render: (v) => (
+    <ToneChip tone={cohortColor(v.cohort)} selected={Boolean(v.selected)} disabled={Boolean(v.disabled)}>
+      {String(v.children ?? "")}
+    </ToneChip>
+  ),
+  code: (v) => printJsx("ToneChip", { tone: cohortColor(v.cohort), selected: v.selected, disabled: v.disabled, children: v.children }, toneChip.defaults),
+  sections: [
+    {
+      title: "기수 거르개",
+      note: "눌러서 켜고 꺼 보세요. aria-pressed 로 켜짐을 알립니다.",
+      render: () => (
+        <Stage>
+          <CohortFilter />
+        </Stage>
+      ),
+    },
+  ],
+};
+
+const toneBox: Spec = {
+  name: "ToneBox",
+  summary: "색을 깐 상자입니다. tone 8% 면과 그 색의 2px 테두리이고, 글자는 바깥 글자색 그대로라 칠하지 않습니다. 카드 안의 칸처럼 이미 틀이 있으면 framed 를 끕니다.",
+  controls: {
+    dept: { kind: "select", options: DEPTS },
+    framed: { kind: "boolean" },
+    children: { kind: "text" },
+  },
+  initial: { dept: "수학", children: "수강 이력으로 보면 수학 트랙 같아요" },
+  defaults: { framed: true },
+  render: (v) => (
+    <Frame width={320}>
+      <ToneBox tone={deptColor(v.dept)} framed={v.framed !== false} paddingX="lg" paddingY="md">
+        <Text weight="black">{String(v.children ?? "")}</Text>
+      </ToneBox>
+    </Frame>
+  ),
+  code: (v) =>
+    printJsx("ToneBox", { tone: deptColor(v.dept), framed: v.framed, paddingX: "lg", paddingY: "md", children: `<Text weight="black">${String(v.children ?? "")}</Text>` }, toneBox.defaults, { framed: { kind: "boolean" } }),
+};
+
+const toneSwatch: Spec = {
+  name: "ToneSwatch",
+  summary: "범례 칸입니다. 16px 네모에 검정 테두리이고, 뜻은 옆 글자가 말하므로 스크린 리더에게 읽히지 않습니다. accent 로 칠하는 점 · 띠는 Swatch 입니다.",
+  controls: { dept: { kind: "select", options: DEPTS } },
+  initial: { dept: "화학" },
+  render: (v) => (
+    <Inline gap="sm">
+      <ToneSwatch tone={deptColor(v.dept)} />
+      <Text variant="caption" weight="black">
+        {String(v.dept ?? "")}
+      </Text>
+    </Inline>
+  ),
+  code: (v) => printJsx("ToneSwatch", { tone: deptColor(v.dept) }),
+  sections: [
+    {
+      title: "범례",
+      render: () => (
+        <Stage bg="raised">
+          {DEPTS.map((dept) => (
+            <Inline key={dept} gap="sm">
+              <ToneSwatch tone={DEPT_COLORS[dept]} />
+              <Text variant="caption" weight="black">
+                {dept}
+              </Text>
+            </Inline>
+          ))}
+        </Stage>
+      ),
+    },
+  ],
+};
+
 export const COMPONENT_SPECS: Record<string, Spec> = {
   AppBar: appBar,
   SideNav: sideNav,
@@ -749,4 +947,8 @@ export const COMPONENT_SPECS: Record<string, Spec> = {
   PersonCard: personCard,
   ClassTile: classTile,
   TimetableGrid: timetableGrid,
+  ToneButton: toneButton,
+  ToneChip: toneChip,
+  ToneBox: toneBox,
+  ToneSwatch: toneSwatch,
 };

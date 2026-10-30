@@ -11,6 +11,7 @@ import { cx } from "../internal/cx";
 import { ChevronDownGlyph } from "../internal/glyphs";
 import { NavButton } from "../atoms/NavButton";
 import { pressOf } from "../atoms/Button";
+import { Wordmark } from "../atoms/text-atoms";
 import { Menu } from "../molecules/floating";
 import { Icon, type IconComponent } from "../primitives/Icon";
 import { paintClass } from "../primitives/Paint";
@@ -21,8 +22,6 @@ import {
   appBar,
   appBarActions,
   appBarFixed,
-  brand,
-  brandButton,
   bottomItem,
   bottomItemActive,
   bottomItemLabel,
@@ -54,13 +53,7 @@ export interface AppBarProps {
 export function AppBar({ brand: label, onBrandClick, actions, fixed = false, className }: AppBarProps) {
   return (
     <SurfaceRoot as="header" fill="brand" className={cx(appBar, fixed && appBarFixed, className)}>
-      {onBrandClick ? (
-        <button type="button" className={cx(brand, brandButton)} onClick={onBrandClick}>
-          {label}
-        </button>
-      ) : (
-        <span className={brand}>{label}</span>
-      )}
+      <Wordmark onClick={onBrandClick}>{label}</Wordmark>
       {actions && <div className={appBarActions}>{actions}</div>}
     </SurfaceRoot>
   );

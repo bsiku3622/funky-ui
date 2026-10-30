@@ -10,7 +10,7 @@ import { badgeBase, badgeSize } from "./Badge.css";
 
 export interface BadgeOwnProps {
   accent?: Accent;
-  /** 기본 `outline`. Button 과 같은 11 가지 레시피이고, 읽는 물건이라 hover 에 반응하지 않습니다 */
+  /** 기본 `outline`. Button 과 같은 12 가지 레시피이고, 읽는 물건이라 hover 에 반응하지 않습니다 */
   variant?: Variant;
   size?: BadgeSize;
   icon?: IconComponent;

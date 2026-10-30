@@ -52,7 +52,7 @@ function SelectedToggle() {
 const button: Spec = {
   name: "Button",
   summary:
-    "accent(색) × variant(칠하는 방식) × size × shadow. 고르면 같은 accent 의 filled 로 바뀌고, 그림자를 켜면 hover 때 그림자 속으로 가라앉습니다. shadow=\"hover\" 면 평평하다가 hover 때 그림자가 올라옵니다.",
+    "accent(색) × variant(칠하는 방식) × size × shadow. 고르면 같은 accent 의 filled 로 바뀌고, 그림자를 켜면 hover 때 그림자 속으로 가라앉습니다. shadow=\"hover\" 면 평평하다가 hover 때 그림자가 올라옵니다. 크림 위에서 흰 면을 지키려면 variant=\"paper\" 입니다.",
   controls: {
     accent: { kind: "select", options: ACCENT_OPTIONS },
     variant: { kind: "select", options: VARIANTS },
@@ -138,6 +138,27 @@ const button: Spec = {
           <Button size="sm" accent="cyan" variant="solid" shadow="hover">
             Preview
           </Button>
+        </Stage>
+      ),
+    },
+    {
+      title: "Paper — 크림 위의 흰 면",
+      note: "outline 은 면이 투명해서 크림 페이지 위에서는 크림색으로 보입니다. 흰 면을 지켜야 하면 paper 입니다 — 흰 면 + 검정 테두리이고, 글자는 기본이 검정이며 accent 를 주면 그 색의 진한 글자가 됩니다.",
+      render: () => (
+        <Stage>
+          <Button variant="outline" shadow>
+            outline
+          </Button>
+          <Button variant="paper" shadow>
+            paper
+          </Button>
+          <Button accent="pink" variant="paper" shadow>
+            pink paper
+          </Button>
+          <Button accent="pink" variant="paper" shadow selected>
+            골림
+          </Button>
+          <Badge variant="paper">추천</Badge>
         </Stage>
       ),
     },

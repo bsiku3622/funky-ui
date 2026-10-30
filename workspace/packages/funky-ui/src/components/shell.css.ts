@@ -40,35 +40,6 @@ export const appBarActions = style(
   }),
 );
 
-export const brand = style(
-  c({
-    display: "inline-block",
-    flexShrink: 0,
-    fontSize: px(TEXT_ROLES.title.size),
-    lineHeight: 1,
-    fontWeight: WEIGHT.black,
-    letterSpacing: em(-0.05),
-    textTransform: "uppercase",
-    transform: "skewX(-6deg)",
-    whiteSpace: "nowrap",
-    color: "inherit",
-  }),
-);
-export const brandButton = style(
-  c({
-    padding: 0,
-    border: 0,
-    background: "none",
-    cursor: "pointer",
-    transitionProperty: "transform",
-    transitionDuration: vars.duration.fast,
-    selectors: {
-      "&:hover": { transform: `skewX(-6deg) scale(${vars.press.grow})` },
-      "&:active": { transform: `skewX(-6deg) scale(${vars.press.scale})` },
-    },
-  }),
-);
-
 /* ── SideNav ────────────────────────────────────────────────────────── */
 
 export const sideNav = style(

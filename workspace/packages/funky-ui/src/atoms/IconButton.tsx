@@ -9,7 +9,7 @@ import { useSelectable } from "../primitives/Selectable";
 import { CONTROL } from "../tokens/shape";
 import type { Accent, ControlSize, Variant } from "../tokens/vocabulary";
 import { buttonBase, buttonSize, squareSize } from "./Button.css";
-import { pressOf } from "./Button";
+import { pressOf, type ButtonShadow } from "./Button";
 
 export interface IconButtonOwnProps {
   icon: IconComponent;
@@ -19,8 +19,8 @@ export interface IconButtonOwnProps {
   /** 기본 `ghostMuted` — 닫기 · 새로고침처럼 옆 내용을 방해하지 않는 자리가 가장 많습니다 */
   variant?: Variant;
   size?: ControlSize;
-  /** Button 과 같습니다 — `true` 면 sink, `"hover"` 면 raise */
-  shadow?: boolean | "hover";
+  /** Button 과 같습니다 — `true` 면 sink, `"hover"` 면 raise, `"shrink"` 면 그림자를 둔 채 작아짐 */
+  shadow?: ButtonShadow;
   /** Button 과 같습니다 — 골라진 색 · aria 하나 · 커지기 */
   selected?: boolean;
   role?: AriaRole;

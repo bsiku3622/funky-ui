@@ -31,6 +31,10 @@ export const PRESS = {
   surfaceScale: 0.98,
   /** 커지는 것 — 골라진 칸(Selectable 의 grow)과 hover 때의 로고 */
   grow: 1.05,
+  /** 그림자를 둔 채 작아지는 단추(Ask 플로팅 버튼 · 창 머리 단추)의 hover */
+  shrink: 0.95,
+  /** 위 단추의 누르는 순간 */
+  shrinkActive: 0.92,
 } as const;
 
 export const LIFT = {

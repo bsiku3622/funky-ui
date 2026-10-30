@@ -21,6 +21,12 @@ export const RADIUS = {
   full: 9999,
 } as const;
 
+/** 분류 점 (Swatch) · 범례 칸 (ToneSwatch) — 띠의 굵기는 `STROKE.rail` 입니다 */
+export const SWATCH = {
+  dot: 8,
+  legend: 16,
+} as const;
+
 /** 컨트롤 사다리 — 높이가 원본이고, 나머지는 그 높이에 맞춘 값입니다 */
 export const CONTROL = {
   height: { xs: 24, sm: 32, md: 40, lg: 48 },

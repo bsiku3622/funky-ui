@@ -38,6 +38,7 @@ export const VARIANTS = [
   "muted",
   "ghost",
   "ghostMuted",
+  "paper",
 ] as const;
 export type Variant = (typeof VARIANTS)[number];
 
@@ -88,8 +89,33 @@ export type TextVariant = (typeof TEXT_VARIANTS)[number];
 export const WEIGHTS = ["regular", "medium", "bold", "black"] as const;
 export type Weight = (typeof WEIGHTS)[number];
 
-/** 글자 색 — 흑백 잉크와, 지금 accent 의 두 글자 칸 */
-export const TONES = ["primary", "secondary", "muted", "faint", "inverse", "accent", "accentSoft", "inherit"] as const;
+/** 줄 높이 — `fixed` 는 역할이 정한 px, `relaxed` 는 여러 줄 문단을 읽는 자리 */
+export const LEADINGS = ["fixed", "relaxed"] as const;
+export type Leading = (typeof LEADINGS)[number];
+
+/**
+ * 글자 색 — 흑백 잉크, 지금 accent 의 두 글자 칸, 그리고 색 이름 여덟입니다. 색 이름은 그 accent 의 진한 글자이고,
+ * 글자 하나만 칠합니다 — accent 를 다시 쓰지 않으므로 안쪽으로 흐르지 않습니다 (검정은 `primary`)
+ */
+export const TONES = [
+  "primary",
+  "secondary",
+  "muted",
+  "faint",
+  "inverse",
+  "inverseMuted",
+  "accent",
+  "accentSoft",
+  "inherit",
+  "pink",
+  "purple",
+  "cyan",
+  "yellow",
+  "orange",
+  "sky",
+  "green",
+  "red",
+] as const;
 export type Tone = (typeof TONES)[number];
 
 export const FAMILIES = ["sans", "mono"] as const;
@@ -107,11 +133,31 @@ export type IconSize = (typeof ICON_SIZES)[number];
 
 /**
  * 누르는 몸짓 (Pressable) — 움직이지 않거나(none, 기본), 그림자 속으로 가라앉거나(sink), 평평하다가 그림자가
- * 올라오거나(raise), 위로 떠오르거나(lift), 그림자 없이 누르는 순간만 작아집니다(tap).
- * 버튼은 그림자를 켜면 sink, `shadow="hover"` 면 raise, 끄면 tap 입니다.
+ * 올라오거나(raise), 위로 떠오르거나(lift), 그림자 없이 누르는 순간만 작아지거나(tap), 그림자를 둔 채 hover 때부터 작아집니다(shrink).
+ * 버튼은 그림자를 켜면 sink, `shadow="hover"` 면 raise, `shadow="shrink"` 면 shrink, 끄면 tap 입니다.
  */
-export const MOTIONS = ["none", "sink", "raise", "lift", "tap"] as const;
+export const MOTIONS = ["none", "sink", "raise", "lift", "tap", "shrink"] as const;
 export type PressMotion = (typeof MOTIONS)[number];
+
+/** 링크의 밑줄 — `always` 는 글 속 링크, `hover` 는 hover 때만 밑줄이 생기는 조용한 링크 */
+export const LINK_UNDERLINES = ["always", "hover"] as const;
+export type LinkUnderline = (typeof LINK_UNDERLINES)[number];
+
+/** 분류 표시의 모양 — 네모 점(분류) · 둥근 점(상태) · 왼쪽 띠 */
+export const SWATCH_SHAPES = ["dot", "round", "rail"] as const;
+export type SwatchShape = (typeof SWATCH_SHAPES)[number];
+
+/** 분류 표시의 칠 — accent 사다리의 어느 칸인가. 검정의 두 칸(`softInk` · `soft`)이 회색 분류입니다 */
+export const SWATCH_RUNGS = ["solid", "softInk", "soft"] as const;
+export type SwatchRung = (typeof SWATCH_RUNGS)[number];
+
+/** 로고 글자의 크기 */
+export const WORDMARK_SIZES = ["sm", "md", "lg"] as const;
+export type WordmarkSize = (typeof WORDMARK_SIZES)[number];
+
+/** 접는 카드의 제목 — `heading` 은 20px 문장, `section` 은 대문자 섹션 제목 (좁은 화면 14px → 넓은 화면 20px) */
+export const ACCORDION_TITLES = ["heading", "section"] as const;
+export type AccordionTitle = (typeof ACCORDION_TITLES)[number];
 
 /** 등장 몸짓 — 새로 나타나는 판이 떠오르거나(rise · pop) 제자리에서 나타납니다(fade). 거리 · 시간은 `ENTER` */
 export const ENTER_MOTIONS = ["none", "rise", "pop", "fade"] as const;

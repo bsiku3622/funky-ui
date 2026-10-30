@@ -35,7 +35,14 @@ const TREE = {
   shadow: { raised: shadow(ELEVATION.raised.offset), floating: shadow(ELEVATION.floating.offset) },
   duration: Object.fromEntries(Object.entries(DURATION).map(([k, v]) => [k, ms(v)])) as Record<keyof typeof DURATION, string>,
   easing: EASING,
-  press: { sink: pxv(PRESS.sink), scale: String(PRESS.activeScale), surfaceScale: String(PRESS.surfaceScale), grow: String(PRESS.grow) },
+  press: {
+    sink: pxv(PRESS.sink),
+    scale: String(PRESS.activeScale),
+    surfaceScale: String(PRESS.surfaceScale),
+    grow: String(PRESS.grow),
+    shrink: String(PRESS.shrink),
+    shrinkActive: String(PRESS.shrinkActive),
+  },
 } as const;
 
 type VarTree<T> = { readonly [K in keyof T]: T[K] extends string | number ? string : VarTree<T[K]> };

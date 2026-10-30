@@ -1,8 +1,8 @@
 import { style } from "@vanilla-extract/css";
 
 import { components } from "../tokens/layers.css";
-import { SPACE } from "../tokens/layout";
-import { px } from "../tokens/typography";
+import { BREAKPOINT, SPACE } from "../tokens/layout";
+import { TEXT_ROLES, WEIGHT, em, px } from "../tokens/typography";
 import { vars } from "../tokens/variables";
 
 const c = (rule: Record<string, unknown>) => ({ "@layer": { [components]: rule } });
@@ -16,6 +16,23 @@ export const accordionHeader = style(
     padding: px(SPACE["2xl"]),
     border: 0,
     textAlign: "start",
+  }),
+);
+
+/**
+ * 대문자 섹션 제목 — class-explorer 의 AccordionSection 입니다. Text 역할은 fk.utilities 라 이 층에서 덮을 수 없어서
+ * Text 를 쓰지 않고 직접 그립니다 (역할은 크기가 하나뿐이고, 이 제목은 폭에 따라 크기가 바뀝니다).
+ */
+export const accordionTitleSection = style(
+  c({
+    fontSize: px(TEXT_ROLES.body.size),
+    lineHeight: px(TEXT_ROLES.body.leading),
+    fontWeight: WEIGHT.black,
+    letterSpacing: em(TEXT_ROLES.display.tracking),
+    textTransform: "uppercase",
+    "@media": {
+      [`(min-width: ${BREAKPOINT.md}px)`]: { fontSize: px(TEXT_ROLES.heading.size), lineHeight: px(TEXT_ROLES.heading.leading) },
+    },
   }),
 );
 

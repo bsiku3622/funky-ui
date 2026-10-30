@@ -2,15 +2,20 @@ import type { ElementType } from "react";
 
 import { cx } from "../internal/cx";
 import type { PolyProps } from "../internal/polymorphic";
-import { alignClass, familyClass, numericClass, textRoleClass, toneClass, truncateClass, weightClass } from "../styles/typography.css";
-import type { Family, TextVariant, Tone, Weight } from "../tokens/vocabulary";
+import { alignClass, familyClass, leadingClass, numericClass, textRoleClass, toneClass, truncateClass, weightClass } from "../styles/typography.css";
+import type { Family, Leading, TextVariant, Tone, Weight } from "../tokens/vocabulary";
 
 export interface TextOwnProps {
   /** 글자 역할 — 크기 · 줄 높이 · 굵기 · 자간 · 대소문자를 한 번에 고릅니다 */
   variant?: TextVariant;
   /** 역할의 기본 굵기를 바꿀 때만 */
   weight?: Weight;
-  /** 글자색 — `accent` 는 지금 accent 의 진한 글자, `accentSoft` 는 연한 글자 */
+  /** 줄 높이 — 여러 줄 문단이면 `relaxed` (기본은 역할이 정한 고정값) */
+  leading?: Leading;
+  /**
+   * 글자색 — `accent` 는 지금 accent 의 진한 글자, `accentSoft` 는 연한 글자. 색 이름(`pink` · `red` …)은 그 색의
+   * 진한 글자이고, 이 글자만 칠합니다 — 안쪽의 accent 를 바꾸지 않습니다
+   */
   tone?: Tone;
   family?: Family;
   align?: "start" | "center" | "end";
@@ -28,6 +33,7 @@ export function Text<E extends ElementType = "span">({
   as,
   variant = "body",
   weight,
+  leading,
   tone,
   family,
   align,
@@ -41,6 +47,7 @@ export function Text<E extends ElementType = "span">({
     <Comp
       className={cx(
         textRoleClass[variant],
+        leading && leadingClass[leading],
         weight && weightClass[weight],
         tone && toneClass[tone],
         family && familyClass[family],

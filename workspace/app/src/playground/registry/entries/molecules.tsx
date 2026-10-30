@@ -41,7 +41,7 @@ import {
   type TooltipProps,
   type Variant,
 } from "@studio-baeks/funky-ui";
-import { ACCENTS, ACCENT_ROLES, CONTROL_SIZES, MOTIONS, SPACES, SURFACE_FILLS, VARIANTS, type PressMotion } from "@studio-baeks/funky-ui/tokens";
+import { ACCENTS, ACCENT_ROLES, ACCORDION_TITLES, CONTROL_SIZES, MOTIONS, SPACES, SURFACE_FILLS, VARIANTS, type AccordionTitle, type PressMotion } from "@studio-baeks/funky-ui/tokens";
 import {
   ArrowUpDown,
   BookOpen,
@@ -486,21 +486,23 @@ function ControlledAccordion() {
 
 const accordion: Spec = {
   name: "Accordion",
-  summary: "접히는 카드. 머리를 누르면 펼쳐지고, 내용은 카드 안 구분선 아래에 놓입니다. open 을 주면 제어형이고, 안 주면 스스로 상태를 가집니다.",
+  summary: "접히는 카드. 머리를 누르면 펼쳐지고, 내용은 카드 안 구분선 아래에 놓입니다. open 을 주면 제어형이고, 안 주면 스스로 상태를 가집니다. titleStyle=section 은 대문자 섹션 제목입니다.",
   controls: {
     title: { kind: "text" },
+    titleStyle: { kind: "select", options: ACCORDION_TITLES },
     icon: { kind: "icon" },
     trailing: { kind: "boolean" },
     defaultOpen: { kind: "boolean" },
   },
   initial: { title: "Enrolled Classes", icon: "GraduationCap", trailing: true },
-  defaults: { icon: "none", trailing: false, defaultOpen: false },
+  defaults: { titleStyle: "heading", icon: "none", trailing: false, defaultOpen: false },
   render: (v) => (
     <Frame width={320}>
       {/* defaultOpen 은 처음 한 번만 읽히므로, 바꾸면 key 로 다시 세웁니다 */}
       <Accordion
         key={String(v.defaultOpen)}
         title={String(v.title ?? "")}
+        titleStyle={v.titleStyle as AccordionTitle}
         icon={icon(v.icon)}
         trailing={
           v.trailing ? (
@@ -519,7 +521,7 @@ const accordion: Spec = {
     jsx(
       "Accordion",
       [
-        ...printed(accordion, { title: v.title, icon: v.icon, defaultOpen: v.defaultOpen }),
+        ...printed(accordion, { title: v.title, titleStyle: v.titleStyle, icon: v.icon, defaultOpen: v.defaultOpen }),
         v.trailing ? `trailing={<Badge size="sm" variant="filled">${ENROLLED.length}</Badge>}` : undefined,
       ],
       [jsx("Stack", ['gap="md"'], ENROLLED.map((name) => `<Text>${name}</Text>`))],
@@ -545,6 +547,19 @@ const accordion: Spec = {
                 <Badge accent="green" variant="solid">미적분학1</Badge>
                 <Badge accent="green" variant="solid">일반물리학</Badge>
               </Inline>
+            </Accordion>
+          </Frame>
+        </Stage>
+      ),
+    },
+    {
+      title: "섹션 제목 — titleStyle=\"section\"",
+      note: "화면을 섹션으로 나누는 카드는 대문자 제목입니다. 좁은 화면에서 14px, md 이상에서 20px 이라 긴 제목도 폰에서 한 줄에 들어갑니다. 창 폭을 줄여 보세요.",
+      render: () => (
+        <Stage>
+          <Frame width={360}>
+            <Accordion title="Enrolled Classes" titleStyle="section" icon={BookOpen}>
+              <EnrolledList />
             </Accordion>
           </Frame>
         </Stage>
