@@ -25,7 +25,7 @@ accent(색) × variant(칠하는 방식) × size × shadow로 만드는 기본 �
 | `as` | `ElementType` | `"button"` | 렌더할 요소입니다. `<button>`이면 `type="button"`이 기본이라 폼 안에서도 제출하지 않고, 제출 버튼은 `type="submit"`을 줍니다. 그 밖의 요소면 `disabled` 대신 `aria-disabled`가 붙습니다. |
 | `accent` | `Accent` | — | 색입니다. 주지 않으면 바깥 Paint의 색을 따르고, 바깥에도 없으면 `black`(시스템)입니다. |
 | `variant` | `Variant` | `"outline"` | 칠하는 방식입니다. `filled` `outline` `hairline` `frameline` `framelineMuted` `plain` `solid` `solidMuted` `muted` `ghost` `ghostMuted` `paper` `tinted` `wash` `ghostTint` 열다섯 가지입니다. 크림 페이지 위에서 흰 면을 지켜야 하면 `paper`입니다. |
-| `size` | `ControlSize` | `"md"` | 높이 사다리입니다. `xs` 24 · `sm` 32 · `md` 40 · `lg` 48px. |
+| `size` | `ControlSize` | `"md"` | 높이 사다리입니다. `xs` 28 · `sm` 32 · `md` 40 · `lg` 48 · `xl` 64px. |
 | `shadow` | `boolean \| "hover" \| "shrink" \| "static"` | `false` | 4px 그림자입니다. `true`면 그림자 위에 떠 있다가 hover 때 가라앉고(`sink`), `"hover"`면 평평하다가 hover 때 제자리에서 그림자가 올라오고(`raise` — 복사 버튼 · 과목 추가 칩), `"shrink"`면 그림자를 둔 채 hover 때 95%, 누르면 92%로 작아집니다(`shrink` — Ask 단추 전용), `"static"`이면 그림자를 둔 채 움직이지 않습니다(`still` — 밖에서 이미 켜진 상태나 꺼진 칸). 끄면 누르는 순간만 작아집니다(`tap`). |
 | `selected` | `boolean` | — | 골라진 상태입니다. 같은 accent의 `filled`로 칠하고, 그 사실을 aria 하나로 알립니다(어느 aria인지는 `role`이 정합니다). 골라지면 105%로 커져 그림자 위에 섭니다(`shadow`와 상관없습니다). |
 | `role` | `AriaRole` | — | 요소의 `role`입니다. `selected`를 알리는 aria가 이걸로 정해집니다. 고르는 무리의 칸이면 `radio` · `tab`을 줍니다. |
@@ -37,6 +37,7 @@ accent(색) × variant(칠하는 방식) × size × shadow로 만드는 기본 �
 | `uppercase` | `boolean` | `true` | 라벨을 대문자로 그립니다. 소문자가 뜻인 라벨(이메일 도메인 · 브랜드 이름)이면 끄고, 이때 자간도 풀립니다. |
 | `wrap` | `boolean` | `false` | 긴 문장 라벨을 줄바꿈합니다. 높이가 글자를 따라 늘어나고 글자는 가운데 정렬됩니다. |
 | `fullWidth` | `boolean` | `false` | 폭을 100%로 늘립니다. |
+| `grow` | `boolean` | `true` | 골라지면 105%로 커집니다. 칸이 맞닿은 줄에서는 끕니다. `fullWidth`는 저절로 꺼집니다. 5%가 폭에 비례해서 넓은 버튼은 옆 칸을 덮기 때문입니다. |
 | `disabled` | `boolean` | `false` | hover와 눌림이 꺼지고 불투명도 0.4가 됩니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |
 | `children` | `ReactNode` | — | 버튼 글자입니다. |
@@ -144,7 +145,8 @@ Button은 Pressable과 Selectable, Paint를 이렇게 묶습니다 — `shadow`�
 | `as` | `ElementType` | `"span"` | 렌더할 요소입니다. |
 | `accent` | `Accent` | — | 색입니다. 주지 않으면 바깥 Paint의 색을 따르고, 바깥에도 없으면 `black`입니다. |
 | `variant` | `Variant` | `"outline"` | 칠하는 방식입니다. Button과 같은 열다섯 가지 규칙입니다. 색 머리줄 위의 흰 배지는 `paper`입니다. |
-| `size` | `BadgeSize` | `"md"` | `sm` 18 · `md` 22 · `lg` 26px입니다. |
+| `size` | `BadgeSize` | `"md"` | `sm` 18 · `md` 22 · `lg` 26 · `xl` 36px입니다. |
+| `shadow` | `boolean` | `false` | 3px 그림자입니다. 검색 결과의 개수 칩처럼 면 위에 뜬 배지에 줍니다. |
 | `icon` | `IconComponent` | — | 앞 아이콘입니다. 크기는 배지 크기가 정합니다. |
 | `wrap` | `boolean` | `false` | 줄바꿈을 허용합니다. 길이가 정해지지 않은 글자(거절 사유)는 잘리는 대신 줄바꿈되고, 높이가 글자를 따라 늘어납니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |

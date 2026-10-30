@@ -322,12 +322,13 @@ const badge: Spec = {
     size: { kind: "select", options: BADGE_SIZES },
     icon: { kind: "icon" },
     wrap: { kind: "boolean" },
+    shadow: { kind: "boolean" },
     children: { kind: "text" },
   },
   initial: { accent: "cyan", variant: "solid", size: "md", icon: "none", children: "계획" },
-  defaults: { accent: "black", variant: "outline", size: "md", wrap: false },
+  defaults: { accent: "black", variant: "outline", size: "md", wrap: false, shadow: false },
   render: (v) => (
-    <Badge accent={v.accent as never} variant={v.variant as Variant} size={v.size as never} icon={icon(v.icon)} wrap={Boolean(v.wrap)}>
+    <Badge accent={v.accent as never} variant={v.variant as Variant} size={v.size as never} icon={icon(v.icon)} wrap={Boolean(v.wrap)} shadow={Boolean(v.shadow)}>
       {String(v.children ?? "")}
     </Badge>
   ),

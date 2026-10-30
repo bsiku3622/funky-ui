@@ -68,7 +68,7 @@ export function TypographyPage() {
       <PageHead
         layer="foundations · 1"
         title="Typography"
-        summary="Pretendard Variable 하나. 본문도 700, 구조 라벨은 900 — funky 의 글자는 두껍습니다. 크기 사다리 아홉에 class-explorer 가 가장 많이 반복한 구조 라벨 둘(overline · subtitle)을 더한 열한 역할입니다. 사다리의 맨 위 hero 만 폭에 따라 커집니다."
+        summary="Pretendard Variable 하나. 본문도 700, 구조 라벨은 900 — funky 의 글자는 두껍습니다. 크기 사다리 열하나에 class-explorer 가 가장 많이 반복한 구조 라벨 셋(overline · eyebrow · subtitle)을 더한 열네 역할입니다. hero 와 headline 만 폭에 따라 커집니다."
       />
       <Section title="글자 역할" note="태그(as)와 생김새(variant)는 따로 고릅니다. 줄 높이는 px 고정값입니다.">
         <Card padding="0">

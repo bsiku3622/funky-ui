@@ -79,10 +79,10 @@ primitive가 받는 값은 모두 닫힌 집합입니다.
 | prop | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `as` | `ElementType` | `"span"` | 렌더할 요소입니다. |
-| `variant` | `TextVariant` | `"body"` | 글자 역할입니다. 크기 · 줄 높이 · 굵기 · 자간 · 대소문자를 한 번에 고릅니다. `hero` `display` `title` `heading` `subheading` `body` `caption` `label` `micro` `overline` `subtitle` 열한 가지이고, 숫자는 [Typography](../foundations/typography.md)에 있습니다. |
+| `variant` | `TextVariant` | `"body"` | 글자 역할입니다. 크기 · 줄 높이 · 굵기 · 자간 · 대소문자를 한 번에 고릅니다. `hero` `display` `headline` `title` `heading` `subheading` `body` `small` `caption` `label` `micro` `overline` `eyebrow` `subtitle` 열네 가지이고, 숫자는 [Typography](../foundations/typography.md)에 있습니다. |
 | `weight` | `Weight` | — | `regular` `medium` `bold` `black`. 역할의 기본 굵기를 바꿀 때만 줍니다. |
 | `leading` | `Leading` | `"fixed"` | 줄 높이입니다. `fixed`는 역할이 정한 px이고, `relaxed`는 글자 크기의 1.625배입니다. 여러 줄을 읽는 문단에 줍니다. |
-| `tone` | `Tone` | — | 글자색입니다. `primary` `secondary` `muted` `faint` `inverse` `inverseMuted` `accent` `accentSoft` `inherit`와 색 이름 `pink` `purple` `cyan` `yellow` `orange` `sky` `green` `red`. `accent`는 가장 가까운 Paint의 진한 글자, `accentSoft`는 연한 글자이고, 바깥에 Paint가 없으면 검정(시스템)의 사다리입니다. 색 이름은 그 색의 진한 글자입니다. |
+| `tone` | `Tone` | — | 글자색입니다. `primary` `secondary` `muted` `faint` `inverse` `inverseMuted` `accent` `accentSoft` `inherit`와 색 이름 `pink` `purple` `cyan` `yellow` `orange` `sky` `green` `red`, 상태색 이름 `success` `error` `warning` `info`. `accent`는 가장 가까운 Paint의 진한 글자, `accentSoft`는 연한 글자이고, 바깥에 Paint가 없으면 검정(시스템)의 사다리입니다. 색 이름과 상태색 이름은 그 색의 원색입니다. |
 | `family` | `"sans" \| "mono"` | — | 서체입니다. 코드나 식별자 같은 기술적 자리에만 `mono`를 씁니다. |
 | `align` | `"start" \| "center" \| "end"` | — | 글자 정렬입니다. |
 | `truncate` | `boolean` | `false` | 한 줄에서 자르고 …을 붙입니다. |
@@ -96,7 +96,7 @@ primitive가 받는 값은 모두 닫힌 집합입니다.
 - `overline`과 `subtitle`은 기본 잉크가 `muted`입니다. 정의 순서가 역할 → 굵기 → 잉크라서 `tone`과 `weight`로 그 기본값을 바꿀 수 있습니다.
 - `faint`는 장식 · placeholder · 꺼진 자리 전용입니다. 대비가 AA에 못 미치므로 필수 정보에 쓰지 않습니다.
 - 문서 구조는 `as`가, 생김새는 `variant`가 맡습니다. 제목 태그의 크기를 바꾸고 싶으면 태그를 바꾸지 말고 `variant`를 바꿉니다.
-- Text는 accent를 읽기만 하고 정하지 않습니다. 안쪽으로 흐르는 색을 정하는 것은 Paint입니다. `tone`의 색 이름은 이 글자 하나의 색이라, 안에 든 요소의 accent를 바꾸지 않습니다. 그래서 `tone="red"`는 목록을 돌며 그리는 콜백 안에서도 씁니다(`useAccent`는 훅이라 그 자리에서 부를 수 없습니다).
+- Text는 accent를 읽기만 하고 정하지 않습니다. 안쪽으로 흐르는 색을 정하는 것은 Paint입니다. `tone`의 색 이름은 이 글자 하나의 색이라, 안에 든 요소의 accent를 바꾸지 않습니다. 그래서 `tone="error"`는 목록을 돌며 그리는 콜백 안에서도 씁니다(`useAccent`는 훅이라 그 자리에서 부를 수 없습니다).
 
 ## Icon
 

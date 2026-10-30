@@ -170,7 +170,7 @@ Molecules는 Atoms와 Primitives를 묶은 범용 조합입니다. 카드 · 선
 | --- | --- | --- | --- |
 | `title` | `ReactNode` | 필수 | 머리 글자입니다. |
 | `titleStyle` | `AccordionTitle` | `"heading"` | 제목의 글자입니다. `heading`은 20px 문장이고, `section`은 대문자 섹션 제목으로 좁은 화면에서 14px, `md` 이상에서 20px입니다. |
-| `size` | `AccordionSize` | `"md"` | `sm`은 12px 제목의 촘촘한 줄입니다. 쉐브론이 작아지고 본문 여백이 좁아지며, 이때 `titleStyle`은 쓰지 않습니다. |
+| `size` | `AccordionSize` | `"md"` | `lg`는 화면의 주인공 목록입니다. 머리 여백이 24px, 그림자가 6px이고 본문 위 선이 검정입니다. `sm`은 12px 제목의 촘촘한 줄입니다. 쉐브론이 작아지고 본문 여백이 좁아지며, 이때 `titleStyle`은 쓰지 않습니다. |
 | `icon` | `IconComponent` | — | 제목 앞 아이콘입니다. |
 | `trailing` | `ReactNode` | — | 제목 옆입니다. 개수 배지 같은 것을 둡니다. 넓은 화면에서는 오른쪽 끝에 모이고, 좁은 화면에서는 제목 아래로 내려갑니다. |
 | `open` | `boolean` | — | 펼침 상태입니다. 주면 제어 모드가 됩니다. |
@@ -540,7 +540,7 @@ native `<dialog>` 위에 서는 모달입니다. 아래는 수강 변경을 확�
 | `label` | `ReactNode` | 필수 | 이름표입니다. |
 | `value` | `ReactNode` | 필수 | 큰 숫자입니다. |
 | `unit` | `ReactNode` | — | 숫자 뒤 단위입니다. |
-| `size` | `"sm" \| "lg"` | `"lg"` | 숫자 크기입니다. 36 · 48px. |
+| `size` | `"xs" \| "sm" \| "lg"` | `"lg"` | 숫자 크기입니다. 30 · 36 · 48px. `xs`는 네온 면 위 요약 카드로, 이름표가 12px(`eyebrow`)입니다. |
 | `accent` | `Accent` | — | 주면 숫자를 accent의 진한 글자로 칠합니다. |
 | `labelTone` | `Tone` | — | 이름표의 글자색입니다. 기본은 역할의 약한 잉크이고, 네온 면 위에서는 안 읽히므로 `inherit`를 줍니다. |
 | `className` | `string` | — | 마지막에 덧붙는 class입니다. |

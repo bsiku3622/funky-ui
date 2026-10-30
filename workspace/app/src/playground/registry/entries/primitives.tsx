@@ -856,7 +856,7 @@ const text: Spec = {
   ),
   sections: [
     {
-      title: "Variant — 열한 가지 역할",
+      title: "Variant — 열네 가지 역할",
       note: "overline 과 subtitle 은 약한 잉크가 역할에 들어 있어서 tone 을 주지 않아도 흐립니다. hero 는 랜딩 · 검색 프로필의 큰 제목으로, 역할 중 유일하게 폭에 따라 변합니다 — 좁은 화면 36px, md 이상 60px 이라 창 폭을 바꿔 보면 크기가 달라집니다.",
       render: () => (
         <Stage bg="raised">
@@ -877,7 +877,7 @@ const text: Spec = {
     },
     {
       title: "Tone",
-      note: "흑백 잉크 여섯(inverse · inverseMuted 는 어두운 면 위), 가장 가까운 Paint 의 진한 글자 · 연한 글자(accent · accentSoft — 여기서는 purple ghost Paint 로 감쌌습니다), 부모 글자색을 따르는 inherit, 그리고 색 이름 여덟입니다. 색 이름은 그 색의 진한 글자(AA)이고 이 글자만 칠합니다 — accent 를 다시 쓰지 않으므로 안쪽으로 흐르지 않습니다. faint 는 장식 전용이라 필수 정보에 쓰지 않습니다.",
+      note: "흑백 잉크 여섯(inverse · inverseMuted 는 어두운 면 위), 가장 가까운 Paint 의 진한 글자 · 연한 글자(accent · accentSoft — 여기서는 purple ghost Paint 로 감쌌습니다), 부모 글자색을 따르는 inherit, 그리고 색 이름 여덟입니다. 색 이름과 상태색 이름은 그 색의 원색이고 이 글자만 칠합니다 — accent 를 다시 쓰지 않으므로 안쪽으로 흐르지 않습니다. faint 는 장식 전용이라 필수 정보에 쓰지 않습니다.",
       render: () => (
         <Stage bg="raised">
           <Paint accent="purple" variant="ghost">

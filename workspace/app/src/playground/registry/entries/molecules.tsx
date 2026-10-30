@@ -109,7 +109,7 @@ const ACCENT_OR_NONE = ["none", ...ACCENT_OPTIONS] as const;
 // 아래는 컴포넌트 자신의 prop 이 지역 union 이라 어휘 배열이 없는 선택지입니다
 const CARD_SHADOWS = ["raised", "none"] as const;
 const MODAL_SIZES = ["sm", "md", "lg", "xl", "full"] as const;
-const STAT_SIZES = ["sm", "lg"] as const;
+const STAT_SIZES = ["xs", "sm", "lg"] as const;
 const METER_LAYOUTS = ["stack", "row"] as const;
 const MENU_ALIGNS = ["start", "center", "end"] as const;
 const TOOLTIP_PLACEMENTS = ["top", "bottom"] as const;
@@ -1739,7 +1739,7 @@ const stat: Spec = {
       label={String(v.label ?? "")}
       value={String(v.value ?? "")}
       unit={txt(v.unit)}
-      size={v.size as "sm" | "lg"}
+      size={v.size as (typeof STAT_SIZES)[number]}
       accent={opt<Accent>(v.accent)}
       labelTone={opt<Tone>(v.labelTone)}
     />
@@ -1748,11 +1748,12 @@ const stat: Spec = {
   sections: [
     {
       title: "Size",
-      note: "lg 는 이름표가 subtitle · 숫자 48px, sm 은 이름표가 overline · 숫자 36px 입니다.",
+      note: "lg 는 이름표가 subtitle · 숫자 48px, sm 은 이름표가 overline · 숫자 36px, xs 는 이름표가 eyebrow · 숫자 30px 입니다.",
       render: () => (
         <Stage bg="raised">
           <Stat label="Credits" value="72" unit="학점" />
           <Stat size="sm" label="Credits" value="72" unit="학점" />
+          <Stat size="xs" label="Credits" value="72" unit="학점" />
         </Stage>
       ),
     },
