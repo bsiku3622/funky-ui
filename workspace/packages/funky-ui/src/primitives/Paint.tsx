@@ -3,9 +3,10 @@ import type { ElementType } from "react";
 import { cx } from "../internal/cx";
 import type { PolyProps } from "../internal/polymorphic";
 import { accentClass } from "../styles/accent.css";
+import { borderSideClass, borderStyleClass, raisedClass } from "../styles/border.css";
 import { variantClass } from "../styles/variant.css";
 import { SELECTED_VARIANT } from "../tokens/color-recipes";
-import { resolveAccent, type Accent, type Variant } from "../tokens/vocabulary";
+import { resolveAccent, type Accent, type BorderSide, type BorderStyle, type Variant } from "../tokens/vocabulary";
 import { boxClass, type BoxOwnProps } from "./Box";
 import { hoverable as hoverableClass, paintBase } from "./Paint.css";
 
@@ -15,8 +16,14 @@ export interface PaintOwnProps extends BoxOwnProps {
    * 그 색으로 흐릅니다. 주지 않으면 바깥 Paint 의 색, 바깥에도 없으면 검정(시스템)입니다.
    */
   accent?: Accent;
-  /** 칠하는 방식 (기본 `outline`) — 12 가지 레시피는 docs/foundations/color.md */
+  /** 칠하는 방식 (기본 `outline`) — 15 가지 레시피는 docs/foundations/color.md */
   variant?: Variant;
+  /** 테두리를 긋는 변 (기본 `all`) */
+  borderSide?: BorderSide;
+  /** 테두리의 선 (기본 `solid`) */
+  borderStyle?: BorderStyle;
+  /** 4px 그림자 — 움직이지 않는 색 면(지표 카드 · 알림 띠). 누르는 물건의 그림자는 Pressable 의 몸짓이 가집니다 */
+  shadow?: boolean;
   /** 골라진 상태 — 같은 accent 의 filled 로 칠합니다. 알리는 aria 와 골라진 모양(커지기)은 `Selectable` 입니다 */
   selected?: boolean;
   /**
@@ -42,9 +49,9 @@ export function useAccent(accent: Accent | undefined): string | undefined {
 }
 
 /** Paint 의 prop 을 class 로 — 다른 primitive(Pressable)에 색을 얹을 때 씁니다 */
-export function paintClass({ accent, variant = "outline", selected = false, hoverable = false, ...box }: PaintOwnProps): string {
+export function paintClass({ accent, variant = "outline", selected = false, hoverable = false, borderSide = "all", borderStyle = "solid", shadow = false, ...box }: PaintOwnProps): string {
   const painted: Variant = selected ? SELECTED_VARIANT : variant;
-  return cx(accentOf(accent), variantClass[painted], paintBase, hoverable && hoverableClass, boxClass(box));
+  return cx(accentOf(accent), variantClass[painted], paintBase, borderSideClass[borderSide], borderStyleClass[borderStyle], shadow && raisedClass, hoverable && hoverableClass, boxClass(box));
 }
 
 /**
@@ -65,6 +72,9 @@ export function Paint<E extends ElementType = "div">({
   variant,
   selected,
   hoverable,
+  borderSide,
+  borderStyle,
+  shadow,
   padding,
   paddingX,
   paddingY,
@@ -72,5 +82,5 @@ export function Paint<E extends ElementType = "div">({
   ...rest
 }: PaintProps<E>) {
   const Comp: ElementType = as ?? "div";
-  return <Comp className={paintClass({ accent, variant, selected, hoverable, padding, paddingX, paddingY, className })} {...rest} />;
+  return <Comp className={paintClass({ accent, variant, selected, hoverable, borderSide, borderStyle, shadow, padding, paddingX, paddingY, className })} {...rest} />;
 }

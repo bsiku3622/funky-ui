@@ -17,3 +17,4 @@ export {
 } from "./Selectable";
 export { Floating, type FloatingOwnProps, type FloatingProps, type DismissReason } from "./Floating";
 export { VisuallyHidden, Portal, type VisuallyHiddenProps } from "./a11y";
+export { enterClass, pulseClass } from "../styles/enter.css";

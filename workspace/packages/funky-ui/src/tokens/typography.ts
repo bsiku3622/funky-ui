@@ -33,16 +33,20 @@ export interface TextRole {
   uppercase?: boolean;
   /** 역할이 정해 둔 글자색. 없으면 물려받습니다 */
   tone?: Tone;
+  /** `md` 이상에서의 크기 · 줄 높이 — 화면을 채우는 제목만 폭에 따라 커집니다 */
+  md?: { size: number; leading: number };
 }
 
 /**
- * 글자 역할 열 개. 앞의 여덟은 크기 사다리이고, 뒤의 둘은 class-explorer 가 가장 많이
+ * 글자 역할 열한 개. 앞의 아홉은 크기 사다리이고, 뒤의 둘은 class-explorer 가 가장 많이
  * 반복한 **구조 라벨**입니다.
  *
+ * - `hero` — 랜딩 · 검색 프로필의 큰 제목. 좁은 화면 36px, `md` 이상 60px 이고 역할 중 유일하게 폭에 따라 변합니다
  * - `overline` — 10px · 900 · 대문자 · 넓은 자간 · 약한 잉크. 카드 머리의 작은 이름표 (계측 35회)
  * - `subtitle` — 14px · 900 · 대문자 · 넓은 자간 · 약한 잉크. 섹션 소제목 (`RetroSubTitle`, 41회)
  */
 export const TEXT_ROLES = {
+  hero: { size: 36, leading: 40, weight: "black", tracking: -0.05, uppercase: true, md: { size: 60, leading: 60 } },
   display: { size: 36, leading: 40, weight: "black", tracking: -0.05, uppercase: true },
   title: { size: 24, leading: 32, weight: "black", tracking: -0.025 },
   heading: { size: 20, leading: 28, weight: "black", tracking: -0.025 },

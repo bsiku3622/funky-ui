@@ -7,14 +7,20 @@
 import { style, styleVariants } from "@vanilla-extract/css";
 
 import { utilities } from "../tokens/layers.css";
-import { LEADING, TEXT_ROLES, WEIGHT } from "../tokens/typography";
+import { BREAKPOINT } from "../tokens/layout";
+import { LEADING, TEXT_ROLES, WEIGHT, px, type TextRole } from "../tokens/typography";
 import { TONE_VALUE, textRule } from "../tokens/typography-recipes";
 import { vars } from "../tokens/variables";
-import type { Family, Leading } from "../tokens/vocabulary";
+import type { Family, Leading, TextDecoration } from "../tokens/vocabulary";
 
 const u = (rule: Record<string, unknown>) => ({ "@layer": { [utilities]: rule } });
 
-export const textRoleClass = styleVariants(TEXT_ROLES, (role) => u(textRule(role)));
+export const textRoleClass = styleVariants(TEXT_ROLES, (role: TextRole) =>
+  u({
+    ...textRule(role),
+    ...(role.md ? { "@media": { [`(min-width: ${BREAKPOINT.md}px)`]: { fontSize: px(role.md.size), lineHeight: px(role.md.leading) } } } : {}),
+  }),
+);
 
 export const leadingClass = styleVariants({
   fixed: u({}),
@@ -40,3 +46,8 @@ export const alignClass = styleVariants({
 export const truncateClass = style(u({ display: "block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0 }));
 
 export const numericClass = style(u({ fontVariantNumeric: "tabular-nums" }));
+
+export const decorationClass = styleVariants({
+  strike: u({ textDecorationLine: "line-through" }),
+  underline: u({ textDecorationLine: "underline", textDecorationThickness: vars.stroke.base, textUnderlineOffset: px(2) }),
+} satisfies Record<TextDecoration, object>);

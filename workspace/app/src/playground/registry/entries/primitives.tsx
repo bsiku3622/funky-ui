@@ -1000,6 +1000,7 @@ const MOTION_NOTE: Record<PressMotion, string> = {
   lift: "탐색 카드 — 위로 떠오릅니다",
   tap: "그림자를 끈 버튼 — 누르는 순간만 작아집니다",
   shrink: "Ask 단추 — 그림자를 둔 채 hover 때부터 작아집니다",
+  still: "밖에서 켠 칸 — 그림자를 둔 채 움직이지 않습니다",
 };
 
 const pressable: Spec = {

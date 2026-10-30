@@ -1,6 +1,7 @@
 /** 숫자 몰레큘 둘 — Stat(큰 숫자 하나) · Meter(막대 한 줄) */
 import { useId, type ReactNode } from "react";
 
+import { Link } from "../atoms/text-atoms";
 import { cx } from "../internal/cx";
 import { Inline, Stack } from "../primitives/layout";
 import { surfaceClass } from "../primitives/Surface";
@@ -8,6 +9,7 @@ import { Text } from "../primitives/Text";
 import { useAccent } from "../primitives/Paint";
 import type { Accent } from "../tokens/vocabulary";
 import { meterFill, meterTrack, statUnit, statValue, statValueAccent } from "./data.css";
+import { Popover } from "./floating";
 
 export interface StatProps {
   label: ReactNode;
@@ -41,27 +43,46 @@ export interface MeterProps {
   valueLabel?: ReactNode;
   /** 막대 색 (기본: 바깥 accent, 없으면 검정) */
   accent?: Accent;
+  /** 이름을 누르면 부릅니다 — 이름이 조용한 링크가 됩니다 (막대를 눌러 그 항목으로 거르기) */
+  onSelect?: () => void;
+  /** 막대에 마우스를 올리면 그 위에 뜨는 판의 내용 */
+  tooltip?: ReactNode;
   className?: string;
 }
 
 /** 막대 한 줄 — 이름 · 막대 · 값. 홈은 well, 채움은 accent solid */
-export function Meter({ label, value, max = 100, valueLabel, accent, className }: MeterProps) {
+export function Meter({ label, value, max = 100, valueLabel, accent, onSelect, tooltip, className }: MeterProps) {
   const ratio = max > 0 ? Math.min(1, Math.max(0, value / max)) : 0;
   const labelId = useId();
   const accentCls = useAccent(accent);
+  const track = (
+    <div className={cx(surfaceClass({ fill: "well", border: "line" }), meterTrack)} role="meter" aria-labelledby={labelId} aria-valuemin={0} aria-valuemax={max} aria-valuenow={Math.min(max, Math.max(0, value))}>
+      <div className={meterFill} style={{ width: `${ratio * 100}%` }} />
+    </div>
+  );
   return (
     <Stack gap="xs" className={cx(accentCls, className)}>
       <Inline justify="between" gap="md">
         <Text id={labelId} variant="caption" weight="black" truncate>
-          {label}
+          {onSelect ? (
+            <Link as="button" underline="hover" accent={accent ?? "pink"} onClick={onSelect}>
+              {label}
+            </Link>
+          ) : (
+            label
+          )}
         </Text>
         <Text variant="caption" weight="black" numeric>
           {valueLabel ?? value}
         </Text>
       </Inline>
-      <div className={cx(surfaceClass({ fill: "well", border: "line" }), meterTrack)} role="meter" aria-labelledby={labelId} aria-valuemin={0} aria-valuemax={max} aria-valuenow={Math.min(max, Math.max(0, value))}>
-        <div className={meterFill} style={{ width: `${ratio * 100}%` }} />
-      </div>
+      {tooltip ? (
+        <Popover content={tooltip} block delay={100} padding="md">
+          {track}
+        </Popover>
+      ) : (
+        track
+      )}
     </Stack>
   );
 }

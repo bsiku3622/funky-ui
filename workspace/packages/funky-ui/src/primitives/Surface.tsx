@@ -2,7 +2,8 @@ import type { ElementType } from "react";
 
 import { cx } from "../internal/cx";
 import type { PolyProps } from "../internal/polymorphic";
-import type { Border, Shadow, SurfaceFill } from "../tokens/vocabulary";
+import { borderSideClass, borderStyleClass } from "../styles/border.css";
+import type { Border, BorderSide, BorderStyle, Shadow, SurfaceFill } from "../tokens/vocabulary";
 import { boxClass, type BoxOwnProps } from "./Box";
 import { borderClass, fillClass, hoverable as hoverableClass, shadowClass } from "./Surface.css";
 
@@ -14,6 +15,10 @@ export interface SurfaceOwnProps extends BoxOwnProps {
   fill?: SurfaceFill;
   /** 2px 테두리의 색 (기본 없음) */
   border?: Border;
+  /** 테두리를 긋는 변 (기본 `all`) — 칸을 나누는 왼쪽 선 · 위아래 선 */
+  borderSide?: BorderSide;
+  /** 테두리의 선 (기본 `solid`) — `dashed` 는 비어 있는 자리 */
+  borderStyle?: BorderStyle;
   /** 깊이 — 떠 있는 물건은 `raised`(4px), 모달만 `floating`(6px) */
   shadow?: Shadow;
   /**
@@ -26,10 +31,12 @@ export interface SurfaceOwnProps extends BoxOwnProps {
 export type SurfaceProps<E extends ElementType = "div"> = PolyProps<E, SurfaceOwnProps>;
 
 /** Surface 의 prop 을 class 로 — 누르는 카드처럼 다른 primitive 위에 면만 빌려 올 때 씁니다 */
-export function surfaceClass({ fill = "raised", border = "none", shadow = "none", hoverable = false, ...box }: SurfaceOwnProps): string {
+export function surfaceClass({ fill = "raised", border = "none", borderSide = "all", borderStyle = "solid", shadow = "none", hoverable = false, ...box }: SurfaceOwnProps): string {
   return cx(
     fillClass[fill],
     border !== "none" && borderClass[border],
+    border !== "none" && borderSideClass[borderSide],
+    border !== "none" && borderStyleClass[borderStyle],
     shadow !== "none" && shadowClass[shadow],
     hoverable && hoverableClass,
     boxClass(box),
@@ -50,6 +57,8 @@ export function Surface<E extends ElementType = "div">({
   as,
   fill,
   border,
+  borderSide,
+  borderStyle,
   shadow,
   hoverable,
   padding,
@@ -59,5 +68,5 @@ export function Surface<E extends ElementType = "div">({
   ...rest
 }: SurfaceProps<E>) {
   const Comp: ElementType = as ?? "div";
-  return <Comp className={surfaceClass({ fill, border, shadow, hoverable, padding, paddingX, paddingY, className })} {...rest} />;
+  return <Comp className={surfaceClass({ fill, border, borderSide, borderStyle, shadow, hoverable, padding, paddingX, paddingY, className })} {...rest} />;
 }

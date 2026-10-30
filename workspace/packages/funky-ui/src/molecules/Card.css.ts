@@ -31,5 +31,10 @@ export const cardHeaderBar = style(
   }),
 );
 
+/** 전폭 색 띠 — 칠은 Paint 가 하고, 테두리는 카드 쪽 한 줄만 남깁니다. 카드의 2px 테두리와 겹치지 않습니다 */
+export const cardStrip = style(c({ minWidth: 0, paddingInline: px(SPACE["3xl"]), paddingBlock: px(SPACE.lg), borderColor: vars.line.base }));
+export const cardStripBottom = style(c({ borderWidth: `${vars.stroke.base} 0 0` }));
+export const cardStripTop = style(c({ borderWidth: `0 0 ${vars.stroke.base}` }));
+
 export const cardSection = style(c({ minWidth: 0 }));
 export const cardSectionDivided = style(c({ borderTop: `${vars.stroke.base} solid ${vars.line.subtle}` }));

@@ -56,7 +56,11 @@ export const badgeClickable = style(
   }),
 );
 
-export const badgeBuzz = style(c({ animation: `${buzz} 1.8s linear infinite` }));
+/**
+ * 찾는 사람 — 떨면서 면이 진해지고 그림자 위에 섭니다. ⚠️ 면과 그림자를 같이 둡니다: 움직임을 줄인 사람에게는 진동이 꺼지므로,
+ * 정지 상태로도 일치 표시가 남아야 합니다
+ */
+export const badgeBuzz = style(c({ animation: `${buzz} 1.8s linear infinite`, backgroundColor: tint(22), boxShadow: vars.shadow.raised }));
 
 export const personCard = style(
   c({
@@ -71,6 +75,11 @@ export const personCard = style(
     vars: { [PRESS_SCALE_VAR]: vars.press.surfaceScale },
   }),
 );
+
+/** 작은 카드 — 교사 카드 · 풍선 안 */
+export const personCardSm = style(c({ minHeight: px(112) }));
+/** 안쪽에 넣는 카드 — 풍선이 이미 틀이라 테두리가 겹치지 않게 뺍니다 */
+export const personCardBare = style(c({ border: 0, boxShadow: "none" }));
 
 export const personHead = style(
   c({
@@ -102,6 +111,8 @@ export const personTitle = style(
   }),
 );
 export const personItems = style(c({ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", columnGap: px(SPACE.xl), rowGap: px(SPACE.sm) }));
+export const personItemsOne = style(c({ gridTemplateColumns: "minmax(0, 1fr)" }));
+export const personFooter = style(c({ marginTop: px(SPACE.lg), fontSize: px(TEXT_ROLES.micro.size), fontWeight: WEIGHT.black, textTransform: "uppercase", color: vars.ink.muted }));
 export const personItem = style(
   c({
     minWidth: 0,

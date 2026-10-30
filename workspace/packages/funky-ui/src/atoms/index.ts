@@ -7,3 +7,4 @@ export { Checkbox, Radio, Switch, type CheckboxProps, type RadioProps, type Swit
 export { Spinner, type SpinnerProps } from "./Spinner";
 export { Link, Label, Code, Wordmark, Divider, type LinkProps, type LabelProps, type CodeProps, type WordmarkProps, type DividerProps } from "./text-atoms";
 export { Swatch, type SwatchProps } from "./Swatch";
+export { Marquee, type MarqueeProps } from "./Marquee";

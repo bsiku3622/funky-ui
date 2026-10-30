@@ -91,3 +91,7 @@ export const toneSwatch = style(
 
 /** 칩이 꺼졌을 때 칸의 면을 비웁니다 */
 export const toneSwatchEmpty = style(c({ backgroundColor: "transparent" }));
+
+/** 왼쪽 띠 — flex 줄의 높이를 채웁니다. 색이 없는 줄도 자리를 지켜 글자 열이 흔들리지 않습니다 */
+export const toneRail = style(c({ flexShrink: 0, alignSelf: "stretch", width: vars.stroke.rail, backgroundColor: tone }));
+export const toneRailEmpty = style(c({ backgroundColor: "transparent" }));

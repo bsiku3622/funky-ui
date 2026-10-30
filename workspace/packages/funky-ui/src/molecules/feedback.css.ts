@@ -18,5 +18,24 @@ export const notice = style(
   }),
 );
 
+/** 좁은 폭에서 버튼이 글 아래로 내려갑니다 — 글이 30px 로 짜부라지지 않습니다 */
+export const noticeWrap = style(c({ flexWrap: "wrap" }));
+export const noticeBody = style(c({ flex: "1 1 12rem", minWidth: 0 }));
+
+/** 영역을 덮는 불러오는 중 — 아래 내용은 흐려지고 눌리지 않습니다 */
+export const busy = style(c({ position: "relative", minWidth: 0 }));
+export const busyContent = style(c({ opacity: 0.4, pointerEvents: "none" }));
+export const busyOverlay = style(
+  c({
+    position: "absolute",
+    inset: 0,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: px(SPACE.md),
+  }),
+);
+
 export const emptyState = style(c({ paddingBlock: px(SPACE["4xl"]), paddingInline: px(SPACE.xl), textAlign: "center" }));
 export const emptyStateFramed = style(c({ border: `${vars.stroke.base} dashed ${vars.line.soft}` }));

@@ -1,5 +1,5 @@
 /**
- * Variant 레시피 — 12 variant 가 accent 사다리의 어느 칸을 글자 · 면 · 테두리에 쓰고,
+ * Variant 레시피 — 15 variant 가 accent 사다리의 어느 칸을 글자 · 면 · 테두리에 쓰고,
  * hover 때 무엇이 바뀌는지. 숫자도 hex 도 없고 **칸 이름만** 있습니다.
  *
  * 그래서 accent 를 바꾸면 variant 규칙은 그대로 둔 채 색만 바뀝니다 (accent × variant).
@@ -37,6 +37,9 @@ export interface VariantRecipe {
  * `paper` 만 스케치 밖에서 더했습니다(2026-10-30, 재원님 결정). 스케치의 `outline` 은 면이 투명해서 class-explorer 에서 가장
  * 많이 쓰는 흰 버튼을 크림 위에서 그릴 수 없습니다 — 흰 면 + 검정 테두리이고, 글자는 `solidInk` 입니다. 검정 accent 의 solidInk 가
  * 본문 잉크(#222)라 기본은 검정 글자이고, accent 를 주면 그 색의 글자가 됩니다(Ask 플로팅 버튼의 흰 면 + 보라 아이콘).
+ *
+ * `tinted` · `wash` · `ghostTint` 도 스케치 밖입니다(class-explorer 대조 2026-10-31). `tinted` 는 연한 면 + 색 테두리 + 검정 글자(교육과정 노드 ·
+ * 분반 칸), `wash` 는 테두리 없는 연한 면(달력 칩 · 하이라이트), `ghostTint` 는 쉴 때 투명하다가 hover 때 accent 층이 깔리는 무테 칸(목록 줄)입니다.
  */
 export const VARIANT_RECIPES = {
   filled: { fg: "ink", bg: "solid", border: "solid", hover: { layer: "white" } },
@@ -51,10 +54,13 @@ export const VARIANT_RECIPES = {
   ghost: { fg: "solidInk", bg: "none", border: "none", hover: { fg: "softInk" } },
   ghostMuted: { fg: "softInk", bg: "none", border: "none", hover: { fg: "solidInk" } },
   paper: { fg: "solidInk", bg: "white", border: "line", hover: { layer: "tint" } },
+  tinted: { fg: "black", bg: "soft", border: "solid", hover: { layer: "gray" } },
+  wash: { fg: "solidInk", bg: "soft", border: "none", hover: { layer: "gray" } },
+  ghostTint: { fg: "solidInk", bg: "none", border: "none", hover: { layer: "tint" } },
 } as const satisfies Record<Variant, VariantRecipe>;
 
 /** 선택된 컨트롤은 같은 accent 의 이 variant 로 바뀝니다 — 색이 "골랐다" 를 말합니다 */
 export const SELECTED_VARIANT: Variant = "filled";
 
 /** 테두리가 없는 variant — 그림자를 받지 않습니다 (가라앉을 상자가 없습니다) */
-export const BORDERLESS_VARIANTS: readonly Variant[] = ["ghost", "ghostMuted"];
+export const BORDERLESS_VARIANTS: readonly Variant[] = ["ghost", "ghostMuted", "wash", "ghostTint"];

@@ -53,7 +53,7 @@ export const CONTAINER = {
   /** 읽는 글 한 단 */
   prose: 720,
   /** 모달 */
-  dialog: { sm: 400, md: 512, lg: 768, xl: 1024 },
+  dialog: { sm: 400, md: 512, lg: 768, xl: 1024, full: 1280 },
   /** 앱 셸 — 상단 바 높이 · 사이드바 폭 · 하단 바 높이 */
   shell: { bar: 80, sidebar: 256, bottomBar: 64 },
 } as const;

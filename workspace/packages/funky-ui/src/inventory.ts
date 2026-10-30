@@ -31,23 +31,23 @@ export const INVENTORY = {
   },
   atoms: {
     action: ["Button", "IconButton", "NavButton", "Link"],
-    display: ["Badge", "Code", "Swatch", "Wordmark", "Spinner", "Divider"],
+    display: ["Badge", "Code", "Swatch", "Wordmark", "Marquee", "Spinner", "Divider"],
     input: ["Input", "Textarea", "Select", "Checkbox", "Radio", "Switch", "Label"],
   },
   molecules: {
     surface: ["Card", "SectionTitle", "PageHeader", "Accordion"],
     choice: ["SegmentedControl", "Tabs", "Menu"],
-    overlay: ["Modal", "Tooltip"],
-    form: ["SearchField", "FormField"],
-    data: ["Stat", "Meter"],
-    feedback: ["Notice", "EmptyState"],
+    overlay: ["Modal", "Drawer", "Tooltip", "Popover"],
+    form: ["SearchField", "FormField", "FileDrop"],
+    data: ["Stat", "Meter", "Table"],
+    feedback: ["Notice", "Busy", "EmptyState"],
   },
   components: {
     shell: ["AppBar", "SideNav", "BottomNav", "TermSwitcher"],
     people: ["StudentBadge", "PersonCard"],
-    schedule: ["ClassTile", "TimetableGrid"],
+    schedule: ["ClassTile", "TimetableGrid", "BreakBand", "TimeCaret", "SlotCell"],
     /** 실행 중의 색(학과 · 학번)으로 칠하는 부품 — Paint 는 hex 를 받지 않으므로 이 층에만 있습니다 */
-    tone: ["ToneButton", "ToneChip", "ToneBox", "ToneSwatch"],
+    tone: ["ToneButton", "ToneChip", "ToneBox", "ToneSwatch", "ToneText"],
   },
 } as const;
 

@@ -39,6 +39,9 @@ export const VARIANTS = [
   "ghost",
   "ghostMuted",
   "paper",
+  "tinted",
+  "wash",
+  "ghostTint",
 ] as const;
 export type Variant = (typeof VARIANTS)[number];
 
@@ -62,6 +65,14 @@ export type SurfaceFill = (typeof SURFACE_FILLS)[number];
 export const BORDERS = ["none", "line", "soft", "subtle"] as const;
 export type Border = (typeof BORDERS)[number];
 
+/** 테두리를 긋는 변 — 기본 `all`. 칸을 나누는 왼쪽 선 · 위아래 선에 씁니다 */
+export const BORDER_SIDES = ["all", "left", "right", "top", "bottom", "x", "y"] as const;
+export type BorderSide = (typeof BORDER_SIDES)[number];
+
+/** 테두리의 선 — `dashed` 는 비어 있는 자리 · 넣을 수 있는 자리 */
+export const BORDER_STYLES = ["solid", "dashed"] as const;
+export type BorderStyle = (typeof BORDER_STYLES)[number];
+
 /** 그림자 — 떠 있는 물건(raised)과 모달(floating) 두 단뿐입니다 */
 export const SHADOWS = ["none", "raised", "floating"] as const;
 export type Shadow = (typeof SHADOWS)[number];
@@ -72,6 +83,7 @@ export type Space = (typeof SPACES)[number];
 
 /** 글자 역할 */
 export const TEXT_VARIANTS = [
+  "hero",
   "display",
   "title",
   "heading",
@@ -92,6 +104,10 @@ export type Weight = (typeof WEIGHTS)[number];
 /** 줄 높이 — `fixed` 는 역할이 정한 px, `relaxed` 는 여러 줄 문단을 읽는 자리 */
 export const LEADINGS = ["fixed", "relaxed"] as const;
 export type Leading = (typeof LEADINGS)[number];
+
+/** 글자에 긋는 선 */
+export const TEXT_DECORATIONS = ["strike", "underline"] as const;
+export type TextDecoration = (typeof TEXT_DECORATIONS)[number];
 
 /**
  * 글자 색 — 흑백 잉크, 지금 accent 의 두 글자 칸, 그리고 색 이름 여덟입니다. 색 이름은 그 accent 의 진한 글자이고,
@@ -131,12 +147,17 @@ export type Justify = (typeof JUSTIFIES)[number];
 export const ICON_SIZES = ["xs", "sm", "md", "lg", "xl"] as const;
 export type IconSize = (typeof ICON_SIZES)[number];
 
+/** 바깥 버튼 · 링크에 마우스를 올리면 아이콘만 움직입니다 — 돌거나(`turn`) 옆으로 밀립니다(`nudge`) */
+export const ICON_MOTIONS = ["turn", "nudge"] as const;
+export type IconMotion = (typeof ICON_MOTIONS)[number];
+
 /**
  * 누르는 몸짓 (Pressable) — 움직이지 않거나(none, 기본), 그림자 속으로 가라앉거나(sink), 평평하다가 그림자가
- * 올라오거나(raise), 위로 떠오르거나(lift), 그림자 없이 누르는 순간만 작아지거나(tap), 그림자를 둔 채 hover 때부터 작아집니다(shrink).
- * 버튼은 그림자를 켜면 sink, `shadow="hover"` 면 raise, `shadow="shrink"` 면 shrink, 끄면 tap 입니다.
+ * 올라오거나(raise), 위로 떠오르거나(lift), 그림자 없이 누르는 순간만 작아지거나(tap), 그림자를 둔 채 hover 때부터 작아지거나(shrink),
+ * 그림자를 둔 채 움직이지 않습니다(still — 밖에서 켠 상태라 hover 와 상관없는 칸).
+ * 버튼은 그림자를 켜면 sink, `shadow="hover"` 면 raise, `shadow="shrink"` 면 shrink, `shadow="static"` 면 still, 끄면 tap 입니다.
  */
-export const MOTIONS = ["none", "sink", "raise", "lift", "tap", "shrink"] as const;
+export const MOTIONS = ["none", "sink", "raise", "lift", "tap", "shrink", "still"] as const;
 export type PressMotion = (typeof MOTIONS)[number];
 
 /** 링크의 밑줄 — `always` 는 글 속 링크, `hover` 는 hover 때만 밑줄이 생기는 조용한 링크 */
@@ -160,5 +181,25 @@ export const ACCORDION_TITLES = ["heading", "section"] as const;
 export type AccordionTitle = (typeof ACCORDION_TITLES)[number];
 
 /** 등장 몸짓 — 새로 나타나는 판이 떠오르거나(rise · pop) 제자리에서 나타납니다(fade). 거리 · 시간은 `ENTER` */
-export const ENTER_MOTIONS = ["none", "rise", "pop", "fade"] as const;
+export const ENTER_MOTIONS = ["none", "rise", "pop", "fade", "panel", "sheet"] as const;
 export type EnterMotion = (typeof ENTER_MOTIONS)[number];
+
+/** 안내 상자의 칠 — `plain` 은 연한 면, `solid` 는 꽉 찬 색 띠 */
+export const NOTICE_VARIANTS = ["plain", "solid"] as const;
+export type NoticeVariant = (typeof NOTICE_VARIANTS)[number];
+
+/** 접는 카드의 크기 — `sm` 은 12px 제목의 촘촘한 줄 */
+export const ACCORDION_SIZES = ["md", "sm"] as const;
+export type AccordionSize = (typeof ACCORDION_SIZES)[number];
+
+/** 떠 있는 판을 여는 법 — 마우스를 올리면 · 누르면 · 부르는 쪽이 `open` 으로 */
+export const POPOVER_TRIGGERS = ["hover", "click", "manual"] as const;
+export type PopoverTrigger = (typeof POPOVER_TRIGGERS)[number];
+
+/** 표 머리의 칠 */
+export const TABLE_HEADS = ["inverse", "well"] as const;
+export type TableHead = (typeof TABLE_HEADS)[number];
+
+/** 서랍이 붙는 가장자리 */
+export const DRAWER_SIDES = ["right", "left", "bottom"] as const;
+export type DrawerSide = (typeof DRAWER_SIDES)[number];

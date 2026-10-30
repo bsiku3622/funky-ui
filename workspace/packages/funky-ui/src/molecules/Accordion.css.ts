@@ -36,6 +36,10 @@ export const accordionTitleSection = style(
   }),
 );
 
+/** 촘촘한 줄 — 12px 제목에 여백을 줄입니다 (Admin 의 접는 목록 · Ask 의 단계 줄) */
+export const accordionHeaderSm = style(c({ gap: px(SPACE.md), padding: px(SPACE.lg) }));
+export const accordionBodySm = style(c({ padding: px(SPACE.lg) }));
+
 export const accordionChevron = style(
   c({ marginLeft: "auto", flexShrink: 0, transitionProperty: "transform", transitionDuration: vars.duration.base }),
 );

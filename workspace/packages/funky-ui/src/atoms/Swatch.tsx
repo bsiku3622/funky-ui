@@ -2,6 +2,7 @@ import type { ComponentPropsWithRef } from "react";
 
 import { cx } from "../internal/cx";
 import { useAccent } from "../primitives/Paint";
+import { pulseClass } from "../styles/enter.css";
 import type { Accent, SwatchRung, SwatchShape } from "../tokens/vocabulary";
 import { swatchRung, swatchShape } from "./Swatch.css";
 
@@ -12,12 +13,14 @@ export type SwatchProps = ComponentPropsWithRef<"span"> & {
   shape?: SwatchShape;
   /** 사다리의 어느 칸으로 칠할지 (기본 `solid`). 회색 분류는 검정의 `softInk` · `soft` 입니다 */
   rung?: SwatchRung;
+  /** 깜빡입니다 — 살아 있는 상태 점 */
+  pulse?: boolean;
 };
 
 /**
  * 분류 표시 — 색 하나로 묶음을 알리는 점과 띠입니다. 글자가 없고 뜻은 옆 글자가 말하므로 스크린 리더에게 읽히지 않습니다.
  * Link · Stat · Meter 처럼 Variant 없이 자기 색을 칠합니다
  */
-export function Swatch({ accent, shape = "dot", rung = "solid", className, ...rest }: SwatchProps) {
-  return <span aria-hidden="true" className={cx(swatchShape[shape], swatchRung[rung], useAccent(accent), className)} {...rest} />;
+export function Swatch({ accent, shape = "dot", rung = "solid", pulse = false, className, ...rest }: SwatchProps) {
+  return <span aria-hidden="true" className={cx(swatchShape[shape], swatchRung[rung], useAccent(accent), pulse && pulseClass, className)} {...rest} />;
 }

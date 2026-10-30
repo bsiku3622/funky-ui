@@ -1,5 +1,5 @@
 /**
- * 실행 중의 색으로 칠하는 부품 — ToneButton · ToneChip · ToneBox · ToneSwatch.
+ * 실행 중의 색으로 칠하는 부품 — ToneButton · ToneChip · ToneBox · ToneSwatch · ToneText.
  * 색은 앱이 학과 · 학번으로 정해 `tone`(hex)으로 넘깁니다. Button · Paint 는 hex 를 받지 않고, 그 길은 이 층에만 있습니다.
  */
 import type { ComponentPropsWithRef, CSSProperties, ElementType } from "react";
@@ -10,10 +10,12 @@ import type { PolyProps } from "../internal/polymorphic";
 import { boxClass, type BoxOwnProps } from "../primitives/Box";
 import { usePressable } from "../primitives/Pressable";
 import { useSelectable } from "../primitives/Selectable";
+import { Text, type TextOwnProps } from "../primitives/Text";
 import { toneFaceStyle, toneStyle } from "./tone";
-import { toneBox, toneBoxFramed, toneButtonSelected, toneChip, toneChipOff, toneChipOn, toneSwatch, toneSwatchEmpty } from "./tone-parts.css";
+import { toneBox, toneBoxFramed, toneButtonSelected, toneChip, toneChipOff, toneChipOn, toneRail, toneRailEmpty, toneSwatch, toneSwatchEmpty } from "./tone-parts.css";
 
 const ButtonRoot = Button as ElementType;
+const TextRoot = Text as ElementType;
 
 export type ToneButtonProps<E extends ElementType = "button"> = PolyProps<
   E,
@@ -81,11 +83,28 @@ export function ToneBox<E extends ElementType = "div">({ as, tone, framed = true
 }
 
 export type ToneSwatchProps = ComponentPropsWithRef<"span"> & {
-  /** 칠할 색 (hex) */
-  tone: string;
+  /** 칠할 색 (hex). 없으면 자리만 지킵니다 — 수업이 없는 줄의 띠 */
+  tone?: string;
+  /** `box` 는 16px 범례 칸, `rail` 은 줄 높이를 채우는 4px 왼쪽 띠입니다 (기본 `box`) */
+  shape?: "box" | "rail";
 };
 
-/** 범례 칸 — 16px 네모에 검정 테두리. 뜻은 옆 글자가 말하므로 스크린 리더에게 읽히지 않습니다. accent 로 칠하는 점 · 띠는 `Swatch` 입니다 */
-export function ToneSwatch({ tone, className, style, ...rest }: ToneSwatchProps) {
-  return <span aria-hidden="true" className={cx(toneSwatch, className)} style={toneStyle(tone, style)} {...rest} />;
+/** 범례 칸 · 왼쪽 띠 — 뜻은 옆 글자가 말하므로 스크린 리더에게 읽히지 않습니다. accent 로 칠하는 점 · 띠는 `Swatch` 입니다 */
+export function ToneSwatch({ tone, shape = "box", className, style, ...rest }: ToneSwatchProps) {
+  const rail = shape === "rail";
+  return <span aria-hidden="true" className={cx(rail ? toneRail : toneSwatch, !tone && (rail ? toneRailEmpty : toneSwatchEmpty), className)} style={toneStyle(tone, style)} {...rest} />;
+}
+
+export type ToneTextProps<E extends ElementType = "span"> = PolyProps<
+  E,
+  Omit<TextOwnProps, "tone"> & {
+    /** 글자색 (hex) */
+    tone: string;
+    style?: CSSProperties;
+  }
+>;
+
+/** 실행 중의 색으로 칠하는 글자 — Text 의 글자 역할을 그대로 받습니다. ⚠️ 흰 면 위의 대비는 그 색에 달렸으니 큰 글자 · 이름에만 씁니다 */
+export function ToneText<E extends ElementType = "span">({ tone, style, ...rest }: ToneTextProps<E>) {
+  return <TextRoot style={{ color: tone, ...style }} {...rest} />;
 }

@@ -4,13 +4,13 @@ import { cx } from "../internal/cx";
 import type { PolyProps } from "../internal/polymorphic";
 import { Box } from "../primitives/Box";
 import { Icon, type IconComponent } from "../primitives/Icon";
-import { Inline } from "../primitives/layout";
+import { Inline, Stack } from "../primitives/layout";
 import { Paint } from "../primitives/Paint";
 import { Pressable } from "../primitives/Pressable";
 import { Surface, surfaceClass } from "../primitives/Surface";
 import { Text } from "../primitives/Text";
-import type { Accent, PressMotion, Space, SurfaceFill } from "../tokens/vocabulary";
-import { cardBase, cardHeader, cardHeaderBar, cardHeaderTitle, cardPressable, cardSection, cardSectionDivided } from "./Card.css";
+import type { Accent, PressMotion, Space, SurfaceFill, Variant } from "../tokens/vocabulary";
+import { cardBase, cardHeader, cardHeaderBar, cardHeaderTitle, cardPressable, cardSection, cardSectionDivided, cardStrip, cardStripBottom, cardStripTop } from "./Card.css";
 
 export interface CardOwnProps {
   /**
@@ -54,6 +54,12 @@ export function Card<E extends ElementType = "div">({
 
 export interface CardHeaderProps {
   title: ReactNode;
+  /** 제목 위의 작은 이름표 (overline). 주면 두 줄 머리가 되어 제목이 줄바꿈됩니다 */
+  eyebrow?: ReactNode;
+  /** 제목 아래 설명. 주면 두 줄 머리가 되어 제목이 줄바꿈됩니다 */
+  description?: ReactNode;
+  /** 제목의 글자 (기본 `subtitle` — 대문자 14px). `heading` 은 대소문자를 둔 20px 이고 줄바꿈됩니다 */
+  titleStyle?: "subtitle" | "heading";
   icon?: IconComponent;
   /** 오른쪽 끝 — 개수 · 버튼 */
   actions?: ReactNode;
@@ -67,15 +73,35 @@ export interface CardHeaderProps {
 const PaintRoot = Paint as ElementType;
 
 /** 카드 머리 — 섹션 소제목 글자 + 오른쪽 끝 자리 */
-function CardHeader({ title, icon, actions, tone = "plain", accent, className }: CardHeaderProps) {
+function CardHeader({ title, eyebrow, description, titleStyle = "subtitle", icon, actions, tone = "plain", accent, className }: CardHeaderProps) {
   const bar = tone === "bar";
+  const ink = bar ? "inherit" : undefined;
+  const rich = Boolean(eyebrow || description) || titleStyle === "heading";
   const content = (
     <>
       <Inline gap="md" className={cardHeaderTitle}>
         {icon && <Icon icon={icon} size={18} tone={bar ? "inherit" : "muted"} />}
-        <Text variant="subtitle" tone={bar ? "inherit" : undefined} truncate>
-          {title}
-        </Text>
+        {rich ? (
+          <Stack gap="2xs" className={cardHeaderTitle}>
+            {eyebrow && (
+              <Text as="div" variant="overline" tone={ink}>
+                {eyebrow}
+              </Text>
+            )}
+            <Text as="div" variant={titleStyle} tone={ink}>
+              {title}
+            </Text>
+            {description && (
+              <Text as="div" variant="caption" tone={bar ? "inherit" : "muted"}>
+                {description}
+              </Text>
+            )}
+          </Stack>
+        ) : (
+          <Text variant="subtitle" tone={ink} truncate>
+            {title}
+          </Text>
+        )}
       </Inline>
       {actions && <Inline gap="sm">{actions}</Inline>}
     </>
@@ -107,5 +133,25 @@ function CardSection({ divided, padding = "3xl", className, children }: CardSect
   );
 }
 
+export interface CardStripProps {
+  accent?: Accent;
+  /** 칠 (기본 `solid`) */
+  variant?: Variant;
+  /** 카드의 어느 끝에 붙는지 (기본 `bottom`) — 테두리는 카드 쪽 한 줄만 남습니다 */
+  placement?: "top" | "bottom";
+  className?: string;
+  children?: ReactNode;
+}
+
+/** 전폭 색 띠 — 카드 안 아래 · 위 끝의 상태 줄 (노란 푸터 막대 · 거절 사유). 카드는 `padding="0"` 으로 둡니다 */
+function CardStrip({ accent, variant = "solid", placement = "bottom", className, children }: CardStripProps) {
+  return (
+    <PaintRoot accent={accent} variant={variant} className={cx(cardStrip, placement === "top" ? cardStripTop : cardStripBottom, className)}>
+      {children}
+    </PaintRoot>
+  );
+}
+
 Card.Header = CardHeader;
 Card.Section = CardSection;
+Card.Strip = CardStrip;

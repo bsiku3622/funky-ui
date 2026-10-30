@@ -5,7 +5,7 @@
  * `fixed` 로 고릅니다. 메뉴 순서는 앱(`lib/navigation.ts`)이 정합니다 — 셸은 그리기만 합니다.
  * 바 둘은 구조 면이라 Surface 의 `brand`(보라)로 칠합니다 — 버튼처럼 색을 고르는 요소가 아닙니다.
  */
-import type { ElementType, ReactNode } from "react";
+import type { ComponentPropsWithRef, ElementType, ReactNode } from "react";
 
 import { cx } from "../internal/cx";
 import { ChevronDownGlyph } from "../internal/glyphs";
@@ -138,11 +138,12 @@ export function BottomNav({ fixed = false, className, children }: BottomNavProps
   );
 }
 
-function BottomNavItem({ icon, active = false, onClick, children }: SideNavItemProps) {
+/** 나머지 props 는 `<button>` 으로 갑니다 — More 칸이 판을 붙일 `ref` 와 `aria-expanded` 를 달 수 있습니다 */
+function BottomNavItem({ icon, active = false, onClick, children, ...rest }: SideNavItemProps & Omit<ComponentPropsWithRef<"button">, keyof SideNavItemProps>) {
   const { Comp, pressProps } = usePressable({ motion: "tap" });
   const { selectProps } = useSelectable({ selected: active, current: "page" });
   return (
-    <Comp {...pressProps} {...selectProps} onClick={onClick} className={cx(pressProps.className, bottomItem, active && bottomItemActive)}>
+    <Comp {...pressProps} {...selectProps} onClick={onClick} className={cx(pressProps.className, bottomItem, active && bottomItemActive)} {...rest}>
       <Icon icon={icon} size="lg" />
       <span className={bottomItemLabel}>{children}</span>
     </Comp>

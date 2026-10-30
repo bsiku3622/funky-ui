@@ -7,7 +7,7 @@ import { enterClass } from "../styles/enter.css";
 import type { EnterMotion } from "../tokens/vocabulary";
 import { Portal } from "./a11y";
 import { boxClass, type BoxOwnProps } from "./Box";
-import { floatingLayer } from "./Floating.css";
+import { floatingLayer, floatingScrim } from "./Floating.css";
 
 /** 판이 닫히자고 하는 까닭 — 바깥을 눌렀다 · Esc 를 눌렀다 */
 export type DismissReason = "outside" | "escape";
@@ -30,6 +30,8 @@ export interface FloatingOwnProps extends BoxOwnProps {
   onDismiss?: (reason: DismissReason) => void;
   /** 열릴 때 포커스를 줄 요소를 판 안에서 고릅니다 — 메뉴는 골라진 칸, 없으면 첫 칸 */
   initialFocus?: (panel: HTMLElement) => HTMLElement | null | undefined;
+  /** 뒤 화면을 어둡게 하고 누름을 막습니다 — 바깥을 눌러 닫을 때 뒤의 버튼이 같이 눌리지 않습니다 (하단 바 More 판) */
+  scrim?: boolean;
   style?: CSSProperties;
 }
 
@@ -58,6 +60,7 @@ export function Floating<E extends ElementType = "div">({
   enter = "rise",
   onDismiss,
   initialFocus,
+  scrim = false,
   padding,
   paddingX,
   paddingY,
@@ -106,6 +109,7 @@ export function Floating<E extends ElementType = "div">({
 
   return (
     <Portal container={container}>
+      {scrim && <div className={floatingScrim} />}
       <Comp
         ref={panel}
         className={cx(floatingLayer[layer], enterClass[enter], boxClass({ padding, paddingX, paddingY, className }))}

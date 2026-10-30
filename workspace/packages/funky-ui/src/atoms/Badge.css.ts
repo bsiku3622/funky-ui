@@ -28,3 +28,6 @@ export const badgeBase = style(
 export const badgeSize = styleVariants(BADGE.height, (h, size) =>
   c({ height: px(h), paddingInline: px(BADGE.inset[size as BadgeSize]), fontSize: px(BADGE.font[size as BadgeSize]) }),
 );
+
+/** 길이가 정해지지 않은 글자(거절 사유) — 줄바꿈되고 높이가 글자를 따라 늘어납니다 */
+export const badgeWrap = style(c({ height: "auto", paddingBlock: px(4), whiteSpace: "normal", lineHeight: 1.3, flexShrink: 1 }));

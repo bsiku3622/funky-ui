@@ -3,7 +3,7 @@ import { globalStyle, style, styleVariants } from "@vanilla-extract/css";
 import { ENTER_ANIMATION, enterKeyframes } from "../styles/enter.css";
 import { components } from "../tokens/layers.css";
 import { CONTAINER, SPACE } from "../tokens/layout";
-import { CONTROL_TEXT, WEIGHT, em, px } from "../tokens/typography";
+import { CONTROL_TEXT, TEXT_ROLES, WEIGHT, em, px } from "../tokens/typography";
 import { vars } from "../tokens/variables";
 
 const c = (rule: Record<string, unknown>) => ({ "@layer": { [components]: rule } });
@@ -28,6 +28,12 @@ export const modal = style(
 globalStyle(`html:has(${modal}[open])`, c({ overflow: "hidden" }));
 
 export const modalSize = styleVariants(CONTAINER.dialog, (w) => c({ maxWidth: px(w) }));
+
+/** 넓은 모달 — 머리가 고정되고 본문이 남은 높이를 채웁니다 (자료 미리보기) */
+export const modalFull = style(c({ height: "96vh", maxHeight: "96vh", overflow: "hidden" }));
+export const modalContentFill = style(c({ display: "flex", flexDirection: "column", height: "100%" }));
+export const modalBodyFill = style(c({ flex: 1, minHeight: 0, overflow: "auto" }));
+export const modalBodyFlush = style(c({ padding: 0 }));
 
 export const modalHeader = style(
   c({
@@ -55,6 +61,22 @@ export const modalTitle = style(
     minWidth: 0,
   }),
 );
+
+export const modalTitlePlain = style(c({ textTransform: "none", letterSpacing: 0 }));
+export const modalHeadText = style(c({ display: "flex", flexDirection: "column", gap: px(SPACE["2xs"]), flex: 1, minWidth: 0 }));
+export const modalSubtitle = style(
+  c({
+    display: "-webkit-box",
+    WebkitBoxOrient: "vertical",
+    WebkitLineClamp: 2,
+    overflow: "hidden",
+    fontSize: px(TEXT_ROLES.caption.size),
+    lineHeight: px(TEXT_ROLES.caption.leading),
+    fontWeight: WEIGHT.bold,
+    opacity: 0.8,
+  }),
+);
+export const modalHeadActions = style(c({ display: "flex", alignItems: "center", gap: px(SPACE.md), flexShrink: 0 }));
 
 /** 막대 위 닫기 — 막대 글자색을 따르고, 쉴 때는 한 단 옅습니다 */
 export const modalClose = style(
@@ -100,3 +122,6 @@ export const modalFooter = style(
     borderTop: `${vars.stroke.base} solid ${vars.line.subtle}`,
   }),
 );
+
+/** 색 띠 푸터 — 칠은 Paint 가 하고, 테두리는 위 한 줄만 남깁니다 */
+export const modalFooterStrip = style(c({ borderWidth: `${vars.stroke.base} 0 0`, borderColor: vars.line.base }));

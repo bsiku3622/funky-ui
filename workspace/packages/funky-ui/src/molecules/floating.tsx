@@ -1,6 +1,6 @@
 /**
- * 떠 있는 판 둘 — Tooltip(설명) · Menu(고르는 목록).
- * 둘 다 `Floating` 위에 섭니다 — 문서 끝에 그려 카드의 overflow 에 잘리지 않고, 바깥 누름 · Esc 로 닫힙니다.
+ * 떠 있는 판 셋 — Tooltip(설명) · Popover(내용을 담는 판) · Menu(고르는 목록).
+ * 모두 `Floating` 위에 섭니다 — 문서 끝에 그려 카드의 overflow 에 잘리지 않고, 바깥 누름 · Esc 로 닫힙니다.
  */
 import { cloneElement, isValidElement, useEffect, useId, useRef, useState, type AriaRole, type ReactElement, type ReactNode } from "react";
 
@@ -12,7 +12,8 @@ import { Icon, type IconComponent } from "../primitives/Icon";
 import { usePressable } from "../primitives/Pressable";
 import { useSelectable, useSelectableGroup } from "../primitives/Selectable";
 import { surfaceClass } from "../primitives/Surface";
-import { anchorWrap, menu, menuItem, menuItemCheck, tooltip } from "./floating.css";
+import type { PopoverTrigger, Space } from "../tokens/vocabulary";
+import { anchorBlock, anchorWrap, menu, menuItem, menuItemCheck, popover, tooltip } from "./floating.css";
 
 export interface TooltipProps {
   content: ReactNode;
@@ -60,6 +61,81 @@ export function Tooltip({ content, children, placement = "top", delay = 300, dis
           id={id}
           role="tooltip"
           className={cx(surfaceClass({ fill: "inverse", border: "line", shadow: "raised" }), tooltip)}
+        >
+          {content}
+        </Floating>
+      )}
+    </span>
+  );
+}
+
+export interface PopoverProps {
+  /** 판 안의 내용 — 사람 카드 · 요약 */
+  content: ReactNode;
+  /** 판을 붙일 요소 */
+  children: ReactNode;
+  /** 여는 법 (기본 `hover`) — `click` 은 눌러서 고정, `manual` 은 부르는 쪽이 `open` 으로만 엽니다(⌘ 를 누를 때) */
+  trigger?: PopoverTrigger;
+  /** 주면 열림을 밖에서 쥡니다 */
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  placement?: Placement;
+  /** 기본 `center` */
+  align?: AnchorAlign;
+  /** hover 로 열기까지 (ms, 기본 300) */
+  delay?: number;
+  /** 판의 안쪽 여백 (기본 `lg`) */
+  padding?: Space;
+  /** 기준 요소를 줄 전체로 둡니다 — 폭을 채우는 막대 · 줄에 붙일 때 */
+  block?: boolean;
+  className?: string;
+}
+
+/** 판 사이를 옮겨 가는 동안 닫히지 않게 잠깐 기다립니다 (ms) */
+const POPOVER_LEAVE = 100;
+
+/**
+ * 내용을 담는 판 — 흰 면 · 2px 검정 · 4px 그림자. Tooltip 은 짧은 글자용(검정 면 · 누를 수 없음)이고, 카드나 요약은 이쪽입니다.
+ * 판 위로 마우스를 옮겨도 닫히지 않으며, 바깥을 누르거나 Esc 로 닫힙니다.
+ */
+export function Popover({ content, children, trigger = "hover", open, onOpenChange, placement = "top", align = "center", delay = 300, padding = "lg", block = false, className }: PopoverProps) {
+  const [inner, setInner] = useState(false);
+  const isOpen = open ?? inner;
+  const anchor = useRef<HTMLSpanElement>(null);
+  const timer = useRef<number | undefined>(undefined);
+  useEffect(() => () => window.clearTimeout(timer.current), []);
+
+  const set = (next: boolean) => {
+    if (open === undefined) setInner(next);
+    onOpenChange?.(next);
+  };
+  const later = (next: boolean, ms: number) => {
+    window.clearTimeout(timer.current);
+    timer.current = window.setTimeout(() => set(next), ms);
+  };
+  const hover = trigger === "hover";
+  return (
+    <span
+      ref={anchor}
+      className={block ? anchorBlock : anchorWrap}
+      onMouseEnter={hover ? () => later(true, delay) : undefined}
+      onMouseLeave={hover ? () => later(false, POPOVER_LEAVE) : undefined}
+      onFocus={hover ? () => later(true, delay) : undefined}
+      onBlur={hover ? () => later(false, POPOVER_LEAVE) : undefined}
+      onClick={trigger === "click" ? () => set(!isOpen) : undefined}
+    >
+      {children}
+      {isOpen && (
+        <Floating
+          anchor={anchor}
+          placement={placement}
+          align={align}
+          onDismiss={() => set(false)}
+          padding={padding}
+          className={cx(surfaceClass({ border: "line", shadow: "raised" }), popover, className)}
+          onClick={(e: { stopPropagation: () => void }) => e.stopPropagation()}
+          onMouseEnter={hover ? () => window.clearTimeout(timer.current) : undefined}
+          onMouseLeave={hover ? () => later(false, POPOVER_LEAVE) : undefined}
         >
           {content}
         </Floating>

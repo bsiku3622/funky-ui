@@ -8,22 +8,22 @@ import { usePressable } from "../primitives/Pressable";
 import { useSelectable } from "../primitives/Selectable";
 import { BORDERLESS_VARIANTS } from "../tokens/color-recipes";
 import { CONTROL } from "../tokens/shape";
-import type { Accent, ControlSize, PressMotion, Variant } from "../tokens/vocabulary";
-import { buttonBase, buttonSize, fullWidth as fullWidthClass, loading as loadingClass, loadingSpinner } from "./Button.css";
+import type { Accent, ControlSize, IconMotion, PressMotion, Variant } from "../tokens/vocabulary";
+import { buttonBase, buttonSize, buttonWrap, fullWidth as fullWidthClass, iconEndTurn, loading as loadingClass, loadingSpinner, plainCase } from "./Button.css";
 import { Spinner } from "./Spinner";
 
-export type ButtonShadow = boolean | "hover" | "shrink";
+export type ButtonShadow = boolean | "hover" | "shrink" | "static";
 
 export interface ButtonOwnProps {
   /** 색 — 주지 않으면 바깥 Paint 의 색을 따르고, 바깥에도 없으면 검정(시스템)입니다 */
   accent?: Accent;
-  /** 칠하는 방식 (기본 `outline`) — 12 가지 레시피는 docs/foundations/color.md */
+  /** 칠하는 방식 (기본 `outline`) — 15 가지 레시피는 docs/foundations/color.md */
   variant?: Variant;
   size?: ControlSize;
   /**
    * 4px 그림자. `true` 면 그림자 위에 떠 있다가 hover 때 가라앉고(sink), `"hover"` 면 평평하다가 hover 때
-   * 그림자가 올라오고(raise), `"shrink"` 면 그림자를 둔 채 hover 때 작아집니다(Ask 단추 전용).
-   * 테두리가 없는 variant(ghost)는 그림자를 받지 않습니다
+   * 그림자가 올라오고(raise), `"shrink"` 면 그림자를 둔 채 hover 때 작아지고(Ask 단추 전용), `"static"` 이면 그림자를 둔 채
+   * 움직이지 않습니다(밖에서 켠 상태 · 꺼진 칸). 테두리가 없는 variant(ghost)는 그림자를 받지 않습니다
    */
   shadow?: ButtonShadow;
   /**
@@ -37,8 +37,16 @@ export interface ButtonOwnProps {
   loading?: boolean;
   /** 앞 아이콘 — 크기와 굵기는 버튼 크기가 정합니다 */
   icon?: IconComponent;
-  /** 뒤 아이콘 */
+  /** 뒤 아이콘 — 판을 열어 둔 동안(`aria-expanded`) 뒤집힙니다 */
   iconEnd?: IconComponent;
+  /** 앞 아이콘이 제자리에서 돕니다 — 라벨을 지운 `loading` 과 달리 글자가 그대로 있는 새로고침 */
+  iconSpin?: boolean;
+  /** 마우스를 올리면 아이콘만 움직입니다. 앞 아이콘에, 없으면 뒤 아이콘에 겁니다 */
+  iconMotion?: IconMotion;
+  /** 대문자로 그립니다 (기본 true). 소문자가 뜻인 라벨이면 끕니다 */
+  uppercase?: boolean;
+  /** 긴 문장 라벨 — 줄바꿈되고 높이가 글자를 따라 늘어납니다 */
+  wrap?: boolean;
   fullWidth?: boolean;
   disabled?: boolean;
   className?: string;
@@ -53,7 +61,7 @@ const swallow = (e: SyntheticEvent) => {
 };
 
 /**
- * 그림자 · 골라짐에서 몸짓을 고릅니다 — 그림자를 켜면 sink(가라앉음), `"hover"` 면 raise(올라옴), `"shrink"` 면 shrink(작아짐), 끄면 tap.
+ * 그림자 · 골라짐에서 몸짓을 고릅니다 — 그림자를 켜면 sink(가라앉음), `"hover"` 면 raise(올라옴), `"shrink"` 면 shrink(작아짐), `"static"` 이면 still(그대로), 끄면 tap.
  * 골라진 버튼은 그림자와 상관없이 커집니다(Selectable 의 grow) — class-explorer 에서 쉴 때 평평한 칩도 골라지면
  * 커지며 그림자가 생깁니다. grow 가 몸짓을 덮으므로 motion 은 쉴 때의 것을 그대로 둡니다.
  * 테두리가 없는 variant(ghost)는 가라앉을 상자가 없어 그림자를 받지 않습니다. IconButton · SideNav.Item 이 같은 규칙을 씁니다.
@@ -62,7 +70,9 @@ export function pressOf(variant: Variant, shadow: ButtonShadow, selected: boolea
   const grow = Boolean(selected);
   if (!shadow || BORDERLESS_VARIANTS.includes(variant)) return { motion: "tap", grow };
   if (shadow === "hover") return { motion: "raise", grow };
-  return { motion: shadow === "shrink" ? "shrink" : "sink", grow };
+  if (shadow === "shrink") return { motion: "shrink", grow };
+  if (shadow === "static") return { motion: "still", grow };
+  return { motion: "sink", grow };
 }
 
 /**
@@ -85,6 +95,10 @@ export function Button<E extends ElementType = "button">({
   loading = false,
   icon,
   iconEnd,
+  iconSpin = false,
+  iconMotion,
+  uppercase = true,
+  wrap = false,
   fullWidth = false,
   disabled,
   className,
@@ -110,15 +124,17 @@ export function Button<E extends ElementType = "button">({
         paintClass({ accent, variant, selected, hoverable: true }),
         buttonBase,
         buttonSize[size],
+        !uppercase && plainCase,
+        wrap && buttonWrap,
         fullWidth && fullWidthClass,
         loading && loadingClass,
         className,
       )}
       {...rest}
     >
-      {icon && <Icon icon={icon} size={iconSize} />}
+      {icon && <Icon icon={icon} size={iconSize} spin={iconSpin} motion={iconMotion} />}
       {children}
-      {iconEnd && <Icon icon={iconEnd} size={iconSize} />}
+      {iconEnd && <Icon icon={iconEnd} size={iconSize} motion={icon ? undefined : iconMotion} className={iconEndTurn} />}
       {loading && (
         <span className={loadingSpinner}>
           <Spinner size={size === "lg" ? "md" : "sm"} label="불러오는 중" />

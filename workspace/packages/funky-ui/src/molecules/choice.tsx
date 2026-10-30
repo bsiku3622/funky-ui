@@ -15,7 +15,7 @@ import { Inline } from "../primitives/layout";
 import { useSelectableGroup } from "../primitives/Selectable";
 import { Button } from "../atoms/Button";
 import type { Accent, ControlSize, Space, Variant } from "../tokens/vocabulary";
-import { choiceFill, choiceItemFill, tabPanel } from "./choice.css";
+import { choiceAttached, choiceFill, choiceItemFill, tabPanel } from "./choice.css";
 
 export interface ChoiceOption<V extends string> {
   value: V;
@@ -40,6 +40,8 @@ export interface SegmentedControlProps<V extends string> extends ChoiceLook {
   options: readonly ChoiceOption<V>[];
   value: V;
   onChange: (value: V) => void;
+  /** 칸을 이어 붙입니다 — 사이가 없고 맞닿은 테두리가 하나로 겹칩니다 (Admin 의 데이터 범위) */
+  attached?: boolean;
   "aria-label": string;
   className?: string;
 }
@@ -54,12 +56,13 @@ export function SegmentedControl<V extends string>({
   shadow = false,
   gap = "sm",
   fill = false,
+  attached = false,
   className,
   "aria-label": ariaLabel,
 }: SegmentedControlProps<V>) {
   const { groupProps, itemProps } = useSelectableGroup({ value, onChange });
   return (
-    <Inline role="radiogroup" aria-label={ariaLabel} gap={gap} wrap={!fill} className={cx(fill && choiceFill, className)} {...groupProps}>
+    <Inline role="radiogroup" aria-label={ariaLabel} gap={attached ? "0" : gap} wrap={!fill && !attached} className={cx(fill && choiceFill, attached && choiceAttached, className)} {...groupProps}>
       {options.map((o) => (
         <Button
           key={o.value}

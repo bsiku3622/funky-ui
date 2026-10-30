@@ -7,7 +7,7 @@ import { Icon, type IconComponent } from "../primitives/Icon";
 import { usePressable } from "../primitives/Pressable";
 import { useSelectable } from "../primitives/Selectable";
 import { CONTROL } from "../tokens/shape";
-import { buttonBase, buttonSize, squareSize } from "./Button.css";
+import { buttonBase, buttonSize, iconEndTurn, squareSize } from "./Button.css";
 
 export interface NavButtonOwnProps {
   icon?: IconComponent;
@@ -64,7 +64,7 @@ export function NavButton<E extends ElementType = "button">({
     >
       {icon && <Icon icon={icon} size={CONTROL.icon[size]} />}
       {children}
-      {iconEnd && <Icon icon={iconEnd} size={CONTROL.icon[size]} />}
+      {iconEnd && <Icon icon={iconEnd} size={CONTROL.icon[size]} className={iconEndTurn} />}
     </Comp>
   );
 }

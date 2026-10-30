@@ -7,7 +7,7 @@ import { paintClass } from "../primitives/Paint";
 import { usePressable } from "../primitives/Pressable";
 import { useSelectable } from "../primitives/Selectable";
 import { CONTROL } from "../tokens/shape";
-import type { Accent, ControlSize, Variant } from "../tokens/vocabulary";
+import type { Accent, ControlSize, IconMotion, Variant } from "../tokens/vocabulary";
 import { buttonBase, buttonSize, squareSize } from "./Button.css";
 import { pressOf, type ButtonShadow } from "./Button";
 
@@ -24,6 +24,10 @@ export interface IconButtonOwnProps {
   /** Button 과 같습니다 — 골라진 색 · aria 하나 · 커지기 */
   selected?: boolean;
   role?: AriaRole;
+  /** 아이콘이 제자리에서 돕니다 — 불러오는 동안의 새로고침 */
+  iconSpin?: boolean;
+  /** 마우스를 올리면 아이콘만 움직입니다 */
+  iconMotion?: IconMotion;
   disabled?: boolean;
   className?: string;
 }
@@ -41,6 +45,8 @@ export function IconButton<E extends ElementType = "button">({
   shadow = false,
   selected,
   role,
+  iconSpin = false,
+  iconMotion,
   disabled,
   className,
   ...rest
@@ -65,7 +71,7 @@ export function IconButton<E extends ElementType = "button">({
       )}
       {...rest}
     >
-      <Icon icon={icon} size={CONTROL.icon[size]} />
+      <Icon icon={icon} size={CONTROL.icon[size]} spin={iconSpin} motion={iconMotion} />
     </Comp>
   );
 }

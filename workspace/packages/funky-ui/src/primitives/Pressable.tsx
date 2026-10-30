@@ -9,8 +9,8 @@ import { motionClass, pressBase } from "./Pressable.css";
 export interface PressableOwnProps extends BoxOwnProps {
   /**
    * 몸짓 (기본 `none` — 누르지만 움직이지 않음). `sink` 는 그림자 위에서 가라앉고, `raise` 는 평평하다가 hover 때
-   * 그림자가 올라오고, `lift` 는 떠오르고, `tap` 은 누르는 순간만 작아지고, `shrink` 는 그림자를 둔 채 hover 때부터 작아집니다.
-   * sink · raise · lift · shrink 는 그림자를 같이 가집니다
+   * 그림자가 올라오고, `lift` 는 떠오르고, `tap` 은 누르는 순간만 작아지고, `shrink` 는 그림자를 둔 채 hover 때부터 작아지고, `still` 은 그림자를 둔 채 움직이지 않습니다.
+   * sink · raise · lift · shrink · still 은 그림자를 같이 가집니다
    */
   motion?: PressMotion;
   disabled?: boolean;

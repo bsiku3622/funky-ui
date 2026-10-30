@@ -14,6 +14,8 @@ export const DURATION = {
   slow: 300,
   /** 시간선 위 캐럿처럼 연속으로 움직이는 위치 전용 */
   crawl: 700,
+  /** 불러오는 동안의 깜빡임 한 주기 */
+  pulse: 2000,
 } as const;
 
 export const EASING = {
@@ -54,7 +56,17 @@ export const ENTER = {
   pop: { distance: 8, duration: "base" },
   /** 제자리에서 — 펼친 본문 (class-explorer 아코디언의 fade-in 300ms) */
   fade: { distance: 0, duration: "slow" },
-} as const satisfies Record<string, { distance: number; duration: keyof typeof DURATION }>;
+  /** 앱이 만든 작은 창 — 8px 아래에서 96% 로 시작합니다 (Ask 데스크탑 창) */
+  panel: { distance: 8, duration: "base", scale: 0.96 },
+  /** 화면을 덮는 판 — 멀리서 옵니다 (Ask 모바일 판) */
+  sheet: { distance: 24, duration: "base" },
+} as const satisfies Record<string, { distance: number; duration: keyof typeof DURATION; scale?: number }>;
+
+/** 아이콘만 움직이는 몸짓 — 돌아가는 각도(°)와 밀리는 거리(px) */
+export const ICON_MOTION = {
+  turn: -45,
+  nudge: 2,
+} as const;
 
 /**
  * 상태(hover · 누르는 중 · 꺼짐)가 바뀔 때 움직이는 속성 — 색(Paint 의 hoverable)과 몸짓(Pressable)을 합친

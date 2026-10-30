@@ -23,6 +23,11 @@ export const tooltip = style(
   }),
 );
 
+export const anchorBlock = style(c({ display: "block", width: "100%" }));
+
+/** 내용이 있는 판 — 카드 · 요약을 담으므로 Tooltip 과 달리 누를 수 있고 폭이 넓습니다 */
+export const popover = style(c({ maxWidth: `min(32rem, calc(100vw - ${px(SPACE.xl)}))`, color: vars.ink.primary }));
+
 export const menu = style(c({ display: "flex", flexDirection: "column", paddingBlock: 0 }));
 
 export const menuItem = style(

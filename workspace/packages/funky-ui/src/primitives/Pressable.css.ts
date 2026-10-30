@@ -79,4 +79,6 @@ export const motionClass = styleVariants({
       [`&${ENABLED}:active`]: { transform: `scale(${vars.press.shrinkActive})` },
     },
   }),
+  // 밖에서 켠 상태 — 고른 칸 · 풀어 둔 노드처럼 hover 와 상관없이 그림자가 남고, 꺼져도 그림자를 둡니다
+  still: p({ boxShadow: vars.shadow.raised }),
 } satisfies Record<PressMotion, object>);

@@ -12,5 +12,5 @@ export { FONT_FAMILY, FONT_STYLESHEET, WEIGHT, TEXT_ROLES, LEADING, WORDMARK, CO
 export { textRule, TONE_VALUE } from "./typography-recipes";
 export { STROKE, RADIUS, SWATCH, CONTROL, BADGE, ICON, ICON_STROKE, FOCUS_RING, TOGGLE } from "./shape";
 export { SPACE, ELEVATION, Z, BREAKPOINT, CONTAINER } from "./layout";
-export { DURATION, EASING, PRESS, LIFT, ENTER } from "./motion";
+export { DURATION, EASING, PRESS, LIFT, ENTER, ICON_MOTION } from "./motion";
 export { vars, ROOT_VALUES } from "./variables";
