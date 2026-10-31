@@ -1,0 +1,55 @@
+{
+  "name": "@studio-baeks/funky-ui",
+  "version": "1.0.0-alpha.0",
+  "type": "module",
+  "description": "funky-ui — neo-brutalist design system for Class Explorer. Cream canvas, neon accents, 2px black lines, hard shadows.",
+  "license": "MIT",
+  "author": "Jaewon Baek",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bsiku3622/funky-ui.git",
+    "directory": "workspace/packages/funky-ui"
+  },
+  "keywords": ["react", "design-system", "neo-brutalism", "vanilla-extract"],
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "funky-ui-source": "./src/index.ts",
+      "default": {
+        "types": "./dist/types/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
+    "./tokens": {
+      "funky-ui-source": "./src/tokens/public.ts",
+      "default": {
+        "types": "./dist/types/tokens/public.d.ts",
+        "default": "./dist/tokens.js"
+      }
+    },
+    "./styles.css": {
+      "funky-ui-source": "./src/styles/global.css.ts",
+      "default": "./dist/funky-ui.css"
+    }
+  },
+  "sideEffects": ["**/*.css", "**/*.css.ts", "**/src/index.ts", "**/focusModality.ts"],
+  "files": ["dist", "src"],
+  "scripts": {
+    "build": "tsc --noEmit && vite build && tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vanilla-extract/css": "^1.16.0",
+    "@vanilla-extract/vite-plugin": "^5.2.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "typescript": "^5.6.0",
+    "vite": "^6.4.2"
+  }
+}
