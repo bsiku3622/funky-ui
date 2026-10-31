@@ -1,8 +1,8 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
-  "installCommand": "cd workspace && pnpm install --frozen-lockfile",
-  "buildCommand": "cd workspace && pnpm --filter @funky-ui/app build",
+  "installCommand": "cd workspace && npx --yes pnpm@11.0.9 install --frozen-lockfile",
+  "buildCommand": "cd workspace && npx --yes pnpm@11.0.9 --filter @funky-ui/app build",
   "outputDirectory": "workspace/app/dist",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
