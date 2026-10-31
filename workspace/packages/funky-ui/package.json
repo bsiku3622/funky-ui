@@ -32,10 +32,12 @@
       "default": "./dist/funky-ui.css"
     }
   },
-  "sideEffects": ["**/*.css", "**/*.css.ts", "**/src/index.ts", "**/focusModality.ts"],
+  "sideEffects": ["**/*.css", "**/*.css.ts", "**/src/index.ts", "**/focusModality.ts", "**/dist/index.js", "**/focusModality.js"],
   "files": ["dist", "src"],
+  "publishConfig": { "access": "public" },
   "scripts": {
     "build": "tsc --noEmit && vite build && tsc -p tsconfig.build.json",
+    "prepublishOnly": "pnpm build",
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {

@@ -203,7 +203,7 @@ class-explorer의 모션 전부를 몸짓 · 상태 모션 · 입력칸으로 �
 
 검수 뒤 6단계에서 이 순서로 붙입니다. 각 단계가 끝날 때마다 `npm run build`와 `npm run lint`가 통과해야 합니다.
 
-1. funky-ui 소스를 `frontend/vendor/funky-ui`로 vendor 하고, Vite에 vanilla-extract 플러그인을 더합니다 ([설치](../get-started/install.md)).
+1. funky-ui를 앱의 의존성으로 더합니다 ([설치](../get-started/install.md)). 처음에는 소스를 앱 안에 복사해 썼고, 2026-10-31에 npm 패키지로 바꿨습니다.
 2. `index.css` 맨 위에 `@layer theme, base, fk, components, utilities;`를 선언합니다. Tailwind 유틸리티가 funky를 이기고, funky가 Tailwind의 preflight를 이깁니다.
 3. `RetroButton` · `RetroCard` · `RetroSubTitle` · `RetroChip` · `RetroSpinner`를 funky 컴포넌트로 바꿉니다. atom 이름이 그대로 남아 있는 자리부터라 범위가 분명합니다.
 4. raw `<button>`을 위 표대로 바꿉니다. 화면 단위로 나눠 갑니다.
