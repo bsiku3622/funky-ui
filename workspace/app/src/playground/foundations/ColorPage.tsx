@@ -66,7 +66,7 @@ export function ColorPage() {
         </Grid>
       </Section>
 
-      <Section title="Ink · Line" note="글자는 #222, 선은 #000 입니다. muted 는 AA 를 지키는 가장 옅은 회색이고, faint 는 장식 전용(AA 미달)입니다.">
+      <Section title="Ink · Line" note="글자는 #222, 선은 #000 입니다. secondary · muted · faint 는 검정 60 · 40 · 25% 라 어떤 면 위에서든 같은 농도로 읽힙니다. faint 는 장식 전용입니다.">
         <Grid columns="repeat(auto-fill, minmax(140px, 1fr))" gap="xl">
           {Object.entries(INK).map(([name, value]) => (
             <Swatch key={name} name={`ink.${name}`} value={value} note={name.startsWith("inverse") ? "어두운 면 위" : `크림 위 ${ratio(contrast(value, CREAM))}`} ground={name.startsWith("inverse") ? "#000000" : CREAM} />
