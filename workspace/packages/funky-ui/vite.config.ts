@@ -21,7 +21,10 @@ export default defineConfig({
       external: (id) => external.some((dep) => id === dep || id.startsWith(`${dep}/`)),
       output: {
         banner: (chunk) => (chunk.isEntry && chunk.name === "index" ? '"use client";' : ""),
-        chunkFileNames: "chunks/[name]-[hash].js",
+        // ⚠️ 한 파일로 묶지 않습니다. 묶으면 앱의 번들러가 페이지별로 나누지 못해서, lazy 페이지만 쓰는
+        // 부품까지 첫 로딩에 실립니다(Class Explorer 에서 gzip 22KB 차이).
+        preserveModules: true,
+        preserveModulesRoot: "src",
       },
     },
   },
