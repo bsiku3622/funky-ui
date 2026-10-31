@@ -28,14 +28,14 @@ palette.ts (hex)  →  color.ts (역할)  →  color-recipes.ts (variant 규칙)
 | 역할 | 값 | 크림 위 대비 | 쓰는 곳 |
 | --- | --- | --- | --- |
 | `ink.primary` | `#222222` | 14.6 | 본문 |
-| `ink.secondary` | `#4d4d4d` | 8.3 | 보조 글 |
-| `ink.muted` | `#6f6f6f` | 4.6 | 약한 글자 — AA를 지키는 가장 옅은 회색 |
-| `ink.faint` | `rgba(0,0,0,.3)` | 미달 | placeholder · 장식 전용. 필수 정보에 쓰지 않습니다 |
+| `ink.secondary` | `rgba(0,0,0,.6)` | 5.6 | 보조 글 |
+| `ink.muted` | `rgba(0,0,0,.4)` | 2.8 | 약한 글자 — 소제목 · 이름표 · 부연. 긴 글에 쓰지 않습니다 |
+| `ink.faint` | `rgba(0,0,0,.25)` | 1.8 | placeholder · 장식 전용. 필수 정보에 쓰지 않습니다 |
 | `line.base` | `#000000` | | 모든 카드 · 버튼의 2px |
 | `line.soft` | `#cccccc` | | Muted · Hairline의 쉬는 테두리 |
 | `line.subtle` | `rgba(0,0,0,.1)` | | 카드 안 구분선 |
 
-class-explorer는 약한 글자를 `text-black/40`(흰 면 위 2.85:1)로 써 왔습니다. 이제 그 자리는 `ink.muted`이고 한 단 진해집니다.
+약한 글자는 class-explorer의 `text-black/40`을 그대로 옮긴 값입니다. 반투명이라 크림 · 흰 면 · 네온 어디서든 그 면 위의 같은 농도로 읽힙니다. 흰 면 위 2.85:1이라 AA에는 못 미칩니다.
 
 ## Accent
 
