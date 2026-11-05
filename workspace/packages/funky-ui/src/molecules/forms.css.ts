@@ -59,8 +59,8 @@ export const suggestRemove = style(
   }),
 );
 
-// `xl` 은 넓은 여백이 버튼의 것이고, 검색칸의 아이콘은 테두리 가까이 붙습니다
-const edge = (size: ControlSize) => (size === "xl" ? SPACE.md : CONTROL.inset[size] - 2);
+// `xl` 은 넓은 여백(40)이 버튼의 것입니다. 검색칸은 아이콘 위아래 여백(64 - 24 = 양쪽 20)과 같게 띄웁니다 — 앞의 돋보기와 뒤의 지우기가 칸 안에 같은 거리로 앉습니다
+const edge = (size: ControlSize) => (size === "xl" ? SPACE["2xl"] : CONTROL.inset[size] - 2);
 
 export const searchIcon = styleVariants(CONTROL.height, (_, size) =>
   c({
@@ -76,7 +76,7 @@ export const searchIcon = styleVariants(CONTROL.height, (_, size) =>
 /** 앞 아이콘과 뒤 지우기 자리를 비웁니다. 브라우저의 기본 지우기 버튼은 숨깁니다 */
 export const searchInput = styleVariants(CONTROL.height, (_, size) =>
   c({
-    paddingLeft: px(edge(size as ControlSize) + CONTROL.icon[size as ControlSize] + CONTROL.gap[size as ControlSize] + (size === "xl" ? SPACE.md : 0)),
+    paddingLeft: px(edge(size as ControlSize) + CONTROL.icon[size as ControlSize] + CONTROL.gap[size as ControlSize] + (size === "xl" ? SPACE.xs : 0)),
     paddingRight: px(edge(size as ControlSize) + CONTROL.icon[size as ControlSize] + CONTROL.gap[size as ControlSize]),
     "::-webkit-search-cancel-button": { display: "none" },
   }),
